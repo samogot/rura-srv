@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	   
+<mapper namespace="ru.ruranobe.mybatis.mappers.SeriesMapper">
+
+    <select id="getSeriesById" parameterType="int" resultType="ru.ruranobe.mybatis.tables.Series">
+        SELECT
+            series_id as seriesId,
+            name_url as nameUrl,
+            title,
+            parent_id as parentId
+        FROM main_series
+        WHERE series_id = #{seriesId}
+    </select>
+
+    <resultMap type="ru.ruranobe.mybatis.tables.Series" id="SeriesResult">
+        <id property="seriesId" column="series_id"/>
+        <result property="nameUrl" column="name_url"/>
+        <result property="title" column="title"/>
+        <result property="parentId" column="parent_id"/>
+    </resultMap>
+
+    <select id="getAllSeries" resultMap="SeriesResult">
+        SELECT * FROM main_series
+    </select>
+
+    <insert id="insertSeries" parameterType="ru.ruranobe.mybatis.tables.Series" useGeneratedKeys="true" keyProperty="seriesId">
+        INSERT INTO SERIES(series_id, name_url, title, parent_id)
+        VALUES(#{seriesId}, #{nameUrl}, #{title}, #{parentId})
+    </insert>
+
+    <update id="updateSeries" parameterType="ru.ruranobe.mybatis.tables.Series">
+        UPDATE main_series
+        SET
+            name_url = #{nameUrl},
+            title = #{title},
+            parent_id = #{parentId}
+        WHERE series_id = #{seriesId}
+    </update>
+
+    <delete id="deleteSeries" parameterType="int">
+        DELETE FROM main_series WHERE series_id = #{seriesId}
+    </delete>
+    
+</mapper>
