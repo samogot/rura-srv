@@ -16,5 +16,7 @@
   </environments>
   <mappers>
     <mapper resource="ru/ruranobe/mybatis/mappers/SeriesMapper.xml"/>
+    <mapper resource="ru/ruranobe/mybatis/mappers/ChaptersMapper.xml"/>
+    <mapper resource="ru/ruranobe/mybatis/mappers/UsersMapper.xml"/>
   </mappers>
 </configuration>

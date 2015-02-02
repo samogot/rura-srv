@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	   
+<mapper namespace="ru.ruranobe.mybatis.mappers.UsersMapper">
+
+    <select id="getUserByEmail" parameterType="String" resultType="ru.ruranobe.mybatis.tables.User">
+        SELECT
+            user_id as userId,
+            user_name as username,
+            realname,
+            pass, 
+            pass_recovery_token as passRecoveryToken,
+            pass_recovery_token_date as passRecoveryTokenDate,
+            email,
+            email_token as emailToken,
+            email_token_date as emailTokenDate,
+            is_email_activated as isEmailActivated,
+            registration_date as registrationDate
+        FROM users
+        WHERE email = #{email}
+    </select>
+    
+    <select id="getUserByUsername" parameterType="String" resultType="ru.ruranobe.mybatis.tables.User">
+        SELECT
+            user_id as userId,
+            user_name as username,
+            realname,
+            pass, 
+            pass_recovery_token as passRecoveryToken,
+            pass_recovery_token_date as passRecoveryTokenDate,
+            email,
+            email_token as emailToken,
+            email_token_date as emailTokenDate,
+            is_email_activated as isEmailActivated,
+            registration_date as registrationDate
+        FROM users
+        WHERE username = #{username}
+    </select>
+    
+    <select id="getUserByPassRecoveryToken" parameterType="String" resultType="ru.ruranobe.mybatis.tables.User">
+        SELECT
+            user_id as userId,
+            user_name as username,
+            realname,
+            pass, 
+            pass_recovery_token as passRecoveryToken,
+            pass_recovery_token_date as passRecoveryTokenDate,
+            email,
+            email_token as emailToken,
+            email_token_date as emailTokenDate,
+            is_email_activated as isEmailActivated,
+            registration_date as registrationDate
+        FROM users
+        WHERE pass_recovery_token = #{passRecoveryToken}
+    </select>
+    
+    
+
+    <insert id="registerUser" parameterType="ru.ruranobe.mybatis.tables.User" useGeneratedKeys="true" keyProperty="userId">
+        INSERT INTO USERS (user_id, username, realname, pass, pass_recovery_token, pass_recovery_token_date, email, email_token, email_token_date, is_email_activated, registration_date)
+        VALUES(#{userId}, #{username}, #{realname}, #{pass}, #{passRecoveryToken}, #{passRecoveryTokenDate}, #{email}, #{emailToken}, #{emailTokenDate}, #{isEmailActivated}, #{registrationDate})
+    </insert>
+
+    <insert id="registerUser" parameterType="ru.ruranobe.mybatis.tables.User" useGeneratedKeys="true" keyProperty="userId">
+        INSERT INTO USERS (user_id, username, realname, pass, pass_recovery_token, pass_recovery_token_date, email, email_token, email_token_date, is_email_activated, registration_date)
+        VALUES(#{userId}, #{username}, #{realname}, #{pass}, #{passRecoveryToken}, #{passRecoveryTokenDate}, #{email}, #{emailToken}, #{emailTokenDate}, #{isEmailActivated}, #{registrationDate})
+    </insert>
+
+
+    <update id="updateUser" parameterType="ru.ruranobe.mybatis.tables.User">
+        UPDATE users
+        SET
+            user_id = #{userId}, 
+            username = #{username}, 
+            realname = #{realname}, 
+            pass = #{pass}, 
+            pass_recovery_token = #{passRecoveryToken}, 
+            pass_recovery_token_date = #{passRecoveryTokenDate}, 
+            email = #{email}, 
+            email_token = #{emailToken}, 
+            email_token_date = #{emailTokenDate}, 
+            is_email_activated = #{isEmailActivated}, 
+            registration_date = #{registrationDate}
+        WHERE user_id = #{userId}
+    </update>
+
+   
+   
+   
+   
+
+
+    <select id="getSeriesById" parameterType="int" resultType="ru.ruranobe.mybatis.tables.Series">
+        SELECT
+            series_id as seriesId,
+            name_url as nameUrl,
+            title,
+            parent_id as parentId
+        FROM main_series
+        WHERE series_id = #{seriesId}
+    </select>
+    
+    <select id="getSeriesByUrl" parameterType="String" resultType="ru.ruranobe.mybatis.tables.Series">
+        SELECT
+            series_id as seriesId,
+            name_url as nameUrl,
+            title,
+            parent_id as parentId
+        FROM main_series
+        WHERE name_url = #{url}
+    </select>
+
+    <resultMap type="ru.ruranobe.mybatis.tables.Series" id="SeriesResult">
+        <id property="seriesId" column="series_id"/>
+        <result property="nameUrl" column="name_url"/>
+        <result property="title" column="title"/>
+        <result property="parentId" column="parent_id"/>
+    </resultMap>
+
+    <select id="getAllSeries" resultMap="SeriesResult">
+        SELECT * FROM main_series
+    </select>
+
+    <insert id="insertSeries" parameterType="ru.ruranobe.mybatis.tables.Series" useGeneratedKeys="true" keyProperty="seriesId">
+        INSERT INTO SERIES(series_id, name_url, title, parent_id)
+        VALUES(#{seriesId}, #{nameUrl}, #{title}, #{parentId})
+    </insert>
+
+    <update id="updateSeries" parameterType="ru.ruranobe.mybatis.tables.Series">
+        UPDATE main_series
+        SET
+            name_url = #{nameUrl},
+            title = #{title},
+            parent_id = #{parentId}
+        WHERE series_id = #{seriesId}
+    </update>
+
+    <delete id="deleteSeries" parameterType="int">
+        DELETE FROM main_series WHERE series_id = #{seriesId}
+    </delete>
+    
+</mapper>

@@ -13,6 +13,16 @@
         FROM main_series
         WHERE series_id = #{seriesId}
     </select>
+    
+    <select id="getSeriesByUrl" parameterType="String" resultType="ru.ruranobe.mybatis.tables.Series">
+        SELECT
+            series_id as seriesId,
+            name_url as nameUrl,
+            title,
+            parent_id as parentId
+        FROM main_series
+        WHERE name_url = #{url}
+    </select>
 
     <resultMap type="ru.ruranobe.mybatis.tables.Series" id="SeriesResult">
         <id property="seriesId" column="series_id"/>

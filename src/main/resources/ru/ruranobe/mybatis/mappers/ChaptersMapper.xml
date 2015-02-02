@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	   
+<mapper namespace="ru.ruranobe.mybatis.mappers.ChaptersMapper">
+
+    <select id="getChaptersByReleaseId" parameterType="int" resultType="ru.ruranobe.mybatis.tables.Chapter">
+        SELECT
+            chapter_id as chapterId,
+            release_id as releaseId,
+            `order`,
+            `level`, 
+            url,
+            title,
+            title_short as titleShort
+        FROM main_chapter
+        WHERE release_id = #{releaseId}
+    </select>
+    
+    <select id="getChapterByUrl" parameterType="String" resultType="ru.ruranobe.mybatis.tables.Chapter">
+        SELECT
+            chapter_id as chapterId,
+            release_id as releaseId,
+            `order`,
+            `level`, 
+            url,
+            title,
+            title_short as titleShort
+        FROM main_chapter
+        WHERE url = #{url} limit 1
+    </select>
+    
+    <resultMap type="ru.ruranobe.mybatis.tables.Chapter" id="ChaptersResult">
+        <id property="chapterId" column="chapter_id"/>
+        <result property="releaseId" column="release_id"/>
+        <result property="order" column="order"/>
+        <result property="level" column="level"/>
+        <result property="url" column="url"/>
+        <result property="title" column="title"/>
+        <result property="titleShort" column="title_short"/>
+    </resultMap>
+
+</mapper>

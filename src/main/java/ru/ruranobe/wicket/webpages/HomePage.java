@@ -1,4 +1,4 @@
-package ru.ruranobe.wicket;
+package ru.ruranobe.wicket.webpages;
 
 import java.util.List;
 import org.apache.ibatis.session.SqlSession;
@@ -33,7 +33,7 @@ public class HomePage extends WebPage
         
         session.close();
         
-        add(new Image("headerImage",new PackageResourceReference(getClass(), "header-m.png")));
+        add(new Image("headerImage", new PackageResourceReference(getClass(), "header-m.png")));
         
         ListView<Series> seriesListView = new ListView<Series> ("seriesListView", seriesList)
         {

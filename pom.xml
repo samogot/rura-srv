@@ -93,6 +93,12 @@
                     <version>5.1.18</version>
                 </dependency>
 
+                <dependency>
+                        <groupId>info.bliki.wiki</groupId>
+                        <artifactId>bliki-core</artifactId>
+                        <version>3.0.19</version>
+                </dependency>
+
 		<!--  JUNIT DEPENDENCY FOR TESTING -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -110,8 +116,6 @@
 		</dependency>
 	</dependencies>
 	<build>
-            
-                <outputDirectory>C:/Users/Viktor/ruranobeTempFiles</outputDirectory>
   		<resources>
 			<resource>
 				<filtering>false</filtering>
