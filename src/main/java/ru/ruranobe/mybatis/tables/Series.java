@@ -1,6 +1,8 @@
 package ru.ruranobe.mybatis.tables;
 
-public class Series
+import java.io.Serializable;
+
+public class Series implements Serializable
 {
     
     public Series() 
@@ -59,4 +61,5 @@ public class Series
     private String nameUrl;    
     private String title;    
     private Integer parentId;
+    private static final long serialVersionUID = 1L;
 }

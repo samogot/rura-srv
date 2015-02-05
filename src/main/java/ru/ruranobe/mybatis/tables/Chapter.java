@@ -1,6 +1,8 @@
 package ru.ruranobe.mybatis.tables;
 
-public class Chapter 
+import java.io.Serializable;
+
+public class Chapter implements Serializable
 {
 
     public Chapter()
@@ -96,4 +98,5 @@ public class Chapter
     private String url;
     private String title;
     private String titleShort;
+    private static final long serialVersionUID = 1L;
 }

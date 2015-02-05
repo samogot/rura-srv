@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:wicket="http://wicket.sourceforge.net/" 
+      xml:lang="en" 
+      lang="en">
+    <body>
+        <wicket:panel>
+            <form wicket:id="registrationForm">
+                username
+		<input type="text" wicket:id="username"/> 
+                <br/>
+                password
+                <input type="password" wicket:id="password"/> 
+                <br/>
+                confirm password
+                <input type="password" wicket:id="confirmPassword"/> 
+                <br/>
+                email
+                <input type="text" wicket:id="email"/> 
+                <br/>
+                realname
+                <input type="text" wicket:id="realname"/>                 
+                <br/>
+		<input type="submit"/>
+            </form>
+            <div wicket:id="feedback">
+            </div>
+	</wicket:panel>
+    </body>
+</html>

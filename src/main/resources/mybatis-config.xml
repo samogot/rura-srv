@@ -8,15 +8,15 @@
       <transactionManager type="JDBC"/>
       <dataSource type="POOLED">
         <property name="driver" value="com.mysql.jdbc.Driver"/>
-        <property name="url" value="jdbc:mysql://ruranobe.ru:3306/ruranobe_db"/>
-        <property name="username" value="ruranobe_db"/>
-        <property name="password" value="7mNx8fOd"/>
+        <property name="url" value="jdbc:mysql://ruranobe.ru:3306/ruranobe"/>
+        <property name="username" value="ruranobe"/>
+        <property name="password" value="NcMvhRDum5WNS4cT"/>
       </dataSource>
     </environment>
   </environments>
   <mappers>
-    <mapper resource="ru/ruranobe/mybatis/mappers/SeriesMapper.xml"/>
-    <mapper resource="ru/ruranobe/mybatis/mappers/ChaptersMapper.xml"/>
+    <!--mapper resource="ru/ruranobe/mybatis/mappers/SeriesMapper.xml"/>
+    <mapper resource="ru/ruranobe/mybatis/mappers/ChaptersMapper.xml"/-->
     <mapper resource="ru/ruranobe/mybatis/mappers/UsersMapper.xml"/>
   </mappers>
 </configuration>

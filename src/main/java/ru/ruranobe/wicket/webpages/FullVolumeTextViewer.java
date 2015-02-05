@@ -31,7 +31,7 @@ public class FullVolumeTextViewer extends WebPage
     {
         if (parameters.getNamedKeys().size() != 1)
         {
-            throw redirectTo404;
+            throw REDIRECT_TO_404;
         }
 
         String seriesUrl = parameters.getNamedKeys().iterator().next();
@@ -45,7 +45,7 @@ public class FullVolumeTextViewer extends WebPage
         
         if (series == null)
         {
-            throw redirectTo404;
+            throw REDIRECT_TO_404;
         }
         
         ChaptersMapper chaptersMapper = session.getMapper(ChaptersMapper.class);
@@ -53,7 +53,7 @@ public class FullVolumeTextViewer extends WebPage
         
         if (chapter == null)
         {
-            throw redirectTo404;
+            throw REDIRECT_TO_404;
         }
         
         session.close();
@@ -91,5 +91,5 @@ public class FullVolumeTextViewer extends WebPage
         });
     }
     
-    private static final RedirectToUrlException redirectTo404 = new RedirectToUrlException("http://404");
+    private static final RedirectToUrlException REDIRECT_TO_404 = new RedirectToUrlException("http://404");
 }

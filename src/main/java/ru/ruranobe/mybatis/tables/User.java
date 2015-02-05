@@ -1,8 +1,9 @@
 package ru.ruranobe.mybatis.tables;
 
-import java.sql.Date;
+import java.io.Serializable;
+import java.util.Date;
 
-public class User 
+public class User implements Serializable
 {
     public User()
     {
@@ -21,7 +22,7 @@ public class User
         this.email = email;
         this.emailToken = emailToken;
         this.emailTokenDate = emailTokenDate;
-        this.isEmailActivated = isEmailActivated;
+        this.emailActivated = isEmailActivated;
         this.registrationDate = registrationDate;
     }
     
@@ -95,15 +96,16 @@ public class User
         this.emailTokenDate = emailTokenDate;
     }
 
-    public boolean isIsEmailActivated()
+    public boolean isEmailActivated()
     {
-        return isEmailActivated;
+        return emailActivated;
     }
 
-    public void setIsEmailActivated(boolean isEmailActivated)
+    public void setEmailActivated(boolean emailActivated)
     {
-        this.isEmailActivated = isEmailActivated;
+        this.emailActivated = emailActivated;
     }
+
 
     public String getPass()
     {
@@ -144,6 +146,7 @@ public class User
     private String email;
     private String emailToken;
     private Date emailTokenDate;
-    private boolean isEmailActivated;
+    private boolean emailActivated;
     private Date registrationDate;
+    private static final long serialVersionUID = 1L;
 }

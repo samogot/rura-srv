@@ -2,6 +2,7 @@ package ru.ruranobe.wicket.components;
 
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.authentication.IAuthenticationStrategy;
+import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.StatelessForm;
@@ -9,30 +10,28 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import ru.ruranobe.wicket.LoginSession;
+import ru.ruranobe.misc.MD5;
 
-public class RuranobeSignInPanel extends Panel
+public class LoginPanel extends Panel
 {
 
-    public RuranobeSignInPanel(final String id)
+    public LoginPanel(final String id)
     {
         super(id);
-
         add(new FeedbackPanel("feedback"));
-
-        // Add sign-in form to page, passing feedback panel as
-        // validation error handler
-        add(new RuranobeSignInForm(SIGN_IN_FORM));
+        add(new LoginForm(LOGIN_FORM));
     }
 
-    protected RuranobeSignInForm getForm()
+    protected LoginForm getForm()
     {
-        return (RuranobeSignInForm) get(SIGN_IN_FORM);
+        return (LoginForm) get(LOGIN_FORM);
     }
 
     @Override
     protected void onBeforeRender()
     {
-        if (!isSignedIn())
+        if (!isLoggedIn())
         {
             IAuthenticationStrategy authenticationStrategy = getApplication()
                     .getSecuritySettings().getAuthenticationStrategy();
@@ -43,7 +42,7 @@ public class RuranobeSignInPanel extends Panel
             if ((data != null) && (data.length > 1))
             {
                 // try to sign in the user
-                if (signIn(data[0], data[1]))
+                if (login(data[0], data[1]))
                 {
                     username = data[0];
                     password = data[1];
@@ -73,7 +72,7 @@ public class RuranobeSignInPanel extends Panel
 
     public void setPassword(final String password)
     {
-        this.password = password;
+        this.password = MD5.crypt(password);
     }
 
     public String getUsername()
@@ -96,22 +95,22 @@ public class RuranobeSignInPanel extends Panel
         this.rememberMe = rememberMe;
     }
 
-    private boolean signIn(String username, String password)
+    private boolean login(String username, String password)
     {
-        return AuthenticatedWebSession.get().signIn(username, password);
+        return LoginSession.get().signIn(username, password);
     }
 
-    private boolean isSignedIn()
+    private boolean isLoggedIn()
     {
-        return AuthenticatedWebSession.get().isSignedIn();
+        return LoginSession.get().isSignedIn();
     }
 
-    protected void onSignInFailed()
+    protected void onLoginFailed()
     {
         error("Не удалось распознать введенные данные. ");
     }
 
-    protected void onSignInSucceeded()
+    protected void onLoginSucceeded()
     {
         // logon successful. Continue to the original destination
         continueToOriginalDestination();
@@ -120,14 +119,14 @@ public class RuranobeSignInPanel extends Panel
         setResponsePage(getApplication().getHomePage());
     }
 
-    public final class RuranobeSignInForm extends StatelessForm<RuranobeSignInPanel>
+    public final class LoginForm extends StatelessForm<LoginPanel>
     {
 
-        public RuranobeSignInForm(final String id)
+        public LoginForm(String id)
         {
             super(id);
 
-            setModel(new CompoundPropertyModel<RuranobeSignInPanel>(RuranobeSignInPanel.this));
+            setModel(new CompoundPropertyModel<LoginPanel>(LoginPanel.this));
 
             // Attach textfields for username and password
             add(new TextField<String>("username"));
@@ -141,7 +140,7 @@ public class RuranobeSignInPanel extends Panel
             IAuthenticationStrategy strategy = getApplication().getSecuritySettings()
                     .getAuthenticationStrategy();
 
-            if (signIn(getUsername(), getPassword()))
+            if (login(getUsername(), getPassword()))
             {
                 if (rememberMe == true)
                 {
@@ -152,11 +151,11 @@ public class RuranobeSignInPanel extends Panel
                     strategy.remove();
                 }
 
-                onSignInSucceeded();
+                onLoginSucceeded();
             }
             else
             {
-                onSignInFailed();
+                onLoginFailed();
                 strategy.remove();
             }
         }
@@ -164,7 +163,7 @@ public class RuranobeSignInPanel extends Panel
         private static final long serialVersionUID = 1L;
     }
     
-    private static final String SIGN_IN_FORM = "signInForm";
+    private static final String LOGIN_FORM = "loginForm";
     private boolean rememberMe = true;
     private String password;
     private String username;

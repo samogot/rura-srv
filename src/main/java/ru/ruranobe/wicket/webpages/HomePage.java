@@ -1,5 +1,6 @@
 package ru.ruranobe.wicket.webpages;
 
+import java.util.Collections;
 import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -27,9 +28,9 @@ public class HomePage extends WebPage
         System.out.println(sessionFactory);
         SqlSession session = sessionFactory.openSession();
         
-        SeriesMapper seriesMapper = session.getMapper(SeriesMapper.class);
+        //SeriesMapper seriesMapper = session.getMapper(SeriesMapper.class);
         
-        List<Series> seriesList = seriesMapper.getAllSeries();
+        List<Series> seriesList = Collections.EMPTY_LIST;//seriesMapper.getAllSeries();
         
         session.close();
         

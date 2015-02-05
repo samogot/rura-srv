@@ -7,7 +7,7 @@
     <select id="getUserByEmail" parameterType="String" resultType="ru.ruranobe.mybatis.tables.User">
         SELECT
             user_id as userId,
-            user_name as username,
+            username as username,
             realname,
             pass, 
             pass_recovery_token as passRecoveryToken,
@@ -15,7 +15,7 @@
             email,
             email_token as emailToken,
             email_token_date as emailTokenDate,
-            is_email_activated as isEmailActivated,
+            email_activated as emailActivated,
             registration_date as registrationDate
         FROM users
         WHERE email = #{email}
@@ -24,7 +24,7 @@
     <select id="getUserByUsername" parameterType="String" resultType="ru.ruranobe.mybatis.tables.User">
         SELECT
             user_id as userId,
-            user_name as username,
+            username as username,
             realname,
             pass, 
             pass_recovery_token as passRecoveryToken,
@@ -32,7 +32,7 @@
             email,
             email_token as emailToken,
             email_token_date as emailTokenDate,
-            is_email_activated as isEmailActivated,
+            email_activated as emailActivated,
             registration_date as registrationDate
         FROM users
         WHERE username = #{username}
@@ -41,7 +41,7 @@
     <select id="getUserByPassRecoveryToken" parameterType="String" resultType="ru.ruranobe.mybatis.tables.User">
         SELECT
             user_id as userId,
-            user_name as username,
+            username as username,
             realname,
             pass, 
             pass_recovery_token as passRecoveryToken,
@@ -49,29 +49,58 @@
             email,
             email_token as emailToken,
             email_token_date as emailTokenDate,
-            is_email_activated as isEmailActivated,
+            email_activated as emailActivated,
             registration_date as registrationDate
         FROM users
         WHERE pass_recovery_token = #{passRecoveryToken}
     </select>
-    
-    
 
-    <insert id="registerUser" parameterType="ru.ruranobe.mybatis.tables.User" useGeneratedKeys="true" keyProperty="userId">
-        INSERT INTO USERS (user_id, username, realname, pass, pass_recovery_token, pass_recovery_token_date, email, email_token, email_token_date, is_email_activated, registration_date)
-        VALUES(#{userId}, #{username}, #{realname}, #{pass}, #{passRecoveryToken}, #{passRecoveryTokenDate}, #{email}, #{emailToken}, #{emailTokenDate}, #{isEmailActivated}, #{registrationDate})
+    <select id="getUserByEmailToken" parameterType="String" resultType="ru.ruranobe.mybatis.tables.User">
+        SELECT
+            user_id as userId,
+            username as username,
+            realname,
+            pass, 
+            pass_recovery_token as passRecoveryToken,
+            pass_recovery_token_date as passRecoveryTokenDate,
+            email,
+            email_token as emailToken,
+            email_token_date as emailTokenDate,
+            email_activated as emailActivated,
+            registration_date as registrationDate
+        FROM users
+        WHERE email_token = #{emailToken}
+    </select>
+
+    <select id="signInUser" parameterType="map" resultType="ru.ruranobe.mybatis.tables.User">
+        SELECT
+            user_id as userId,
+            username as username,
+            realname,
+            pass, 
+            pass_recovery_token as passRecoveryToken,
+            pass_recovery_token_date as passRecoveryTokenDate,
+            email,
+            email_token as emailToken,
+            email_token_date as emailTokenDate,
+            email_activated as emailActivated,
+            registration_date as registrationDate
+        FROM users
+        WHERE username = #{username}
+          AND pass = #{pass}
+    </select>
+
+    <insert id="registerUser" parameterType="ru.ruranobe.mybatis.tables.User" keyProperty="userId" useGeneratedKeys="true">
+        INSERT INTO users (username, realname, pass, pass_recovery_token, pass_recovery_token_date, email, email_token, email_token_date, email_activated, registration_date)
+        VALUES(#{username}, #{realname}, #{pass}, #{passRecoveryToken}, #{passRecoveryTokenDate}, #{email}, #{emailToken}, #{emailTokenDate}, #{emailActivated}, #{registrationDate})
+        <!--selectKey keyProperty="userId" resultType="int">
+            SELECT LAST_INSERT_ID() AS userId
+        </selectKey-->
     </insert>
-
-    <insert id="registerUser" parameterType="ru.ruranobe.mybatis.tables.User" useGeneratedKeys="true" keyProperty="userId">
-        INSERT INTO USERS (user_id, username, realname, pass, pass_recovery_token, pass_recovery_token_date, email, email_token, email_token_date, is_email_activated, registration_date)
-        VALUES(#{userId}, #{username}, #{realname}, #{pass}, #{passRecoveryToken}, #{passRecoveryTokenDate}, #{email}, #{emailToken}, #{emailTokenDate}, #{isEmailActivated}, #{registrationDate})
-    </insert>
-
 
     <update id="updateUser" parameterType="ru.ruranobe.mybatis.tables.User">
         UPDATE users
         SET
-            user_id = #{userId}, 
             username = #{username}, 
             realname = #{realname}, 
             pass = #{pass}, 
@@ -80,7 +109,7 @@
             email = #{email}, 
             email_token = #{emailToken}, 
             email_token_date = #{emailTokenDate}, 
-            is_email_activated = #{isEmailActivated}, 
+            email_activated = #{emailActivated}, 
             registration_date = #{registrationDate}
         WHERE user_id = #{userId}
     </update>
@@ -91,7 +120,7 @@
    
 
 
-    <select id="getSeriesById" parameterType="int" resultType="ru.ruranobe.mybatis.tables.Series">
+    <!--select id="getSeriesById" parameterType="int" resultType="ru.ruranobe.mybatis.tables.Series">
         SELECT
             series_id as seriesId,
             name_url as nameUrl,
@@ -138,6 +167,6 @@
 
     <delete id="deleteSeries" parameterType="int">
         DELETE FROM main_series WHERE series_id = #{seriesId}
-    </delete>
+    </delete-->
     
 </mapper>

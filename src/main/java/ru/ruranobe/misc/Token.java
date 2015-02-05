@@ -1,29 +1,30 @@
-package ru.ruranobe.wicket;
+package ru.ruranobe.misc;
 
 import java.security.SecureRandom;
-import java.sql.Date;
+import java.util.Date;
 
 public class Token 
 {
- 
-    public static Token newInstance()
+    public static Token valueOf(int uniqueId, long expirationTime)
     {
-        return new Token(generateTokenValue(), generateTokenExpirationDate());
+        StringBuilder tokenValue = new StringBuilder(Integer.toHexString(uniqueId));
+        tokenValue.append(generateTokenValue(TOKEN_LENGTH - uniqueId));
+        return new Token(tokenValue.toString(), generateTokenExpirationDate(expirationTime));
     }
     
-    private static String generateTokenValue()
+    private static String generateTokenValue(int length)
     {
-        StringBuilder sb = new StringBuilder(TOKEN_LENGTH);
-        for(int i = 0; i < TOKEN_LENGTH; ++i) 
+        StringBuilder sb = new StringBuilder(length);
+        for(int i = 0; i < length; ++i) 
         {
             sb.append(ALPHABET.charAt(RANDOM.nextInt(ALPHABET.length())));
         }
         return sb.toString();
     }
-
-    private static Date generateTokenExpirationDate()
+    
+    private static Date generateTokenExpirationDate(long expirationTime)
     {
-        return new Date(System.currentTimeMillis() + EXPIRATION_IN_MILLIS);
+        return new Date(System.currentTimeMillis() + expirationTime);
     }
     
     public Date getTokenExpirationDate()
@@ -44,8 +45,7 @@ public class Token
     
     private String tokenValue;
     private Date tokenExpirationDate;
-    private static final long EXPIRATION_IN_MILLIS = 21600000L; // 6 hours
     private static final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     private static final SecureRandom RANDOM = new SecureRandom();
-    private static final int TOKEN_LENGTH = 128;
+    private static final int TOKEN_LENGTH = 64;
 }

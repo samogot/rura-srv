@@ -1,32 +1,21 @@
 package ru.ruranobe.wicket;
 
-import ru.ruranobe.wicket.webpages.HomePage;
-import ru.ruranobe.wicket.webpages.FullVolumeTextViewer;
+import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
+import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.core.request.mapper.MountedMapper;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.mapper.parameter.UrlPathPageParametersEncoder;
+import ru.ruranobe.wicket.webpages.*;
 
-/**
- * Application object for your web application.
- * If you want to run this application without deploying, run the Start class.
- * 
- * @see org.ruranobe.Start#main(String[])
- */
-public class WicketApplication extends WebApplication
+public class WicketApplication extends AuthenticatedWebApplication    		
 {
-    /**
-    * @see org.apache.wicket.Application#getHomePage()
-    */
+
     @Override
     public Class<? extends WebPage> getHomePage()
     {
         return HomePage.class;
     }
 
-    /**
-    * @see org.apache.wicket.Application#init()
-    */
     @Override
     public void init()
     {
@@ -35,8 +24,26 @@ public class WicketApplication extends WebApplication
         mount(new MountedMapper("/text", FullVolumeTextViewer.class, 
                 new UrlPathPageParametersEncoder()));
         
+        mount(new MountedMapper("/user/register", RegistrationPage.class));
+        mount(new MountedMapper("/user/login", LoginPage.class));
+        mount(new MountedMapper("/user/recover/pass", PasswordRecoveryPage.class));
+        mount(new MountedMapper("/user/recover/pass/email", EmailPasswordRecoveryPage.class));
+        mount(new MountedMapper("/user/email/activate", ActivateEmail.class));
+        
         getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
         getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
         getMarkupSettings().setStripWicketTags(true);
+    }
+
+    @Override
+    protected Class<? extends AbstractAuthenticatedWebSession> getWebSessionClass()
+    {
+        return LoginSession.class;
+    }
+
+    @Override
+    protected Class<? extends WebPage> getSignInPageClass()
+    {
+        return LoginPage.class;
     }
 }

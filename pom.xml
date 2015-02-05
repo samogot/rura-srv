@@ -114,6 +114,25 @@
 			<version>${jetty.version}</version>
 			<scope>provided</scope>
 		</dependency>
+                
+                <dependency>
+                    <groupId>javax.mail</groupId>
+                    <artifactId>mail</artifactId>
+                    <version>1.4</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.apache.wicket</groupId>
+                    <artifactId>wicket-auth-roles</artifactId>
+                    <version>6.18.0</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.apache.wicket</groupId>
+                    <artifactId>wicket-devutils</artifactId>
+                    <version>6.18.0</version>
+                </dependency>
+
 	</dependencies>
 	<build>
   		<resources>
