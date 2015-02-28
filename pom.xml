@@ -132,6 +132,12 @@
                     <artifactId>wicket-devutils</artifactId>
                     <version>6.18.0</version>
                 </dependency>
+                
+                <dependency>
+                    <groupId>com.google.gdata</groupId>
+                    <artifactId>core</artifactId>
+                    <version>1.47.1</version>
+                </dependency>
 
 	</dependencies>
 	<build>

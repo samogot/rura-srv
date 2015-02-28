@@ -1,6 +1,5 @@
 package ru.ruranobe.wicket.components;
 
-import java.util.regex.Pattern;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.StatelessForm;

@@ -2,7 +2,6 @@ package ru.ruranobe.wicket.components;
 
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.authentication.IAuthenticationStrategy;
-import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.StatelessForm;
@@ -10,8 +9,8 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
-import ru.ruranobe.wicket.LoginSession;
 import ru.ruranobe.misc.MD5;
+import ru.ruranobe.wicket.LoginSession;
 
 public class LoginPanel extends Panel
 {

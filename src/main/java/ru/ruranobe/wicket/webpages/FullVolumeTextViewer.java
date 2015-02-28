@@ -24,6 +24,7 @@ import ru.ruranobe.mybatis.mappers.ChaptersMapper;
 import ru.ruranobe.mybatis.mappers.SeriesMapper;
 import ru.ruranobe.mybatis.tables.Chapter;
 import ru.ruranobe.mybatis.tables.Series;
+import ru.ruranobe.wicket.components.AjaxOrphusBehaviour;
 
 public class FullVolumeTextViewer extends WebPage 
 {
@@ -89,6 +90,8 @@ public class FullVolumeTextViewer extends WebPage
                 response.write(html);
             }
         });
+        
+        
     }
     
     private static final RedirectToUrlException REDIRECT_TO_404 = new RedirectToUrlException("http://404");

@@ -1,9 +1,6 @@
 package ru.ruranobe.wicket.components;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Date;
-import java.util.regex.Pattern;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.markup.html.form.PasswordTextField;
@@ -119,7 +116,7 @@ public class RegistrationPanel extends Panel
             {
                 error("Введенные пароли не совпадают.");
             }
-            else if (RuranobeUtils.isPasswordSyntaxValid(password))
+            else if (!RuranobeUtils.isPasswordSyntaxValid(password))
             {
                 error("Пароль может состоять только из больших и маленьких латинских букв, а также цифр.");
             }

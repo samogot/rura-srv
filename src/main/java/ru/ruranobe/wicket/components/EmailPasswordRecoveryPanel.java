@@ -9,11 +9,11 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.util.string.Strings;
+import ru.ruranobe.misc.Email;
+import ru.ruranobe.misc.Token;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.UsersMapper;
 import ru.ruranobe.mybatis.tables.User;
-import ru.ruranobe.misc.Email;
-import ru.ruranobe.misc.Token;
 
 public class EmailPasswordRecoveryPanel extends Panel
 {

@@ -7,16 +7,21 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 import ru.ruranobe.mybatis.MybatisUtil;
-import ru.ruranobe.mybatis.mappers.SeriesMapper;
 import ru.ruranobe.mybatis.tables.Series;
+import ru.ruranobe.wicket.components.AjaxOrphusBehaviour;
+import ru.ruranobe.wicket.components.AjaxOrphusMessageDialog;
 
 public class HomePage extends WebPage 
 {
@@ -61,5 +66,18 @@ public class HomePage extends WebPage
             
         };
         add(seriesListView);
+        
+        AjaxOrphusMessageDialog ooo = new AjaxOrphusMessageDialog("orphus", null);
+        add(ooo);
+        add(new AjaxOrphusBehaviour(ooo));
     }    
+    
+    @Override
+    public void renderHead(IHeaderResponse response) 
+    {
+        response.render(JavaScriptHeaderItem.forReference(JAVASCRIPT_ORPHUS));
+    }
+    
+    private static final ResourceReference JAVASCRIPT_ORPHUS = new JavaScriptResourceReference(
+            AjaxOrphusMessageDialog.class, "orphus.js"); 
 }

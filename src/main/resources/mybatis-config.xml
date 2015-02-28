@@ -18,5 +18,6 @@
     <!--mapper resource="ru/ruranobe/mybatis/mappers/SeriesMapper.xml"/>
     <mapper resource="ru/ruranobe/mybatis/mappers/ChaptersMapper.xml"/-->
     <mapper resource="ru/ruranobe/mybatis/mappers/UsersMapper.xml"/>
+    <mapper resource="ru/ruranobe/mybatis/mappers/OrphusCommentsMapper.xml"/>
   </mappers>
 </configuration>
