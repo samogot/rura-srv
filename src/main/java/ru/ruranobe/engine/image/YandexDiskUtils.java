@@ -4,39 +4,41 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import org.apache.wicket.ajax.json.JSONException;
+import org.apache.wicket.ajax.json.JSONObject;
 
 public class YandexDiskUtils 
 {
-    public static void uploadFile(File file, String mimeType, String fileTitle, String path)
+    public static Image uploadFile(Image image)
     {
         DataOutputStream out = null;
-        FileInputStream in = null;
         try
         {
-            String uploadLink = requestLinkForUpload(path);
+            String uploadLink = requestLinkForUpload(image.getPath() + "/" + image.getTitle());
             URL url = new URL(uploadLink);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setRequestMethod("PUT");
             out = new DataOutputStream(connection.getOutputStream());
-            in = new FileInputStream(file);
-            
+             
+            InputStream in = image.getImageSource().getInputStream();
             int bytesRead;
             byte[] buffer = new byte[1024];
-            while ((bytesRead = in.read(buffer, 0, buffer.length)) > 0) 
+            while ((bytesRead = in.read(buffer, 0, buffer.length)) > 0)
             {
                 out.write(buffer, 0, bytesRead);
                 out.flush();
             }
-            
-            in.close();
-            out.close();
             
             int responseCode = connection.getResponseCode();
             if (responseCode != 201)
             {
                 throw new RuntimeException("Uploading failed. Received response code " + responseCode);
             }
+            
+            image.putPathOnImageServiceSystem(Image.ImageServiceSystem.YANDEX_DISK, 
+                    "Samogot Yandex Disk path: " + image.getPath() + "/" + image.getTitle());
+            return image;
         }
         catch (Exception ex)
         {
@@ -50,26 +52,22 @@ public class YandexDiskUtils
                 {
                     out.close();
                 }
-                if (in != null)
-                {
-                    in.close();
-                }
             }
             catch (Exception ex)
             {
                 throw new RuntimeException(ex);
             }
         }
-        
     }
     
     private static String requestLinkForUpload(String path) 
-            throws MalformedURLException, IOException
+            throws MalformedURLException, IOException, JSONException
     {
-        URL url = new URL("https://cloud-api.yandex.net/v1/disk/resources/upload?path=");
+        URL url = new URL("https://cloud-api.yandex.net/v1/disk/resources/upload/?overwrite=true&path="+path);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
         connection.setRequestMethod("GET");
+        connection.setRequestProperty("Authorization", "546c9d23e516468f8bd5d3298d8af447");
         int responseCode = connection.getResponseCode();
         
         if (responseCode == 200)
@@ -84,15 +82,17 @@ public class YandexDiskUtils
             }
             input.close();
 
-            String link = "\"href\"";
-            int fromIndex = response.toString().indexOf(link);
-            int linkStartIndex = response.indexOf("\"", fromIndex+link.length());
-            int linkEndIndex = response.indexOf("\"", linkStartIndex+1);
-            return response.substring(linkStartIndex, linkEndIndex);
+            JSONObject jsonResponse = new JSONObject(response.toString());
+            return jsonResponse.getString("href");
         }
         else
         {
             throw new RuntimeException("Irregular response code " + responseCode + " received while sending GET to " + url);
         }
+    }
+
+    static void isImagePresentOnServer(Image image)
+    {
+        
     }
 }

@@ -15,9 +15,13 @@
     </environment>
   </environments>
   <mappers>
-    <!--mapper resource="ru/ruranobe/mybatis/mappers/SeriesMapper.xml"/>
-    <mapper resource="ru/ruranobe/mybatis/mappers/ChaptersMapper.xml"/-->
     <mapper resource="ru/ruranobe/mybatis/mappers/UsersMapper.xml"/>
     <mapper resource="ru/ruranobe/mybatis/mappers/OrphusCommentsMapper.xml"/>
+    <mapper resource="ru/ruranobe/mybatis/mappers/ExternalResourcesMapper.xml"/>    
+    <mapper resource="ru/ruranobe/mybatis/mappers/ChapterImagesMapper.xml"/>
+    <mapper resource="ru/ruranobe/mybatis/mappers/ChaptersMapper.xml"/>
+    <mapper resource="ru/ruranobe/mybatis/mappers/ProjectsMapper.xml"/>    
+    <mapper resource="ru/ruranobe/mybatis/mappers/TextsMapper.xml"/>
+    <mapper resource="ru/ruranobe/mybatis/mappers/VolumesMapper.xml"/>
   </mappers>
 </configuration>

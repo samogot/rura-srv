@@ -9,46 +9,66 @@ public class Chapter implements Serializable
     {
         
     }
-    
-    public Chapter(Integer releaseId, Integer order, Integer level, String url, 
-            String title, String titleShort) 
+
+    public Chapter(Integer volumeId, Integer textId, String url, String title, Integer orderNumber, boolean published, boolean nested)
     {
-        this.releaseId = releaseId;
-        this.order = order;
-        this.level = level;
+        this.volumeId = volumeId;
+        this.textId = textId;
         this.url = url;
         this.title = title;
-        this.titleShort = titleShort;
+        this.orderNumber = orderNumber;
+        this.published = published;
+        this.nested = nested;
     }
 
-    public Integer getLevel()
+    public Integer getChapterId()
     {
-        return level;
+        return chapterId;
     }
 
-    public void setLevel(Integer level)
+    public void setChapterId(Integer chapterId)
     {
-        this.level = level;
+        this.chapterId = chapterId;
     }
 
-    public Integer getOrder()
+    public boolean isNested()
     {
-        return order;
+        return nested;
     }
 
-    public void setOrder(Integer order)
+    public void setNested(boolean nested)
     {
-        this.order = order;
+        this.nested = nested;
     }
 
-    public Integer getReleaseId()
+    public Integer getOrderNumber()
     {
-        return releaseId;
+        return orderNumber;
     }
 
-    public void setReleaseId(Integer releaseId)
+    public void setOrderNumber(Integer orderNumber)
     {
-        this.releaseId = releaseId;
+        this.orderNumber = orderNumber;
+    }
+
+    public boolean isPublished()
+    {
+        return published;
+    }
+
+    public void setPublished(boolean published)
+    {
+        this.published = published;
+    }
+
+    public Integer getTextId()
+    {
+        return textId;
+    }
+
+    public void setTextId(Integer textId)
+    {
+        this.textId = textId;
     }
 
     public String getTitle()
@@ -61,16 +81,6 @@ public class Chapter implements Serializable
         this.title = title;
     }
 
-    public String getTitleShort()
-    {
-        return titleShort;
-    }
-
-    public void setTitleShort(String titleShort)
-    {
-        this.titleShort = titleShort;
-    }
-
     public String getUrl()
     {
         return url;
@@ -81,22 +91,23 @@ public class Chapter implements Serializable
         this.url = url;
     }
 
-    public Integer getChapterId()
+    public Integer getVolumeId()
     {
-        return chapterId;
+        return volumeId;
     }
 
-    public void setChapterId(Integer chapterId)
+    public void setVolumeId(Integer volumeId)
     {
-        this.chapterId = chapterId;
+        this.volumeId = volumeId;
     }
     
     private Integer chapterId;
-    private Integer releaseId;
-    private Integer order;
-    private Integer level;
+    private Integer volumeId;
+    private Integer textId;
     private String url;
     private String title;
-    private String titleShort;
+    private Integer orderNumber;
+    private boolean published;
+    private boolean nested;
     private static final long serialVersionUID = 1L;
 }

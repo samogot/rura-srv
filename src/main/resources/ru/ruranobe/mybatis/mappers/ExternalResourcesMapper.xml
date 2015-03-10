@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 	   
-<mapper namespace="ru.ruranobe.mybatis.mappers.OrphusCommentsMapper">
+<mapper namespace="ru.ruranobe.mybatis.mappers.ExternalResourcesMapper">
 
     <insert id="insert" parameterType="ru.ruranobe.mybatis.tables.ExternalResource">
         INSERT INTO external_resource (resource_id, user_id, mime_type, url, title, uploaded_when)

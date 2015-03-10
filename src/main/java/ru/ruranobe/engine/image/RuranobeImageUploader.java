@@ -2,22 +2,21 @@ package ru.ruranobe.engine.image;
 
 public class RuranobeImageUploader implements ImageUploader
 {
-
-    @Override
-    public String uploadImage()
+    
+    public RuranobeImageUploader(Image image)
     {
-        YandexDiskUtils.uploadFile(null, null, null, null);
-        return PicasaUtils.uploadImage(null, null, null, null);       
-    }
-
-    public static RuranobeImageUploader getInstance()
-    {
-        return RURANOBE_IMAGE_UPLOADER;
-    }
-
-    private RuranobeImageUploader()
-    {        
+        this.image = image;
     }
     
-    private static final RuranobeImageUploader RURANOBE_IMAGE_UPLOADER = new RuranobeImageUploader();
+    @Override
+    public Image uploadImage(Image image)
+    {
+        YandexDiskUtils.uploadFile(image);
+        image.getImageSource().rewind();
+        PicasaUtils.uploadImage(image);
+        image.getImageSource().close();
+        return image;
+    }
+    
+    private final Image image;
 }

@@ -2,10 +2,8 @@ package ru.ruranobe.wicket.webpages;
 
 import java.io.*;
 import java.net.URISyntaxException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.ibatis.session.SqlSession;
@@ -16,15 +14,11 @@ import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.flow.RedirectToUrlException;
-import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import ru.ruranobe.engine.wiki.parser.WikiParser;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.ChaptersMapper;
-import ru.ruranobe.mybatis.mappers.SeriesMapper;
 import ru.ruranobe.mybatis.tables.Chapter;
-import ru.ruranobe.mybatis.tables.Series;
-import ru.ruranobe.wicket.components.AjaxOrphusBehaviour;
 
 public class FullVolumeTextViewer extends WebPage 
 {
@@ -41,13 +35,13 @@ public class FullVolumeTextViewer extends WebPage
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
         SqlSession session = sessionFactory.openSession();
         
-        SeriesMapper seriesMapper = session.getMapper(SeriesMapper.class);
+        /*SeriesMapper seriesMapper = session.getMapper(SeriesMapper.class);
         Series series = seriesMapper.getSeriesByUrl(seriesUrl);
         
         if (series == null)
         {
             throw REDIRECT_TO_404;
-        }
+        }*/
         
         ChaptersMapper chaptersMapper = session.getMapper(ChaptersMapper.class);
         Chapter chapter = chaptersMapper.getChapterByUrl(volumeUrl);

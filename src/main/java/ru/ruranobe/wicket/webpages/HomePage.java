@@ -19,7 +19,6 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import ru.ruranobe.mybatis.MybatisUtil;
-import ru.ruranobe.mybatis.tables.Series;
 import ru.ruranobe.wicket.components.AjaxOrphusBehaviour;
 import ru.ruranobe.wicket.components.AjaxOrphusMessageDialog;
 
@@ -33,13 +32,15 @@ public class HomePage extends WebPage
         System.out.println(sessionFactory);
         SqlSession session = sessionFactory.openSession();
         
+        add(new Image("headerImage", new PackageResourceReference(getClass(), "header-m.png")));
+        
         //SeriesMapper seriesMapper = session.getMapper(SeriesMapper.class);
         
-        List<Series> seriesList = Collections.EMPTY_LIST;//seriesMapper.getAllSeries();
+      /*  List<Series> seriesList = Collections.EMPTY_LIST;//seriesMapper.getAllSeries();
         
         session.close();
         
-        add(new Image("headerImage", new PackageResourceReference(getClass(), "header-m.png")));
+        
         
         ListView<Series> seriesListView = new ListView<Series> ("seriesListView", seriesList)
         {
@@ -65,7 +66,7 @@ public class HomePage extends WebPage
             }
             
         };
-        add(seriesListView);
+        add(seriesListView);*/
         
         AjaxOrphusMessageDialog ooo = new AjaxOrphusMessageDialog("orphus", null);
         add(ooo);

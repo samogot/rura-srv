@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 	   
-<mapper namespace="ru.ruranobe.mybatis.mappers.SeriesMapper">
+<mapper namespace="ru.ruranobe.mybatis.mappers.ProjectsMapper">
 
-    <select id="getSeriesById" parameterType="int" resultType="ru.ruranobe.mybatis.tables.Series">
+    <!--select id="getSeriesById" parameterType="int" resultType="ru.ruranobe.mybatis.tables.Series">
         SELECT
             series_id as seriesId,
             name_url as nameUrl,
@@ -51,6 +51,6 @@
 
     <delete id="deleteSeries" parameterType="int">
         DELETE FROM main_series WHERE series_id = #{seriesId}
-    </delete>
-    
+    </delete-->
+
 </mapper>

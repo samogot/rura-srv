@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	   
+<mapper namespace="ru.ruranobe.mybatis.mappers.VolumesMapper">
+
+    <select id="getVolumeByUrl" parameterType="String" resultType="ru.ruranobe.mybatis.tables.Volume">
+        SELECT
+            volume_id as volumeId,
+            project_id as projectId,
+            url,
+            name_file as nameFile,
+            name_title as nameTitle,
+            name_jp as nameJp,
+            name_en as nameEn,
+            name_ru as nameRu,
+            name_short as nameShort,
+            order_number as orderNumber,
+            author,
+            illustrator,
+            release_date as releaseDate,
+            ISBN as isbn,
+            external_url as externalUrl,
+            annotation
+        FROM volumes
+        WHERE url = #{email}
+    </select>
+
+</mapper>

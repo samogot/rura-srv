@@ -133,13 +133,48 @@
                     <version>6.18.0</version>
                 </dependency>
                 
+                <!-- Dirty hacks. All hail Google Picassa API. 
+                     Just for convenience. Installed into local maven repository
+                     this libs serves only as a help to NetBeans. (no error msg etc.)-->
                 <dependency>
-                    <groupId>com.google.gdata</groupId>
-                    <artifactId>core</artifactId>
-                    <version>1.47.1</version>
+                    <groupId>gdata.photos</groupId>
+                    <artifactId>gdata.photos</artifactId>
+                    <version>2.0</version>
+                    <scope>system</scope>
+                    <systemPath>C:/Users/Viktor/Downloads/gdata-samples.java-1.47.1/gdata/java/lib/gdata-photos-2.0.jar</systemPath>
+                </dependency>
+                
+                <dependency>
+                    <groupId>gdata.photos2</groupId>
+                    <artifactId>gdata.photos2</artifactId>
+                    <version>2.0</version>
+                    <scope>system</scope>
+                    <systemPath>C:/Users/Viktor/Downloads/gdata-samples.java-1.47.1/gdata/java/lib/gdata-photos-meta-2.0.jar</systemPath>
                 </dependency>
 
-	</dependencies>
+                <dependency>
+                    <groupId>gdata.photos3</groupId>
+                    <artifactId>gdata.photos3</artifactId>
+                    <version>1.0</version>
+                    <scope>system</scope>
+                    <systemPath>C:/Users/Viktor/Downloads/gdata-samples.java-1.47.1/gdata/java/lib/gdata-core-1.0.jar</systemPath>
+                </dependency>
+
+                <dependency>
+                    <groupId>gdata.photos4</groupId>
+                    <artifactId>gdata.photos4</artifactId>
+                    <version>1.0</version>
+                    <scope>system</scope>
+                    <systemPath>C:/Users/Viktor/Downloads/gdata-samples.java-1.47.1/gdata/java/lib/gdata-media-1.0.jar</systemPath>
+                </dependency>
+                
+                <dependency>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                    <version>18.0</version>
+                </dependency>
+
+        </dependencies>
 	<build>
   		<resources>
 			<resource>
@@ -216,6 +251,20 @@
 					<wtpversion>${wtp.version}</wtpversion>
 				</configuration>
 			</plugin>
+                        <!-- Dirty hacks. All hail Google Picassa API. -->
+                        <plugin> 
+                            <groupId>org.apache.maven.plugins</groupId> 
+                            <artifactId>maven-war-plugin</artifactId> 
+                            <version>2.0.2</version> 
+                            <configuration> 
+                            <webResources> 
+                                <resource> 
+                                <directory>C:/Users/Viktor/Downloads/gdata-samples.java-1.47.1/gdata/java/lib</directory> 
+                                <targetPath>WEB-INF/lib</targetPath> 
+                                </resource> 
+                            </webResources> 
+                            </configuration> 
+                        </plugin> 
 		</plugins>
 	</build>
 

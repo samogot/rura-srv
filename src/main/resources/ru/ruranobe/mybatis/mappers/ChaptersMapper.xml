@@ -4,7 +4,35 @@
 	   
 <mapper namespace="ru.ruranobe.mybatis.mappers.ChaptersMapper">
 
-    <select id="getChaptersByReleaseId" parameterType="int" resultType="ru.ruranobe.mybatis.tables.Chapter">
+    <select id="getChaptersByVolumeId" parameterType="int" resultType="ru.ruranobe.mybatis.tables.Chapter">
+        SELECT
+            chapter_id as chapterId,
+            volume_id as volumeId,
+            text_id as textId,
+            url,
+            title,
+            order_number as orderNumber,
+            published,
+            nested
+        FROM chapters
+        WHERE volume_id = #{volumeId}
+    </select>
+    
+    <select id="getChaptersByUrl" parameterType="String" resultType="ru.ruranobe.mybatis.tables.Chapter">
+        SELECT
+            chapter_id as chapterId,
+            volume_id as volumeId,
+            text_id as textId,
+            url,
+            title,
+            order_number as orderNumber,
+            published,
+            nested
+        FROM chapters
+        WHERE url = #{url}
+    </select>
+
+    <!--select id="getChaptersByReleaseId" parameterType="int" resultType="ru.ruranobe.mybatis.tables.Chapter">
         SELECT
             chapter_id as chapterId,
             release_id as releaseId,
@@ -28,16 +56,17 @@
             title_short as titleShort
         FROM main_chapter
         WHERE url = #{url} limit 1
-    </select>
+    </select-->
     
     <resultMap type="ru.ruranobe.mybatis.tables.Chapter" id="ChaptersResult">
         <id property="chapterId" column="chapter_id"/>
-        <result property="releaseId" column="release_id"/>
-        <result property="order" column="order"/>
-        <result property="level" column="level"/>
+        <result property="volumeId" column="volume_id"/>
+        <result property="text_id" column="textId"/>
         <result property="url" column="url"/>
         <result property="title" column="title"/>
-        <result property="titleShort" column="title_short"/>
+        <result property="order_number" column="orderNumber"/>
+        <result property="published" column="published"/>
+        <result property="nested" column="nested"/>
     </resultMap>
 
 </mapper>
