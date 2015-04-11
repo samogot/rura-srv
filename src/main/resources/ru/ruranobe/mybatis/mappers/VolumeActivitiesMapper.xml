@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	   
+<mapper namespace="ru.ruranobe.mybatis.mappers.VolumeActivitiesMapper">
+    
+    <select id="getActivityById" parameterType="int" resultMap="VolumeActivityResult">
+        SELECT *
+        FROM volume_activities
+        WHERE activity_id = #{activityId}
+    </select>
+    
+    <resultMap type="ru.ruranobe.mybatis.tables.VolumeActivity" id="VolumeActivityResult">
+        <id property="activityId" column="activity_id"/>
+        <result property="activityName" column="activity_name"/>
+    </resultMap>
+    
+</mapper>

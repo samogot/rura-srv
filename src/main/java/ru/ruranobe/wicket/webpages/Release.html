@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+
+<wicket:extend>
+    <div class="container">
+                    <div class="leftColumn">
+                            <main class="content">
+<div class="h3"><span wicket:id="volumeTitle"/></div>
+                    <div class="releaseImg pull-left">
+<img wicket:id="volumeImg"/>
+                        <div class="nextVolume">
+<div class="previous text-center"><a wicket:id="prevUrl"><i class="fa fa-chevron-left"></i>&nbsp;<span wicket:id="prevShortName"/></a></div>
+<div class="text-center next"><a wicket:id="nextUrl"><span wicket:id="nextShortName"/>&nbsp;<i class="fa fa-chevron-right"></i></a></div>
+                        </div>
+                    </div>
+                    <div class="aboutRelease">
+                        <div class="h4">Информация</div>
+<div><span class="bold">Серия: </span><a wicket:id="projectUrl"/></div>
+<div><span class="bold">Название: </span><span wicket:id="volumeName"/></div>
+<div><span class="bold">Автор: </span><span wicket:id="volumeAuthor"/></div>
+<div><span class="bold">Иллюстратор: </span><span wicket:id="volumeIllustrator"/></div>
+<div><span class="bold">ISBN: </span><a wicket:id="volumeIsbn"/></div>
+<div><span class="bold">Статус перевода: </span><span wicket:id="volumeStatus"/></div>
+<div class="h4">Перевод</div>
+<wicket:container wicket:id="volumeReleaseActivitiesView">
+    <div><span class="bold" wicket:id="activityName"/><span wicket:id="teamMember"/></div>
+</wicket:container>
+<div class="h4">Аннотация</div>
+<div class="annotation">
+<span wicket:id="volumeAnnotation"/>
+</div>
+                    </div>
+                    <div class="h3">Читать</div>
+                    <div class="read">
+                        <a href="#"><div class="bold">Читать весь текст</div></a>
+
+<wicket:container wicket:id="chaptersView"><a wicket:id="chapterLink"><div><span wicket:id="chapterName"/></div></a></wicket:container>
+<!--a href="#"><div>Начальные иллюстрации</div></a>
+                        <a href="#"><div>Пролог</div></a>
+                        <a href="#"><div class="italic bold">Часть 1. Чёрный мечник</div></a>
+                        <a href="#"><div>Глава 1</div></a>
+                        <a href="#"><div>Глава 2</div></a>
+                        <a href="#"><div>Глава 3</div></a>
+                        <a href="#"><div class="italic bold">Часть 2. Тепло сердца</div></a>
+                        <a href="#"><div>Глава 1</div></a>
+                        <a href="#"><div class="red">Глава 2</div></a>
+                        <a href="#"><div class="red">Глава 3</div></a>
+                        <a href="#"><div class="red">Глава 4</div></a>
+                        <a href="#"><div class="italic bold">Часть 3. Девочка утренней росы</div></a>
+                        <a href="#"><div class="red">Глава 1</div></a-->
+                    </div>
+                    <h3 class="h3">Комментарии</h3>
+                    <p>
+                        <span class="color110">На сайте РуРанобэ приветствуются <span class="bold">все комментарий</span>. Если вы не хотите быть анонимным, <a href="#">зарегистрируйтесь</a> или <a href="#">войдите</a>.</span>
+                    </p>
+                    <div class="input-group input-group-lg sharp" style="margin-bottom:40px;">
+                        <textarea type="text" class="form-control" placeholder="Введите комментарии" rows="3"></textarea>
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="button" style="height:85px; ">Отправить</button>
+                        </span>
+                    </div>   
+                    <div class="comments">
+                        <div class="comment">
+                            <div class="avatar"><div class=""><img src="#" width="80" height="80"></div></div>
+                            <div style="margin-left: 90px;">
+                                <div class="name pull-left bold">Анонимный участник №1</div>
+                                <div class="timeAgo">2 дня назад</div>
+                                <div class="commentText">
+                                    <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Earum nam reiciendis molestias itaque, excepturi aut error quam necessitatibus! Voluptate et veniam sed? Cupiditate omnis, aut unde aliquid blanditiis, nam in.</div>
+                                    <div>Minus voluptates repellat sapiente quam! Officia explicabo expedita aut blanditiis quibusdam, natus voluptatem libero eaque magnam molestiae unde neque, repellendus! Fugit ipsum voluptates quas vero vel dolore quisquam mollitia consequatur?</div>
+                                </div>
+                                <a href="#" class="commentAnswer bold">Ответить</a>
+                                <div class="comment">
+                                    <div class="avatar"><div class=""><img src="#" width="80" height="80"></div></div>
+                                    <div style="margin-left: 90px;">
+                                        <div class="name pull-left bold">Анонимный участник №1</div>
+                                        <div class="timeAgo">2 дня назад</div>
+                                        <div class="commentText">
+                                            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Earum nam reiciendis molestias itaque, excepturi aut error quam necessitatibus! Voluptate et veniam sed? Cupiditate omnis, aut unde aliquid blanditiis, nam in.</div>
+                                            <div>Minus voluptates repellat sapiente quam! Officia explicabo expedita aut blanditiis quibusdam, natus voluptatem libero eaque magnam molestiae unde neque, repellendus! Fugit ipsum voluptates quas vero vel dolore quisquam mollitia consequatur?</div>
+                                        </div>
+                                        <a href="#" class="commentAnswer bold">Ответить</a>
+                                    </div>
+                                </div><!-- Конец ответа на комментарий -->
+                            </div>
+                        </div><!-- Конец комментария -->
+                        <div class="comment">
+                            <div class="avatar"><div class=""><img src="#" width="80" height="80"></div></div>
+                            <div style="margin-left: 90px;">
+                                <div class="name pull-left bold">Анонимный участник №1</div>
+                                <div class="timeAgo">2 дня назад</div>
+                                <div class="commentText">
+                                    <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Earum nam reiciendis molestias itaque, excepturi aut error quam necessitatibus! Voluptate et veniam sed? Cupiditate omnis, aut unde aliquid blanditiis, nam in.</div>
+                                    <div>Minus voluptates repellat sapiente quam! Officia explicabo expedita aut blanditiis quibusdam, natus voluptatem libero eaque magnam molestiae unde neque, repellendus! Fugit ipsum voluptates quas vero vel dolore quisquam mollitia consequatur?</div>
+                                </div>
+                                <a href="#" class="commentAnswer bold">Ответить</a>
+                                <div class="comment">
+                                    <div class="avatar"><div class=""><img src="#" width="80" height="80"></div></div>
+                                    <div style="margin-left: 90px;">
+                                        <div class="name pull-left bold">Анонимный участник №1</div>
+                                        <div class="timeAgo">2 дня назад</div>
+                                        <div class="commentText">
+                                            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Earum nam reiciendis molestias itaque, excepturi aut error quam necessitatibus! Voluptate et veniam sed? Cupiditate omnis, aut unde aliquid blanditiis, nam in.</div>
+                                            <div>Minus voluptates repellat sapiente quam! Officia explicabo expedita aut blanditiis quibusdam, natus voluptatem libero eaque magnam molestiae unde neque, repellendus! Fugit ipsum voluptates quas vero vel dolore quisquam mollitia consequatur?</div>
+                                        </div>
+                                        <a href="#" class="commentAnswer bold">Ответить</a>
+                                    </div>
+                                </div><!-- Конец ответа на комментарий -->
+                            </div>
+                        </div><!-- Конец комментария -->
+                    </div>
+                </main>
+                    </div>
+                    <aside class="right-sidebar">
+                <div class="miniSearch">
+                    <input type="text" placeholder="Поиск..."><button><i class="fa fa-search"></i></button>
+                </div>
+                <div style="color:rgb(77,77,77);">
+                    <i class="fa fa-chevron-down pull-left" style='margin-top: 2px;'></i>
+                    <div class="h4">Действия</div>
+                </div>
+                <div class="actions">
+                    <div style="background-image:url(img/actions/edit.png)"><a href="#">Править</a></div>
+                    <div style="background-image:url(img/actions/history.png)"><a href="#">История</a></div>
+                    <div style="background-image:url(img/actions/remove.png)"><a href="#">Удалить</a></div>
+                    <div style="background-image:url(img/actions/rename.png)"><a href="#">Переименовать</a></div>
+                    <div style="background-image:url(img/actions/protect.png)"><a href="#">Защитить</a></div>
+                    <div style="background-image:url(img/actions/track.png)"><a href="#">Следить</a></div>
+                    <div style="background-image:url(img/actions/edit_base.png)"><a href="#">Править базу</a></div>
+                </div>
+                <div style="color:rgb(77,77,77);">
+                    <i class="fa fa-chevron-down pull-left" style='margin-top: 2px;'></i>
+                    <div class="h4">Скачать том</div>
+                </div>
+                <div class="actions">
+                    <div style="background-image:url(img/list.png);padding: 10px 0px 10px 35px;">
+                        <a href="#" class="download bold">Скачать fb2 </a><span class="bold">(4.4 мб)</span>
+                        <div class="italic">С иллюстрациями</div>                    
+                    </div>
+                    <div style="background-image:url(img/list.png);padding: 10px 0px 10px 35px;">
+                        <a href="#" class="download bold">Скачать fb2 </a><span class="bold">(543 кб)</span>
+                        <div class="italic">Без иллюстраций</div>                    
+                    </div>
+                </div>
+                <div style="color:rgb(77,77,77);">
+                    <i class="fa fa-chevron-down pull-left" style='margin-top: 2px;'></i>
+                    <div class="h4">Обновления</div>
+                </div>
+                <div class="actions">
+<wicket:container wicket:id="updatesView">
+    <div wicket:id="iconDivClass"><a wicket:id="updateLink"></a></div>
+</wicket:container>   
+<span><a wicket:id="moreUpdates" class="more">Больше</a></span>                    
+                </div>
+                <div style="color:rgb(77,77,77);">
+                    <i class="fa fa-chevron-down pull-left" style='margin-top: 2px;'></i>
+                    <div class="h4">Проекты</div>
+                </div>
+                <center class="project">       
+                    <p>
+<wicket:container wicket:id="projectsView"><a wicket:id="projectLink"><img wicket:id="projectImage"/></a></wicket:container>
+                    </p>
+                </center>
+                <div style="color:rgb(77,77,77);">
+                    <i class="fa fa-chevron-down pull-left" style='margin-top: 2px;'></i>
+                    <div class="h4">Друзья</div>
+                </div>
+                <div class="poster" style="margin-right:0px !important;">
+                    <a href="#"><div class="projectBlock type2"><img src="img/friend.png"></div></a>
+                </div>
+            </aside>
+    </div>
+</wicket:extend>
+
+</body>
+</html>

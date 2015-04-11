@@ -13,13 +13,14 @@ import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.tables.Chapter;
 import ru.ruranobe.mybatis.tables.ChapterImage;
 import ru.ruranobe.mybatis.tables.Volume;
+import ru.ruranobe.wicket.webpages.base.RuraHeaderAndFooter;
 
-public class VolumeEdit extends WebPage
+public class VolumeEdit extends RuraHeaderAndFooter
 {
     
     public VolumeEdit(final PageParameters parameters)
     {
-        if (parameters.getNamedKeys().size() != 1)
+        /*if (parameters.getNamedKeys().size() != 1)
         {
             throw RuranobeUtils.REDIRECT_TO_404;
         }
@@ -45,7 +46,7 @@ public class VolumeEdit extends WebPage
         ChapterImagesMapper chapterImagesMapper = session.getMapper(ChapterImagesMapper.class);
         List<ChapterImage> chapterImages = chapterImagesMapper.getChapterImagesByVolumeId(volume.getVolumeId());
         
-        session.close();
+        session.close();*/
     }
     
 }

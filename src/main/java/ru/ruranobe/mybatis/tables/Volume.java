@@ -191,9 +191,89 @@ public class Volume implements Serializable
     {
         this.volumeId = volumeId;
     }
+
+    public boolean isAdult()
+    {
+        return adult;
+    }
+
+    public void setAdult(boolean adult)
+    {
+        this.adult = adult;
+    }
+
+    public String getVolumeStatus()
+    {
+        return volumeStatus;
+    }
+
+    public void setVolumeStatus(String volumeStatus)
+    {
+        this.volumeStatus = volumeStatus;
+    }
+
+    public String getVolumeType()
+    {
+        return volumeType;
+    }
+
+    public void setVolumeType(String volumeType)
+    {
+        this.volumeType = volumeType;
+    }
+
+    public Integer getImageFour()
+    {
+        return imageFour;
+    }
+
+    public void setImageFour(Integer imageFour)
+    {
+        this.imageFour = imageFour;
+    }
+
+    public Integer getImageOne()
+    {
+        return imageOne;
+    }
+
+    public void setImageOne(Integer imageOne)
+    {
+        this.imageOne = imageOne;
+    }
+
+    public Integer getImageThree()
+    {
+        return imageThree;
+    }
+
+    public void setImageThree(Integer imageThree)
+    {
+        this.imageThree = imageThree;
+    }
+
+    public Integer getImageTwo()
+    {
+        return imageTwo;
+    }
+
+    public void setImageTwo(Integer imageTwo)
+    {
+        this.imageTwo = imageTwo;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Volume{" + "volumeId=" + volumeId + ", projectId=" + projectId + ", url=" + url + ", nameFile=" + nameFile + ", nameTitle=" + nameTitle + ", nameJp=" + nameJp + ", nameEn=" + nameEn + ", nameRu=" + nameRu + ", nameShort=" + nameShort + ", orderNumber=" + orderNumber + ", author=" + author + ", illustrator=" + illustrator + ", releaseDate=" + releaseDate + ", isbn=" + isbn + ", externalUrl=" + externalUrl + ", annotation=" + annotation + ", volumeStatus=" + volumeStatus + ", volumeType=" + volumeType + ", adult=" + adult + '}';
+    }
     
     private Integer volumeId;
     private Integer projectId;
+    private Integer imageOne;
+    private Integer imageTwo;
+    private Integer imageThree;
+    private Integer imageFour;
     private String url;
     private String nameFile;
     private String nameTitle;
@@ -208,5 +288,54 @@ public class Volume implements Serializable
     private String isbn;
     private String externalUrl;
     private String annotation;
+    private String volumeStatus;
+    private String volumeType;
+    private boolean adult;
     private static final long serialVersionUID = 1L;
+    
+    /* Optional */
+    private String prevNameShort;
+    private String prevUrl;
+    private String nextNameShort;
+    private String nextUrl;
+
+    public String getNextNameShort()
+    {
+        return nextNameShort;
+    }
+
+    public void setNextNameShort(String nextNameShort)
+    {
+        this.nextNameShort = nextNameShort;
+    }
+
+    public String getNextUrl()
+    {
+        return nextUrl;
+    }
+
+    public void setNextUrl(String nextUrl)
+    {
+        this.nextUrl = nextUrl;
+    }
+
+    public String getPrevNameShort()
+    {
+        return prevNameShort;
+    }
+
+    public void setPrevNameShort(String prevNameShort)
+    {
+        this.prevNameShort = prevNameShort;
+    }
+
+    public String getPrevUrl()
+    {
+        return prevUrl;
+    }
+
+    public void setPrevUrl(String prevUrl)
+    {
+        this.prevUrl = prevUrl;
+    }
 }

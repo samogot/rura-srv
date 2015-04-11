@@ -4,9 +4,30 @@
 	   
 <mapper namespace="ru.ruranobe.mybatis.mappers.ExternalResourcesMapper">
 
-    <insert id="insert" parameterType="ru.ruranobe.mybatis.tables.ExternalResource">
-        INSERT INTO external_resource (resource_id, user_id, mime_type, url, title, uploaded_when)
-        VALUES(#{resourceId}, #{userId}, #{mimeType}, #{url}, #{title}, #{uploadedWhen})
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache">
+        <property name="timeToIdleSeconds" value="3600"/><!--1 hour-->
+        <property name="timeToLiveSeconds" value="3600"/><!--1 hour-->
+        <property name="maxEntriesLocalHeap" value="1000"/>
+        <property name="maxEntriesLocalDisk" value="10000000"/>
+        <property name="memoryStoreEvictionPolicy" value="LRU"/>
+    </cache>
+
+    <insert id="insertExternalResource" parameterType="ru.ruranobe.mybatis.tables.ExternalResource" keyProperty="resourceId" useGeneratedKeys="true">
+        INSERT INTO external_resources ( user_id, mime_type, url, title, uploaded_when)
+        VALUES(#{userId}, #{mimeType}, #{url}, #{title}, #{uploadedWhen})
     </insert>
+
+    <select id="getExternalResourceById" resultMap="ExternalResourceResult">
+        SELECT * FROM external_resources
+    </select>
+
+    <resultMap type="ru.ruranobe.mybatis.tables.ExternalResource" id="ExternalResourceResult">
+        <id property="resourceId" column="resource_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="mimeType" column="mime_type"/>
+        <result property="url" column="url"/>        
+        <result property="title" column="title"/>
+        <result property="uploadedWhen" column="uploaded_when"/>
+    </resultMap>
 
 </mapper>

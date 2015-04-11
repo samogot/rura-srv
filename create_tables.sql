@@ -1,11 +1,15 @@
 ﻿drop table orphus_comments;
 drop table chapter_images;
-drop table external_resources;
 drop table chapters;
 drop table volumes;
 drop table projects;
+drop table external_resources;
 drop table texts;
 drop table users;
+drop table updates;
+drop table volume_release_activities;
+drop table teams;
+drop table volume_activities;
 
 create table users
 (
@@ -43,11 +47,13 @@ create table projects
 (
   project_id int(11) primary key auto_increment,
   parent_id int(11),
+  image_id int(11),
   url varchar(16),
   title varchar(1023),
   order_number int(11),
   banner_hidden bool,
   project_hidden bool,
+  franchise text,
   annotation text
 );
 
@@ -55,6 +61,10 @@ create table volumes
 (
   volume_id int(11) primary key auto_increment,
   project_id int(11),
+  image_one int(11),
+  image_two int(11),
+  image_three int(11),
+  image_four int(11),
   url varchar(16),
   name_file varchar(255),
   name_title varchar(255),
@@ -68,6 +78,9 @@ create table volumes
   release_date date,
   ISBN varchar(16),
   external_url varchar(255),
+  volume_type varchar(255),
+  volume_status varchar(255),
+  adult bool,
   annotation text
 );
 
@@ -103,6 +116,40 @@ create table external_resources
   uploaded_when datetime
 );
 
+create table volume_activities
+(
+  activity_id   int(11) primary key auto_increment,
+  activity_name varchar(255)
+);
+
+create table teams
+(
+  team_id int(11) primary key auto_increment,
+  team_name varchar(255),
+  team_website_link varchar(255),
+  team_hidden boolean
+);
+
+create table volume_release_activities
+(
+  release_activity_id  int(11) primary key auto_increment,
+  volume_id            int(11),
+  team_id              int(11),
+  activity_id          int(11),
+  assignee_team_member varchar(255)
+);
+
+create table updates
+(
+  update_id int(11) primary key auto_increment, 
+  project_id int(11),
+  volume_id int(11), 
+  chapter_id int(11), 
+  update_type varchar(255), 
+  show_time datetime, 
+  description varchar(255)
+)
+
 alter table chapter_images add constraint fk_colored_image_id foreign key (colored_image_id) references external_resources (resource_id);
 alter table chapter_images add constraint fk_non_colored_image_id foreign key (non_colored_image_id) references external_resources (resource_id);
 alter table chapter_images add constraint fk_volume_id foreign key (volume_id) references volumes (volume_id);
@@ -114,14 +161,29 @@ alter table volumes add constraint fk_project_id foreign key (project_id) refere
 alter table projects add constraint fk_parent_id foreign key (parent_id) references projects (project_id);
 alter table orphus_comments add constraint fk_chapter_id2 foreign key (chapter_id) references chapters (chapter_id);
 alter table orphus_comments add primary key (chapter_id, paragraph, start_offset, original_text, replacement_text);
+alter table projects add constraint fk_image_id foreign key (image_id) references external_resources (resource_id);
+
+alter table updates add constraint fk_u_project_id foreign key (project_id) references projects (project_id);
+alter table updates add constraint fk_u_volume_id foreign key (volume_id) references volumes (volume_id);
+alter table updates add constraint fk_u_chapter_id foreign key (chapter_id) references chapters (chapter_id);
 
 alter table chapters add constraint chapter_unique_url UNIQUE (url);
 alter table volumes add constraint volume_unique_url UNIQUE (url);
-alter table projects add constraint prject_unique_url UNIQUE (url);
 
+alter table volume_release_activities add constraint fk_ra_volume_id foreign key (volume_id) references volumes(volume_id);
+alter table volume_release_activities add constraint fk_team_id foreign key (team_id) references teams(team_id);
+alter table volume_release_activities add constraint fk_activity_id foreign key (activity_id) references volume_activities(activity_id);
+/*alter table projects add constraint prject_unique_url UNIQUE (url); project url is not unique*/
+
+ALTER TABLE updates ADD INDEX (project_id);
+ALTER TABLE updates ADD INDEX (project_id, show_time);
+ALTER TABLE updates ADD INDEX (show_time);
+ALTER TABLE updates ADD INDEX (update_type);
+ALTER TABLE updates ADD INDEX (update_type, show_time);
 
 
 /* Insert data for testing. Only for development purposes. */
+/*
 insert into projects (project_id, parent_id, url, title, order_number, banner_hidden, project_hidden, annotation) 
 values (1, null, 'mknr', 'mahouka', 1, 0, 0, 'Какая-то глупая аннотация');
 
@@ -180,4 +242,4 @@ values(1,'==Глава 0==
 Даже если они родные брат и сестра.', null);
 
 insert into chapters (chapter_id, volume_id, text_id, url, title, order_number, published, nested)
-values (1,1,1,'ch1', 'Неожиданная глава', 1, 1, 1);
+values (1,1,1,'ch1', 'Неожиданная глава', 1, 1, 1);*/

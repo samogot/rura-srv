@@ -4,18 +4,19 @@
 	   
 <mapper namespace="ru.ruranobe.mybatis.mappers.ChaptersMapper">
 
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache">
+        <property name="timeToIdleSeconds" value="3600"/><!--1 hour-->
+        <property name="timeToLiveSeconds" value="3600"/><!--1 hour-->
+        <property name="maxEntriesLocalHeap" value="1000"/>
+        <property name="maxEntriesLocalDisk" value="10000000"/>
+        <property name="memoryStoreEvictionPolicy" value="LRU"/>
+    </cache>
+    
     <select id="getChaptersByVolumeId" parameterType="int" resultType="ru.ruranobe.mybatis.tables.Chapter">
-        SELECT
-            chapter_id as chapterId,
-            volume_id as volumeId,
-            text_id as textId,
-            url,
-            title,
-            order_number as orderNumber,
-            published,
-            nested
+        SELECT *
         FROM chapters
         WHERE volume_id = #{volumeId}
+        order by order_number asc
     </select>
     
     <select id="getChaptersByUrl" parameterType="String" resultType="ru.ruranobe.mybatis.tables.Chapter">

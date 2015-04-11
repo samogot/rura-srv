@@ -42,6 +42,14 @@ public class WicketApplication extends AuthenticatedWebApplication
 
     private void mountPages()
     {
+        mount(new MountedMapper("/diary", Diary.class));
+        mount(new MountedMapper("/projects", FullProjects.class));
+        mount(new MountedMapper("/faq", Faq.class));
+        mount(new MountedMapper("/project", Project.class, new PageParameterEncoder()));
+        mount(new MountedMapper("/release", Release.class, new PageParameterEncoder()));
+        mount(new MountedMapper("/updates", Updates.class));
+        
+        
         mount(new MountedMapper("/text", FullVolumeTextViewer.class, 
                 new UrlPathPageParametersEncoder()));
         
@@ -51,7 +59,7 @@ public class WicketApplication extends AuthenticatedWebApplication
         mount(new MountedMapper("/user/recover/pass/email", EmailPasswordRecoveryPage.class));
         mount(new MountedMapper("/user/email/activate", ActivateEmail.class));
         mount(new MountedMapper("/upload/image", UploadImage.class));
-        mount(new MountedMapper("/admin/volume", VolumeEdit.class, new UrlPathPageParametersEncoder()));
+        mount(new MountedMapper("/admin/volume", VolumeEdit.class, new PageParameterEncoder()));
     }
     
     @Override

@@ -1,14 +1,89 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>index</title>
-    <link rel="stylesheet" href="css/rura_styles.css">
-    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 </head>
 <body>
-    
+
+
+<wicket:extend>
+    <div class="container">
+                    <div class="leftColumn">
+                            <main class="content">
+<div class="h3"><span wicket:id="projectTitle"/></div>
+                    <div class="releaseImg pull-left">
+<img wicket:id="projectMainImage"/>
+                    </div>
+                    <div class="aboutRelease">
+                        <div class="h4">Информация</div>
+<div><span class="bold">Название: </span><span wicket:id="projectName"/></div>
+<div><span class="bold">Автор: </span><span wicket:id="projectAuthor"/></div>
+<div><span class="bold">Иллюстратор: </span><span wicket:id="projectIllustrator"/></div>
+                        <div class="h4">Франшиза</div>
+                        <div>
+<span wicket:id="projectFranchise"/>
+                        </div>
+                        <div class="h4">Другие материалы</div>
+                        <div><a href="#">Хронология событий</a></div>
+                        <div class="h4">Описание</div>
+                        <div class="annotation">
+<span wicket:id="projectAnnotation"/>
+                        </div>
+                    </div>
+                    
+                    <wicket:container wicket:id="volumeTypeRepeater">
+                        <div class="h3 project"><span wicket:id="volumeType"/></div>
+                        <div class="ranobeList">
+                            <wicket:container wicket:id="volumeRepeater">
+                                <div>
+                                    <div class="pull-left bold"><span wicket:id="volumeName"/></div>
+                                    <a wicket:id="volumeLink"/>
+                                    <!--span wicket:id="volumeStatus"/>
+                                    <span class="label label-warning">заморожен</span>
+                                    <span class="label label-danger">нет анлейта</span>
+                                    <span class="label label-success">перевод</span-->
+                                </div>
+                            </wicket:container>
+                        </div>
+                    </wicket:container>
+
+                </main>
+                    </div>
+                    <aside class="right-sidebar">
+                <div class="miniSearch">
+                    <input type="text" placeholder="Поиск..."><button><i class="fa fa-search"></i></button>
+                </div>
+                <div style="color:rgb(77,77,77);">
+                    <i class="fa fa-chevron-down pull-left" style='margin-top: 2px;'></i>
+                    <div class="h4">Обновления</div>
+                </div>
+                <div class="actions">
+<wicket:container wicket:id="updatesView">
+    <div wicket:id="iconDivClass"><a wicket:id="updateLink"></a></div>
+</wicket:container>                    
+                    <!--div style="background-image:url(img/updIcons/icon1.png)"><a href="#">Рондо - Глава 24</a></div>
+                    <div style="background-image:url(img/updIcons/icon4.png)"><a href="#">Том 15 - Ч/б иллюстрации</a></div>
+                    <div style="background-image:url(img/updIcons/icon4.png)"><a href="#">Том 15 - Начальные иллюстрации</a></div-->
+<span><a wicket:id="moreUpdates" class="more">Больше</a></span>
+                </div>
+                <div style="color:rgb(77,77,77);">
+                    <i class="fa fa-chevron-down pull-left" style='margin-top: 2px;'></i>
+                    <div class="h4">Проекты</div>
+                </div>
+                <center class="project">       
+                    <p>
+<wicket:container wicket:id="projectsView"><a wicket:id="projectLink"><img wicket:id="projectImage"/></a></wicket:container>
+                    </p>
+                </center>
+                <div style="color:rgb(77,77,77);">
+                    <i class="fa fa-chevron-down pull-left" style='margin-top: 2px;'></i>
+                    <div class="h4">Друзья</div>
+                </div>
+                <div class="poster" style="margin-right:0px !important;">
+                    <a href="#"><div class="projectBlock type2"><img src="img/friend.png"></div></a>
+                </div>
+            </aside>
+    </div>
+</wicket:extend>
+
 </body>
 </html>

@@ -4,26 +4,103 @@
 	   
 <mapper namespace="ru.ruranobe.mybatis.mappers.VolumesMapper">
 
-    <select id="getVolumeByUrl" parameterType="String" resultType="ru.ruranobe.mybatis.tables.Volume">
-        SELECT
-            volume_id as volumeId,
-            project_id as projectId,
-            url,
-            name_file as nameFile,
-            name_title as nameTitle,
-            name_jp as nameJp,
-            name_en as nameEn,
-            name_ru as nameRu,
-            name_short as nameShort,
-            order_number as orderNumber,
-            author,
-            illustrator,
-            release_date as releaseDate,
-            ISBN as isbn,
-            external_url as externalUrl,
-            annotation
-        FROM volumes
-        WHERE url = #{email}
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache">
+        <property name="timeToIdleSeconds" value="3600"/><!--1 hour-->
+        <property name="timeToLiveSeconds" value="3600"/><!--1 hour-->
+        <property name="maxEntriesLocalHeap" value="1000"/>
+        <property name="maxEntriesLocalDisk" value="10000000"/>
+        <property name="memoryStoreEvictionPolicy" value="LRU"/>
+    </cache>
+
+    <select id="getInfoByProjectId" parameterType="int" resultType="ru.ruranobe.mybatis.tables.ProjectInfo">
+        select volumesCount.`count(*)` as volumesCount,
+               volumes.author,
+               volumes.illustrator,
+               volumes.volume_status as volumeStatus
+        from 
+        (
+            select count(*)
+            from volumes
+            where project_id = #{projectId}
+        ) volumesCount, volumes
+        where volumes.project_id = #{projectId}
+        order by volume_id desc
+        limit 1
     </select>
+
+    <select id="getVolumeByUrl" parameterType="String" resultMap="VolumeResult">
+        SELECT *
+        FROM volumes
+        WHERE url = #{url}
+    </select>
+    
+    <select id="getVolumeNextPrevByUrl" parameterType="String" resultMap="VolumeResult">
+        select v.*
+             , prev_vol.name_short prev_name_short
+             , prev_vol.url prev_url
+             , next_vol.name_short next_name_short
+             , next_vol.url next_url
+        from
+        (
+            select v.*
+                 , (select max(order_number)
+                    from volumes
+                    where order_number &lt; v.order_number
+                      and project_id = v.project_id
+                    order by order_number desc 
+                    limit 1) prev_order_number
+                 , (select min(order_number)
+                    from volumes
+                    where order_number &gt; v.order_number
+                      and project_id = v.project_id
+                    order by order_number asc
+                    limit 1) next_order_number
+            from volumes v
+            where v.url = #{url}
+        ) v
+        left join volumes prev_vol
+          on v.prev_order_number = prev_vol.order_number
+         and v.project_id = prev_vol.project_id
+        left join volumes next_vol
+          on v.next_order_number = next_vol.order_number
+         and v.project_id = next_vol.project_id
+    </select>
+    
+    <select id="getVolumesByProjectId" parameterType="int" resultMap="VolumeResult">
+        SELECT *
+        FROM volumes
+        WHERE project_id = #{projectId}
+    </select>
+
+    <resultMap type="ru.ruranobe.mybatis.tables.Volume" id="VolumeResult">
+        <id property="volumeId" column="volume_id"/>
+        <result property="projectId" column="project_id"/>
+        <result property="imageOne" column="image_one"/>
+        <result property="imageTwo" column="image_two"/>
+        <result property="imageThree" column="image_three"/>
+        <result property="imageFour" column="image_four"/>
+        <result property="url" column="url"/>
+        <result property="nameFile" column="name_file"/>
+        <result property="nameTitle" column="name_title"/>
+        <result property="nameJp" column="name_jp"/>
+        <result property="nameEn" column="name_en"/>
+        <result property="nameRu" column="name_ru"/>
+        <result property="nameShort" column="name_short"/>
+        <result property="orderNumber" column="order_number"/>
+        <result property="author" column="author"/>
+        <result property="illustrator" column="illustrator"/>
+        <result property="releaseDate" column="release_date"/>
+        <result property="isbn" column="isbn"/>
+        <result property="externalUrl" column="external_url"/>
+        <result property="volumeType" column="volume_type"/>
+        <result property="volumeStatus" column="volume_status"/>
+        <result property="adult" column="adult"/>
+        <result property="annotation" column="annotation"/>
+        
+        <result property="prevUrl" column="prev_url"/>
+        <result property="prevNameShort" column="prev_name_short"/>
+        <result property="nextUrl" column="next_url"/>
+        <result property="nextNameShort" column="next_name_short"/>
+    </resultMap>
 
 </mapper>

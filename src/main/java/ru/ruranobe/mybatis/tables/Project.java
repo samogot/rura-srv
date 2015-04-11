@@ -5,9 +5,10 @@ import java.io.Serializable;
 public class Project implements Serializable
 {
 
-    public Project(Integer parentId, String url, String title, Integer orderNumber, boolean bannerHidden, boolean projectHidden, String annotation)
+    public Project(Integer parentId, Integer imageId, String url, String title, Integer orderNumber, boolean bannerHidden, boolean projectHidden, String annotation)
     {
         this.parentId = parentId;
+        this.imageId = imageId;
         this.url = url;
         this.title = title;
         this.orderNumber = orderNumber;
@@ -99,14 +100,42 @@ public class Project implements Serializable
     {
         this.url = url;
     }
+
+    public Integer getImageId()
+    {
+        return imageId;
+    }
+
+    public void setImageId(Integer imageId)
+    {
+        this.imageId = imageId;
+    }
+
+    public String getFranchise()
+    {
+        return franchise;
+    }
+
+    public void setFranchise(String franchise)
+    {
+        this.franchise = franchise;
+    }
+    
+    @Override
+    public String toString()
+    {
+        return "Project{" + "projectId=" + projectId + ", parentId=" + parentId + ", imageId=" + imageId + ", url=" + url + ", title=" + title + ", orderNumber=" + orderNumber + ", bannerHidden=" + bannerHidden + ", projectHidden=" + projectHidden + ", annotation=" + annotation + '}';
+    }
     
     private Integer projectId;
     private Integer parentId;
+    private Integer imageId;
     private String url;
     private String title;
     private Integer orderNumber;
     private boolean bannerHidden;
     private boolean projectHidden;
+    private String franchise;
     private String annotation;
     private static final long serialVersionUID = 1L;
 }

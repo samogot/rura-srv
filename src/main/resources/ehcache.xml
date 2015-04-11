@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- caching configuration -->
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="true"
+	 monitoring="autodetect" dynamicConfig="true">  
+
+    <defaultCache eternal="true" 
+                  maxEntriesLocalHeap="10000" 
+                  maxEntriesLocalDisk="1000000"
+                  timeToIdleSeconds="3600"
+                  timeToLiveSeconds="3600" 
+                  memoryStoreEvictionPolicy="LRU" 
+                  statistics="false" />
+                  
+    <cache name="ExternalResourcesInMemoryCache" 
+           eternal="true" 
+           maxEntriesLocalHeap="10000"
+           maxEntriesLocalDisk="100000" 
+           timeToIdleSeconds="3600"
+           timeToLiveSeconds="3600" 
+           memoryStoreEvictionPolicy="LFU">
+    </cache>
+    
+</ehcache>

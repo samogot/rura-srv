@@ -3,6 +3,16 @@
 }
 body {
     min-width: 340px;
+    color: rgb(77,77,77);
+}
+.clear-both {
+    clear: both;
+}
+.italic {
+    font-style: italic;
+}
+.red {
+    color: rgb(211,63,84);
 }
 /* --------------- header --------------*/
 header{
@@ -40,7 +50,11 @@ header{
     margin-top: 30px;
 }
 .btn {
-    border: 0 none;
+    border-style: none;
+}
+.btn-border {
+    border-style: solid;
+    padding: 5px 11px;
 }
 .btn:focus, .btn:active:focus, .btn.active:focus {
     outline: 0 none;
@@ -148,6 +162,9 @@ background: #F2F2F2;
 		margin:-55px auto;
 		height:75px;
 	}
+    .displayNone991 {
+        display: none;
+    }
 }
 @media (max-width: 767px){
 	.navbar-brand {
@@ -375,6 +392,12 @@ display: inline-block;
     padding-top: 10px;
     margin-right: 0.64pc;
 }
+.project > .all:hover, .updates > .all:hover,
+.project > .all:active, .updates > .all:active,
+.project > .all:focus, .updates > .all:focus {
+    text-decoration: none;
+    color: rgb(133,133,133);
+}
 .project.width220 > div > .prjBlockAbout {
     width: 220px !important;
 }
@@ -589,6 +612,7 @@ button.loginClose {
 /* --------------- updates ------------------ */
 .updSearch {
     margin-bottom: 15px;
+    line-height: 30px;
 }
 .updSearch > .bold {
     font-size: 13px;
@@ -605,7 +629,7 @@ button.loginClose {
     color: rgb(93,93,93);
     text-decoration: none !important;
 }
-.updPaginator > a > i, .disabled > i {
+.updPaginator > a > i, .disabled  a > i {
     font-size: 10px !important;
 }
 .updSearch > a.active {
@@ -641,7 +665,7 @@ button.loginClose {
 .updSearch > .fifth {
     background: rgb(242,242,242) url(../img/updIcons/icon4.png) no-repeat 10.5px;
 }
-.disabled {
+.disabled > a {
     color: rgb(193,193,193);
     text-decoration: underline;
     margin-right: 4px;
@@ -666,15 +690,18 @@ button.loginClose {
     font-size: 18px;
     position: absolute;
 }
-.list-group.select{
+/*.list-group.select{
 	max-height: 300px;
 	overflow-y: auto;
-}
+}*/
 .move.fa.fa-ellipsis-v {
 	padding: 0 5px 0 10px;
 }
 .move{
 	cursor: move;
+}
+.list-group.select .list-group-item.heading:first-child .move{
+	cursor: default;
 }
 .list-group.select .list-group-item
 {
@@ -686,24 +713,423 @@ button.loginClose {
 	padding: 3px 15px;
 	font-weight: bold;
 	border: 1px solid #dddddd;
+	-moz-user-select: -moz-none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
-.list-group-item img {
-height: 32px;
-margin: 0 auto;
+.list-group-item img, .list-group-item canvas {
+	height: 32px;
+	margin: 0 auto;
+	max-width: 50px;
 }
 a.list-group-item center {
-display: inline-block;
-width: 50px;
-margin-right: 10px;
-margin-left: 5px;
+	display: inline-block;
+	height: 32px;
+	width: 50px;
+	margin-right: 10px;
+	margin-left: 5px;
 }
 #imageform img{
-max-height: 180px;
-margin: 0 auto;
+	max-height: 180px;
+	margin: 0 auto;
 }
 #imageform .panel {
-margin-bottom: 0;
-border: none;
--webkit-box-shadow: none;
-box-shadow: none;
+	margin-bottom: 0;
+	border: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+.admin-affix.affix {
+	top: 10px;
+	left: 50%;  
+	margin-left: -124px;
+}
+@media (max-width: 767px) {
+	.admin-affix.affix {
+		right: 0;
+		left: initial;
+	}
+}
+@media (min-width: 768px) {
+	.admin-affix.affix {
+		width: 340px;
+		margin-left: -205px;
+}
+}
+@media (min-width: 992px) {
+	.admin-affix.affix {
+		width: 487px;
+		margin-left: -242px;
+	}
+}
+@media (min-width: 1200px) {
+	.admin-affix.affix {
+		width: 620px;
+		margin-left: -276px;
+	}
+}
+
+
+#imageselect{
+min-height: 340px;
+}
+.dragover #imageselect::before {
+content: 'Добавить файлы';
+position: absolute;
+top: 0px;
+bottom: 20px;
+left: 15px;
+right: 15px;
+opacity: 0.9;
+padding-top: 50px;
+background: white;
+border: 5px dashed #777;
+text-align: center;
+font-size: 30px;
+font-weight: 500;
+color: #777;
+z-index: 3;
+}
+.dragover .image-data-main::before,.dragover .image-data-color::before {
+content: 'Заменить файл';
+position: absolute;
+top: 15px;
+height: 305px;
+left: 5px;
+right: 5px;
+padding-top: 129px;
+opacity: 0.9;
+background: white;
+border: 5px dashed #777;
+text-align: center;
+font-size: 30px;
+font-weight: 500;
+color: #777;
+z-index: 3;
+}
+.dragover .image-data-main.hover::before,
+.dragover .image-data-color.hover::before,
+.dragover #imageselect.hover::before {
+-webkit-transition: all 0.3s ease-out;
+-moz-transition: all 0.3s ease-out;
+-ms-transition: all 0.3s ease-out;
+-o-transition: all 0.3s ease-out;
+transition: all 0.3s ease-out;
+opacity: 1;
+border-color: #60a9d4;
+color: #60a9d4;
+}
+
+#imageform .progress {
+	margin: 5px 0;
+}
+
+#btn-image-add,.btn-image-replace {
+  position: relative;
+  overflow: hidden;
+}
+.fileupload {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  opacity: 0;
+  -ms-filter: 'alpha(opacity=0)';
+  font-size: 200px;
+  direction: ltr;
+  cursor: pointer;
+}
+/* ------------------------- faq -------------------- */
+center.project {
+    margin-bottom: 4px;
+}
+.color110 {
+    color: rgb(110,110,110);
+}
+.faqContent {
+    background: rgb(242,242,242);
+    width: 100%;
+    height: 40px;
+    padding-top: 10px;
+    padding-left: 20px;
+    color: rgb(77,77,77);
+    margin-bottom: 25px;
+}
+.panel-heading {
+    background: rgb(202,233,252);
+    border: 1px solid rgb(67,186,255) !important;
+    border-radius: 0;
+}
+.panel-heading > h4 > a > div {
+    color: rgb(77,77,77);
+    font-size: 10pt;
+    text-decoration: underline;
+}
+.panel-heading > h4 > a:hover {
+    text-decoration: none;
+}
+.color110 {
+    color: rgb(110,110,110);
+}
+.answer > .h4 {
+    color: #60A9D4;
+    font-size: 17px;
+}
+.answer {
+    color: rgb(94,94,94);
+    margin-bottom: 25px;
+    margin-top: 20px;
+}
+.panel-heading.gray {
+    background: rgb(242,242,242);
+    border-style: dashed !important;
+}
+.h4.gray {
+    color: rgb(77,77,77);
+}
+textarea[class="form-control"] {
+    margin: 0px;
+    max-height: 85px;
+    min-height: 85px;
+    font-size: 16px !important;
+    padding: 11px !important;
+    height: 87px;
+    max-width: 779px;
+    width: 784px;
+    background-color: rgb(242, 242, 242);
+}
+.avatar > div {
+    background: rgb(77,77,77);
+    margin-right: 10px;
+    margin-bottom: -80px;
+    height: 80px;
+    width: 80px;
+}
+.timeAgo {
+    color: rgb(138,138,138);
+}
+.name {
+    color: rgb(77,77,77);
+    margin-right: 10px;
+}
+.commentAnswer {
+    color: rgb(77,77,77);
+}
+.comment {
+    min-width: 80px;
+    margin-top: 20px;
+}
+.avatar {
+    height: 100%;
+    width: 80px;
+}
+.commentText {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+/* -------------------- release ------------------*/
+.releaseImg > img {
+    max-width: 240px;
+    width: 100%;
+}
+.releaseImg {
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+.nextVolume {
+    max-width: 240px;
+}
+.nextVolume > div > a > i {
+    font-size: 11px;
+}
+.nextVolume > div {
+    width: 50%;
+    background: rgb(242,242,242);
+    min-height: 40px;
+    float: left;
+    padding-top: 11px;
+}
+.nextVolume > div > a {
+    color: rgb(77,77,77);
+}
+.aboutRelease {
+    color: rgb(77,77,77);
+}
+.read > a > div {
+    border-bottom: 1px solid rgb(231,231,231);
+    height: 28px;
+    margin-bottom: 5px;
+}
+.read > a {
+    color: rgb(77,77,77);
+    width: 100%;
+}
+aside > .actions > div:hover {
+    background: rgb(231,231,231) no-repeat 5% 50%;
+}
+.actions > div {
+    padding: 5px 5px 5px 35px;
+    width: 100%;
+    background: no-repeat scroll 5% 50% #F2F2F2;
+    margin-bottom: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.actions > div > a {
+    color: rgb(77,77,77);
+}
+.actions > div > a:hover {
+    text-decoration: none;
+    border-bottom: 1px dashed rgb(77,77,77);
+}
+.download {
+    color: #60A9D4 !important;
+    border-bottom: 0 !important;
+}
+a.more {
+    float: right;
+    color: rgb(133,133,133);
+    text-decoration: none;
+    border-bottom: 1px dashed rgb(133,133,133);
+}
+.actions {
+    margin-bottom: 20px;
+}
+.h4 + div > a {
+    margin-bottom: 10px;
+}
+/* -------------- project ------------*/
+.ranobeList > div > .pull-left {
+    font-size: 13px;
+    background: rgb(231,231,231);
+    width: 55px;
+    text-align: center;
+    margin-right: 5px;
+}
+.ranobeList > div:hover {
+    background: rgb(242,242,242);
+}
+.ranobeList > div {
+    width: 100%;
+    padding: 5px;
+    border-bottom: 1px solid rgb(231,231,231);
+    padding-top: 10px;
+/*
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+*/
+}
+main > .ranobeList > div:last-child {
+    border-bottom: none;
+}
+.ranobeList > div > a {
+    color: rgb(77,77,77);
+}
+main > .ranobeList > div > a:hover {
+    color: #60A9D4;
+}
+.h3.project {
+    margin-bottom: 0px; 
+    margin-top: 35px;
+}
+/* ---------------------- all_projects ----------- */
+.view {
+    color: rgb(77,77,77);
+    padding-top: 5px;
+    padding-right: 5px;
+}
+button.view1 {
+    border: 0;
+    background: rgb(242,242,242) no-repeat 50%;
+    background-image: url(../img/view1.png);
+    width: 35px;
+    height: 30px;
+}
+button.view2 {
+    border: 0;
+    background: rgb(242,242,242) no-repeat 50%;
+    background-image: url(../img/view2.png);
+    width: 35px;
+    height: 30px;
+    margin-left: -4px;
+}
+div > button.view1.active {
+    background: rgb(96,169,212) url(../img/view1.active.png) no-repeat 50%;
+}
+div > button.view2.active {
+    background: rgb(96,169,212) url(../img/view2.active.png) no-repeat 50%;
+}
+.viewType1 {
+    max-width: 214px;
+    margin: 10px 10px 10px 0px;
+    line-height: 20px;
+    float: left;
+}
+.viewType1 > div > .stateGreen {
+    width: 50%;
+    text-align: center;
+    background: rgb(147, 194, 42);
+    color: rgb(255, 255, 255);
+    padding: 4px;
+    float: left;
+}
+.viewType1 > div > .stateRed {
+    width: 50%;
+    text-align: center;
+    background: rgb(220, 93, 72);
+    color: rgb(255, 255, 255);
+    padding: 4px;
+    float: left;
+}
+.viewType1 > div > .moreAboutProject {
+    width: 50%;
+    text-align: center;
+    background: rgb(242,242,242);
+    padding: 4px;    
+    float: right;
+}
+.viewType1 > div > .moreAboutProject > a {
+    color: rgb(77,77,77);
+}
+.viewType1 > a > img {
+    margin-bottom: 6px;
+}
+.viewTypeBlock2 { 
+    display: none;
+    margin-bottom: 40px;
+ }
+.viewType2 {
+    margin: 10px 0px;
+    border-bottom: 1px solid rgb(242,242,242);
+}   
+.viewType2 > a > img {
+    margin-right: 10px;
+    margin-top: 5px;
+}
+.viewType2about {
+    margin-top: -75px;
+    width: 120px;
+    background: rgb(147, 194, 42);
+    text-align: center;
+    height: 75px;
+    color: #fff;
+}
+.viewType2about > .volumes {
+    padding-top: 45px;
+    background: url(../img/updIcons/icon2_active.png) no-repeat 50% 40%;
+}
+.viewTypeBlock2 > .moreAboutProject {
+    width: 120px;
+    text-align: center;
+    background: rgb(242,242,242);
+    padding: 5px;
+    margin-top: -10px;
+}
+.viewTypeBlock2 > .moreAboutProject > a {
+    color: rgb(133,133,133);
 }

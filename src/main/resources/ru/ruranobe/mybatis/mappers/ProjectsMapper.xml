@@ -4,6 +4,37 @@
 	   
 <mapper namespace="ru.ruranobe.mybatis.mappers.ProjectsMapper">
 
+    <!-- The only need for this cache is operation getProjectsByUrl -->
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache">
+        <property name="timeToIdleSeconds" value="3600"/>
+        <property name="timeToLiveSeconds" value="3600"/>
+        <property name="maxEntriesLocalHeap" value="1000"/>
+        <property name="memoryStoreEvictionPolicy" value="LRU"/>
+    </cache>
+    
+    <select id="getAllProjects" resultMap="ProjectResult">
+        SELECT * FROM projects
+    </select>
+    
+    <select id="getProjectsByUrl" parameterType="String" resultMap="ProjectResult">
+        SELECT *
+        FROM projects
+        WHERE url = #{url}
+    </select>
+    
+    <resultMap type="ru.ruranobe.mybatis.tables.Project" id="ProjectResult">
+        <id property="projectId" column="project_id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="imageId" column="image_id"/>
+        <result property="url" column="url"/>        
+        <result property="title" column="title"/>
+        <result property="orderNumber" column="order_number"/>
+        <result property="bannerHidden" column="banner_hidden"/>
+        <result property="projectHidden" column="project_hidden"/>
+        <result property="franchise" column="franchise"/>
+        <result property="annotation" column="annotation"/>
+    </resultMap>
+
     <!--select id="getSeriesById" parameterType="int" resultType="ru.ruranobe.mybatis.tables.Series">
         SELECT
             series_id as seriesId,

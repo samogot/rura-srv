@@ -4,6 +4,14 @@
 	   
 <mapper namespace="ru.ruranobe.mybatis.mappers.OrphusCommentsMapper">
 
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache">
+        <property name="timeToIdleSeconds" value="3600"/><!--1 hour-->
+        <property name="timeToLiveSeconds" value="3600"/><!--1 hour-->
+        <property name="maxEntriesLocalHeap" value="1000"/>
+        <property name="maxEntriesLocalDisk" value="10000000"/>
+        <property name="memoryStoreEvictionPolicy" value="LRU"/>
+    </cache>
+
     <insert id="insertOrphusComment" parameterType="ru.ruranobe.mybatis.tables.OrphusComment">
         INSERT INTO orphus_comments (chapter_id, paragraph, start_offset, original_text, replacement_text, optional_comment, created_when)
         VALUES(#{chapterId}, #{paragraph}, #{startOffset}, #{originalText}, #{replacementText}, #{optionalComment}, #{createdWhen})

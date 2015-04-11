@@ -4,6 +4,14 @@
 	   
 <mapper namespace="ru.ruranobe.mybatis.mappers.UsersMapper">
 
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache">
+        <property name="timeToIdleSeconds" value="3600"/><!--1 hour-->
+        <property name="timeToLiveSeconds" value="3600"/><!--1 hour-->
+        <property name="maxEntriesLocalHeap" value="1000"/>
+        <property name="maxEntriesLocalDisk" value="10000000"/>
+        <property name="memoryStoreEvictionPolicy" value="LRU"/>
+    </cache>
+    
     <select id="getUserByEmail" parameterType="String" resultType="ru.ruranobe.mybatis.tables.User">
         SELECT
             user_id as userId,

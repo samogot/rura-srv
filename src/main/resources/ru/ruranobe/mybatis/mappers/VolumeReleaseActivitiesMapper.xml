@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	   
+<mapper namespace="ru.ruranobe.mybatis.mappers.VolumeReleaseActivitiesMapper">
+    
+    <select id="getVolumeReleaseActivitiesByVolumeId" parameterType="int" resultMap="VolumeReleaseActivityResult">
+        SELECT *
+        FROM volume_release_activities
+        WHERE release_activity_id = #{volumeId}
+    </select>
+    
+    <resultMap type="ru.ruranobe.mybatis.tables.VolumeReleaseActivity" id="VolumeReleaseActivityResult">
+        <id property="releaseActivityId" column="release_activity_id"/>
+        <result property="volumeId" column="volume_id"/>
+        <result property="teamId" column="team_id"/>
+        <result property="activityId" column="activity_id"/>
+        <result property="assigneeTeamMember" column="assignee_team_member"/>
+    </resultMap>
+    
+</mapper>
