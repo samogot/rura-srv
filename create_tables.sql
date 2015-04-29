@@ -137,14 +137,14 @@ create table external_resources
 create table volume_activities
 (
   activity_id   int(11) primary key auto_increment,
-  activity_name varchar(255) NOT NULL,
+  activity_name varchar(255) UNIQUE NOT NULL,
   activity_type enum('text', 'image') NOT NULL
 );
 
 create table teams
 (
   team_id int(11) primary key auto_increment,
-  team_name varchar(255) NOT NULL,
+  team_name varchar(255) UNIQUE NOT NULL,
   team_website_link varchar(255)
 );
 
@@ -153,7 +153,7 @@ create table members
   member_id  int(11) primary key auto_increment,
   user_id int(11),
   team_id int(11),
-  nikname varchar(64) NOT NULL,
+  nikname varchar(64) UNIQUE NOT NULL,
   active boolean NOT NULL
 );
 
@@ -195,6 +195,11 @@ alter table chapters add constraint fk_text_id foreign key (text_id) references 
 
 
 alter table volumes add constraint fk_project_id foreign key (project_id) references projects (project_id);
+
+alter table volumes add constraint fk_image_one   foreign key (image_one)   references external_resources (resource_id);
+alter table volumes add constraint fk_image_two   foreign key (image_two)   references external_resources (resource_id);
+alter table volumes add constraint fk_image_three foreign key (image_three) references external_resources (resource_id);
+alter table volumes add constraint fk_image_four  foreign key (image_four)  references external_resources (resource_id);
 
 
 alter table projects add constraint fk_parent_id foreign key (parent_id) references projects (project_id);

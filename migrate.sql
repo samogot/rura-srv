@@ -73,10 +73,10 @@ SELECT `release_id`, `job_id`, `worker_id`, !`show_command` FROM `ruranobe_db`.`
 
 
 
-create temporary table prj_text(prj integer, txt integer);
+create temporary table prj_text(prj integer, pg integer, txt integer);
 
 insert into prj_text
-SELECT distinct series_id, old_id
+SELECT distinct series_id, page_id, old_id
 FROM `ruranobe_db`.`main_series` s
 inner join `ruranobe_db`.mw_page p on page_title=`name_url`
 inner join `ruranobe_db`.mw_revision rv on rev_page=page_id
@@ -143,10 +143,10 @@ UPDATE ruranobe.projects SET name_jp='世界の終わりの世界録', name_rj='
 
 
 
-create temporary table ch_text(ch integer, txt integer);
+create temporary table ch_text(ch integer, pg integer, txt integer);
 
 insert into ch_text
-SELECT distinct chapter_id, old_id
+SELECT distinct chapter_id, page_id, old_id
 FROM `ruranobe_db`.`main_releases` r
 inner join `ruranobe_db`.main_chapter c using (release_id)
 inner join `ruranobe_db`.mw_page p on page_title=concat(r.`name_url`, '/',c.`url`)
@@ -160,3 +160,40 @@ SELECT `old_id`, trim(`old_text`), '' FROM `ruranobe_db`.`mw_text` inner join ch
 UPDATE `ruranobe`.`chapters`
 INNER JOIN `ch_text` on `ch`=`chapter_id`
 SET `text_id`=`txt`, `published`=1;
+
+
+
+INSERT INTO `ruranobe`.`external_resources`(`user_id`, `mime_type`, `url`, `title`, `uploaded_when`)
+SELECT `img_user`, concat(`img_major_mime`, '/', `img_minor_mime`), concat('http://ruranobe.ru/w/images/',substr(md5(`img_name`),1,1),'/',substr(md5(`img_name`),1,2),'/',`img_name`), `img_name`, `img_timestamp` FROM `ruranobe_db`.`mw_image`
+INNER JOIN `ruranobe`.`projects` ON concat('sidebanner-',`url`,'.png')=img_name;
+
+UPDATE `ruranobe`.`projects` p
+INNER JOIN `ruranobe`.`external_resources` r on concat('sidebanner-',p.`url`,'.png')=r.title
+SET `image_id`=`resource_id`;
+
+INSERT INTO `ruranobe`.`external_resources`(`user_id`, `mime_type`, `url`, `title`, `uploaded_when`)
+SELECT DISTINCT `img_user`, concat(`img_major_mime`, '/', `img_minor_mime`), concat('http://ruranobe.ru/w/images/',substr(md5(`img_name`),1,1),'/',substr(md5(`img_name`),1,2),'/',`img_name`), `img_name`, `img_timestamp` FROM `ruranobe_db`.`mw_image`
+INNER JOIN `ruranobe_db`.`mw_imagelinks` ON `il_to`=`img_name`
+INNER JOIN `ch_text` ON il_from=pg
+ORDER BY img_name;
+
+INSERT INTO `chapter_images`(`chapter_id`, `volume_id`, `non_colored_image_id`, `colored_image_id`, `order_number`, `adult`)
+SELECT `chapter_id`, `volume_id`, `resource_id`, null, `resource_id`, 0 FROM `ruranobe`.`external_resources`
+INNER JOIN `ruranobe_db`.`mw_imagelinks` ON `il_to`=`title`
+INNER JOIN `ch_text` ON il_from=pg
+INNER JOIN `ruranobe`.`chapters` on `ch`=`chapter_id`;
+
+INSERT Ignore INTO `ruranobe`.`external_resources`(`user_id`, `mime_type`, `url`, `title`, `uploaded_when`)
+SELECT DISTINCT `img_user`, concat(`img_major_mime`, '/', `img_minor_mime`), concat('http://ruranobe.ru/w/images/',substr(md5(`img_name`),1,1),'/',substr(md5(`img_name`),1,2),'/',`img_name`), `img_name`, `img_timestamp` FROM `ruranobe_db`.`mw_image`
+INNER JOIN `ruranobe_db`.`mw_imagelinks` ON `il_to`=`img_name`
+inner join `ruranobe_db`.mw_page on page_id=il_from
+inner join `ruranobe`.volumes on page_title=url
+inner join `ruranobe_db`.`main_releases` on `release_id`=`volume_id`
+where img_name like concat(replace(cover,' ','_'),'.%');
+
+UPDATE `ruranobe`.`volumes`
+inner join `ruranobe_db`.`main_releases` on `release_id`=`volume_id`
+INNER JOIN `ruranobe`.`external_resources` r on r.title like concat(replace(cover,' ','_'),'.%')
+SET `image_one`=`resource_id`;
+
+
