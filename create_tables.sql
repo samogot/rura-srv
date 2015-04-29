@@ -51,7 +51,7 @@ create table projects
 (
   project_id int(11) primary key auto_increment,
   parent_id int(11),
---  image_id int(11),-- Кейко, нужно брать обложку 1го тома
+  image_id int(11),
   url varchar(32) UNIQUE,
   title varchar(1023) NOT NULL,
   name_jp varchar(255),
@@ -117,7 +117,7 @@ create table chapter_images
 (
   chapter_id int(11),
   volume_id int(11) NOT NULL,
-  image_id int(11), NOT NULL
+--  image_id int(11), NOT NULL
   non_colored_image_id int(11) NOT NULL,
   colored_image_id int(11),
   order_number int(11) NOT NULL,
