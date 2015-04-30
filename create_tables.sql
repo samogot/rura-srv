@@ -7,7 +7,7 @@ drop table if exists volumes;
 drop table if exists projects;
 drop table if exists external_resources;
 drop table if exists texts;
-drop table if exists members;
+drop table if exists team_members;
 drop table if exists users;
 drop table if exists teams;
 drop table if exists volume_activities;
@@ -57,7 +57,7 @@ create table projects
   name_jp varchar(255),
   name_en varchar(255),
   name_ru varchar(255),
-  name_rj varchar(255),
+  name_romaji varchar(255),
   author varchar(255),
   illustrator varchar(255),
   order_number int(11) NOT NULL,
@@ -82,7 +82,7 @@ create table volumes
   name_jp varchar(255),
   name_en varchar(255),
   name_ru varchar(255),
-  name_rj varchar(255),
+  name_romaji varchar(255),
   name_short varchar(64),
   sequence_number float,
   author varchar(255),
@@ -148,7 +148,7 @@ create table teams
   team_website_link varchar(255)
 );
 
-create table members
+create table team_members
 (
   member_id  int(11) primary key auto_increment,
   user_id int(11),
@@ -221,14 +221,14 @@ alter table updates add constraint fk_u_volume_id foreign key (volume_id) refere
 alter table updates add constraint fk_u_chapter_id foreign key (chapter_id) references chapters (chapter_id);
 
 
-alter table members add constraint fk_team_id foreign key (team_id) references teams(team_id);
+alter table team_members add constraint fk_team_id foreign key (team_id) references teams(team_id);
 
-alter table members add constraint fk_user_id3 foreign key (user_id) references users (user_id);
+alter table team_members add constraint fk_user_id3 foreign key (user_id) references users (user_id);
 
 
 alter table volume_release_activities add constraint fk_ra_volume_id foreign key (volume_id) references volumes(volume_id);
 
-alter table volume_release_activities add constraint fk_member_id foreign key (member_id) references members(member_id);
+alter table volume_release_activities add constraint fk_member_id foreign key (member_id) references team_members(member_id);
 
 alter table volume_release_activities add constraint fk_activity_id foreign key (activity_id) references volume_activities(activity_id);
 
