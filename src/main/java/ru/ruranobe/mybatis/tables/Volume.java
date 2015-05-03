@@ -12,7 +12,7 @@ public class Volume implements Serializable
 
     public Volume(Integer projectId, String url, String nameFile, String nameTitle, 
             String nameJp, String nameEn, String nameRu, String nameShort, 
-            Integer orderNumber, String author, String illustrator, Date releaseDate, 
+            Integer sequenceNumber, String author, String illustrator, Date releaseDate,
             String isbn, String externalUrl, String annotation)
     {
         this.projectId = projectId;
@@ -23,7 +23,7 @@ public class Volume implements Serializable
         this.nameEn = nameEn;
         this.nameRu = nameRu;
         this.nameShort = nameShort;
-        this.orderNumber = orderNumber;
+        this.sequenceNumber = sequenceNumber;
         this.author = author;
         this.illustrator = illustrator;
         this.releaseDate = releaseDate;
@@ -142,14 +142,14 @@ public class Volume implements Serializable
         this.nameTitle = nameTitle;
     }
 
-    public Integer getOrderNumber()
+    public Integer getSequenceNumber()
     {
-        return orderNumber;
+        return sequenceNumber;
     }
 
-    public void setOrderNumber(Integer orderNumber)
+    public void setSequenceNumber(Integer sequenceNumber)
     {
-        this.orderNumber = orderNumber;
+        this.sequenceNumber = sequenceNumber;
     }
 
     public Integer getProjectId()
@@ -265,7 +265,7 @@ public class Volume implements Serializable
     @Override
     public String toString()
     {
-        return "Volume{" + "volumeId=" + volumeId + ", projectId=" + projectId + ", url=" + url + ", nameFile=" + nameFile + ", nameTitle=" + nameTitle + ", nameJp=" + nameJp + ", nameEn=" + nameEn + ", nameRu=" + nameRu + ", nameShort=" + nameShort + ", orderNumber=" + orderNumber + ", author=" + author + ", illustrator=" + illustrator + ", releaseDate=" + releaseDate + ", isbn=" + isbn + ", externalUrl=" + externalUrl + ", annotation=" + annotation + ", volumeStatus=" + volumeStatus + ", volumeType=" + volumeType + ", adult=" + adult + '}';
+        return "Volume{" + "volumeId=" + volumeId + ", projectId=" + projectId + ", url=" + url + ", nameFile=" + nameFile + ", nameTitle=" + nameTitle + ", nameJp=" + nameJp + ", nameEn=" + nameEn + ", nameRu=" + nameRu + ", nameShort=" + nameShort + ", sequenceNumber=" + sequenceNumber + ", author=" + author + ", illustrator=" + illustrator + ", releaseDate=" + releaseDate + ", isbn=" + isbn + ", externalUrl=" + externalUrl + ", annotation=" + annotation + ", volumeStatus=" + volumeStatus + ", volumeType=" + volumeType + ", adult=" + adult + '}';
     }
     
     private Integer volumeId;
@@ -281,7 +281,7 @@ public class Volume implements Serializable
     private String nameEn;
     private String nameRu;
     private String nameShort;
-    private Integer orderNumber;
+    private Integer sequenceNumber;
     private String author;
     private String illustrator;
     private Date releaseDate;

@@ -120,6 +120,26 @@ public class Project implements Serializable
     {
         this.franchise = franchise;
     }
+
+    public String getAuthor()
+    {
+        return author;
+    }
+
+    public void setAuthor(String author)
+    {
+        this.author = author;
+    }
+
+    public String getIllustrator()
+    {
+        return illustrator;
+    }
+
+    public void setIllustrator(String illustrator)
+    {
+        this.illustrator = illustrator;
+    }
     
     @Override
     public String toString()
@@ -135,7 +155,9 @@ public class Project implements Serializable
     private Integer orderNumber;
     private boolean bannerHidden;
     private boolean projectHidden;
+    private String author;
+    private String illustrator;
     private String franchise;
     private String annotation;
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 }

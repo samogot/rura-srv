@@ -8,19 +8,20 @@ public class RuraConstants
     public static final String UPDATE_TYPE_TRANSLATE = "translate";    
     public static final String UPDATE_TYPE_PROOFREAD = "proofread";    
     public static final String UPDATE_TYPE_IMAGES = "images";    
-    public static final String UPDATE_TYPE_OTHER = "other";   
+    public static final String UPDATE_TYPE_OTHER = "other";
 
     public static final String VOLUME_STATUS_HIDDEN = "hidden";
-    public static final String VOLUME_STATUS_ANNOUNCED = "announced";
-    public static final String VOLUME_STATUS_NOT_TRANSLATING = "not_translating";
-    public static final String VOLUME_STATUS_EXTERNAL = "external";
-    public static final String VOLUME_STATUS_WAIT_TRANSLATOR = "wait_translator";
-    public static final String VOLUME_STATUS_WAIT_ENGLISH = "wait_eng";
-    public static final String VOLUME_STATUS_FREEZED_TRANSLATOR = "freezed_translator";
-    public static final String VOLUME_STATUS_FREEZED_ENGLISH = "freezed_eng";
+    public static final String VOLUME_STATUS_AUTO = "auto";
+    public static final String VOLUME_STATUS_EXTERNAL_DROPPED = "external_dropped";
+    public static final String VOLUME_STATUS_EXTERNAL_ACTIVE = "external_active";
+    public static final String VOLUME_STATUS_EXTERNAL_DONE = "external_done";
+    public static final String VOLUME_STATUS_NO_ENG = "no_eng";
+    public static final String VOLUME_STATUS_FREEZE = "freeze";
+    public static final String VOLUME_STATUS_ON_HOLD = "on_hold";
+    public static final String VOLUME_STATUS_QUEUE = "queue";
     public static final String VOLUME_STATUS_ONGOING = "ongoing";
     public static final String VOLUME_STATUS_TRANSLATING = "translating";
-    public static final String VOLUME_STATUS_PROOFREADING = "proofreading";
+    public static final String VOLUME_STATUS_PROOFREAD = "proofread";
     public static final String VOLUME_STATUS_DECOR = "decor";
     public static final String VOLUME_STATUS_DONE = "done";
     

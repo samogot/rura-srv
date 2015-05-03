@@ -350,7 +350,7 @@ footer {
     position: absolute;
 }
 .project {
-    margin-bottom: 40px;
+    /* margin-bottom: 40px; */
 }
 .project a{
 margin: 1.5px;
@@ -1013,6 +1013,15 @@ a.more {
 .ranobeList > div:hover {
     background: rgb(242,242,242);
 }
+.ranobeList .sub-project {
+    text-align: center;
+    font-style: italic;
+    padding: 2px 5px;
+}
+
+.ranobeList .sub-project:hover {
+    background: none;
+}
 .ranobeList > div {
     width: 100%;
     padding: 5px;
@@ -1132,4 +1141,8 @@ div > button.view2.active {
 }
 .viewTypeBlock2 > .moreAboutProject > a {
     color: rgb(133,133,133);
+}
+
+#project-cover-carousel .carousel-inner {
+    width: 240px;    height: 343px;
 }

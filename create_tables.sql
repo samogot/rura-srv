@@ -91,9 +91,9 @@ create table volumes
   ISBN varchar(16),
   external_url varchar(255),
   volume_type enum('Ранобэ','Побочные истории','Авторские додзинси','Другое') NOT NULL DEFAULT 'Ранобэ',
-  volume_status enum('hiden','auto'
+  volume_status enum('hidden','auto'
                     ,'external_dropped','external_active','external_done'
-                    ,'noeng','freez','onhold','queue'
+                    ,'no_eng','freeze','on_hold','queue'
                     ,'ongoing','translating','proofread'
                     ,'decor','done') NOT NULL DEFAULT 'onhold',
   volume_status_hint varchar(255),

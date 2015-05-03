@@ -17,8 +17,8 @@
         VALUES(#{userId}, #{mimeType}, #{url}, #{title}, #{uploadedWhen})
     </insert>
 
-    <select id="getExternalResourceById" resultMap="ExternalResourceResult">
-        SELECT * FROM external_resources
+    <select id="getExternalResourceById"  parameterType="int" resultMap="ExternalResourceResult">
+        SELECT * FROM external_resources WHERE resource_id = #{resourceId}
     </select>
 
     <resultMap type="ru.ruranobe.mybatis.tables.ExternalResource" id="ExternalResourceResult">

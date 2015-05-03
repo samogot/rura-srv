@@ -5,12 +5,12 @@ INSERT ignore INTO `ruranobe`.`projects`(`project_id`, `parent_id`, `url`, `titl
 SELECT `series_id`, `parent_id`, null, `title`,`series_id`,1,1 FROM `ruranobe_db`.`main_series` f
 WHERE parent_id is not null and exists (select * from `ruranobe`.`projects` where `project_id`=f.parent_id);
 
-INSERT INTO `ruranobe`.`projects`(`parent_id`, `url`, `title`, `name_jp`, `name_en`, `name_ru`, `order_number`, `franchise`, `annotation`, `onevolume`) 
+INSERT INTO `ruranobe`.`projects`(`parent_id`, `url`, `title`, `name_jp`, `name_en`, `name_ru`, `order_number`, `franchise`, `annotation`, `onevolume`)
 SELECT null, `name_url`, `name_title`, `name_jp`, `name_en`, `name_ru`, `release_id`,"* 1 том", `annotation`, 1 FROM `ruranobe_db`.`main_releases` where `series_id` is null;
 
 INSERT INTO `ruranobe`.`volumes`(`volume_id`, `project_id`, `url`, `name_file`, `name_title`, `name_jp`, `name_en`, `name_ru`,
                                  `name_short`,  `sequence_number`, `author`, `illustrator`, `release_date`, `ISBN`, `external_url`, `annotation`, `volume_type`, `volume_status`, adult)
-SELECT `release_id`, ifnull(`series_id`, (select project_id from `ruranobe`.`projects` where `url`=`name_url`)), if(`series_id` is not null,`name_url`,concat(`name_url`,'/v1')), 
+SELECT `release_id`, ifnull(`series_id`, (select project_id from `ruranobe`.`projects` where `url`=`name_url`)), if(`series_id` is not null,`name_url`,concat(`name_url`,'/v1')),
        `name_main`, `name_title`, `name_jp`, `name_en`, `name_ru`, `name_short`, `series_num`, `autor`, `illustrator`, `date`, `ISBN`, `external_url`, `annotation`
        , CASE `type`
             when 'ranobe_vol' then 1
@@ -47,7 +47,7 @@ SELECT ifnull(`series_id`, (select project_id from `ruranobe`.`projects` where `
             when 'proofread' then 3
             when 'edit' then 4
             when 'other' then 1
-         end, u.`date`, `text` 
+         end, u.`date`, `text`
 FROM `ruranobe_db`.`main_last_updates` u inner join `ruranobe_db`.`main_releases` using(`release_id`);
 
 
@@ -57,7 +57,7 @@ SELECT `command_id`, `title`, `link` FROM `ruranobe_db`.`main_comands`;
 INSERT INTO `ruranobe`.`volume_activities`(`activity_id`, `activity_name`, `activity_type`)
 SELECT `job_id`, `title`, if(`job_id` between 3 and 7,'image','text') FROM `ruranobe_db`.`main_jobs`;
 
-INSERT IGNORE INTO `ruranobe`.`users`(`user_id`, `username`, `realname`, `pass`, `email`, `email_activated`, `registration_date`, `adult`) 
+INSERT IGNORE INTO `ruranobe`.`users`(`user_id`, `username`, `realname`, `pass`, `email`, `email_activated`, `registration_date`, `adult`)
 SELECT `user_id`, `user_name`, `user_real_name`, `user_password`, `user_email`, `user_email_authenticated`, `user_registration`, 1 FROM `ruranobe_db`.`mw_user`;
 
 INSERT INTO `ruranobe`.`members`(`member_id`, `user_id`, `team_id`, `nikname`, `active`)
@@ -107,7 +107,20 @@ INNER JOIN `ruranobe_db`.`mw_text` on txt=old_id
 SET `franchise`=trim('\n' from substring_index(substring_index(trim(LEADING '''' from trim(substring_index(old_text,'Франшиза:',-1))),'==',1),'{{',1))
 where old_text like '%Франшиза:%';
 
-UPDATE ruranobe.projects SET name_jp='ソードアート・オンライン', name_en='Sword Art Online', name_ru=null WHERE project_id = 1;
+UPDATE `ruranobe`.`projects`
+SET `order_number` = instr((SELECT old_text
+                            FROM `ruranobe_db`.mw_revision
+                              INNER JOIN `ruranobe_db`.mw_text ON old_id = rev_text_id
+                            WHERE rev_page = 7460
+                            ORDER BY rev_timestamp DESC
+                            LIMIT 1), url)
+WHERE parent_id IS NULL;
+
+UPDATE `ruranobe`.`projects`
+SET `order_number` = 9999
+WHERE `order_number` = 0;
+
+  UPDATE ruranobe.projects SET name_jp='ソードアート・オンライン', name_en='Sword Art Online', name_ru=null WHERE project_id = 1;
 UPDATE ruranobe.projects SET name_jp='ログ・ホライズン', name_en='Log Horizon', name_ru=null WHERE project_id = 3;
 UPDATE ruranobe.projects SET name_jp='狼と香辛料', name_en='Spice and Wolf', name_ru='Волчица и пряности' WHERE project_id = 7;
 UPDATE ruranobe.projects SET name_jp='デュラララ!!', name_en='Durarara!!', name_ru='Дюрарара!!' WHERE project_id = 8;

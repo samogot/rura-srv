@@ -1,8 +1,6 @@
 package ru.ruranobe.wicket.webpages;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.Component;
@@ -30,20 +28,27 @@ import ru.ruranobe.wicket.components.AjaxOrphusMessageDialog;
 import ru.ruranobe.wicket.components.UpdatesView;
 import ru.ruranobe.wicket.webpages.base.RuraHeaderAndFooter;
 
-public class HomePage extends RuraHeaderAndFooter 
+public class HomePage extends RuraHeaderAndFooter
 {
     @Override
-    protected void onInitialize() 		
+    protected void onInitialize()
     {
-        super.onInitialize(); 
+        super.onInitialize();
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
         SqlSession session = sessionFactory.openSession();
         ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
-        Collection<Project> projects = projectsMapperCacheable.getAllProjects();
+        List<Project> projects = new ArrayList<Project>(projectsMapperCacheable.getAllProjects());
         List<ProjectExtended> projectsList = new ArrayList<ProjectExtended>();
         ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.
                 getCacheableMapper(session, ExternalResourcesMapper.class);
-        
+        Collections.sort(projects, new Comparator<Project>()
+        {
+            @Override
+            public int compare(Project o1, Project o2)
+            {
+                return o1.getOrderNumber() - o2.getOrderNumber();
+            }
+        });
         int count = 0;
         for (Project project : projects)
         {
@@ -59,24 +64,25 @@ public class HomePage extends RuraHeaderAndFooter
                 break;
             }
         }
-        
-        ListView<ProjectExtended> projectsView = new ListView<ProjectExtended> ("projectsView", projectsList)
+
+        ListView<ProjectExtended> projectsView = new ListView<ProjectExtended>("projectsView", projectsList)
         {
             @Override
-            protected void populateItem(final ListItem <ProjectExtended> listItem)
+            protected void populateItem(final ListItem<ProjectExtended> listItem)
             {
                 ProjectExtended projectExtended = listItem.getModelObject();
-                ExternalResource imageResource = projectExtended.getExternalResource();
+                final ExternalResource imageResource = projectExtended.getExternalResource();
                 final Project project = projectExtended.getProject();
-                
-                ExternalLink projectLink = new ExternalLink("projectLink", "/"+project.getUrl());
-                Image projectImage = (imageResource == null) ? (new Image("projectImage", new PackageResourceReference(HomePage.class,"undefined.png")))
-                                                             : (new Image("projectImage", imageResource.getUrl()));
-                projectImage.add(new Behavior() 
+
+                //add(new BookmarkablePageLink("projectLink", BookmarkablePage.class, parameters));
+                ExternalLink projectLink = new ExternalLink("projectLink", "/project/" + project.getUrl());
+                Image projectImage = new Image("projectImage", new PackageResourceReference(HomePage.class, "undefined.png"));
+                projectImage.add(new Behavior()
                 {
                     @Override
-                    public void onComponentTag(Component component, ComponentTag tag) 
+                    public void onComponentTag(Component component, ComponentTag tag)
                     {
+                        if (imageResource != null) tag.put("src", imageResource.getUrl());
                         tag.put("alt", project.getTitle());
                         tag.put("width", 220);
                         tag.put("height", 73);
@@ -87,46 +93,46 @@ public class HomePage extends RuraHeaderAndFooter
             }
         };
         add(projectsView);
-        
+
         UpdatesMapper updatesMapperCacheable = CachingFacade.getCacheableMapper(session, UpdatesMapper.class);
         List<Update> updates = updatesMapperCacheable.getLastUpdatesBy(null, null, null, 0, COUNT_OF_UPDATES_ON_PAGE);
         ListView<Update> updatesView = new UpdatesView("updatesView", updates);
         add(updatesView);
-        
-        add(new StatelessLink("allUpdates") 
+
+        add(new StatelessLink("allUpdates")
         {
 
             @Override
-            public void onClick() 
+            public void onClick()
             {
                 setResponsePage(Updates.class);
             }
 
         });
-        
-        add(new StatelessLink("allProjects") 
+
+        add(new StatelessLink("allProjects")
         {
 
             @Override
-            public void onClick() 
+            public void onClick()
             {
                 setResponsePage(FullProjects.class);
             }
 
         });
-        
+
         session.close();
-    }    
-    
+    }
+
     @Override
-    public void renderHead(IHeaderResponse response) 
+    public void renderHead(IHeaderResponse response)
     {
         super.renderHead(response);
         response.render(JavaScriptHeaderItem.forReference(JAVASCRIPT_ORPHUS));
     }
-    
+
     private static final ResourceReference JAVASCRIPT_ORPHUS = new JavaScriptResourceReference(
-            AjaxOrphusMessageDialog.class, "orphus.js"); 
+            AjaxOrphusMessageDialog.class, "orphus.js");
     private static final int COUNT_OF_PROJECTS_ON_PAGE = 12;
     private static final int COUNT_OF_UPDATES_ON_PAGE = 10;
 }

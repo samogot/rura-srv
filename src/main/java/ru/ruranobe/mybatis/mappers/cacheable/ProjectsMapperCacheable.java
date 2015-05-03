@@ -32,9 +32,15 @@ public class ProjectsMapperCacheable implements ProjectsMapper
     /* Uncacheable operation. For this operation DB level cache is used. 
      * See ProjectsMapper cache tag */
     @Override
-    public Collection<Project> getProjectsByUrl(String url)
+    public Project getProjectByUrl(String url)
     {
-        return mapper.getProjectsByUrl(url);
+        return mapper.getProjectByUrl(url);
+    }
+
+    @Override
+    public Collection<Project> getSubProjectsByParentProjectId(Integer parentId)
+    {
+        return mapper.getSubProjectsByParentProjectId(parentId);
     }
 
     @Override
@@ -56,7 +62,7 @@ public class ProjectsMapperCacheable implements ProjectsMapper
         mapper.deleteProject(projectId);
         projectIdToProject.remove(projectId);
     }
-    
+
     private final ProjectsMapper mapper;
     private static final AtomicBoolean getAllProjectsMethodCalled = new AtomicBoolean(false);
     private static final ConcurrentHashMap<Integer, Project> projectIdToProject = 
