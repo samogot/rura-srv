@@ -60,7 +60,7 @@ SELECT `job_id`, `title`, if(`job_id` between 3 and 7,'image','text') FROM `rura
 INSERT IGNORE INTO `ruranobe`.`users`(`user_id`, `username`, `realname`, `pass`, `email`, `email_activated`, `registration_date`, `adult`)
 SELECT `user_id`, `user_name`, `user_real_name`, `user_password`, `user_email`, `user_email_authenticated`, `user_registration`, 1 FROM `ruranobe_db`.`mw_user`;
 
-INSERT INTO `ruranobe`.`members`(`member_id`, `user_id`, `team_id`, `nikname`, `active`)
+INSERT INTO `ruranobe`.`team_members`(`member_id`, `user_id`, `team_id`, `nikname`, `active`)
 SELECT `worker_id`, `user_id`, `command_id`, `nikname`, `active` FROM `ruranobe_db`.`main_workers`;
 
 INSERT INTO `ruranobe`.`volume_release_activities`(`volume_id`, `activity_id`, `member_id`, `team_hidden`)
@@ -138,18 +138,18 @@ UPDATE ruranobe.projects SET name_jp='やはり俺の青春ラブコメはまち
 UPDATE ruranobe.projects SET name_jp='エロマンガ先生', name_en='EroManga Sensei', name_ru='Эроманга-сэнсэй' WHERE project_id = 27;
 UPDATE ruranobe.projects SET name_jp='問題児たちが異世界から来るそうですよ?', name_en='Problem Children are Coming from Another World, Aren''t They?', name_ru='Проблемные дети приходят из другого мира, верно?' WHERE project_id = 28;
 UPDATE ruranobe.projects SET name_jp='とある魔術の禁書目録', name_en='Toaru Majutsu no Index', name_ru='Некий Магический Индекс' WHERE project_id = 29;
-UPDATE ruranobe.projects SET name_jp='魔弾の王と戦姫', name_rj='Madan no Ou to Vanadis', name_ru=null WHERE project_id = 33;
-UPDATE ruranobe.projects SET name_jp='盾の勇者の成り上がり', name_rj='Tate no Yuusha no Nariagari', name_ru='Становление Героя Щита' WHERE project_id = 34;
+UPDATE ruranobe.projects SET name_jp='魔弾の王と戦姫', name_romaji='Madan no Ou to Vanadis', name_ru=null WHERE project_id = 33;
+UPDATE ruranobe.projects SET name_jp='盾の勇者の成り上がり', name_romaji='Tate no Yuusha no Nariagari', name_ru='Становление Героя Щита' WHERE project_id = 34;
 UPDATE ruranobe.projects SET name_jp='棺姫のチャイカ', name_en='Chaika - The Coffin Princess', name_ru='Чайка − принцесса с гробом' WHERE project_id = 35;
 UPDATE ruranobe.projects SET name_jp='マグダラで眠れ', name_en='May your soul rest in Magdala', name_ru='Пусть твоя душа упокоится в Магдале' WHERE project_id = 37;
-UPDATE ruranobe.projects SET name_jp='さくら荘のペットな彼女', name_rj='Sakurasou no Pet na Kanojo', name_ru='Кошечка из Сакурасо' WHERE project_id = 38;
+UPDATE ruranobe.projects SET name_jp='さくら荘のペットな彼女', name_romaji='Sakurasou no Pet na Kanojo', name_ru='Кошечка из Сакурасо' WHERE project_id = 38;
 UPDATE ruranobe.projects SET name_jp='オーバーロード', name_en='Overlord', name_ru='Властелин' WHERE project_id = 39;
 UPDATE ruranobe.projects SET name_jp='レンタルマギカ', name_en='Rental Magica', name_ru=null WHERE project_id = 43;
 UPDATE ruranobe.projects SET name_jp='黙示録アリス', name_en='Apocalypse Alice', name_ru=null WHERE project_id = 44;
-UPDATE ruranobe.projects SET name_jp='ダンジョンに出会いを求めるのは間違っているだろうか', name_rj='Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka', name_ru=null WHERE project_id = 45;
-UPDATE ruranobe.projects SET name_jp='新妹魔王の契約者（テスタメント）', name_rj='Shinmai Maou no Tesutamento', name_ru=null WHERE project_id = 46;
+UPDATE ruranobe.projects SET name_jp='ダンジョンに出会いを求めるのは間違っているだろうか', name_romaji='Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka', name_ru=null WHERE project_id = 45;
+UPDATE ruranobe.projects SET name_jp='新妹魔王の契約者（テスタメント）', name_romaji='Shinmai Maou no Tesutamento', name_ru=null WHERE project_id = 46;
 UPDATE ruranobe.projects SET name_jp='ハイスクールD×D', name_en='High School D×D', name_ru=null WHERE project_id = 48;
-UPDATE ruranobe.projects SET name_jp='世界の終わりの世界録', name_rj='Sekai no Owari no Encore', name_ru=null WHERE project_id = 49;
+UPDATE ruranobe.projects SET name_jp='世界の終わりの世界録', name_romaji='Sekai no Owari no Encore', name_ru=null WHERE project_id = 49;
 
 
 
