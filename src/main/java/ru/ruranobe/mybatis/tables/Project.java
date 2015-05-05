@@ -1,9 +1,25 @@
 package ru.ruranobe.mybatis.tables;
 
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+
 import java.io.Serializable;
 
 public class Project implements Serializable
 {
+
+    private static final long serialVersionUID = 2L;
+    private Integer projectId;
+    private Integer parentId;
+    private Integer imageId;
+    private String url;
+    private String title;
+    private Integer orderNumber;
+    private boolean bannerHidden;
+    private boolean projectHidden;
+    private String author;
+    private String illustrator;
+    private String franchise;
+    private String annotation;
 
     public Project(Integer parentId, Integer imageId, String url, String title, Integer orderNumber, boolean bannerHidden, boolean projectHidden, String annotation)
     {
@@ -19,6 +35,11 @@ public class Project implements Serializable
 
     public Project()
     {
+    }
+
+    public static PageParameters makeUrlParameters(String url)
+    {
+        return new PageParameters().set("project", url);
     }
 
     public String getAnnotation()
@@ -140,24 +161,15 @@ public class Project implements Serializable
     {
         this.illustrator = illustrator;
     }
-    
+
     @Override
     public String toString()
     {
         return "Project{" + "projectId=" + projectId + ", parentId=" + parentId + ", imageId=" + imageId + ", url=" + url + ", title=" + title + ", orderNumber=" + orderNumber + ", bannerHidden=" + bannerHidden + ", projectHidden=" + projectHidden + ", annotation=" + annotation + '}';
     }
-    
-    private Integer projectId;
-    private Integer parentId;
-    private Integer imageId;
-    private String url;
-    private String title;
-    private Integer orderNumber;
-    private boolean bannerHidden;
-    private boolean projectHidden;
-    private String author;
-    private String illustrator;
-    private String franchise;
-    private String annotation;
-    private static final long serialVersionUID = 2L;
+
+    public PageParameters getUrlParameters()
+    {
+        return makeUrlParameters(url);
+    }
 }

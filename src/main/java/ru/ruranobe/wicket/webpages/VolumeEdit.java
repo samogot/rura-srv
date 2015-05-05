@@ -1,23 +1,13 @@
 package ru.ruranobe.wicket.webpages;
 
-import java.util.List;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import ru.ruranobe.misc.RuranobeUtils;
-import ru.ruranobe.mybatis.MybatisUtil;
-import ru.ruranobe.mybatis.mappers.ChapterImagesMapper;
-import ru.ruranobe.mybatis.mappers.ChaptersMapper;
-import ru.ruranobe.mybatis.mappers.VolumesMapper;
-import ru.ruranobe.mybatis.tables.Chapter;
-import ru.ruranobe.mybatis.tables.ChapterImage;
-import ru.ruranobe.mybatis.tables.Volume;
-import ru.ruranobe.wicket.webpages.base.RuraHeaderAndFooter;
+import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
+import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
+import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
-public class VolumeEdit extends RuraHeaderAndFooter
+public class VolumeEdit extends SidebarLayoutPage
 {
-    
+
     public VolumeEdit(final PageParameters parameters)
     {
         /*if (parameters.getNamedKeys().size() != 1)
@@ -47,6 +37,8 @@ public class VolumeEdit extends RuraHeaderAndFooter
         List<ChapterImage> chapterImages = chapterImagesMapper.getChapterImagesByVolumeId(volume.getVolumeId());
         
         session.close();*/
+        sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
+        sidebarModules.add(new FriendsSidebarModule("sidebarModule"));
     }
-    
+
 }

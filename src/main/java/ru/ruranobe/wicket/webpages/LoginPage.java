@@ -5,9 +5,9 @@ import ru.ruranobe.wicket.components.LoginPanel;
 
 public class LoginPage extends WebPage
 {
-    
+
     @Override
-    protected void onInitialize() 
+    protected void onInitialize()
     {
         add(new LoginPanel("loginPanel"));
         super.onInitialize();

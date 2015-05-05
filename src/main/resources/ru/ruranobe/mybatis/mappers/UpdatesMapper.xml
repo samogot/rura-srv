@@ -1,48 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ru.ruranobe.mybatis.mappers.UpdatesMapper">
-    
+
     <select id="getLastUpdatesBy" parameterType="map" resultType="ru.ruranobe.mybatis.tables.Update">
-         select last_updates.update_id as updateId,
-                last_updates.update_type as updateType,
-                last_updates.volume_id as volumeId,
-                last_updates.chapter_id as chapterId,
-                last_updates.show_time as showTime,
-                last_updates.description as description,
-                c.title as chapterTitle,
-                v.name_ru as volumeTitle,
-                c.url as chapterUrl,
-                v.url as volumeUrl
-        from
-        (
-                select update_id,
-                       update_type,
-                       volume_id,
-                       chapter_id,
-                       show_time,
-                       description
-                from updates
-                where show_time &lt; (now())
-                  and (volume_id = #{volumeId} or #{volumeId} is null)
-                  and (project_id = #{projectId} or #{projectId} is null)
-                  and (update_type = #{updateType} or #{updateType} is null)
-                order by show_time
-                limit #{limitFrom}, #{limitTo}
-        ) last_updates
-        left join chapters c
-          on last_updates.chapter_id = c.chapter_id
-        left join volumes v
-          on last_updates.volume_id = v.volume_id
+        SELECT
+        last_updates.update_id AS updateId,
+        last_updates.update_type AS updateType,
+        last_updates.volume_id AS volumeId,
+        last_updates.chapter_id AS chapterId,
+        last_updates.show_time AS showTime,
+        last_updates.description AS description,
+        c.title AS chapterTitle,
+        v.name_title AS volumeTitle,
+        v.name_short AS volumeTitleShort,
+        c.url AS chapterUrl,
+        v.url AS volumeUrl
+        FROM (SELECT
+        update_id,
+        update_type,
+        volume_id,
+        chapter_id,
+        show_time,
+        description
+        FROM updates
+        WHERE show_time &lt; (now())
+        AND (#{volumeId} IS NULL OR volume_id = #{volumeId})
+        AND (#{updateType} IS NULL OR update_type = #{updateType})
+        AND (#{projectId} IS NULL OR project_id IN (#{projectId}, (SELECT parent_id
+        FROM projects
+        WHERE project_id = #{projectId})))
+        ORDER BY show_time DESC
+        LIMIT #{limitFrom}, #{limitTo}) last_updates
+        LEFT JOIN chapters c ON last_updates.chapter_id = c.chapter_id
+        LEFT JOIN volumes v ON last_updates.volume_id = v.volume_id
     </select>
-    
+
     <select id="getUpdatesCountBy" resultType="int">
-        select count(*)
-        from updates
-        where (volume_id = #{volumeId} or #{volumeId} is null)
-          and (project_id = #{projectId} or #{projectId} is null)
-          and (update_type = #{updateType} or #{updateType} is null)
+        SELECT count(*)
+        FROM updates
+        WHERE (volume_id = #{volumeId} OR #{volumeId} IS NULL)
+        AND (project_id = #{projectId} OR #{projectId} IS NULL)
+        AND (update_type = #{updateType} OR #{updateType} IS NULL)
     </select>
-    
+
 </mapper>

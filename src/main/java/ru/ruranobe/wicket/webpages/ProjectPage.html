@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org" lang="en">
+<body>
+
+
+<wicket:extend>
+
+    <h1 wicket:id="projectTitle"></h1>
+
+    <div wicket:id="projectCoverCarousel" class="releaseImg pull-left"></div>
+    <div class="aboutRelease">
+        <h2>Информация</h2>
+
+        <div><span class="bold">Название: </span><span wicket:id="projectName"></span></div>
+        <div><span class="bold">Автор: </span><span wicket:id="projectAuthor"></span></div>
+        <div><span class="bold">Иллюстратор: </span><span wicket:id="projectIllustrator"></span></div>
+        <h2>Франшиза</h2>
+
+        <div wicket:id="projectFranchise"></div>
+        <!--<div class="h4">Другие материалы</div>
+        <div><a href="#">Хронология событий</a></div>-->
+        <h2>Описание</h2>
+
+        <div class="annotation" wicket:id="projectAnnotation"></div>
+    </div>
+
+    <wicket:container wicket:id="volumeTypeRepeater">
+        <h2 wicket:id="volumeType"></h2>
+
+        <div class="ranobeList">
+            <wicket:container wicket:id="volumeSubProjectRepeater">
+                <div class="sub-project" wicket:id="projectName"></div>
+                <wicket:container wicket:id="volumeRepeater">
+                    <div>
+                        <div class="pull-left bold" wicket:id="volumeName"></div>
+                        <a wicket:id="volumeLink"></a>
+                        <span class="label" wicket:id="volumeStatus"></span>
+                    </div>
+                </wicket:container>
+            </wicket:container>
+        </div>
+    </wicket:container>
+</wicket:extend>
+
+</body>
+</html>

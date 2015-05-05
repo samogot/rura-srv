@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ru.ruranobe.mybatis.mappers.VolumesMapper">
 
     <cache type="org.mybatis.caches.ehcache.EhcacheCache">
-        <property name="timeToIdleSeconds" value="3600"/><!--1 hour-->
-        <property name="timeToLiveSeconds" value="3600"/><!--1 hour-->
+        <property name="timeToIdleSeconds" value="3600"/>
+        <!--1 hour-->
+        <property name="timeToLiveSeconds" value="3600"/>
+        <!--1 hour-->
         <property name="maxEntriesLocalHeap" value="1000"/>
         <property name="maxEntriesLocalDisk" value="10000000"/>
         <property name="memoryStoreEvictionPolicy" value="LRU"/>
     </cache>
 
     <select id="getInfoByProjectId" parameterType="int" resultType="ru.ruranobe.mybatis.tables.ProjectInfo">
-        select volumesCount.`count(*)` as volumesCount,
-               volumes.author,
-               volumes.illustrator,
-               volumes.volume_status as volumeStatus
-        from
-        (
-            select count(*)
-            from volumes
-            where project_id = #{projectId}
-        ) volumesCount, volumes
-        where volumes.project_id = #{projectId}
-        order by volume_id desc
-        limit 1
+        SELECT
+        count(*) AS volumesCount,
+        volumes.author,
+        volumes.illustrator,
+        volumes.volume_status AS volumeStatus
+        FROM (SELECT count(*)
+        FROM volumes
+        WHERE project_id = #{projectId}) volumesCount, volumes
+        WHERE volumes.project_id = #{projectId}
+        ORDER BY volume_id DESC
+        LIMIT 1
     </select>
 
     <select id="getVolumeByUrl" parameterType="String" resultMap="VolumeResult">
@@ -35,35 +35,30 @@
     </select>
 
     <select id="getVolumeNextPrevByUrl" parameterType="String" resultMap="VolumeResult">
-        select v.*
-             , prev_vol.name_short prev_name_short
-             , prev_vol.url prev_url
-             , next_vol.name_short next_name_short
-             , next_vol.url next_url
-        from
-        (
-            select v.*
-                 , (select max(order_number)
-                    from volumes
-                    where order_number &lt; v.order_number
-                      and project_id = v.project_id
-                    order by order_number desc
-                    limit 1) prev_order_number
-                 , (select min(order_number)
-                    from volumes
-                    where order_number &gt; v.order_number
-                      and project_id = v.project_id
-                    order by order_number asc
-                    limit 1) next_order_number
-            from volumes v
-            where v.url = #{url}
-        ) v
-        left join volumes prev_vol
-          on v.prev_order_number = prev_vol.order_number
-         and v.project_id = prev_vol.project_id
-        left join volumes next_vol
-          on v.next_order_number = next_vol.order_number
-         and v.project_id = next_vol.project_id
+        SELECT
+        v.*,
+        prev_vol.name_short prev_name_short,
+        prev_vol.url prev_url,
+        next_vol.name_short next_name_short,
+        next_vol.url next_url
+        FROM (SELECT
+        v.*,
+        (SELECT max(sequence_number)
+        FROM volumes
+        WHERE volumes.sequence_number &lt; v.sequence_number AND volumes.project_id = v.project_id
+        ORDER BY sequence_number DESC
+        LIMIT 1) prev_sequence_number,
+        (SELECT min(sequence_number)
+        FROM volumes
+        WHERE volumes.sequence_number &gt; v.sequence_number AND volumes.project_id = v.project_id
+        ORDER BY sequence_number ASC
+        LIMIT 1) next_sequence_number
+        FROM volumes v
+        WHERE v.url = #{url}) v
+        LEFT JOIN volumes prev_vol
+        ON v.prev_sequence_number = prev_vol.sequence_number AND v.project_id = prev_vol.project_id
+        LEFT JOIN volumes next_vol
+        ON v.next_sequence_number = next_vol.sequence_number AND v.project_id = next_vol.project_id
     </select>
 
     <select id="getVolumesByProjectId" parameterType="int" resultMap="VolumeResult">
@@ -96,7 +91,6 @@
         <result property="volumeStatus" column="volume_status"/>
         <result property="adult" column="adult"/>
         <result property="annotation" column="annotation"/>
-
         <result property="prevUrl" column="prev_url"/>
         <result property="prevNameShort" column="prev_name_short"/>
         <result property="nextUrl" column="next_url"/>

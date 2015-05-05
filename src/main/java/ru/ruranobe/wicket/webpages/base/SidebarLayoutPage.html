@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org" lang="en">
+<body>
+<wicket:extend>
+    <div class="container">
+        <div class="leftColumn">
+            <main class="content">
+                <wicket:child/>
+            </main>
+        </div>
+        <aside class="right-sidebar">
+            <div wicket:id="miniSearch"></div>
+            <wicket:container wicket:id="sidebarModuleRepeater">
+                <div wicket:id="sidebarModule"></div>
+            </wicket:container>
+        </aside>
+    </div>
+</wicket:extend>
+</body>
+</html>

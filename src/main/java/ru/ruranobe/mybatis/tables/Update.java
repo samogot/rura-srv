@@ -1,11 +1,29 @@
 package ru.ruranobe.mybatis.tables;
 
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import ru.ruranobe.wicket.webpages.FullVolumeTextViewer;
+import ru.ruranobe.wicket.webpages.VolumePage;
+
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Map;
 
 public class Update implements Serializable, Comparable<Update>
 {
+
+    private static final long serialVersionUID = 1L;
+    private static final String SHORT_TITLE_REGEX = "[-\\.,—–:].*$";
+    private Integer updateId;
+    private Integer volumeId;
+    private Integer chapterId;
+    private String updateType;
+    private Date showTime;
+    private String description;
+    /* Optional. Doesn't exist in table, used only in mybatis selects and corresponding code. */
+    private String volumeTitle;
+    private String volumeTitleShort;
+    private String chapterTitle;
+    private String volumeUrl;
+    private String chapterUrl;
 
     public Update()
     {
@@ -78,7 +96,7 @@ public class Update implements Serializable, Comparable<Update>
     {
         this.updateType = updateType;
     }
-    
+
     public String getChapterTitle()
     {
         return chapterTitle;
@@ -118,25 +136,45 @@ public class Update implements Serializable, Comparable<Update>
     {
         this.volumeUrl = volumeUrl;
     }
-    
+
+    public String getVolumeTitleShort()
+    {
+        return volumeTitleShort;
+    }
+
+    public void setVolumeTitleShort(String volumeTitleShort)
+    {
+        this.volumeTitleShort = volumeTitleShort;
+    }
+
     @Override
     public int compareTo(Update update)
     {
         return showTime.compareTo(update.showTime);
     }
-    
-    private Integer updateId;
-    private Integer volumeId;
-    private Integer chapterId;
-    private String updateType;
-    private Date showTime;
-    private String description;
-    
-    /* Optional. Doesn't exist in table, used only in mybatis selects and corresponding code. */
-    private String volumeTitle;
-    private String chapterTitle;
-    private String volumeUrl;
-    private String chapterUrl;
-   
-    private static final long serialVersionUID = 1L;
+
+    public PageParameters getUrlParameters()
+    {
+        return chapterUrl != null ? Chapter.makeUrlParameters(chapterUrl.split("/")) : Volume.makeUrlParameters(volumeUrl.split("/"));
+    }
+
+    public String getShortTitle()
+    {
+        String shortTitle;
+        if (volumeTitleShort != null) shortTitle = volumeTitleShort;
+        else shortTitle = volumeTitle.replaceFirst(SHORT_TITLE_REGEX, "");
+        if (chapterTitle != null) shortTitle += " - " + getChapterShortTitle();
+        return shortTitle;
+    }
+
+    public String getChapterShortTitle()
+    {
+        //todo supchapter
+        return chapterTitle != null ? chapterTitle.replaceFirst(SHORT_TITLE_REGEX, "") : null;
+    }
+
+    public Class getLinkClass()
+    {
+        return chapterId != null ? FullVolumeTextViewer.class : VolumePage.class;
+    }
 }

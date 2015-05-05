@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org" lang="en">
+<body>
+<wicket:panel>
+    <ol class="carousel-indicators">
+        <wicket:container wicket:id="carouselIndicators">
+            <li wicket:id="slideIndicator"></li>
+        </wicket:container>
+    </ol>
+    <div class="carousel-inner" role="listbox">
+        <wicket:container wicket:id="carouselSlides">
+            <div class="item" wicket:id="slideContainer">
+                <img width="240" wicket:id="slideImage">
+            </div>
+        </wicket:container>
+    </div>
+</wicket:panel>
+</body>
+</html>

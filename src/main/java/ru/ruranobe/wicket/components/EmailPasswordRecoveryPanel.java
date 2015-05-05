@@ -1,6 +1,5 @@
 package ru.ruranobe.wicket.components;
 
-import javax.mail.MessagingException;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.markup.html.form.StatelessForm;
@@ -15,16 +14,24 @@ import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.UsersMapper;
 import ru.ruranobe.mybatis.tables.User;
 
+import javax.mail.MessagingException;
+
 public class EmailPasswordRecoveryPanel extends Panel
 {
 
+    private static final String EMAIL_PASSWORD_RECOVERY_FORM = "emailPasswordRecoveryForm";
+    private static final String EMAIL_PASSWORD_RECOVERY_SUBJECT = "Восстановление пароля";
+    private static final String EMAIL_PASSWORD_RECOVERY_TEXT = "Для восстановления пароля проследуйте по ссылке http://ruranobe.ru/user/recover/pass?token=%s";
+    private static final long EXPIRATION_TIME_6_HOURS = 21600000L;
+    private static final long serialVersionUID = 1L;
+    private String email;
     public EmailPasswordRecoveryPanel(String id)
     {
         super(id);
         add(new FeedbackPanel("feedback"));
         add(new EmailPasswordRecoveryForm(EMAIL_PASSWORD_RECOVERY_FORM));
     }
-    
+
     public String getEmail()
     {
         return email;
@@ -34,9 +41,11 @@ public class EmailPasswordRecoveryPanel extends Panel
     {
         this.email = email;
     }
-    
+
     public final class EmailPasswordRecoveryForm extends StatelessForm<EmailPasswordRecoveryPanel>
     {
+
+        private static final long serialVersionUID = 1L;
 
         public EmailPasswordRecoveryForm(String id)
         {
@@ -51,16 +60,13 @@ public class EmailPasswordRecoveryPanel extends Panel
             if (Strings.isEmpty(email))
             {
                 error("Укажите, пожалуйста, электронный адрес.");
-            }
-            else if (!Email.isEmailSyntaxValid(email))
+            } else if (!Email.isEmailSyntaxValid(email))
             {
                 error("Указан неверный адрес электронной почты.");
-            }
-            else if (email.length() > 255)
+            } else if (email.length() > 255)
             {
                 error("Длина электронного адреса не должна превышать 255 символов.");
-            }
-            else
+            } else
             {
                 SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
                 SqlSession session = sessionFactory.openSession();
@@ -72,18 +78,15 @@ public class EmailPasswordRecoveryPanel extends Panel
                     if (user == null)
                     {
                         error("Пользователь с таким электронным адресом не зарегистрирован в системе.");
-                    }
-                    else if (!user.isEmailActivated())
+                    } else if (!user.isEmailActivated())
                     {
                         error("Электронный адрес пользователя не был подтвержден.");
-                    }
-                    else if (user.getPassRecoveryToken() != null
-                             && user.getPassRecoveryTokenDate().getTime() > System.currentTimeMillis())
+                    } else if (user.getPassRecoveryToken() != null
+                               && user.getPassRecoveryTokenDate().getTime() > System.currentTimeMillis())
                     {
                         error("На указанный электронной адрес уже было отправлено письмо.");
-                    }
-                    else
-                    { 
+                    } else
+                    {
                         Token token = Token.valueOf(user.getUserId(), EXPIRATION_TIME_6_HOURS);
                         user.setPassRecoveryToken(token.getTokenValue());
                         user.setPassRecoveryTokenDate(token.getTokenExpirationDate());
@@ -93,27 +96,16 @@ public class EmailPasswordRecoveryPanel extends Panel
                             Email.sendEmail(user.getEmail(), EMAIL_PASSWORD_RECOVERY_SUBJECT,
                                     String.format(EMAIL_PASSWORD_RECOVERY_TEXT, user.getPassRecoveryToken()));
                             session.commit();
-                        }
-                        catch (MessagingException ex)
+                        } catch (MessagingException ex)
                         {
                             error("Отправка сообщения на указанный электронный адрес не удалась. Свяжитесь, пожалуйста, с администрацией сайта.");
                         }
                     }
-                }
-                finally
+                } finally
                 {
                     session.close();
                 }
             }
         }
-        
-        private static final long serialVersionUID = 1L;
     }
-    
-    private String email;
-    private static final String EMAIL_PASSWORD_RECOVERY_FORM = "emailPasswordRecoveryForm";
-    private static final String EMAIL_PASSWORD_RECOVERY_SUBJECT = "Восстановление пароля";
-    private static final String EMAIL_PASSWORD_RECOVERY_TEXT = "Для восстановления пароля проследуйте по ссылке http://ruranobe.ru/user/recover/pass?token=%s";
-    private static final long EXPIRATION_TIME_6_HOURS = 21600000L;
-    private static final long serialVersionUID = 1L;
 }

@@ -1,96 +1,115 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-</head>
+<html xmlns:wicket="http://wicket.apache.org" lang="en">
 <body>
+<wicket:extend>
+    <div class="container">
+        <div class="leftColumn">
+            <main class="content" style="padding: 0;">
+                <div class="h3" style="margin-top: 15px !important;">Проекты</div>
+                <p><span class="color110">Ниже перечислены наши проекты.</span></p>
 
-    <wicket:extend>
-        <div class="container">
-                        <div class="leftColumn">
-                        <main class="content">
-                    <div class="h3" style="margin-top: 15px !important;">Проекты</div>
-                    <p><span class="color110">Ниже перечислены наши проекты.</span></p>        
-                    <div class="displayNone991">
-                        <div class="view pull-left">Вид:</div>
-                        <button class="view1 active"></button>
-                        <button class="view2"></button>
-                    </div>
-                    <!-- view type 1 -->
-<wicket:container wicket:id="viewTypeOne">
-    <div class="viewType1">
-        <a wicket:id="linkOneViewTypeOne"><img wicket:id="imageViewTypeOne"/></a>
-        <a wicket:id="linkTwoViewTypeOne"><span wicket:id="titleViewTypeOne"/></a>
-        <span class="bold">Автор:&nbsp;</span><span wicket:id="authorViewTypeOne"/><br>
-        <span class="bold">Томов:&nbsp;</span><span wicket:id="volumeCountViewTypeOne"/><br>
-        <div style="margin-top:15px;">
-            <div wicket:id="statusViewTypeOne"><span wicket:id="statusViewTypeOneText"/></div>
-            <div class="moreAboutProject"><a wicket:id="linkThreeViewTypeOne">Подробнее</a></div>
-        </div>
-    </div>
-</wicket:container>
-                    <!-- view type 2 -->
-                    <div class="viewTypeBlock2">
-                        <div class="viewType2">
-<wicket:container wicket:id="viewTypeTwo">
-    <a wicket:id="linkOneViewTypeTwo" class="pull-left"><img wicket:id="imageViewTypeTwo"/></a>
-    <div style="padding-bottom: 10px;"><a wicket:id="linkTwoViewTypeTwo" style="text-decoration: underline;"><span wicket:id="titleViewTypeTwo"/></a></div>
-    <div style="line-height: 22px;margin-bottom: 4px;">
-        <span class="bold">Автор:&nbsp;</span><span wicket:id="authorViewTypeTwo"/><br/>
-        <span class="bold">Иллюстратор:&nbsp;</span><span wicket:id="illustratorViewTypeTwo"/><br/>
-    </div>
-    <div class="viewType2about pull-right">
-        <div class="volumes"><span class="bold">Томов:&nbsp;</span><span wicket:id="volumeCountViewTypeTwo"/></div>
-    </div>
-    <div class="moreAboutProject pull-right">
-        <a wicket:id="linkThreeViewTypeTwo">Подробнее</a>
-    </div>
-</wicket:container>
-                        </div>
-                    </div>
-                </main>
-                        </div>
-                        <aside class="right-sidebar">
-                <div class="miniSearch" style="margin-bottom: 20px;">
-                    <input type="text" placeholder="Поиск..."><button><i class="fa fa-search"></i></button>
+                <div class="displayNone991">
+                    <div class="view pull-left">Вид:</div>
+                    <button class="view1 active"></button>
+                    <button class="view2"></button>
                 </div>
-                    <script type="text/javascript" src="https://vk.com/js/api/openapi.js?115"></script>
-                    <div id="vk_groups"></div>
-                    <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/RuRa_team" data-widget-id="540043044683546624">Твиты от @RuRa_team</a>
-                    <script>
-                    VK.Widgets.Group("vk_groups", {mode: 2, width: "220", height: "660", color1: 'FFFFFF', color2: '5290b5', color3: '60a7d2'}, 43340456);
-                    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
-                    </script>   
-                    <div style="color:rgb(77,77,77);">
-                        <i class="fa fa-chevron-down pull-left" style='margin-top: 2px;'></i>
-                        <div class="h4">Друзья</div>
+                <!-- view type 1 -->
+                <wicket:container wicket:id="viewTypeOne">
+                    <div class="viewType1">
+                        <a wicket:id="linkOneViewTypeOne">
+                            <img wicket:id="imageViewTypeOne" height="73" width="220"/>
+                        </a><br>
+                        <a wicket:id="linkTwoViewTypeOne"><span wicket:id="titleViewTypeOne"></span></a><br>
+                        <span class="bold">Автор:&nbsp;</span><span wicket:id="authorViewTypeOne"></span><br>
+                        <span class="bold">Томов:&nbsp;</span><span wicket:id="volumeCountViewTypeOne"></span><br>
+
+                        <div style="margin-top:15px;">
+                            <div wicket:id="statusViewTypeOne"><span wicket:id="statusViewTypeOneText"></span></div>
+                            <div class="moreAboutProject"><a wicket:id="linkThreeViewTypeOne">Подробнее</a></div>
+                        </div>
                     </div>
-                    <div class="poster" style="margin-right:0px !important;">
-                        <a href="#"><div class="projectBlock type2"><img src="img/friend.png"></div></a>
+                </wicket:container>
+                <!-- view type 2 -->
+                <div class="viewTypeBlock2">
+                    <div class="viewType2">
+                        <wicket:container wicket:id="viewTypeTwo">
+                            <a wicket:id="linkOneViewTypeTwo" class="pull-left">
+                                <img wicket:id="imageViewTypeTwo" height="73" width="220"/>
+                            </a>
+
+                            <div style="padding-bottom: 10px;">
+                                <a wicket:id="linkTwoViewTypeTwo" style="text-decoration: underline;">
+                                    <span wicket:id="titleViewTypeTwo"></span>
+                                </a>
+                            </div>
+                            <div style="line-height: 22px; margin-bottom: 4px;">
+                                <span class="bold">Автор:&nbsp;</span>
+                                <span wicket:id="authorViewTypeTwo"></span><br/>
+                                <span class="bold">Иллюстратор:&nbsp;</span>
+                                <span wicket:id="illustratorViewTypeTwo"></span><br/>
+                            </div>
+                            <div class="viewType2about pull-right">
+                                <div class="volumes">
+                                    <span class="bold">Томов:&nbsp;</span>
+                                    <span wicket:id="volumeCountViewTypeTwo"></span>
+                                </div>
+                            </div>
+                            <!--<div class="moreAboutProject pull-right">
+                                <a wicket:id="linkThreeViewTypeTwo">Подробнее</a>
+                            </div>-->
+                        </wicket:container>
                     </div>
-                </aside>
+                </div>
+            </main>
         </div>
-        
-        <script type="text/javascript">
-$('.view1').click(function(){
-  if ( $('.view1').hasClass('active') ) {
-  } else {
-    $(".view1").addClass("active");
-    $(".viewType1").show();
-    $(".view2").removeClass("active");
-    $(".viewTypeBlock2").hide();
-  }
-});
-$('.view2').click(function(){
-  if ( $('.view2').hasClass('active') ) {
-  } else {
-    $(".view2").addClass("active");
-    $(".viewTypeBlock2").show();
-    $(".view1").removeClass("active");
-    $(".viewType1").hide();
-  }
-});
-</script>
-    </wicket:extend>
-        
+        <aside class="right-sidebar visible-lg-block">
+            <script type="text/javascript" src="https://vk.com/js/api/openapi.js?115"></script>
+            <div id="vk_groups"></div>
+            <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/RuRa_team"
+               data-widget-id="540043044683546624">Твиты от @RuRa_team</a>
+            <script>
+                VK.Widgets.Group("vk_groups", {
+                    mode: 2,
+                    width: "230",
+                    height: "660",
+                    color1: 'FFFFFF',
+                    color2: '5290b5',
+                    color3: '60a7d2'
+                }, 43340456);
+                !function (d, s, id) {
+                    var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+                    if (!d.getElementById(id)) {
+                        js = d.createElement(s);
+                        js.id = id;
+                        js.src = p + "://platform.twitter.com/widgets.js";
+                        fjs.parentNode.insertBefore(js, fjs);
+                    }
+                }(document, "script", "twitter-wjs");
+            </script>
+        </aside>
+    </div>
+
+    <script type="text/javascript">
+        $('.view1').click(function () {
+            if ($('.view1').hasClass('active')) {
+            } else {
+                $(".view1").addClass("active");
+                $(".viewType1").show();
+                $(".view2").removeClass("active");
+                $(".viewTypeBlock2").hide();
+            }
+        });
+        $('.view2').click(function () {
+            if ($('.view2').hasClass('active')) {
+            } else {
+                $(".view2").addClass("active");
+                $(".viewTypeBlock2").show();
+                $(".view1").removeClass("active");
+                $(".viewType1").hide();
+            }
+        });
+    </script>
+</wicket:extend>
+
 </body>
 </html>

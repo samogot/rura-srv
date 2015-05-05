@@ -1,6 +1,5 @@
 package ru.ruranobe.wicket;
 
-import javax.servlet.http.Cookie;
 import org.apache.wicket.Application;
 import org.apache.wicket.authentication.IAuthenticationStrategy;
 import org.apache.wicket.util.cookies.CookieUtils;
@@ -8,12 +7,19 @@ import org.apache.wicket.util.crypt.ICrypt;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
+import javax.servlet.http.Cookie;
+
 /* 
  * 6.18.0 version of class DefaultAuthenticationStrategy 
  * is poor. Here I copied source code from later release.
  */
 public class RuranobeAuthenticationStrategy implements IAuthenticationStrategy
 {
+
+    protected final String cookieKey;
+    protected final String VALUE_SEPARATOR = "-keiuekk-";
+    private CookieUtils cookieUtils;
+    private ICrypt crypt;
 
     public RuranobeAuthenticationStrategy(final String cookieKey)
     {
@@ -27,16 +33,6 @@ public class RuranobeAuthenticationStrategy implements IAuthenticationStrategy
             cookieUtils = new RuranobeCookieUtils();
         }
         return cookieUtils;
-    }
-
-    public class RuranobeCookieUtils extends CookieUtils
-    {
-        @Override
-        protected void initializeCookie(final Cookie cookie)
-        {
-            super.initializeCookie(cookie);
-            cookie.setPath("/");
-        }
     }
 
     protected ICrypt getCrypt()
@@ -57,8 +53,7 @@ public class RuranobeAuthenticationStrategy implements IAuthenticationStrategy
             try
             {
                 value = getCrypt().decryptUrlSafe(value);
-            }
-            catch (RuntimeException e)
+            } catch (RuntimeException e)
             {
                 getCookieUtils().remove(cookieKey);
                 value = null;
@@ -69,7 +64,7 @@ public class RuranobeAuthenticationStrategy implements IAuthenticationStrategy
         return null;
     }
 
-    protected String[] decode(String value) 
+    protected String[] decode(String value)
     {
         if (Strings.isEmpty(value) == false)
         {
@@ -86,7 +81,7 @@ public class RuranobeAuthenticationStrategy implements IAuthenticationStrategy
                 password = values[1];
             }
 
-            return new String[] { username, password };
+            return new String[]{username, password};
         }
         return null;
     }
@@ -116,9 +111,14 @@ public class RuranobeAuthenticationStrategy implements IAuthenticationStrategy
     {
         getCookieUtils().remove(cookieKey);
     }
-        
-    private CookieUtils cookieUtils;
-    protected final String cookieKey;
-    protected final String VALUE_SEPARATOR = "-keiuekk-";
-    private ICrypt crypt;
+
+    public class RuranobeCookieUtils extends CookieUtils
+    {
+        @Override
+        protected void initializeCookie(final Cookie cookie)
+        {
+            super.initializeCookie(cookie);
+            cookie.setPath("/");
+        }
+    }
 }

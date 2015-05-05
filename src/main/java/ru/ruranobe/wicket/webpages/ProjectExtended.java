@@ -1,8 +1,9 @@
 package ru.ruranobe.wicket.webpages;
 
-import java.io.Serializable;
 import ru.ruranobe.mybatis.tables.ExternalResource;
 import ru.ruranobe.mybatis.tables.Project;
+
+import java.io.Serializable;
 
 public class ProjectExtended implements Serializable
 {

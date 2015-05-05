@@ -1,9 +1,5 @@
 package ru.ruranobe.wicket.webpages;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Date;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.markup.html.WebPage;
@@ -15,14 +11,16 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Bytes;
-import ru.ruranobe.engine.image.RuranobeImageUploader;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.ExternalResourcesMapper;
-import ru.ruranobe.mybatis.tables.ExternalResource;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
 
 public class UploadImage extends WebPage
 {
-    
+
     public UploadImage(final PageParameters parameters)
     {
         add(new FeedbackPanel("feedback"));
@@ -31,24 +29,27 @@ public class UploadImage extends WebPage
 
     public class UploadImageForm extends StatelessForm<UploadImage>
     {
+        private final FileUploadField fileUploadField;
+        private TextField<String> picasaPathField;
+        private TextField<String> titleField;
         public UploadImageForm(final String id)
         {
             super(id);
 
             setMultiPart(true);
             setMaxSize(Bytes.megabytes(10));
-            
+
             picasaPathField = new TextField<String>("picasaPath", Model.of(""));
             titleField = new TextField<String>("title", Model.of(""));
             fileUploadField = new FileUploadField("fileUpload");
-            
+
             add(picasaPathField);
             add(titleField);
             add(fileUploadField);
         }
 
         @Override
-        protected void onSubmit() 
+        protected void onSubmit()
         {
             final FileUpload uploadedFile = fileUploadField.getFileUpload();
             if (uploadedFile != null)
@@ -56,18 +57,17 @@ public class UploadImage extends WebPage
                 String picasaPath = picasaPathField.getDefaultModelObjectAsString();
                 String title = titleField.getDefaultModelObjectAsString();
                 String mimeType = uploadedFile.getContentType();
-          //      RuranobeImageUploader imageUploader = RuranobeImageUploader.getInstance();
-                
+                //      RuranobeImageUploader imageUploader = RuranobeImageUploader.getInstance();
+
                 File file = null;
                 try
                 {
                     file = uploadedFile.writeToTempFile();
-                }
-                catch (IOException ex)
+                } catch (IOException ex)
                 {
                     throw new RuntimeException(ex);
                 }
-                
+
                 //String externalLink = imageUploader.uploadImage(file, mimeType, picasaPath, title);
 
                 SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
@@ -77,21 +77,16 @@ public class UploadImage extends WebPage
                     ExternalResourcesMapper externalResourcesMapper = session.getMapper(ExternalResourcesMapper.class);
                     Date uploadedWhen = new Date(System.currentTimeMillis());
                     //TODO: replace 0
-             //       ExternalResource externalResource = new ExternalResource(0, mimeType, externalLink, title, uploadedWhen);
+                    //       ExternalResource externalResource = new ExternalResource(0, mimeType, externalLink, title, uploadedWhen);
 //                    externalResourcesMapper.insertExternalResource(externalResource);
                     session.commit();
-                }
-                finally
+                } finally
                 {
-                    session.close(); 
+                    session.close();
                 }
 
                 info("Файл с именем: " + uploadedFile.getClientFileName() + " был успешно загружен.");
             }
         }
-        
-        private final FileUploadField fileUploadField;
-        private TextField<String> picasaPathField;
-        private TextField<String> titleField;
     }
 }

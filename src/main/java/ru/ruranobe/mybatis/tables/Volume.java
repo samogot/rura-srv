@@ -1,19 +1,51 @@
 package ru.ruranobe.mybatis.tables;
 
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+
 import java.io.Serializable;
 import java.util.Date;
 
 public class Volume implements Serializable
 {
 
+    private static final long serialVersionUID = 1L;
+    private Integer volumeId;
+    private Integer projectId;
+    private Integer imageOne;
+    private Integer imageTwo;
+    private Integer imageThree;
+    private Integer imageFour;
+    private String url;
+    private String nameFile;
+    private String nameTitle;
+    private String nameJp;
+    private String nameEn;
+    private String nameRu;
+    private String nameShort;
+    private Integer sequenceNumber;
+    private String author;
+    private String illustrator;
+    private Date releaseDate;
+    private String isbn;
+    private String externalUrl;
+    private String annotation;
+    private String volumeStatus;
+    private String volumeType;
+    private boolean adult;
+    /* Optional */
+    private String prevNameShort;
+    private String prevUrl;
+    private String nextNameShort;
+    private String nextUrl;
+
     public Volume()
     {
     }
 
-    public Volume(Integer projectId, String url, String nameFile, String nameTitle, 
-            String nameJp, String nameEn, String nameRu, String nameShort, 
-            Integer sequenceNumber, String author, String illustrator, Date releaseDate,
-            String isbn, String externalUrl, String annotation)
+    public Volume(Integer projectId, String url, String nameFile, String nameTitle,
+                  String nameJp, String nameEn, String nameRu, String nameShort,
+                  Integer sequenceNumber, String author, String illustrator, Date releaseDate,
+                  String isbn, String externalUrl, String annotation)
     {
         this.projectId = projectId;
         this.url = url;
@@ -30,6 +62,11 @@ public class Volume implements Serializable
         this.isbn = isbn;
         this.externalUrl = externalUrl;
         this.annotation = annotation;
+    }
+
+    public static PageParameters makeUrlParameters(String[] urlParts)
+    {
+        return new PageParameters().set("project", urlParts[0]).set("volume", urlParts[1]);
     }
 
     public String getAnnotation()
@@ -267,37 +304,6 @@ public class Volume implements Serializable
     {
         return "Volume{" + "volumeId=" + volumeId + ", projectId=" + projectId + ", url=" + url + ", nameFile=" + nameFile + ", nameTitle=" + nameTitle + ", nameJp=" + nameJp + ", nameEn=" + nameEn + ", nameRu=" + nameRu + ", nameShort=" + nameShort + ", sequenceNumber=" + sequenceNumber + ", author=" + author + ", illustrator=" + illustrator + ", releaseDate=" + releaseDate + ", isbn=" + isbn + ", externalUrl=" + externalUrl + ", annotation=" + annotation + ", volumeStatus=" + volumeStatus + ", volumeType=" + volumeType + ", adult=" + adult + '}';
     }
-    
-    private Integer volumeId;
-    private Integer projectId;
-    private Integer imageOne;
-    private Integer imageTwo;
-    private Integer imageThree;
-    private Integer imageFour;
-    private String url;
-    private String nameFile;
-    private String nameTitle;
-    private String nameJp;
-    private String nameEn;
-    private String nameRu;
-    private String nameShort;
-    private Integer sequenceNumber;
-    private String author;
-    private String illustrator;
-    private Date releaseDate;
-    private String isbn;
-    private String externalUrl;
-    private String annotation;
-    private String volumeStatus;
-    private String volumeType;
-    private boolean adult;
-    private static final long serialVersionUID = 1L;
-    
-    /* Optional */
-    private String prevNameShort;
-    private String prevUrl;
-    private String nextNameShort;
-    private String nextUrl;
 
     public String getNextNameShort()
     {
@@ -337,5 +343,20 @@ public class Volume implements Serializable
     public void setPrevUrl(String prevUrl)
     {
         this.prevUrl = prevUrl;
+    }
+
+    public PageParameters getUrlParameters()
+    {
+        return makeUrlParameters(url.split("/"));
+    }
+
+    public PageParameters getPrevUrlParameters()
+    {
+        return makeUrlParameters(prevUrl.split("/"));
+    }
+
+    public PageParameters getNextUrlParameters()
+    {
+        return makeUrlParameters(nextUrl.split("/"));
     }
 }

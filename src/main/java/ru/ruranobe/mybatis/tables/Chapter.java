@@ -1,13 +1,25 @@
 package ru.ruranobe.mybatis.tables;
 
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+
 import java.io.Serializable;
 
 public class Chapter implements Serializable
 {
 
+    private static final long serialVersionUID = 1L;
+    private Integer chapterId;
+    private Integer volumeId;
+    private Integer textId;
+    private String url;
+    private String title;
+    private Integer orderNumber;
+    private boolean published;
+    private boolean nested;
+
     public Chapter()
     {
-        
+
     }
 
     public Chapter(Integer volumeId, Integer textId, String url, String title, Integer orderNumber, boolean published, boolean nested)
@@ -19,6 +31,11 @@ public class Chapter implements Serializable
         this.orderNumber = orderNumber;
         this.published = published;
         this.nested = nested;
+    }
+
+    public static PageParameters makeUrlParameters(String[] urlParts)
+    {
+        return new PageParameters().set("project", urlParts[0]).set("volume", urlParts[1]).set("chapter", urlParts[2]);
     }
 
     public Integer getChapterId()
@@ -100,14 +117,4 @@ public class Chapter implements Serializable
     {
         this.volumeId = volumeId;
     }
-    
-    private Integer chapterId;
-    private Integer volumeId;
-    private Integer textId;
-    private String url;
-    private String title;
-    private Integer orderNumber;
-    private boolean published;
-    private boolean nested;
-    private static final long serialVersionUID = 1L;
 }

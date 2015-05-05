@@ -1,16 +1,26 @@
 package ru.ruranobe.wicket;
 
 import com.google.common.collect.ImmutableMap;
+
 import java.util.Map;
 
-public class RuraConstants 
+public class RuraConstants
 {
-    public static final String UPDATE_TYPE_TRANSLATE = "translate";    
-    public static final String UPDATE_TYPE_PROOFREAD = "proofread";    
-    public static final String UPDATE_TYPE_IMAGES = "images";    
-    public static final String UPDATE_TYPE_OTHER = "other";
+    public static final String UPDATE_TYPE_PUBLISH = "Опубликован";
+    public static final String UPDATE_TYPE_TRANSLATE = "Обновлен перевод";
+    public static final String UPDATE_TYPE_PROOFREAD = "Глобальная редактура";
+    public static final String UPDATE_TYPE_IMAGES = "Обновление иллюстраций";
+    public static final String UPDATE_TYPE_OTHER = "";
+    public static final Map<String, String> UPDATE_TYPE_TO_ICON_CLASS =
+            new ImmutableMap.Builder<String, String>()
+                    .put(RuraConstants.UPDATE_TYPE_PUBLISH, "update-publish")
+                    .put(RuraConstants.UPDATE_TYPE_TRANSLATE, "update-translate")
+                    .put(RuraConstants.UPDATE_TYPE_PROOFREAD, "update-proofread")
+                    .put(RuraConstants.UPDATE_TYPE_IMAGES, "update-images")
+                    .build();
 
     public static final String VOLUME_STATUS_HIDDEN = "hidden";
+    @SuppressWarnings("unused")
     public static final String VOLUME_STATUS_AUTO = "auto";
     public static final String VOLUME_STATUS_EXTERNAL_DROPPED = "external_dropped";
     public static final String VOLUME_STATUS_EXTERNAL_ACTIVE = "external_active";
@@ -24,20 +34,8 @@ public class RuraConstants
     public static final String VOLUME_STATUS_PROOFREAD = "proofread";
     public static final String VOLUME_STATUS_DECOR = "decor";
     public static final String VOLUME_STATUS_DONE = "done";
-    
-    public static final String VOLUME_TYPE_RANOBE = "ranobe_vol";
-    public static final String VOLUME_TYPE_SIDE_STORY = "side_story";
-    public static final String VOLUME_TYPE_DOUJINSHI= "doujinshi";
-    public static final String VOLUME_TYPE_DOUJINSHI_SIDE_STORY = "doujinshi_ss";
-    public static final String VOLUME_TYPE_MATERIALS = "materials";
 
-    public static final Map<String, String> UPDATE_TYPE_TO_ICON_DIV_CLASS = 
-            new ImmutableMap.Builder<String, String>()
-            .put(UPDATE_TYPE_TRANSLATE, "updIcon type4")
-            .put(UPDATE_TYPE_IMAGES, "updIcon type5")
-            .put(UPDATE_TYPE_PROOFREAD, "updIcon type3")
-            .put(UPDATE_TYPE_OTHER, "updIcon type1")
-            .build();
-    
-    private RuraConstants(){}
+    private RuraConstants()
+    {
+    }
 }

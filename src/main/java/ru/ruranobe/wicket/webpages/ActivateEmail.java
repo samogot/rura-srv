@@ -13,22 +13,22 @@ import ru.ruranobe.mybatis.tables.User;
 
 public class ActivateEmail extends WebPage
 {
-    
+
     public ActivateEmail(final PageParameters parameters)
     {
         add(new FeedbackPanel("feedback"));
-        
+
         if (parameters.getNamedKeys().size() != 1)
         {
             throw RuranobeUtils.REDIRECT_TO_404;
         }
-        
+
         String emailToken = parameters.get("token").toString();
         if (Strings.isEmpty(emailToken))
         {
             throw RuranobeUtils.REDIRECT_TO_404;
         }
-        
+
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
         SqlSession session = sessionFactory.openSession();
         try
@@ -41,12 +41,11 @@ public class ActivateEmail extends WebPage
                 usersMapper.updateUser(user);
                 session.commit();
             }
-        }
-        finally
+        } finally
         {
-            session.close(); 
+            session.close();
         }
-        
+
         info("Электронный адрес успешно активирован.");
     }
 }

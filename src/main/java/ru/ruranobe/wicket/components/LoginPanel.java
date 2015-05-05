@@ -15,6 +15,12 @@ import ru.ruranobe.wicket.LoginSession;
 public class LoginPanel extends Panel
 {
 
+    private static final String LOGIN_FORM = "loginForm";
+    private static final long serialVersionUID = 1L;
+    private boolean rememberMe = true;
+    private String password;
+    private String username;
+
     public LoginPanel(final String id)
     {
         super(id);
@@ -34,7 +40,7 @@ public class LoginPanel extends Panel
         {
             IAuthenticationStrategy authenticationStrategy = getApplication()
                     .getSecuritySettings().getAuthenticationStrategy();
-            
+
             // get username and password from persistence store
             String[] data = authenticationStrategy.load();
 
@@ -48,19 +54,18 @@ public class LoginPanel extends Panel
 
                     // logon successful. Continue to the original destination
                     continueToOriginalDestination();
-                    
+
                     // If we get this far, it means that we should redirect to the home page
                     throw new RestartResponseException(getSession().getPageFactory().newPage(
-                                getApplication().getHomePage()));
-                }
-                else
+                            getApplication().getHomePage()));
+                } else
                 {
                     // the loaded credentials are wrong. erase them.
                     authenticationStrategy.remove();
                 }
             }
         }
-        
+
         super.onBeforeRender();
     }
 
@@ -121,6 +126,8 @@ public class LoginPanel extends Panel
     public final class LoginForm extends StatelessForm<LoginPanel>
     {
 
+        private static final long serialVersionUID = 1L;
+
         public LoginForm(String id)
         {
             super(id);
@@ -144,27 +151,17 @@ public class LoginPanel extends Panel
                 if (rememberMe == true)
                 {
                     strategy.save(username, password);
-                }
-                else
+                } else
                 {
                     strategy.remove();
                 }
 
                 onLoginSucceeded();
-            }
-            else
+            } else
             {
                 onLoginFailed();
                 strategy.remove();
             }
         }
-        
-        private static final long serialVersionUID = 1L;
     }
-    
-    private static final String LOGIN_FORM = "loginForm";
-    private boolean rememberMe = true;
-    private String password;
-    private String username;
-    private static final long serialVersionUID = 1L;
 }

@@ -12,13 +12,15 @@ import ru.ruranobe.mybatis.tables.User;
 public class LoginSession extends AuthenticatedWebSession
 {
 
+    private User user;
+
     public LoginSession(Request request)
     {
         super(request);
     }
 
     @Override
-    public boolean authenticate(String username, String password) 
+    public boolean authenticate(String username, String password)
     {
         boolean authenticationCompleted = false;
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
@@ -29,18 +31,17 @@ public class LoginSession extends AuthenticatedWebSession
         {
             UsersMapper usersMapper = session.getMapper(UsersMapper.class);
             signInUser = usersMapper.signInUser(username, password);
-        }
-        finally
+        } finally
         {
             session.close();
         }
-        
+
         if (signInUser != null)
         {
             this.user = signInUser;
             authenticationCompleted = true;
         }
-        
+
         return authenticationCompleted;
     }
 
@@ -49,12 +50,10 @@ public class LoginSession extends AuthenticatedWebSession
     {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     public User getUser()
     {
         return user;
     }
-    
-    private User user;
 
 }

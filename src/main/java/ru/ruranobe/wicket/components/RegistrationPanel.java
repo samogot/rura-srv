@@ -1,6 +1,5 @@
 package ru.ruranobe.wicket.components;
 
-import java.util.Date;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.markup.html.form.PasswordTextField;
@@ -10,16 +9,29 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.util.string.Strings;
-import ru.ruranobe.mybatis.MybatisUtil;
-import ru.ruranobe.mybatis.mappers.UsersMapper;
-import ru.ruranobe.mybatis.tables.User;
 import ru.ruranobe.misc.Email;
 import ru.ruranobe.misc.MD5;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.misc.Token;
+import ru.ruranobe.mybatis.MybatisUtil;
+import ru.ruranobe.mybatis.mappers.UsersMapper;
+import ru.ruranobe.mybatis.tables.User;
 
-public class RegistrationPanel extends Panel 
+import java.util.Date;
+
+public class RegistrationPanel extends Panel
 {
+    private static final String REGISTRATION_FORM = "registrationForm";
+    private static final String ACTIVATE_EMAIL_SUBJECT = "Активация электронного адреса";
+    private static final String ACTIVATE_EMAIL_TEXT = "Для активации электронного адреса в системе проследуйте по ссылке http://ruranobe.ru/user/email/activate?token=%s";
+    private static final long ETERNITY_EXPIRATION_TIME = 31622400000000L;
+    private static final long serialVersionUID = 1L;
+    private String password;
+    private String username;
+    private String confirmPassword;
+    private String email;
+    private String realname;
+
     public RegistrationPanel(final String id)
     {
         super(id);
@@ -76,9 +88,11 @@ public class RegistrationPanel extends Panel
     {
         this.username = username;
     }
-    
+
     public final class RegistrationForm extends StatelessForm<RegistrationPanel>
     {
+
+        private static final long serialVersionUID = 1L;
 
         public RegistrationForm(final String id)
         {
@@ -99,36 +113,28 @@ public class RegistrationPanel extends Panel
             if (Strings.isEmpty(username))
             {
                 error("Введено пустое имя учетной записи.");
-            }
-            else if (username.length() > 63)
+            } else if (username.length() > 63)
             {
                 error("Длина имени учетной записи не должна превышать 63 символов.");
-            }
-            else if (Strings.isEmpty(password))      
+            } else if (Strings.isEmpty(password))
             {
                 error("Введен пусто пароль учетной записи.");
-            }
-            else if (password.length() < 8 || password.length() > 31)
+            } else if (password.length() < 8 || password.length() > 31)
             {
                 error("Длина пароля не должна быть меньше 8 символов или превышать 31 символ.");
-            }
-            else if (!password.equals(confirmPassword))
+            } else if (!password.equals(confirmPassword))
             {
                 error("Введенные пароли не совпадают.");
-            }
-            else if (!RuranobeUtils.isPasswordSyntaxValid(password))
+            } else if (!RuranobeUtils.isPasswordSyntaxValid(password))
             {
                 error("Пароль может состоять только из больших и маленьких латинских букв, а также цифр.");
-            }
-            else if (!Strings.isEmpty(email) && !Email.isEmailSyntaxValid(email))
+            } else if (!Strings.isEmpty(email) && !Email.isEmailSyntaxValid(email))
             {
                 error("Указан неверный адрес электронной почты.");
-            }
-            else if (email != null && email.length() > 255)
+            } else if (email != null && email.length() > 255)
             {
                 error("Длина электронного адреса не должна превышать 255 символов.");
-            }
-            else
+            } else
             {
                 SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
                 SqlSession session = sessionFactory.openSession();
@@ -139,12 +145,10 @@ public class RegistrationPanel extends Panel
                     if (usersMapper.getUserByUsername(username) != null)
                     {
                         error("Пользователь с такой учетной записью уже зарегистрирован в системе.");
-                    }
-                    else if (usersMapper.getUserByEmail(email) != null)
+                    } else if (usersMapper.getUserByEmail(email) != null)
                     {
                         error("Пользователь с таким электронным адресом уже зарегистрирован в системе.");
-                    }
-                    else
+                    } else
                     {
                         User user = new User();
                         user.setUsername(username);
@@ -167,8 +171,7 @@ public class RegistrationPanel extends Panel
                                 Email.sendEmail(user.getEmail(), ACTIVATE_EMAIL_SUBJECT,
                                         String.format(ACTIVATE_EMAIL_TEXT, user.getEmailToken()));
                                 usersMapper.updateUser(user);
-                            }
-                            catch (Exception ex)
+                            } catch (Exception ex)
                             {
                                 error("Отправка сообщения на указанный электронный адрес не удалась. Свяжитесь, пожалуйста, с администрацией сайта.");
                                 session.rollback();
@@ -176,25 +179,11 @@ public class RegistrationPanel extends Panel
                         }
                         session.commit();
                     }
-                }
-                finally
+                } finally
                 {
                     session.close();
                 }
             }
         }
-            
-        private static final long serialVersionUID = 1L;
     }
-    
-    private String password;
-    private String username;
-    private String confirmPassword;
-    private String email;
-    private String realname;
-    private static final String REGISTRATION_FORM = "registrationForm";
-    private static final String ACTIVATE_EMAIL_SUBJECT = "Активация электронного адреса";
-    private static final String ACTIVATE_EMAIL_TEXT = "Для активации электронного адреса в системе проследуйте по ссылке http://ruranobe.ru/user/email/activate?token=%s";
-    private static final long ETERNITY_EXPIRATION_TIME = 31622400000000L;
-    private static final long serialVersionUID = 1L;
 }
