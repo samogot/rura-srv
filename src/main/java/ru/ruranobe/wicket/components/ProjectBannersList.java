@@ -1,6 +1,5 @@
 package ru.ruranobe.wicket.components;
 
-import javafx.util.Pair;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.AttributeModifier;
@@ -18,6 +17,7 @@ import ru.ruranobe.mybatis.tables.ExternalResource;
 import ru.ruranobe.mybatis.tables.Project;
 import ru.ruranobe.wicket.webpages.ProjectPage;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.*;
 
 /**
@@ -42,7 +42,7 @@ public class ProjectBannersList extends Panel
         SqlSession session = sessionFactory.openSession();
         ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
         Collection<Project> projects = projectsMapperCacheable.getAllProjects();
-        List<Pair<Project, ExternalResource>> projectsList = new ArrayList<Pair<Project, ExternalResource>>();
+        List<SimpleEntry<Project, ExternalResource>> projectsList = new ArrayList<SimpleEntry<Project, ExternalResource>>();
         ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.
                 getCacheableMapper(session, ExternalResourcesMapper.class);
         for (Project project : projects)
@@ -50,24 +50,24 @@ public class ProjectBannersList extends Panel
             if (!project.isProjectHidden() && !project.isBannerHidden())
             {
                 ExternalResource image = externalResourcesMapperCacheable.getExternalResourceById(project.getImageId());
-                projectsList.add(new Pair<Project, ExternalResource>(project, image));
+                projectsList.add(new SimpleEntry<Project, ExternalResource>(project, image));
             }
         }
-        Collections.sort(projectsList, new Comparator<Pair<Project, ExternalResource>>()
+        Collections.sort(projectsList, new Comparator<SimpleEntry<Project, ExternalResource>>()
         {
             @Override
-            public int compare(Pair<Project, ExternalResource> o1, Pair<Project, ExternalResource> o2)
+            public int compare(SimpleEntry<Project, ExternalResource> o1, SimpleEntry<Project, ExternalResource> o2)
             {
                 return o1.getKey().getOrderNumber() - o2.getKey().getOrderNumber();
             }
         });
         if (limit != null) projectsList.subList(limit, projectsList.size()).clear();
-        ListView<Pair<Project, ExternalResource>> bannersList = new ListView<Pair<Project, ExternalResource>>("bannersList", projectsList)
+        ListView<SimpleEntry<Project, ExternalResource>> bannersList = new ListView<SimpleEntry<Project, ExternalResource>>("bannersList", projectsList)
         {
             @Override
-            protected void populateItem(final ListItem<Pair<Project, ExternalResource>> listItem)
+            protected void populateItem(final ListItem<SimpleEntry<Project, ExternalResource>> listItem)
             {
-                Pair<Project, ExternalResource> projectExtended = listItem.getModelObject();
+                SimpleEntry<Project, ExternalResource> projectExtended = listItem.getModelObject();
                 final ExternalResource imageResource = projectExtended.getValue();
                 final Project project = projectExtended.getKey();
                 BookmarkablePageLink bannerLink = new BookmarkablePageLink("bannerLink", ProjectPage.class, project.getUrlParameters());

@@ -2,7 +2,6 @@ package ru.ruranobe.wicket.webpages;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import javafx.util.Pair;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.AttributeModifier;
@@ -28,6 +27,7 @@ import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.UpdatesSidebarModule;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.*;
 
 public class ProjectPage extends SidebarLayoutPage
@@ -123,8 +123,8 @@ public class ProjectPage extends SidebarLayoutPage
         Volume mainProjectLastCover = null;
         Volume lastCover = null;
 
-        final Map<Pair<String, String>, Integer> shortNameLabelWidthMap = new HashMap<Pair<String, String>, Integer>();
-        final Map<String, ArrayList<Pair<String, ArrayList<Volume>>>> volumeTypeToSubProjectToVolumes = new HashMap<String, ArrayList<Pair<String, ArrayList<Volume>>>>();
+        final Map<SimpleEntry<String, String>, Integer> shortNameLabelWidthMap = new HashMap<SimpleEntry<String, String>, Integer>();
+        final Map<String, ArrayList<SimpleEntry<String, ArrayList<Volume>>>> volumeTypeToSubProjectToVolumes = new HashMap<String, ArrayList<SimpleEntry<String, ArrayList<Volume>>>>();
         for (Project project : projects)
         {
             String subProjectTitle = project.getTitle();
@@ -161,16 +161,16 @@ public class ProjectPage extends SidebarLayoutPage
 
                     if (volumeTypeToSubProjectToVolumes.get(type) == null)
                     {
-                        volumeTypeToSubProjectToVolumes.put(type, new ArrayList<Pair<String, ArrayList<Volume>>>());
+                        volumeTypeToSubProjectToVolumes.put(type, new ArrayList<SimpleEntry<String, ArrayList<Volume>>>());
                     }
-                    ArrayList<Pair<String, ArrayList<Volume>>> subProjectToVolumes = volumeTypeToSubProjectToVolumes.get(type);
+                    ArrayList<SimpleEntry<String, ArrayList<Volume>>> subProjectToVolumes = volumeTypeToSubProjectToVolumes.get(type);
                     if (subProjectToVolumes.isEmpty() || !subProjectToVolumes.get(subProjectToVolumes.size() - 1).getKey().equals(subProjectTitle))
                     {
-                        subProjectToVolumes.add(new Pair<String, ArrayList<Volume>>(subProjectTitle, new ArrayList<Volume>()));
+                        subProjectToVolumes.add(new SimpleEntry<String, ArrayList<Volume>>(subProjectTitle, new ArrayList<Volume>()));
                     }
                     subProjectToVolumes.get(subProjectToVolumes.size() - 1).getValue().add(volume);
 
-                    Pair<String, String> volumeTypeAndSubProject = new Pair<String, String>(type, subProjectTitle);
+                    SimpleEntry<String, String> volumeTypeAndSubProject = new SimpleEntry<String, String>(type, subProjectTitle);
                     if (volume.getNameShort() != null)
                     {
                         if (shortNameLabelWidthMap.get(volumeTypeAndSubProject) == null
@@ -192,20 +192,20 @@ public class ProjectPage extends SidebarLayoutPage
                 Label volumeType = new Label("volumeType", displayableName);
                 if (volumeTypeToSubProjectToVolumes.get(displayableName) == null) volumeType.setVisible(false);
                 listItem1.add(volumeType);
-                ListView<Pair<String, ArrayList<Volume>>> volumeSubProjectRepeater
-                        = new ListView<Pair<String, ArrayList<Volume>>>("volumeSubProjectRepeater", volumeTypeToSubProjectToVolumes.get(displayableName))
+                ListView<SimpleEntry<String, ArrayList<Volume>>> volumeSubProjectRepeater
+                        = new ListView<SimpleEntry<String, ArrayList<Volume>>>("volumeSubProjectRepeater", volumeTypeToSubProjectToVolumes.get(displayableName))
                 {
                     @Override
-                    protected void populateItem(ListItem<Pair<String, ArrayList<Volume>>> listItem2)
+                    protected void populateItem(ListItem<SimpleEntry<String, ArrayList<Volume>>> listItem2)
                     {
-                        Pair<String, ArrayList<Volume>> projectTitleAndVolumes = listItem2.getModelObject();
+                        SimpleEntry<String, ArrayList<Volume>> projectTitleAndVolumes = listItem2.getModelObject();
                         String subProjectNameString = projectTitleAndVolumes.getKey();
                         Label projectName = new Label("projectName", subProjectNameString);
                         if (subProjectNameString.isEmpty()) projectName.setVisible(false);
                         listItem2.add(projectName);
                         ArrayList<Volume> volumes = projectTitleAndVolumes.getValue();
                         Collections.sort(volumes, COMPARATOR);
-                        final Integer shortNameLabelWidth = shortNameLabelWidthMap.get(new Pair<String, String>(displayableName, subProjectNameString));
+                        final Integer shortNameLabelWidth = shortNameLabelWidthMap.get(new SimpleEntry<String, String>(displayableName, subProjectNameString));
                         ListView<Volume> volumeRepeater = new ListView<Volume>("volumeRepeater", projectTitleAndVolumes.getValue())
                         {
                             @Override
@@ -249,10 +249,10 @@ public class ProjectPage extends SidebarLayoutPage
             allCoversSet.add(lastCover);
         ArrayList<Volume> allCovers = new ArrayList<Volume>(allCoversSet);
         Collections.sort(allCovers, COMPARATOR);
-        ArrayList<Pair<String, String>> allCoverIds = new ArrayList<Pair<String, String>>();
+        ArrayList<SimpleEntry<String, String>> allCoverIds = new ArrayList<SimpleEntry<String, String>>();
         for (Volume volume : allCovers)
         {
-            allCoverIds.add(new Pair<String, String>(volume.getNameTitle(),
+            allCoverIds.add(new SimpleEntry<String, String>(volume.getNameTitle(),
                     externalResourcesMapperCacheable.getExternalResourceById(volume.getImageOne()).getUrl()));
         }
 

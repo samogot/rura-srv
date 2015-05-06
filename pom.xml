@@ -16,284 +16,254 @@
    limitations under the License.
 -->
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xmlns="http://maven.apache.org/POM/4.0.0"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>ru.ruranobe</groupId>
-	<packaging>war</packaging>
-	<version>1.0-SNAPSHOT</version>
-		<!-- TODO project name  -->
-	<name>Ruranobe</name>
-	<description></description>
-	<!--
-		<organization>
-			<name>company name</name>
-			<url>company url</url>
-		</organization>
-	-->
-	<licenses>
-		<license>
-			<name>The Apache Software License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
-	<properties>
-		<wicket.version>6.18.0</wicket.version>
-		<jetty.version>7.6.13.v20130916</jetty.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<!-- allowed values: R7, 1.0, 1.5, 2.0 or none -->
-		<wtp.version>none</wtp.version>
-	 <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
-	</properties>
-	<dependencies>
-		<!--  WICKET DEPENDENCIES -->
-                <dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-core</artifactId>
-			<version>${wicket.version}</version>
-		</dependency>
-		<!-- OPTIONAL DEPENDENCY
-		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-extensions</artifactId>
-			<version>${wicket.version}</version>
-		</dependency>
-		-->
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>ru.ruranobe</groupId>
+    <packaging>war</packaging>
+    <version>1.1-SNAPSHOT</version>
+    <!-- TODO project name  -->
+    <name>Ruranobe</name>
+    <description></description>
+    <!--
+        <organization>
+            <name>company name</name>
+            <url>company url</url>
+        </organization>
+    -->
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <properties>
+        <wicket.version>6.18.0</wicket.version>
+        <jetty.version>7.6.13.v20130916</jetty.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- allowed values: R7, 1.0, 1.5, 2.0 or none -->
+        <wtp.version>none</wtp.version>
+        <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
+    </properties>
+    <dependencies>
+        <!--  WICKET DEPENDENCIES -->
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-core</artifactId>
+            <version>${wicket.version}</version>
+        </dependency>
+        <!-- OPTIONAL DEPENDENCY
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-extensions</artifactId>
+            <version>${wicket.version}</version>
+        </dependency>
+        -->
 
-		<!-- LOGGING DEPENDENCIES - LOG4J -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.6.4</version>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.16</version>
-		</dependency>
-                
-                <!-- Connection pool -->
-                <dependency>
-                    <groupId>org.mybatis</groupId>
-                    <artifactId>mybatis</artifactId>
-                    <version>3.2.8</version>
-                </dependency>
-                
-                <dependency>
-                    <groupId>c3p0</groupId>
-                    <artifactId>c3p0</artifactId>
-                    <version>0.9.1.2</version>
-                </dependency>
-                
-                <dependency>
-                    <groupId>mysql</groupId>
-                    <artifactId>mysql-connector-java</artifactId>
-                    <version>5.1.18</version>
-                </dependency>
+        <!-- LOGGING DEPENDENCIES - LOG4J -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.6.4</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.16</version>
+        </dependency>
 
-                <dependency>
-                        <groupId>info.bliki.wiki</groupId>
-                        <artifactId>bliki-core</artifactId>
-                        <version>3.0.19</version>
-                </dependency>
+        <!-- Connection pool -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.2.8</version>
+        </dependency>
 
-		<!--  JUNIT DEPENDENCY FOR TESTING -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>c3p0</groupId>
+            <artifactId>c3p0</artifactId>
+            <version>0.9.1.2</version>
+        </dependency>
 
-		<!--  JETTY DEPENDENCIES FOR TESTING  -->
-		<dependency>
-			<groupId>org.eclipse.jetty.aggregate</groupId>
-			<artifactId>jetty-all-server</artifactId>
-			<version>${jetty.version}</version>
-			<scope>provided</scope>
-		</dependency>
-                
-                <dependency>
-                    <groupId>javax.mail</groupId>
-                    <artifactId>mail</artifactId>
-                    <version>1.4</version>
-                </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.18</version>
+        </dependency>
 
-                <dependency>
-                    <groupId>org.apache.wicket</groupId>
-                    <artifactId>wicket-auth-roles</artifactId>
-                    <version>6.18.0</version>
-                </dependency>
+        <dependency>
+            <groupId>info.bliki.wiki</groupId>
+            <artifactId>bliki-core</artifactId>
+            <version>3.0.19</version>
+        </dependency>
 
-                <dependency>
-                    <groupId>org.apache.wicket</groupId>
-                    <artifactId>wicket-devutils</artifactId>
-                    <version>6.18.0</version>
-                </dependency>
-                
-                <!-- Dirty hacks. All hail Google Picassa API. 
-                     Just for convenience. Installed into local maven repository
-                     this libs serves only as a help to NetBeans. (no error msg etc.)-->
-                <dependency>
-                    <groupId>gdata.photos</groupId>
-                    <artifactId>gdata.photos</artifactId>
-                    <version>2.0</version>
-                    <scope>system</scope>
-					<systemPath>D:/Downloads/gdata-samples.java-1.47.1/gdata/java/lib/gdata-photos-2.0.jar</systemPath>
-                </dependency>
-                
-                <dependency>
-                    <groupId>gdata.photos2</groupId>
-                    <artifactId>gdata.photos2</artifactId>
-                    <version>2.0</version>
-                    <scope>system</scope>
-					<systemPath>D:/Downloads/gdata-samples.java-1.47.1/gdata/java/lib/gdata-photos-meta-2.0.jar
-					</systemPath>
-                </dependency>
+        <!--  JUNIT DEPENDENCY FOR TESTING -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
 
-                <dependency>
-                    <groupId>gdata.photos3</groupId>
-                    <artifactId>gdata.photos3</artifactId>
-                    <version>1.0</version>
-                    <scope>system</scope>
-					<systemPath>D:/Downloads/gdata-samples.java-1.47.1/gdata/java/lib/gdata-core-1.0.jar</systemPath>
-                </dependency>
+        <!--  JETTY DEPENDENCIES FOR TESTING  -->
+        <dependency>
+            <groupId>org.eclipse.jetty.aggregate</groupId>
+            <artifactId>jetty-all-server</artifactId>
+            <version>${jetty.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
-                <dependency>
-                    <groupId>gdata.photos4</groupId>
-                    <artifactId>gdata.photos4</artifactId>
-                    <version>1.0</version>
-                    <scope>system</scope>
-					<systemPath>D:/Downloads/gdata-samples.java-1.47.1/gdata/java/lib/gdata-media-1.0.jar</systemPath>
-                </dependency>
-                
-                <dependency>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                    <version>18.0</version>
-                </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4</version>
+        </dependency>
 
-                <!-- EHCache Caching -->
-                <dependency>
-                    <groupId>net.sf.ehcache</groupId>
-                    <artifactId>ehcache</artifactId>
-                    <version>2.9.0</version>
-                </dependency>
-                
-                <!-- Mybatis support for EHCache Caching -->
-                <dependency>
-                    <groupId>org.mybatis.caches</groupId>
-                    <artifactId>mybatis-ehcache</artifactId>
-                    <version>1.0.2</version>
-                </dependency>
-        
-        </dependencies>
-	<build>
-  		<resources>
-			<resource>
-				<filtering>false</filtering>
-				<directory>src/main/resources</directory>
-			</resource>
-			<resource>
-				<filtering>false</filtering>
-				<directory>src/main/java</directory>
-				<includes>
-					<include>**</include>
-				</includes>
-				<excludes>
-					<exclude>**/*.java</exclude>
-				</excludes>
-			</resource>
-		</resources>
-		<testResources>
-			<testResource>
-				<filtering>false</filtering>
-				<directory>src/test/resources</directory>
-			</testResource>
-			<testResource>
-				<filtering>false</filtering>
-				<directory>src/test/java</directory>
-				<includes>
-					<include>**</include>
-				</includes>
-				<excludes>
-					<exclude>**/*.java</exclude>
-				</excludes>
-			</testResource>
-		</testResources>
-		<plugins>
-			<plugin>
-				<inherited>true</inherited>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-					<encoding>UTF-8</encoding>
-					<showWarnings>true</showWarnings>
-					<showDeprecation>true</showDeprecation>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
-				<artifactId>jetty-maven-plugin</artifactId>
-				<version>${jetty.version}</version>
-				<configuration>
-					<connectors>
-						<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-							<port>8080</port>
-							<maxIdleTime>3600000</maxIdleTime>
-						</connector>
-						<connector implementation="org.eclipse.jetty.server.ssl.SslSocketConnector">
-							<port>8443</port>
-							<maxIdleTime>3600000</maxIdleTime>
-							<keystore>${project.build.directory}/test-classes/keystore</keystore>
-							<password>wicket</password>
-							<keyPassword>wicket</keyPassword>
-						</connector>
-					</connectors>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-eclipse-plugin</artifactId>
-				<version>2.9</version>
-				<configuration>
-					<downloadSources>true</downloadSources>
-					<wtpversion>${wtp.version}</wtpversion>
-				</configuration>
-			</plugin>
-                        <!-- Dirty hacks. All hail Google Picassa API. -->
-                        <plugin> 
-                            <groupId>org.apache.maven.plugins</groupId> 
-                            <artifactId>maven-war-plugin</artifactId> 
-                            <version>2.0.2</version> 
-                            <configuration> 
-                            <webResources> 
-                                <resource> 
-                                <directory>C:/Users/Viktor/Downloads/gdata-samples.java-1.47.1/gdata/java/lib</directory> 
-                                <targetPath>WEB-INF/lib</targetPath> 
-                                </resource> 
-                            </webResources> 
-                            </configuration> 
-                        </plugin> 
-		</plugins>
-	</build>
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-auth-roles</artifactId>
+            <version>6.18.0</version>
+        </dependency>
 
-	<repositories>
-		<repository>
-			<id>Apache Nexus</id>
-			<url>https://repository.apache.org/content/repositories/snapshots/</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-devutils</artifactId>
+            <version>6.18.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.gdata</groupId>
+            <artifactId>core</artifactId>
+            <version>1.47.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
+        </dependency>
+
+        <!-- EHCache Caching -->
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+            <version>2.9.0</version>
+        </dependency>
+
+        <!-- Mybatis support for EHCache Caching -->
+        <dependency>
+            <groupId>org.mybatis.caches</groupId>
+            <artifactId>mybatis-ehcache</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+
+    </dependencies>
+    <build>
+        <resources>
+            <resource>
+                <filtering>false</filtering>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <filtering>false</filtering>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <filtering>false</filtering>
+                <directory>src/test/resources</directory>
+            </testResource>
+            <testResource>
+                <filtering>false</filtering>
+                <directory>src/test/java</directory>
+                <includes>
+                    <include>**</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </testResource>
+        </testResources>
+        <plugins>
+            <plugin>
+                <inherited>true</inherited>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <encoding>UTF-8</encoding>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>${jetty.version}</version>
+                <configuration>
+                    <connectors>
+                        <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+                            <port>8080</port>
+                            <maxIdleTime>3600000</maxIdleTime>
+                        </connector>
+                        <connector implementation="org.eclipse.jetty.server.ssl.SslSocketConnector">
+                            <port>8443</port>
+                            <maxIdleTime>3600000</maxIdleTime>
+                            <keystore>${project.build.directory}/test-classes/keystore</keystore>
+                            <password>wicket</password>
+                            <keyPassword>wicket</keyPassword>
+                        </connector>
+                    </connectors>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <version>2.9</version>
+                <configuration>
+                    <downloadSources>true</downloadSources>
+                    <wtpversion>${wtp.version}</wtpversion>
+                </configuration>
+            </plugin>
+            <!-- Dirty hacks. All hail Google Picassa API. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.0.2</version>
+                <configuration>
+                    <webResources>
+                        <resource>
+                            <directory>C:/Users/Viktor/Downloads/gdata-samples.java-1.47.1/gdata/java/lib</directory>
+                            <targetPath>WEB-INF/lib</targetPath>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>Apache Nexus</id>
+            <url>https://repository.apache.org/content/repositories/snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
     <artifactId>Ruranobe</artifactId>
 </project>

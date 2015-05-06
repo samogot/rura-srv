@@ -1,6 +1,5 @@
 package ru.ruranobe.wicket.components;
 
-import javafx.util.Pair;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -8,6 +7,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
 
 /**
@@ -15,16 +15,16 @@ import java.util.List;
  */
 public class CoverCarousel extends Panel
 {
-    public CoverCarousel(String id, final String markupId, List<Pair<String, String>> coversList)
+    public CoverCarousel(String id, final String markupId, List<SimpleEntry<String, String>> coversList)
     {
         super(id);
         setMarkupId(markupId);
         add(new AttributeAppender("class", " carousel slide"));
         add(new AttributeModifier("data-ride", "carousel"));
-        ListView<Pair<String, String>> carouselIndicators = new ListView<Pair<String, String>>("carouselIndicators", coversList)
+        ListView<SimpleEntry<String, String>> carouselIndicators = new ListView<SimpleEntry<String, String>>("carouselIndicators", coversList)
         {
             @Override
-            protected void populateItem(ListItem<Pair<String, String>> item)
+            protected void populateItem(ListItem<SimpleEntry<String, String>> item)
             {
                 WebMarkupContainer slideIndicator = new WebMarkupContainer("slideIndicator");
                 slideIndicator.add(new AttributeModifier("data-target", "#" + markupId));
@@ -36,10 +36,10 @@ public class CoverCarousel extends Panel
         };
         add(carouselIndicators);
 
-        ListView<Pair<String, String>> carouselSlides = new ListView<Pair<String, String>>("carouselSlides", coversList)
+        ListView<SimpleEntry<String, String>> carouselSlides = new ListView<SimpleEntry<String, String>>("carouselSlides", coversList)
         {
             @Override
-            protected void populateItem(ListItem<Pair<String, String>> item)
+            protected void populateItem(ListItem<SimpleEntry<String, String>> item)
             {
                 WebMarkupContainer slideContainer = new WebMarkupContainer("slideContainer");
                 if (item.getIndex() == 0) slideContainer.add(new AttributeAppender("class", " active"));
