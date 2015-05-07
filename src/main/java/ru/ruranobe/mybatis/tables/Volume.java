@@ -1,11 +1,12 @@
 package ru.ruranobe.mybatis.tables;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import ru.ruranobe.wicket.webpages.VolumePage;
 
 import java.io.Serializable;
 import java.util.Date;
 
-public class Volume implements Serializable
+public class Volume implements Serializable, PageRepresentable
 {
 
     private static final long serialVersionUID = 1L;
@@ -21,15 +22,18 @@ public class Volume implements Serializable
     private String nameJp;
     private String nameEn;
     private String nameRu;
+    private String nameRomaji;
     private String nameShort;
     private Integer sequenceNumber;
     private String author;
     private String illustrator;
+    private String originalDesign;
     private Date releaseDate;
     private String isbn;
     private String externalUrl;
     private String annotation;
     private String volumeStatus;
+    private String volumeStatusHint;
     private String volumeType;
     private boolean adult;
     /* Optional */
@@ -67,6 +71,26 @@ public class Volume implements Serializable
     public static PageParameters makeUrlParameters(String[] urlParts)
     {
         return new PageParameters().set("project", urlParts[0]).set("volume", urlParts[1]);
+    }
+
+    public PageParameters getUrlParameters()
+    {
+        return makeUrlParameters(url.split("/"));
+    }
+
+    public PageParameters getPrevUrlParameters()
+    {
+        return makeUrlParameters(prevUrl.split("/"));
+    }
+
+    public PageParameters getNextUrlParameters()
+    {
+        return makeUrlParameters(nextUrl.split("/"));
+    }
+
+    public Class getLinkClass()
+    {
+        return VolumePage.class;
     }
 
     public String getAnnotation()
@@ -299,10 +323,34 @@ public class Volume implements Serializable
         this.imageTwo = imageTwo;
     }
 
-    @Override
-    public String toString()
+    public String getNameRomaji()
     {
-        return "Volume{" + "volumeId=" + volumeId + ", projectId=" + projectId + ", url=" + url + ", nameFile=" + nameFile + ", nameTitle=" + nameTitle + ", nameJp=" + nameJp + ", nameEn=" + nameEn + ", nameRu=" + nameRu + ", nameShort=" + nameShort + ", sequenceNumber=" + sequenceNumber + ", author=" + author + ", illustrator=" + illustrator + ", releaseDate=" + releaseDate + ", isbn=" + isbn + ", externalUrl=" + externalUrl + ", annotation=" + annotation + ", volumeStatus=" + volumeStatus + ", volumeType=" + volumeType + ", adult=" + adult + '}';
+        return nameRomaji;
+    }
+
+    public void setNameRomaji(String nameRomaji)
+    {
+        this.nameRomaji = nameRomaji;
+    }
+
+    public String getOriginalDesign()
+    {
+        return originalDesign;
+    }
+
+    public void setOriginalDesign(String originalDesign)
+    {
+        this.originalDesign = originalDesign;
+    }
+
+    public String getVolumeStatusHint()
+    {
+        return volumeStatusHint;
+    }
+
+    public void setVolumeStatusHint(String volumeStatusHint)
+    {
+        this.volumeStatusHint = volumeStatusHint;
     }
 
     public String getNextNameShort()
@@ -310,19 +358,9 @@ public class Volume implements Serializable
         return nextNameShort;
     }
 
-    public void setNextNameShort(String nextNameShort)
-    {
-        this.nextNameShort = nextNameShort;
-    }
-
     public String getNextUrl()
     {
         return nextUrl;
-    }
-
-    public void setNextUrl(String nextUrl)
-    {
-        this.nextUrl = nextUrl;
     }
 
     public String getPrevNameShort()
@@ -330,33 +368,15 @@ public class Volume implements Serializable
         return prevNameShort;
     }
 
-    public void setPrevNameShort(String prevNameShort)
-    {
-        this.prevNameShort = prevNameShort;
-    }
-
     public String getPrevUrl()
     {
         return prevUrl;
     }
 
-    public void setPrevUrl(String prevUrl)
-    {
-        this.prevUrl = prevUrl;
-    }
 
-    public PageParameters getUrlParameters()
+    @Override
+    public String toString()
     {
-        return makeUrlParameters(url.split("/"));
-    }
-
-    public PageParameters getPrevUrlParameters()
-    {
-        return makeUrlParameters(prevUrl.split("/"));
-    }
-
-    public PageParameters getNextUrlParameters()
-    {
-        return makeUrlParameters(nextUrl.split("/"));
+        return "Volume{" + "volumeId=" + volumeId + ", projectId=" + projectId + ", url=" + url + ", nameFile=" + nameFile + ", nameTitle=" + nameTitle + ", nameJp=" + nameJp + ", nameEn=" + nameEn + ", nameRu=" + nameRu + ", nameShort=" + nameShort + ", sequenceNumber=" + sequenceNumber + ", author=" + author + ", illustrator=" + illustrator + ", releaseDate=" + releaseDate + ", isbn=" + isbn + ", externalUrl=" + externalUrl + ", annotation=" + annotation + ", volumeStatus=" + volumeStatus + ", volumeType=" + volumeType + ", adult=" + adult + '}';
     }
 }

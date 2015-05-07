@@ -1,71 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-	   
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="ru.ruranobe.mybatis.mappers.ChaptersMapper">
 
     <cache type="org.mybatis.caches.ehcache.EhcacheCache">
-        <property name="timeToIdleSeconds" value="3600"/><!--1 hour-->
-        <property name="timeToLiveSeconds" value="3600"/><!--1 hour-->
+        <property name="timeToIdleSeconds" value="3600"/>
+        <!--1 hour-->
+        <property name="timeToLiveSeconds" value="3600"/>
+        <!--1 hour-->
         <property name="maxEntriesLocalHeap" value="1000"/>
         <property name="maxEntriesLocalDisk" value="10000000"/>
         <property name="memoryStoreEvictionPolicy" value="LRU"/>
     </cache>
-    
-    <select id="getChaptersByVolumeId" parameterType="int" resultType="ru.ruranobe.mybatis.tables.Chapter">
+
+    <select id="getChaptersByVolumeId" parameterType="int" resultMap="ChaptersResult">
         SELECT *
         FROM chapters
         WHERE volume_id = #{volumeId}
-        order by order_number asc
+        ORDER BY order_number ASC
     </select>
-    
-    <select id="getChaptersByUrl" parameterType="String" resultType="ru.ruranobe.mybatis.tables.Chapter">
-        SELECT
-            chapter_id as chapterId,
-            volume_id as volumeId,
-            text_id as textId,
-            url,
-            title,
-            order_number as orderNumber,
-            published,
-            nested
+
+    <select id="getChapterByUrl" parameterType="String" resultMap="ChaptersResult">
+        SELECT *
         FROM chapters
         WHERE url = #{url}
     </select>
 
-    <!--select id="getChaptersByReleaseId" parameterType="int" resultType="ru.ruranobe.mybatis.tables.Chapter">
-        SELECT
-            chapter_id as chapterId,
-            release_id as releaseId,
-            `order`,
-            `level`, 
-            url,
-            title,
-            title_short as titleShort
-        FROM main_chapter
-        WHERE release_id = #{releaseId}
-    </select>
-    
-    <select id="getChapterByUrl" parameterType="String" resultType="ru.ruranobe.mybatis.tables.Chapter">
-        SELECT
-            chapter_id as chapterId,
-            release_id as releaseId,
-            `order`,
-            `level`, 
-            url,
-            title,
-            title_short as titleShort
-        FROM main_chapter
-        WHERE url = #{url} limit 1
-    </select-->
-    
     <resultMap type="ru.ruranobe.mybatis.tables.Chapter" id="ChaptersResult">
         <id property="chapterId" column="chapter_id"/>
         <result property="volumeId" column="volume_id"/>
-        <result property="text_id" column="textId"/>
+        <result property="textId" column="text_id"/>
         <result property="url" column="url"/>
         <result property="title" column="title"/>
-        <result property="order_number" column="orderNumber"/>
+        <result property="orderNumber" column="order_number"/>
         <result property="published" column="published"/>
         <result property="nested" column="nested"/>
     </resultMap>

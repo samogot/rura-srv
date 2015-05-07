@@ -1,4 +1,6 @@
-﻿drop table if exists orphus_comments;
+﻿# use ruranobe;
+
+drop table if exists orphus_comments;
 drop table if exists chapter_images;
 drop table if exists updates;
 drop table if exists chapters;
@@ -87,6 +89,7 @@ create table volumes
   sequence_number float,
   author varchar(255),
   illustrator varchar(255),
+  original_design VARCHAR(255), -- по заказу малфа, для спиноф серий с другим иллюстратором
   release_date date,
   ISBN varchar(16),
   external_url varchar(255),

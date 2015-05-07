@@ -1,10 +1,11 @@
 package ru.ruranobe.mybatis.tables;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import ru.ruranobe.wicket.webpages.FullVolumeTextViewer;
 
 import java.io.Serializable;
 
-public class Chapter implements Serializable
+public class Chapter implements Serializable, PageRepresentable
 {
 
     private static final long serialVersionUID = 1L;
@@ -19,7 +20,6 @@ public class Chapter implements Serializable
 
     public Chapter()
     {
-
     }
 
     public Chapter(Integer volumeId, Integer textId, String url, String title, Integer orderNumber, boolean published, boolean nested)
@@ -36,6 +36,16 @@ public class Chapter implements Serializable
     public static PageParameters makeUrlParameters(String[] urlParts)
     {
         return new PageParameters().set("project", urlParts[0]).set("volume", urlParts[1]).set("chapter", urlParts[2]);
+    }
+
+    public Class getLinkClass()
+    {
+        return FullVolumeTextViewer.class;
+    }
+
+    public PageParameters getUrlParameters()
+    {
+        return makeUrlParameters(url.split("/"));
     }
 
     public Integer getChapterId()

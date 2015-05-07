@@ -7,7 +7,7 @@ import ru.ruranobe.wicket.webpages.VolumePage;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Update implements Serializable, Comparable<Update>
+public class Update implements Serializable, Comparable<Update>, PageRepresentable
 {
 
     private static final long serialVersionUID = 1L;
@@ -35,6 +35,16 @@ public class Update implements Serializable, Comparable<Update>
         this.chapterId = chapterId;
         this.showTime = showTime;
         this.description = description;
+    }
+
+    public PageParameters getUrlParameters()
+    {
+        return chapterUrl != null ? Chapter.makeUrlParameters(chapterUrl.split("/")) : Volume.makeUrlParameters(volumeUrl.split("/"));
+    }
+
+    public Class getLinkClass()
+    {
+        return chapterId != null ? FullVolumeTextViewer.class : VolumePage.class;
     }
 
     public Integer getChapterId()
@@ -102,19 +112,9 @@ public class Update implements Serializable, Comparable<Update>
         return chapterTitle;
     }
 
-    public void setChapterTitle(String chapterTitle)
-    {
-        this.chapterTitle = chapterTitle;
-    }
-
     public String getVolumeTitle()
     {
         return volumeTitle;
-    }
-
-    public void setVolumeTitle(String volumeTitle)
-    {
-        this.volumeTitle = volumeTitle;
     }
 
     public String getChapterUrl()
@@ -122,29 +122,14 @@ public class Update implements Serializable, Comparable<Update>
         return chapterUrl;
     }
 
-    public void setChapterUrl(String chapterUrl)
-    {
-        this.chapterUrl = chapterUrl;
-    }
-
     public String getVolumeUrl()
     {
         return volumeUrl;
     }
 
-    public void setVolumeUrl(String volumeUrl)
-    {
-        this.volumeUrl = volumeUrl;
-    }
-
     public String getVolumeTitleShort()
     {
         return volumeTitleShort;
-    }
-
-    public void setVolumeTitleShort(String volumeTitleShort)
-    {
-        this.volumeTitleShort = volumeTitleShort;
     }
 
     @Override
@@ -153,10 +138,6 @@ public class Update implements Serializable, Comparable<Update>
         return showTime.compareTo(update.showTime);
     }
 
-    public PageParameters getUrlParameters()
-    {
-        return chapterUrl != null ? Chapter.makeUrlParameters(chapterUrl.split("/")) : Volume.makeUrlParameters(volumeUrl.split("/"));
-    }
 
     public String getShortTitle()
     {
@@ -171,10 +152,5 @@ public class Update implements Serializable, Comparable<Update>
     {
         //todo supchapter
         return chapterTitle != null ? chapterTitle.replaceFirst(SHORT_TITLE_REGEX, "") : null;
-    }
-
-    public Class getLinkClass()
-    {
-        return chapterId != null ? FullVolumeTextViewer.class : VolumePage.class;
     }
 }

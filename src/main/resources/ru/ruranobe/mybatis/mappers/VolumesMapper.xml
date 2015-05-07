@@ -80,15 +80,18 @@
         <result property="nameJp" column="name_jp"/>
         <result property="nameEn" column="name_en"/>
         <result property="nameRu" column="name_ru"/>
+        <result property="nameRomaji" column="name_romaji"/>
         <result property="nameShort" column="name_short"/>
         <result property="sequenceNumber" column="sequence_number"/>
         <result property="author" column="author"/>
         <result property="illustrator" column="illustrator"/>
+        <result property="originalDesign" column="original_design"/>
         <result property="releaseDate" column="release_date"/>
         <result property="isbn" column="isbn"/>
         <result property="externalUrl" column="external_url"/>
         <result property="volumeType" column="volume_type"/>
         <result property="volumeStatus" column="volume_status"/>
+        <result property="volumeStatusHint" column="volume_status_hint"/>
         <result property="adult" column="adult"/>
         <result property="annotation" column="annotation"/>
         <result property="prevUrl" column="prev_url"/>

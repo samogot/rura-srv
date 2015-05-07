@@ -1,10 +1,12 @@
 package ru.ruranobe.mybatis.tables;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import ru.ruranobe.wicket.webpages.ProjectPage;
+import ru.ruranobe.wicket.webpages.VolumePage;
 
 import java.io.Serializable;
 
-public class Project implements Serializable
+public class Project implements Serializable, PageRepresentable
 {
 
     private static final long serialVersionUID = 2L;
@@ -13,11 +15,16 @@ public class Project implements Serializable
     private Integer imageId;
     private String url;
     private String title;
+    private String nameJp;
+    private String nameEn;
+    private String nameRu;
+    private String nameRomaji;
+    private String author;
+    private String illustrator;
     private Integer orderNumber;
     private boolean bannerHidden;
     private boolean projectHidden;
-    private String author;
-    private String illustrator;
+    private boolean oneVolume;
     private String franchise;
     private String annotation;
 
@@ -40,6 +47,16 @@ public class Project implements Serializable
     public static PageParameters makeUrlParameters(String url)
     {
         return new PageParameters().set("project", url);
+    }
+
+    public PageParameters getUrlParameters()
+    {
+        return oneVolume ? makeUrlParameters(url).set("volume", "v1") : makeUrlParameters(url);
+    }
+
+    public Class getLinkClass()
+    {
+        return oneVolume ? VolumePage.class : ProjectPage.class;
     }
 
     public String getAnnotation()
@@ -162,14 +179,59 @@ public class Project implements Serializable
         this.illustrator = illustrator;
     }
 
+    public String getNameJp()
+    {
+        return nameJp;
+    }
+
+    public void setNameJp(String nameJp)
+    {
+        this.nameJp = nameJp;
+    }
+
+    public String getNameEn()
+    {
+        return nameEn;
+    }
+
+    public void setNameEn(String nameEn)
+    {
+        this.nameEn = nameEn;
+    }
+
+    public String getNameRu()
+    {
+        return nameRu;
+    }
+
+    public void setNameRu(String nameRu)
+    {
+        this.nameRu = nameRu;
+    }
+
+    public String getNameRomaji()
+    {
+        return nameRomaji;
+    }
+
+    public void setNameRomaji(String nameRomaji)
+    {
+        this.nameRomaji = nameRomaji;
+    }
+
+    public boolean isOneVolume()
+    {
+        return oneVolume;
+    }
+
+    public void setOneVolume(boolean oneVolume)
+    {
+        this.oneVolume = oneVolume;
+    }
+
     @Override
     public String toString()
     {
         return "Project{" + "projectId=" + projectId + ", parentId=" + parentId + ", imageId=" + imageId + ", url=" + url + ", title=" + title + ", orderNumber=" + orderNumber + ", bannerHidden=" + bannerHidden + ", projectHidden=" + projectHidden + ", annotation=" + annotation + '}';
-    }
-
-    public PageParameters getUrlParameters()
-    {
-        return makeUrlParameters(url);
     }
 }

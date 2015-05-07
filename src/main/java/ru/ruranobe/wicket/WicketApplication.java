@@ -1,5 +1,6 @@
 package ru.ruranobe.wicket;
 
+import net.ftlines.wicketsource.WicketSource;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.core.request.mapper.MountedMapper;
@@ -23,6 +24,7 @@ public class WicketApplication extends AuthenticatedWebApplication
     public void init()
     {
         super.init();
+        WicketSource.configure(this);
 
         getResourceSettings().getResourceFinders().add(
                 new WebApplicationPath(getServletContext(), "markupFolder"));

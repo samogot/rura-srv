@@ -1,16 +1,25 @@
-INSERT ignore INTO `ruranobe`.`projects`(`project_id`, `parent_id`, `url`, `title`, `order_number`)
+# use ruranobe;
+
+INSERT IGNORE INTO `projects` (`project_id`, `parent_id`, `url`, `title`, `order_number`)
 SELECT `series_id`, `parent_id`, `name_url`, `title`,`series_id` FROM `ruranobe_db`.`main_series` f WHERE `parent_id` is null;
 
-INSERT ignore INTO `ruranobe`.`projects`(`project_id`, `parent_id`, `url`, `title`, `order_number`, `banner_hidden`, `project_hidden`)
+INSERT IGNORE INTO `projects` (`project_id`, `parent_id`, `url`, `title`, `order_number`, `banner_hidden`, `project_hidden`)
 SELECT `series_id`, `parent_id`, null, `title`,`series_id`,1,1 FROM `ruranobe_db`.`main_series` f
-WHERE parent_id is not null and exists (select * from `ruranobe`.`projects` where `project_id`=f.parent_id);
+WHERE parent_id IS NOT NULL AND exists(SELECT *
+                                       FROM `projects`
+                                       WHERE `project_id` = f.parent_id);
 
-INSERT INTO `ruranobe`.`projects`(`parent_id`, `url`, `title`, `name_jp`, `name_en`, `name_ru`, `order_number`, `franchise`, `annotation`, `onevolume`)
+INSERT INTO `projects` (`parent_id`, `url`, `title`, `name_jp`, `name_en`, `name_ru`, `order_number`, `franchise`, `annotation`, `onevolume`)
 SELECT null, `name_url`, `name_title`, `name_jp`, `name_en`, `name_ru`, `release_id`,"* 1 том", `annotation`, 1 FROM `ruranobe_db`.`main_releases` where `series_id` is null;
 
-INSERT INTO `ruranobe`.`volumes`(`volume_id`, `project_id`, `url`, `name_file`, `name_title`, `name_jp`, `name_en`, `name_ru`,
+INSERT INTO `volumes` (`volume_id`, `project_id`, `url`, `name_file`, `name_title`, `name_jp`, `name_en`, `name_ru`,
                                  `name_short`,  `sequence_number`, `author`, `illustrator`, `release_date`, `ISBN`, `external_url`, `annotation`, `volume_type`, `volume_status`, adult)
-SELECT `release_id`, ifnull(`series_id`, (select project_id from `ruranobe`.`projects` where `url`=`name_url`)), if(`series_id` is not null,`name_url`,concat(`name_url`,'/v1')),
+  SELECT
+    `release_id`,
+    ifnull(`series_id`, (SELECT project_id
+                         FROM `projects`
+                         WHERE `url` = `name_url`)),
+    if(`series_id` IS NOT NULL, `name_url`, concat(`name_url`, '/v1')),
        `name_main`, `name_title`, `name_jp`, `name_en`, `name_ru`, `name_short`, `series_num`, `autor`, `illustrator`, `date`, `ISBN`, `external_url`, `annotation`
        , CASE `type`
             when 'ranobe_vol' then 1
@@ -36,12 +45,19 @@ SELECT `release_id`, ifnull(`series_id`, (select project_id from `ruranobe`.`pro
             when 'done' then 14
          end, 0 FROM `ruranobe_db`.`main_releases`;
 
-INSERT INTO `ruranobe`.`chapters`(`chapter_id`, `volume_id`, `text_id`, `url`, `title`, `order_number`, `published`, `nested`)
+INSERT INTO `chapters` (`chapter_id`, `volume_id`, `text_id`, `url`, `title`, `order_number`, `published`, `nested`)
 SELECT `chapter_id`, `release_id`, null, concat(`name_url`, '/',`url`), `title`, `order`, 0, `level`>1
 FROM `ruranobe_db`.`main_chapter` inner join `ruranobe_db`.`main_releases` using(`release_id`);
 
-INSERT INTO `ruranobe`.`updates`(`project_id`, `volume_id`, `chapter_id`, `update_type`, `show_time`, `description`)
-SELECT ifnull(`series_id`, (select project_id from `ruranobe`.`projects` where `url`=`name_url`)), `release_id`, `chapter_id`
+INSERT INTO `updates` (`project_id`, `volume_id`, `chapter_id`, `update_type`, `show_time`, `description`)
+  SELECT
+    coalesce((SELECT                                                  `parent_id`
+              FROM `projects`
+              WHERE `series_id` = `project_id`), `series_id`, (SELECT project_id
+                                                               FROM `projects`
+                                                               WHERE `url` = `name_url`)),
+    `release_id`,
+    `chapter_id`
 	   , CASE u.`type`
             when 'translate' then 1
             when 'proofread' then 3
@@ -51,19 +67,19 @@ SELECT ifnull(`series_id`, (select project_id from `ruranobe`.`projects` where `
 FROM `ruranobe_db`.`main_last_updates` u inner join `ruranobe_db`.`main_releases` using(`release_id`);
 
 
-INSERT INTO `ruranobe`.`teams`(`team_id`, `team_name`, `team_website_link`)
+INSERT INTO `teams` (`team_id`, `team_name`, `team_website_link`)
 SELECT `command_id`, `title`, `link` FROM `ruranobe_db`.`main_comands`;
 
-INSERT INTO `ruranobe`.`volume_activities`(`activity_id`, `activity_name`, `activity_type`)
+INSERT INTO `volume_activities` (`activity_id`, `activity_name`, `activity_type`)
 SELECT `job_id`, `title`, if(`job_id` between 3 and 7,'image','text') FROM `ruranobe_db`.`main_jobs`;
 
-INSERT IGNORE INTO `ruranobe`.`users`(`user_id`, `username`, `realname`, `pass`, `email`, `email_activated`, `registration_date`, `adult`)
+INSERT IGNORE INTO `users` (`user_id`, `username`, `realname`, `pass`, `email`, `email_activated`, `registration_date`, `adult`)
 SELECT `user_id`, `user_name`, `user_real_name`, `user_password`, `user_email`, `user_email_authenticated`, `user_registration`, 1 FROM `ruranobe_db`.`mw_user`;
 
-INSERT INTO `ruranobe`.`team_members`(`member_id`, `user_id`, `team_id`, `nikname`, `active`)
+INSERT INTO `team_members` (`member_id`, `user_id`, `team_id`, `nikname`, `active`)
 SELECT `worker_id`, `user_id`, `command_id`, `nikname`, `active` FROM `ruranobe_db`.`main_workers`;
 
-INSERT INTO `ruranobe`.`volume_release_activities`(`volume_id`, `activity_id`, `member_id`, `team_hidden`)
+INSERT INTO `volume_release_activities` (`volume_id`, `activity_id`, `member_id`, `team_hidden`)
 SELECT `release_id`, `job_id`, `worker_id`, !`show_command` FROM `ruranobe_db`.`main_release_workers`;
 
 
@@ -83,31 +99,31 @@ inner join `ruranobe_db`.mw_revision rv on rev_page=page_id
 inner join `ruranobe_db`.mw_text t on old_id=rev_text_id
 WHERE rev_timestamp=(select max(rev_timestamp) from `ruranobe_db`.mw_revision where rev_page=p.page_id) and parent_id is null;
 
-UPDATE `ruranobe`.`projects`
+UPDATE `projects`
 INNER JOIN `prj_text` on prj=project_id
 INNER JOIN `ruranobe_db`.`mw_text` on txt=old_id
 SET `annotation`=trim(substring_index(old_text,'\n\n''''''',1))
 where old_text like '%\n\n''''''%';
 
-UPDATE `ruranobe`.`projects`
+UPDATE `projects`
 INNER JOIN `prj_text` on prj=project_id
 INNER JOIN `ruranobe_db`.`mw_text` on txt=old_id
 SET `author`=trim(substring_index(substring_index(old_text,'Автор: ''''''',-1),'''''''',1))
 where old_text like '%Автор: ''''''%';
 
-UPDATE `ruranobe`.`projects`
+UPDATE `projects`
 INNER JOIN `prj_text` on prj=project_id
 INNER JOIN `ruranobe_db`.`mw_text` on txt=old_id
 SET `illustrator`=trim(substring_index(substring_index(old_text,'Иллюстратор: ''''''',-1),'''''''',1))
 where old_text like '%Иллюстратор: ''''''%';
 
-UPDATE `ruranobe`.`projects`
+UPDATE `projects`
 INNER JOIN `prj_text` on prj=project_id
 INNER JOIN `ruranobe_db`.`mw_text` on txt=old_id
 SET `franchise`=trim('\n' from substring_index(substring_index(trim(LEADING '''' from trim(substring_index(old_text,'Франшиза:',-1))),'==',1),'{{',1))
 where old_text like '%Франшиза:%';
 
-UPDATE `ruranobe`.`projects`
+UPDATE `projects`
 SET `order_number` = instr((SELECT old_text
                             FROM `ruranobe_db`.mw_revision
                               INNER JOIN `ruranobe_db`.mw_text ON old_id = rev_text_id
@@ -116,40 +132,102 @@ SET `order_number` = instr((SELECT old_text
                             LIMIT 1), url)
 WHERE parent_id IS NULL;
 
-UPDATE `ruranobe`.`projects`
+UPDATE `projects`
 SET `order_number` = 9999
 WHERE `order_number` = 0;
 
-  UPDATE ruranobe.projects SET name_jp='ソードアート・オンライン', name_en='Sword Art Online', name_ru=null WHERE project_id = 1;
-UPDATE ruranobe.projects SET name_jp='ログ・ホライズン', name_en='Log Horizon', name_ru=null WHERE project_id = 3;
-UPDATE ruranobe.projects SET name_jp='狼と香辛料', name_en='Spice and Wolf', name_ru='Волчица и пряности' WHERE project_id = 7;
-UPDATE ruranobe.projects SET name_jp='デュラララ!!', name_en='Durarara!!', name_ru='Дюрарара!!' WHERE project_id = 8;
-UPDATE ruranobe.projects SET name_jp='魔法科高校の劣等生', name_en='Mahouka Koukou no Rettousei', name_ru='Непутевый ученик в школе магии' WHERE project_id = 9;
-UPDATE ruranobe.projects SET name_jp='ヘヴィーオブジェクト', name_en='Heavy Object', name_ru='Тяжелый Объект' WHERE project_id = 11;
-UPDATE ruranobe.projects SET name_jp='アクセル・ワールド', name_en='Accel World', name_ru='Ускоренный мир' WHERE project_id = 12;
-UPDATE ruranobe.projects SET name_jp='終わりのクロニクル', name_en='Owari no Chronicle', name_ru='Хроники конца света' WHERE project_id = 13;
-UPDATE ruranobe.projects SET name_jp='中二病でも恋がしたい!', name_en=null, name_ru='У неё синдром восьмиклассника, но я всё равно хочу любить её!' WHERE project_id = 14;
-UPDATE ruranobe.projects SET name_jp='オール・ユー・ニード・イズ・キル', name_en='All You Need Is Kill', name_ru='Тебе Лишь Нужно Убивать' WHERE project_id = 15;
-UPDATE ruranobe.projects SET name_jp='ノーゲーム．ノーライフ', name_en='No Game No Life', name_ru=null WHERE project_id = 17;
-UPDATE ruranobe.projects SET name_jp='さまよう神姫の剣使徒', name_en='The Wandering Goddess'' Duelist', name_ru='Дуэлянт странствующей богини' WHERE project_id = 18;
-UPDATE ruranobe.projects SET name_jp='東京レイヴンズ', name_en='Tokyo Ravens', name_ru='Токийские вороны' WHERE project_id = 24;
-UPDATE ruranobe.projects SET name_jp='とらドラ！', name_en='ToraDora!', name_ru=null WHERE project_id = 25;
-UPDATE ruranobe.projects SET name_jp='やはり俺の青春ラブコメはまちがっている', name_en=null, name_ru=null WHERE project_id = 26;
-UPDATE ruranobe.projects SET name_jp='エロマンガ先生', name_en='EroManga Sensei', name_ru='Эроманга-сэнсэй' WHERE project_id = 27;
-UPDATE ruranobe.projects SET name_jp='問題児たちが異世界から来るそうですよ?', name_en='Problem Children are Coming from Another World, Aren''t They?', name_ru='Проблемные дети приходят из другого мира, верно?' WHERE project_id = 28;
-UPDATE ruranobe.projects SET name_jp='とある魔術の禁書目録', name_en='Toaru Majutsu no Index', name_ru='Некий Магический Индекс' WHERE project_id = 29;
-UPDATE ruranobe.projects SET name_jp='魔弾の王と戦姫', name_romaji='Madan no Ou to Vanadis', name_ru=null WHERE project_id = 33;
-UPDATE ruranobe.projects SET name_jp='盾の勇者の成り上がり', name_romaji='Tate no Yuusha no Nariagari', name_ru='Становление Героя Щита' WHERE project_id = 34;
-UPDATE ruranobe.projects SET name_jp='棺姫のチャイカ', name_en='Chaika - The Coffin Princess', name_ru='Чайка − принцесса с гробом' WHERE project_id = 35;
-UPDATE ruranobe.projects SET name_jp='マグダラで眠れ', name_en='May your soul rest in Magdala', name_ru='Пусть твоя душа упокоится в Магдале' WHERE project_id = 37;
-UPDATE ruranobe.projects SET name_jp='さくら荘のペットな彼女', name_romaji='Sakurasou no Pet na Kanojo', name_ru='Кошечка из Сакурасо' WHERE project_id = 38;
-UPDATE ruranobe.projects SET name_jp='オーバーロード', name_en='Overlord', name_ru='Властелин' WHERE project_id = 39;
-UPDATE ruranobe.projects SET name_jp='レンタルマギカ', name_en='Rental Magica', name_ru=null WHERE project_id = 43;
-UPDATE ruranobe.projects SET name_jp='黙示録アリス', name_en='Apocalypse Alice', name_ru=null WHERE project_id = 44;
-UPDATE ruranobe.projects SET name_jp='ダンジョンに出会いを求めるのは間違っているだろうか', name_romaji='Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka', name_ru=null WHERE project_id = 45;
-UPDATE ruranobe.projects SET name_jp='新妹魔王の契約者（テスタメント）', name_romaji='Shinmai Maou no Tesutamento', name_ru=null WHERE project_id = 46;
-UPDATE ruranobe.projects SET name_jp='ハイスクールD×D', name_en='High School D×D', name_ru=null WHERE project_id = 48;
-UPDATE ruranobe.projects SET name_jp='世界の終わりの世界録', name_romaji='Sekai no Owari no Encore', name_ru=null WHERE project_id = 49;
+UPDATE projects
+SET name_jp = 'ソードアート・オンライン', name_en = 'Sword Art Online', name_ru = NULL
+WHERE project_id = 1;
+UPDATE projects
+SET name_jp = 'ログ・ホライズン', name_en = 'Log Horizon', name_ru = NULL
+WHERE project_id = 3;
+UPDATE projects
+SET name_jp = '狼と香辛料', name_en = 'Spice and Wolf', name_ru = 'Волчица и пряности'
+WHERE project_id = 7;
+UPDATE projects
+SET name_jp = 'デュラララ!!', name_en = 'Durarara!!', name_ru = 'Дюрарара!!'
+WHERE project_id = 8;
+UPDATE projects
+SET name_jp = '魔法科高校の劣等生', name_en = 'Mahouka Koukou no Rettousei', name_ru = 'Непутевый ученик в школе магии'
+WHERE project_id = 9;
+UPDATE projects
+SET name_jp = 'ヘヴィーオブジェクト', name_en = 'Heavy Object', name_ru = 'Тяжелый Объект'
+WHERE project_id = 11;
+UPDATE projects
+SET name_jp = 'アクセル・ワールド', name_en = 'Accel World', name_ru = 'Ускоренный мир'
+WHERE project_id = 12;
+UPDATE projects
+SET name_jp = '終わりのクロニクル', name_en = 'Owari no Chronicle', name_ru = 'Хроники конца света'
+WHERE project_id = 13;
+UPDATE projects
+SET name_jp = '中二病でも恋がしたい!', name_en = NULL, name_ru = 'У неё синдром восьмиклассника, но я всё равно хочу любить её!'
+WHERE project_id = 14;
+UPDATE projects
+SET name_jp = 'オール・ユー・ニード・イズ・キル', name_en = 'All You Need Is Kill', name_ru = 'Тебе Лишь Нужно Убивать'
+WHERE project_id = 15;
+UPDATE projects
+SET name_jp = 'ノーゲーム．ノーライフ', name_en = 'No Game No Life', name_ru = NULL
+WHERE project_id = 17;
+UPDATE projects
+SET name_jp = 'さまよう神姫の剣使徒', name_en = 'The Wandering Goddess'' Duelist', name_ru = 'Дуэлянт странствующей богини'
+WHERE project_id = 18;
+UPDATE projects
+SET name_jp = '東京レイヴンズ', name_en = 'Tokyo Ravens', name_ru = 'Токийские вороны'
+WHERE project_id = 24;
+UPDATE projects
+SET name_jp = 'とらドラ！', name_en = 'ToraDora!', name_ru = NULL
+WHERE project_id = 25;
+UPDATE projects
+SET name_jp = 'やはり俺の青春ラブコメはまちがっている', name_en = NULL, name_ru = NULL
+WHERE project_id = 26;
+UPDATE projects
+SET name_jp = 'エロマンガ先生', name_en = 'EroManga Sensei', name_ru = 'Эроманга-сэнсэй'
+WHERE project_id = 27;
+UPDATE projects
+SET name_jp = '問題児たちが異世界から来るそうですよ?', name_en = 'Problem Children are Coming from Another World, Aren''t They?',
+  name_ru   = 'Проблемные дети приходят из другого мира, верно?'
+WHERE project_id = 28;
+UPDATE projects
+SET name_jp = 'とある魔術の禁書目録', name_en = 'Toaru Majutsu no Index', name_ru = 'Некий Магический Индекс'
+WHERE project_id = 29;
+UPDATE projects
+SET name_jp = '魔弾の王と戦姫', name_romaji = 'Madan no Ou to Vanadis', name_ru = NULL
+WHERE project_id = 33;
+UPDATE projects
+SET name_jp = '盾の勇者の成り上がり', name_romaji = 'Tate no Yuusha no Nariagari', name_ru = 'Становление Героя Щита'
+WHERE project_id = 34;
+UPDATE projects
+SET name_jp = '棺姫のチャイカ', name_en = 'Chaika - The Coffin Princess', name_ru = 'Чайка − принцесса с гробом'
+WHERE project_id = 35;
+UPDATE projects
+SET name_jp = 'マグダラで眠れ', name_en = 'May your soul rest in Magdala', name_ru = 'Пусть твоя душа упокоится в Магдале'
+WHERE project_id = 37;
+UPDATE projects
+SET name_jp = 'さくら荘のペットな彼女', name_romaji = 'Sakurasou no Pet na Kanojo', name_ru = 'Кошечка из Сакурасо'
+WHERE project_id = 38;
+UPDATE projects
+SET name_jp = 'オーバーロード', name_en = 'Overlord', name_ru = 'Властелин'
+WHERE project_id = 39;
+UPDATE projects
+SET name_jp = 'レンタルマギカ', name_en = 'Rental Magica', name_ru = NULL
+WHERE project_id = 43;
+UPDATE projects
+SET name_jp = '黙示録アリス', name_en = 'Apocalypse Alice', name_ru = NULL
+WHERE project_id = 44;
+UPDATE projects
+SET name_jp = 'ダンジョンに出会いを求めるのは間違っているだろうか', name_romaji = 'Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka',
+  name_ru   = NULL
+WHERE project_id = 45;
+UPDATE projects
+SET name_jp = '新妹魔王の契約者（テスタメント）', name_romaji = 'Shinmai Maou no Tesutamento', name_ru = NULL
+WHERE project_id = 46;
+UPDATE projects
+SET name_jp = 'ハイスクールD×D', name_en = 'High School D×D', name_ru = NULL
+WHERE project_id = 48;
+UPDATE projects
+SET name_jp = '世界の終わりの世界録', name_romaji = 'Sekai no Owari no Encore', name_ru = NULL
+WHERE project_id = 49;
 
 
 
@@ -167,46 +245,70 @@ inner join `ruranobe_db`.mw_revision rv on rev_page=page_id
 inner join `ruranobe_db`.mw_text t on old_id=rev_text_id
 WHERE rev_timestamp=(select max(rev_timestamp) from `ruranobe_db`.mw_revision where rev_page=p.page_id) and length(trim(old_text))>0;
 
-INSERT ignore INTO `ruranobe`.`texts`(`text_id`, `text_wiki`, `text_html`)
+INSERT IGNORE INTO `texts` (`text_id`, `text_wiki`, `text_html`)
 SELECT `old_id`, trim(`old_text`), '' FROM `ruranobe_db`.`mw_text` inner join ch_text on old_id=txt;
 
-UPDATE `ruranobe`.`chapters`
+UPDATE `chapters`
 INNER JOIN `ch_text` on `ch`=`chapter_id`
 SET `text_id`=`txt`, `published`=1;
 
 
+INSERT INTO `external_resources` (`user_id`, `mime_type`, `url`, `title`, `uploaded_when`)
+  SELECT
+    `img_user`,
+    concat(`img_major_mime`, '/', `img_minor_mime`),
+    concat('http://ru/w/images/', substr(md5(`img_name`), 1, 1), '/', substr(md5(`img_name`), 1, 2), '/', `img_name`),
+    `img_name`,
+    `img_timestamp`
+  FROM `ruranobe_db`.`mw_image`
+    INNER JOIN `projects` ON concat('sidebanner-', `url`, '.png') = img_name;
 
-INSERT INTO `ruranobe`.`external_resources`(`user_id`, `mime_type`, `url`, `title`, `uploaded_when`)
-SELECT `img_user`, concat(`img_major_mime`, '/', `img_minor_mime`), concat('http://ruranobe.ru/w/images/',substr(md5(`img_name`),1,1),'/',substr(md5(`img_name`),1,2),'/',`img_name`), `img_name`, `img_timestamp` FROM `ruranobe_db`.`mw_image`
-INNER JOIN `ruranobe`.`projects` ON concat('sidebanner-',`url`,'.png')=img_name;
-
-UPDATE `ruranobe`.`projects` p
-INNER JOIN `ruranobe`.`external_resources` r on concat('sidebanner-',p.`url`,'.png')=r.title
+UPDATE `projects` p
+  INNER JOIN `external_resources` r ON concat('sidebanner-', p.`url`, '.png') = r.title
 SET `image_id`=`resource_id`;
 
-INSERT INTO `ruranobe`.`external_resources`(`user_id`, `mime_type`, `url`, `title`, `uploaded_when`)
-SELECT DISTINCT `img_user`, concat(`img_major_mime`, '/', `img_minor_mime`), concat('http://ruranobe.ru/w/images/',substr(md5(`img_name`),1,1),'/',substr(md5(`img_name`),1,2),'/',`img_name`), `img_name`, `img_timestamp` FROM `ruranobe_db`.`mw_image`
+INSERT INTO `external_resources` (`user_id`, `mime_type`, `url`, `title`, `uploaded_when`)
+  SELECT DISTINCT
+    `img_user`,
+    concat(`img_major_mime`, '/', `img_minor_mime`),
+    concat('http://ru/w/images/', substr(md5(`img_name`), 1, 1), '/', substr(md5(`img_name`), 1, 2), '/', `img_name`),
+    `img_name`,
+    `img_timestamp`
+  FROM `ruranobe_db`.`mw_image`
 INNER JOIN `ruranobe_db`.`mw_imagelinks` ON `il_to`=`img_name`
 INNER JOIN `ch_text` ON il_from=pg
 ORDER BY img_name;
 
 INSERT INTO `chapter_images`(`chapter_id`, `volume_id`, `non_colored_image_id`, `colored_image_id`, `order_number`, `adult`)
-SELECT `chapter_id`, `volume_id`, `resource_id`, null, `resource_id`, 0 FROM `ruranobe`.`external_resources`
+  SELECT
+    `chapter_id`,
+    `volume_id`,
+    `resource_id`,
+    NULL,
+    `resource_id`,
+    0
+  FROM `external_resources`
 INNER JOIN `ruranobe_db`.`mw_imagelinks` ON `il_to`=`title`
 INNER JOIN `ch_text` ON il_from=pg
-INNER JOIN `ruranobe`.`chapters` on `ch`=`chapter_id`;
+    INNER JOIN `chapters` ON `ch` = `chapter_id`;
 
-INSERT Ignore INTO `ruranobe`.`external_resources`(`user_id`, `mime_type`, `url`, `title`, `uploaded_when`)
-SELECT DISTINCT `img_user`, concat(`img_major_mime`, '/', `img_minor_mime`), concat('http://ruranobe.ru/w/images/',substr(md5(`img_name`),1,1),'/',substr(md5(`img_name`),1,2),'/',`img_name`), `img_name`, `img_timestamp` FROM `ruranobe_db`.`mw_image`
+INSERT IGNORE INTO `external_resources` (`user_id`, `mime_type`, `url`, `title`, `uploaded_when`)
+  SELECT DISTINCT
+    `img_user`,
+    concat(`img_major_mime`, '/', `img_minor_mime`),
+    concat('http://ru/w/images/', substr(md5(`img_name`), 1, 1), '/', substr(md5(`img_name`), 1, 2), '/', `img_name`),
+    `img_name`,
+    `img_timestamp`
+  FROM `ruranobe_db`.`mw_image`
 INNER JOIN `ruranobe_db`.`mw_imagelinks` ON `il_to`=`img_name`
 inner join `ruranobe_db`.mw_page on page_id=il_from
-inner join `ruranobe`.volumes on page_title=url
+    INNER JOIN volumes ON page_title = url
 inner join `ruranobe_db`.`main_releases` on `release_id`=`volume_id`
 where img_name like concat(replace(cover,' ','_'),'.%');
 
-UPDATE `ruranobe`.`volumes`
+UPDATE `volumes`
 inner join `ruranobe_db`.`main_releases` on `release_id`=`volume_id`
-INNER JOIN `ruranobe`.`external_resources` r on r.title like concat(replace(cover,' ','_'),'.%')
+  INNER JOIN `external_resources` r ON r.title LIKE concat(replace(cover, ' ', '_'), '.%')
 SET `image_one`=`resource_id`;
 
 

@@ -35,14 +35,18 @@
         <result property="parentId" column="parent_id"/>
         <result property="imageId" column="image_id"/>
         <result property="url" column="url"/>
-        <result property="title" column="title"/>
+        <result property="nameJp" column="name_jp"/>
+        <result property="nameEn" column="name_en"/>
+        <result property="nameRu" column="name_ru"/>
+        <result property="nameRomaji" column="name_romaji"/>
+        <result property="author" column="author"/>
+        <result property="illustrator" column="illustrator"/>
         <result property="orderNumber" column="order_number"/>
         <result property="bannerHidden" column="banner_hidden"/>
         <result property="projectHidden" column="project_hidden"/>
+        <result property="oneVolume" column="onevolume"/>
         <result property="franchise" column="franchise"/>
         <result property="annotation" column="annotation"/>
-        <result property="author" column="author"/>
-        <result property="illustrator" column="illustrator"/>
     </resultMap>
 
     <!--select id="getSeriesById" parameterType="int" resultType="ru.ruranobe.mybatis.tables.Series">
