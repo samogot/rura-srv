@@ -1,239 +1,259 @@
 ﻿# use ruranobe;
 
-drop table if exists orphus_comments;
-drop table if exists chapter_images;
-drop table if exists updates;
-drop table if exists chapters;
-drop table if exists volume_release_activities;
-drop table if exists volumes;
-drop table if exists projects;
-drop table if exists external_resources;
-drop table if exists texts;
-drop table if exists team_members;
-drop table if exists users;
-drop table if exists teams;
-drop table if exists volume_activities;
+DROP TABLE IF EXISTS orphus_comments;
+DROP TABLE IF EXISTS chapter_images;
+DROP TABLE IF EXISTS updates;
+DROP TABLE IF EXISTS chapters;
+DROP TABLE IF EXISTS volume_release_activities;
+DROP TABLE IF EXISTS volumes;
+DROP TABLE IF EXISTS projects;
+DROP TABLE IF EXISTS external_resources;
+DROP TABLE IF EXISTS texts;
+DROP TABLE IF EXISTS team_members;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS teams;
+DROP TABLE IF EXISTS volume_activities;
 
-create table users
+CREATE TABLE users
 (
-  user_id int(11) PRIMARY KEY AUTO_INCREMENT,
-  username varchar(64) UNIQUE NOT NULL,
-  realname varchar(255),
-  pass varchar(32) NOT NULL,
-  pass_recovery_token varchar(255),
-  pass_recovery_token_date datetime,
-  email varchar(255),
-  email_token varchar(255),
-  email_token_date datetime,
-  email_activated bool NOT NULL,
-  registration_date datetime NOT NULL,
-  adult bool NOT NULL
+  user_id                  INT(11) PRIMARY KEY AUTO_INCREMENT,
+  username                 VARCHAR(64) UNIQUE NOT NULL,
+  realname                 VARCHAR(255),
+  pass                     VARCHAR(32)        NOT NULL,
+  pass_recovery_token      VARCHAR(255),
+  pass_recovery_token_date DATETIME,
+  email                    VARCHAR(255),
+  email_token              VARCHAR(255),
+  email_token_date         DATETIME,
+  email_activated          BOOL               NOT NULL,
+  registration_date        DATETIME           NOT NULL,
+  adult                    BOOL               NOT NULL
 );
 
-create table texts
+CREATE TABLE texts
 (
-  text_id int(11) primary key auto_increment,
-  text_wiki mediumtext NOT NULL,
-  text_html mediumtext NOT NULL
+  text_id   INT(11) PRIMARY KEY AUTO_INCREMENT,
+  text_wiki MEDIUMTEXT NOT NULL,
+  text_html MEDIUMTEXT NOT NULL
 );
 
-create table orphus_comments
+CREATE TABLE orphus_comments
 (
-   chapter_id int(11) NOT NULL,
-   paragraph int(11) NOT NULL,
-   start_offset int(11) NOT NULL,
-   original_text varchar(255) NOT NULL,
-   replacement_text varchar(255) NOT NULL,
-   user_id int(11),
-   user_ip varchar(15),
-   created_when datetime NOT NULL
+  chapter_id       INT(11)      NOT NULL,
+  paragraph        INT(11)      NOT NULL,
+  start_offset     INT(11)      NOT NULL,
+  original_text    VARCHAR(255) NOT NULL,
+  replacement_text VARCHAR(255) NOT NULL,
+  optional_comment VARCHAR(255),
+  user_id          INT(11),
+  user_ip          VARCHAR(15),
+  created_when     DATETIME     NOT NULL
 );
 
-create table projects
+CREATE TABLE projects
 (
-  project_id int(11) primary key auto_increment,
-  parent_id int(11),
-  image_id int(11),
-  url varchar(32) UNIQUE,
-  title varchar(1023) NOT NULL,
-  name_jp varchar(255),
-  name_en varchar(255),
-  name_ru varchar(255),
-  name_romaji varchar(255),
-  author varchar(255),
-  illustrator varchar(255),
-  order_number int(11) NOT NULL,
-  banner_hidden bool NOT NULL,
-  project_hidden bool NOT NULL,
-  onevolume bool NOT NULL,
-  franchise text,
-  annotation text
+  project_id     INT(11) PRIMARY KEY AUTO_INCREMENT,
+  parent_id      INT(11),
+  image_id       INT(11),
+  url            VARCHAR(32) UNIQUE,
+  title          VARCHAR(1023) NOT NULL,
+  name_jp        VARCHAR(255),
+  name_en        VARCHAR(255),
+  name_ru        VARCHAR(255),
+  name_romaji    VARCHAR(255),
+  author         VARCHAR(255),
+  illustrator    VARCHAR(255),
+  order_number   INT(11)       NOT NULL,
+  banner_hidden  BOOL          NOT NULL,
+  project_hidden BOOL          NOT NULL,
+  onevolume      BOOL          NOT NULL,
+  franchise      TEXT,
+  annotation     TEXT
 );
 
-create table volumes
+CREATE TABLE volumes
 (
-  volume_id int(11) primary key auto_increment,
-  project_id int(11) NOT NULL,
-  image_one int(11),
-  image_two int(11),
-  image_three int(11),
-  image_four int(11),
-  url varchar(32) UNIQUE NOT NULL,
-  name_file varchar(255),
-  name_title varchar(255),
-  name_jp varchar(255),
-  name_en varchar(255),
-  name_ru varchar(255),
-  name_romaji varchar(255),
-  name_short varchar(64),
-  sequence_number float,
-  author varchar(255),
-  illustrator varchar(255),
-  original_design VARCHAR(255), -- по заказу малфа, для спиноф серий с другим иллюстратором
-  release_date date,
-  ISBN varchar(16),
-  external_url varchar(255),
-  volume_type enum('Ранобэ','Побочные истории','Авторские додзинси','Другое') NOT NULL DEFAULT 'Ранобэ',
-  volume_status enum('hidden','auto'
-                    ,'external_dropped','external_active','external_done'
-                    ,'no_eng','freeze','on_hold','queue'
-                    ,'ongoing','translating','proofread'
-                    ,'decor','done') NOT NULL DEFAULT 'onhold',
-  volume_status_hint varchar(255),
-  adult bool NOT NULL,
-  annotation text
+  volume_id          INT(11) PRIMARY KEY          AUTO_INCREMENT,
+  project_id         INT(11)             NOT NULL,
+  image_one          INT(11),
+  image_two          INT(11),
+  image_three        INT(11),
+  image_four         INT(11),
+  url                VARCHAR(32) UNIQUE  NOT NULL,
+  name_file          VARCHAR(255),
+  name_title         VARCHAR(255),
+  name_jp            VARCHAR(255),
+  name_en            VARCHAR(255),
+  name_ru            VARCHAR(255),
+  name_romaji        VARCHAR(255),
+  name_short         VARCHAR(64),
+  sequence_number    FLOAT,
+  author             VARCHAR(255),
+  illustrator        VARCHAR(255),
+  original_design    VARCHAR(255), -- по заказу малфа, для спиноф серий с другим иллюстратором
+  release_date       DATE,
+  ISBN               VARCHAR(16),
+  external_url       VARCHAR(255),
+  volume_type        ENUM('Ранобэ',
+                          'Побочные истории',
+                          'Авторские додзинси',
+                          'Другое')      NOT NULL DEFAULT 'Ранобэ',
+  volume_status      ENUM('hidden',
+                          'auto',
+                          -- сторонний
+                          'external_dropped',
+                          'external_active',
+                          'external_done',
+                          -- не в работе
+                          'no_eng',
+                          'freeze',
+                          'on_hold',
+                          'queue',
+                          -- в работе
+                          'ongoing',
+                          'translating',
+                          'proofread',
+                          -- опубликован
+                          'decor',
+                          'done')        NOT NULL DEFAULT 'onhold',
+  volume_status_hint VARCHAR(255),
+  adult              BOOL                NOT NULL,
+  annotation         TEXT
 );
 
-create table chapters
+CREATE TABLE chapters
 (
-  chapter_id int(11) primary key auto_increment,
-  volume_id int(11) NOT NULL,
-  text_id int(11),
-  url varchar(32) UNIQUE,
-  title varchar(1023) NOT NULL,
-  order_number int(11) NOT NULL,
-  published bool NOT NULL,
-  nested bool NOT NULL
+  chapter_id   INT(11) PRIMARY KEY AUTO_INCREMENT,
+  volume_id    INT(11)       NOT NULL,
+  text_id      INT(11),
+  url          VARCHAR(32) UNIQUE,
+  title        VARCHAR(1023) NOT NULL,
+  order_number INT(11)       NOT NULL,
+  published    BOOL          NOT NULL,
+  nested       BOOL          NOT NULL
 );
 
-create table chapter_images
+CREATE TABLE chapter_images
 (
-  chapter_id int(11),
-  volume_id int(11) NOT NULL,
---  image_id int(11), NOT NULL
-  non_colored_image_id int(11) NOT NULL,
-  colored_image_id int(11),
-  order_number int(11) NOT NULL,
-  adult bool NOT NULL
+  chapter_id           INT(11),
+  volume_id            INT(11) NOT NULL,
+  --  image_id int(11), NOT NULL
+  non_colored_image_id INT(11) NOT NULL,
+  colored_image_id     INT(11),
+  order_number         INT(11) NOT NULL,
+  adult                BOOL    NOT NULL
 );
 
-create table external_resources
+CREATE TABLE external_resources
 (
-  resource_id int(11) primary key auto_increment,
-  user_id int(11) NOT NULL,
-  mime_type varchar(255) NOT NULL,
-  url varchar(255) UNIQUE NOT NULL,
-  title varchar(255),
-  uploaded_when datetime NOT NULL
+  resource_id   INT(11) PRIMARY KEY AUTO_INCREMENT,
+  user_id       INT(11)             NOT NULL,
+  mime_type     VARCHAR(255)        NOT NULL,
+  url           VARCHAR(255) UNIQUE NOT NULL,
+  title         VARCHAR(255),
+  uploaded_when DATETIME            NOT NULL
 );
 
-create table volume_activities
+CREATE TABLE volume_activities
 (
-  activity_id   int(11) primary key auto_increment,
-  activity_name varchar(255) UNIQUE NOT NULL,
-  activity_type enum('text', 'image') NOT NULL
+  activity_id   INT(11) PRIMARY KEY AUTO_INCREMENT,
+  activity_name VARCHAR(255) UNIQUE   NOT NULL,
+  activity_type ENUM('text', 'image') NOT NULL
 );
 
-create table teams
+CREATE TABLE teams
 (
-  team_id int(11) primary key auto_increment,
-  team_name varchar(255) UNIQUE NOT NULL,
-  team_website_link varchar(255)
+  team_id           INT(11) PRIMARY KEY AUTO_INCREMENT,
+  team_name         VARCHAR(255) UNIQUE NOT NULL,
+  team_website_link VARCHAR(255)
 );
 
-create table team_members
+CREATE TABLE team_members
 (
-  member_id  int(11) primary key auto_increment,
-  user_id int(11),
-  team_id int(11),
-  nikname varchar(64) UNIQUE NOT NULL,
-  active boolean NOT NULL
+  member_id INT(11) PRIMARY KEY AUTO_INCREMENT,
+  user_id   INT(11),
+  team_id   INT(11),
+  nikname   VARCHAR(64) UNIQUE NOT NULL,
+  active    BOOLEAN            NOT NULL
 );
 
-create table volume_release_activities
+CREATE TABLE volume_release_activities
 (
-  release_activity_id  int(11) primary key auto_increment,
-  volume_id            int(11) NOT NULL,
-  activity_id          int(11) NOT NULL,
-  member_id            int(11) NOT NULL,
-  team_hidden          boolean NOT NULL
+  release_activity_id INT(11) PRIMARY KEY AUTO_INCREMENT,
+  volume_id           INT(11) NOT NULL,
+  activity_id         INT(11) NOT NULL,
+  member_id           INT(11) NOT NULL,
+  team_hidden         BOOLEAN NOT NULL
 );
 
-create table updates
+CREATE TABLE updates
 (
-  update_id int(11) primary key auto_increment,
-  project_id int(11) NOT NULL,
-  volume_id int(11) NOT NULL,
-  chapter_id int(11),
-  update_type enum('Опубликован','Обновлен перевод','Глобальная редактура','Обновление иллюстраций') NOT NULL,
-  show_time datetime NOT NULL,
-  description varchar(255)
+  update_id   INT(11) PRIMARY KEY AUTO_INCREMENT,
+  project_id  INT(11)                        NOT NULL,
+  volume_id   INT(11)                        NOT NULL,
+  chapter_id  INT(11),
+  update_type ENUM('Опубликован',
+                   'Обновлен перевод',
+                   'Глобальная редактура',
+                   'Обновление иллюстраций') NOT NULL,
+  show_time   DATETIME                       NOT NULL,
+  description VARCHAR(255)
 );
 
-alter table chapter_images add constraint fk_colored_image_id foreign key (colored_image_id) references external_resources (resource_id);
+ALTER TABLE chapter_images ADD CONSTRAINT fk_colored_image_id FOREIGN KEY (colored_image_id) REFERENCES external_resources (resource_id);
 
-alter table chapter_images add constraint fk_non_colored_image_id foreign key (non_colored_image_id) references external_resources (resource_id);
+ALTER TABLE chapter_images ADD CONSTRAINT fk_non_colored_image_id FOREIGN KEY (non_colored_image_id) REFERENCES external_resources (resource_id);
 
-alter table chapter_images add constraint fk_volume_id foreign key (volume_id) references volumes (volume_id);
+ALTER TABLE chapter_images ADD CONSTRAINT fk_volume_id FOREIGN KEY (volume_id) REFERENCES volumes (volume_id);
 
-alter table chapter_images add constraint fk_chapter_id foreign key (chapter_id) references chapters (chapter_id);
-
-
-alter table external_resources add constraint fk_user_id foreign key (user_id) references users (user_id);
+ALTER TABLE chapter_images ADD CONSTRAINT fk_chapter_id FOREIGN KEY (chapter_id) REFERENCES chapters (chapter_id);
 
 
-alter table chapters add constraint fk_volume_id2 foreign key (volume_id) references volumes (volume_id);
-
-alter table chapters add constraint fk_text_id foreign key (text_id) references texts (text_id);
+ALTER TABLE external_resources ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (user_id);
 
 
-alter table volumes add constraint fk_project_id foreign key (project_id) references projects (project_id);
+ALTER TABLE chapters ADD CONSTRAINT fk_volume_id2 FOREIGN KEY (volume_id) REFERENCES volumes (volume_id);
 
-alter table volumes add constraint fk_image_one   foreign key (image_one)   references external_resources (resource_id);
-alter table volumes add constraint fk_image_two   foreign key (image_two)   references external_resources (resource_id);
-alter table volumes add constraint fk_image_three foreign key (image_three) references external_resources (resource_id);
-alter table volumes add constraint fk_image_four  foreign key (image_four)  references external_resources (resource_id);
+ALTER TABLE chapters ADD CONSTRAINT fk_text_id FOREIGN KEY (text_id) REFERENCES texts (text_id);
 
 
-alter table projects add constraint fk_parent_id foreign key (parent_id) references projects (project_id);
+ALTER TABLE volumes ADD CONSTRAINT fk_project_id FOREIGN KEY (project_id) REFERENCES projects (project_id);
 
-alter table projects add constraint fk_image_id foreign key (image_id) references external_resources (resource_id);
-
-
-alter table orphus_comments add constraint fk_chapter_id2 foreign key (chapter_id) references chapters (chapter_id);
-
-alter table orphus_comments add constraint fk_user_id2 foreign key (user_id) references users (user_id);
-
-alter table orphus_comments add primary key (chapter_id, paragraph, start_offset, original_text, replacement_text);
+ALTER TABLE volumes ADD CONSTRAINT fk_image_one FOREIGN KEY (image_one) REFERENCES external_resources (resource_id);
+ALTER TABLE volumes ADD CONSTRAINT fk_image_two FOREIGN KEY (image_two) REFERENCES external_resources (resource_id);
+ALTER TABLE volumes ADD CONSTRAINT fk_image_three FOREIGN KEY (image_three) REFERENCES external_resources (resource_id);
+ALTER TABLE volumes ADD CONSTRAINT fk_image_four FOREIGN KEY (image_four) REFERENCES external_resources (resource_id);
 
 
-alter table updates add constraint fk_u_project_id foreign key (project_id) references projects (project_id);
+ALTER TABLE projects ADD CONSTRAINT fk_parent_id FOREIGN KEY (parent_id) REFERENCES projects (project_id);
 
-alter table updates add constraint fk_u_volume_id foreign key (volume_id) references volumes (volume_id);
-
-alter table updates add constraint fk_u_chapter_id foreign key (chapter_id) references chapters (chapter_id);
+ALTER TABLE projects ADD CONSTRAINT fk_image_id FOREIGN KEY (image_id) REFERENCES external_resources (resource_id);
 
 
-alter table team_members add constraint fk_team_id foreign key (team_id) references teams(team_id);
+ALTER TABLE orphus_comments ADD CONSTRAINT fk_chapter_id2 FOREIGN KEY (chapter_id) REFERENCES chapters (chapter_id);
 
-alter table team_members add constraint fk_user_id3 foreign key (user_id) references users (user_id);
+ALTER TABLE orphus_comments ADD CONSTRAINT fk_user_id2 FOREIGN KEY (user_id) REFERENCES users (user_id);
+
+ALTER TABLE orphus_comments ADD PRIMARY KEY (chapter_id, paragraph, start_offset, original_text, replacement_text);
 
 
-alter table volume_release_activities add constraint fk_ra_volume_id foreign key (volume_id) references volumes(volume_id);
+ALTER TABLE updates ADD CONSTRAINT fk_u_project_id FOREIGN KEY (project_id) REFERENCES projects (project_id);
 
-alter table volume_release_activities add constraint fk_member_id foreign key (member_id) references team_members(member_id);
+ALTER TABLE updates ADD CONSTRAINT fk_u_volume_id FOREIGN KEY (volume_id) REFERENCES volumes (volume_id);
 
-alter table volume_release_activities add constraint fk_activity_id foreign key (activity_id) references volume_activities(activity_id);
+ALTER TABLE updates ADD CONSTRAINT fk_u_chapter_id FOREIGN KEY (chapter_id) REFERENCES chapters (chapter_id);
+
+
+ALTER TABLE team_members ADD CONSTRAINT fk_team_id FOREIGN KEY (team_id) REFERENCES teams (team_id);
+
+ALTER TABLE team_members ADD CONSTRAINT fk_user_id3 FOREIGN KEY (user_id) REFERENCES users (user_id);
+
+
+ALTER TABLE volume_release_activities ADD CONSTRAINT fk_ra_volume_id FOREIGN KEY (volume_id) REFERENCES volumes (volume_id);
+
+ALTER TABLE volume_release_activities ADD CONSTRAINT fk_member_id FOREIGN KEY (member_id) REFERENCES team_members (member_id);
+
+ALTER TABLE volume_release_activities ADD CONSTRAINT fk_activity_id FOREIGN KEY (activity_id) REFERENCES volume_activities (activity_id);
 
 ALTER TABLE updates ADD INDEX (project_id);
 

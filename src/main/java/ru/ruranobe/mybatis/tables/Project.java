@@ -6,10 +6,10 @@ import ru.ruranobe.wicket.webpages.VolumePage;
 
 import java.io.Serializable;
 
-public class Project implements Serializable, PageRepresentable
+public class Project implements Serializable PageRepresentable
 {
 
-    private static final long serialVersionUID = 2L;
+    private static final long serialVersionUID = 3L;
     private Integer projectId;
     private Integer parentId;
     private Integer imageId;

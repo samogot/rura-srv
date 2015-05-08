@@ -5,25 +5,19 @@ import java.io.Serializable;
 public class Team implements Serializable
 {
 
+    private static final long serialVersionUID = 2L;
+    private Integer teamId;
+    private String teamName;
+    private String teamWebsiteLink;
+
     public Team()
     {
     }
 
-    public Team(String teamName, String teamWebsiteLink, boolean teamHidden)
+    public Team(String teamName, String teamWebsiteLink)
     {
         this.teamName = teamName;
         this.teamWebsiteLink = teamWebsiteLink;
-        this.teamHidden = teamHidden;
-    }
-    
-    public boolean isTeamHidden()
-    {
-        return teamHidden;
-    }
-
-    public void setTeamHidden(boolean teamHidden)
-    {
-        this.teamHidden = teamHidden;
     }
 
     public Integer getTeamId()
@@ -55,10 +49,4 @@ public class Team implements Serializable
     {
         this.teamWebsiteLink = teamWebsiteLink;
     }
-    
-    private Integer teamId;
-    private String teamName;
-    private String teamWebsiteLink;
-    private boolean teamHidden;
-    private static final long serialVersionUID = 1L;
 }

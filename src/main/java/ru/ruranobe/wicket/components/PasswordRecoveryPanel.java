@@ -22,6 +22,7 @@ public class PasswordRecoveryPanel extends Panel
     private final SqlSession session;
     private String password;
     private String confirmPassword;
+
     public PasswordRecoveryPanel(String id, User user, UsersMapper usersMapper, SqlSession session)
     {
         super(id);

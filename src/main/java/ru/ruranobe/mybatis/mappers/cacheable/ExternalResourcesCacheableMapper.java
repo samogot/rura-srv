@@ -9,19 +9,21 @@ import ru.ruranobe.mybatis.tables.ExternalResource;
 public class ExternalResourcesCacheableMapper implements ExternalResourcesMapper
 {
 
+    private static final Cache cache = CacheManager.newInstance().getCache("ExternalResourcesInMemoryCache");
+    private final ExternalResourcesMapper mapper;
+
     public ExternalResourcesCacheableMapper(ExternalResourcesMapper mapper)
     {
         this.mapper = mapper;
     }
-    
+
     @Override
     public ExternalResource getExternalResourceById(Integer externalResourceId)
     {
         if (cache.isKeyInCache(externalResourceId))
         {
             return (ExternalResource) cache.get(externalResourceId).getObjectValue();
-        }
-        else 
+        } else
         {
             ExternalResource externalResource = mapper.getExternalResourceById(externalResourceId);
             cache.put(new Element(externalResourceId, externalResource));
@@ -36,7 +38,4 @@ public class ExternalResourcesCacheableMapper implements ExternalResourcesMapper
         cache.put(new Element(resourceId, externalResource));
         return resourceId;
     }
-
-    private final ExternalResourcesMapper mapper;
-    private static final Cache cache = CacheManager.newInstance().getCache("ExternalResourcesInMemoryCache");
 }

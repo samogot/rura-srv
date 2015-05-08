@@ -5,6 +5,8 @@ import java.io.InputStream;
 
 public class ImageStreamSource implements ImageSource
 {
+    private final InputStream inputStream;
+
     public ImageStreamSource(InputStream inputStream)
     {
         if (inputStream.markSupported())
@@ -13,27 +15,26 @@ public class ImageStreamSource implements ImageSource
         }
         this.inputStream = inputStream;
     }
-    
+
     @Override
     public InputStream getInputStream()
     {
         return inputStream;
     }
-    
-    @Override 
+
+    @Override
     public void rewind()
     {
         try
         {
             inputStream.reset();
-        } 
-        catch (IOException ex)
+        } catch (IOException ex)
         {
             throw new RuntimeException(ex);
         }
     }
-    
-    @Override 
+
+    @Override
     public void close()
     {
         if (inputStream != null)
@@ -41,13 +42,10 @@ public class ImageStreamSource implements ImageSource
             try
             {
                 inputStream.close();
-            }
-            catch (IOException ex)
+            } catch (IOException ex)
             {
                 throw new RuntimeException(ex);
             }
         }
     }
-
-    private final InputStream inputStream;
 }

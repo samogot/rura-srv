@@ -5,6 +5,11 @@ import java.io.Serializable;
 public class Text implements Serializable
 {
 
+    private static final long serialVersionUID = 1L;
+    private Integer textId;
+    private String textWiki;
+    private String textHtml;
+
     public Text()
     {
     }
@@ -44,9 +49,4 @@ public class Text implements Serializable
     {
         this.textWiki = textWiki;
     }
-
-    private Integer textId;
-    private String textWiki;
-    private String textHtml;
-    private static final long serialVersionUID = 1L;
 }

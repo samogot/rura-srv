@@ -1,11 +1,14 @@
 package ru.ruranobe.mybatis.mappers.cacheable;
 
-import java.util.Collection;
 import ru.ruranobe.mybatis.mappers.VolumeReleaseActivitiesMapper;
 import ru.ruranobe.mybatis.tables.VolumeReleaseActivity;
 
+import java.util.Collection;
+
 public class VolumeReleaseActivitiesMapperCacheable implements VolumeReleaseActivitiesMapper
 {
+    private VolumeReleaseActivitiesMapper mapper;
+
     public VolumeReleaseActivitiesMapperCacheable(VolumeReleaseActivitiesMapper mapper)
     {
         this.mapper = mapper;
@@ -34,6 +37,4 @@ public class VolumeReleaseActivitiesMapperCacheable implements VolumeReleaseActi
     {
         mapper.updateVolumeReleaseActivity(volumeReleaseActivity);
     }
-    
-    private VolumeReleaseActivitiesMapper mapper;
 }

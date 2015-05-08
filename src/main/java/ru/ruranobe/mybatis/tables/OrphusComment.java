@@ -6,12 +6,23 @@ import java.util.Date;
 public class OrphusComment implements Serializable
 {
 
+    private static final long serialVersionUID = 2L;
+    private int chapterId;
+    private int paragraph;
+    private int startOffset;
+    private String originalText;
+    private String replacementText;
+    private String optionalComment;
+    private String userIP;
+    private Integer userId;
+    private Date createdWhen;
+
     public OrphusComment()
     {
     }
 
-    public OrphusComment(int chapterId, int parapraph, int startOffset, 
-            String originalText, String replacementText, String optionalComment, Date createdWhen)
+    public OrphusComment(int chapterId, int parapraph, int startOffset,
+                         String originalText, String replacementText, String optionalComment, Date createdWhen)
     {
         this.chapterId = chapterId;
         this.paragraph = parapraph;
@@ -21,7 +32,7 @@ public class OrphusComment implements Serializable
         this.optionalComment = optionalComment;
         this.createdWhen = createdWhen;
     }
-    
+
     public int getChapterId()
     {
         return chapterId;
@@ -91,14 +102,24 @@ public class OrphusComment implements Serializable
     {
         this.createdWhen = createdWhen;
     }
-    
-    private int chapterId;
-    private int paragraph;
-    private int startOffset;
-    private String originalText;
-    private String replacementText;
-    private String optionalComment;
-    private Date createdWhen;
-    
-    private static final long serialVersionUID = 1L;
+
+    public String getUserIP()
+    {
+        return userIP;
+    }
+
+    public void setUserIP(String userIP)
+    {
+        this.userIP = userIP;
+    }
+
+    public Integer getUserId()
+    {
+        return userId;
+    }
+
+    public void setUserId(Integer userId)
+    {
+        this.userId = userId;
+    }
 }

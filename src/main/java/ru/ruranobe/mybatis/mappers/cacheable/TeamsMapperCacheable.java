@@ -5,6 +5,8 @@ import ru.ruranobe.mybatis.tables.Team;
 
 public class TeamsMapperCacheable implements TeamsMapper
 {
+    private TeamsMapper mapper;
+
     public TeamsMapperCacheable(TeamsMapper mapper)
     {
         this.mapper = mapper;
@@ -33,6 +35,4 @@ public class TeamsMapperCacheable implements TeamsMapper
     {
         mapper.updateTeam(team);
     }
-    
-    private TeamsMapper mapper;
 }

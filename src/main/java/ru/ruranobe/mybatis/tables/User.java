@@ -5,14 +5,28 @@ import java.util.Date;
 
 public class User implements Serializable
 {
+    private static final long serialVersionUID = 2L;
+    private Integer userId;
+    private String username;
+    private String realname;
+    private String pass;
+    private String passRecoveryToken;
+    private Date passRecoveryTokenDate;
+    private String email;
+    private String emailToken;
+    private Date emailTokenDate;
+    private boolean emailActivated;
+    private Date registrationDate;
+    private boolean adult;
+
     public User()
     {
-        
+
     }
 
-    public User(String username, String realname, String pass, 
-            String passRecoveryToken, Date passRecoveryTokenDate, String email, 
-            String emailToken, Date emailTokenDate, boolean isEmailActivated, Date registrationDate)
+    public User(String username, String realname, String pass,
+                String passRecoveryToken, Date passRecoveryTokenDate, String email,
+                String emailToken, Date emailTokenDate, boolean isEmailActivated, Date registrationDate)
     {
         this.username = username;
         this.realname = realname;
@@ -25,7 +39,7 @@ public class User implements Serializable
         this.emailActivated = isEmailActivated;
         this.registrationDate = registrationDate;
     }
-    
+
     public String getEmail()
     {
         return email;
@@ -106,7 +120,6 @@ public class User implements Serializable
         this.emailActivated = emailActivated;
     }
 
-
     public String getPass()
     {
         return pass;
@@ -136,17 +149,14 @@ public class User implements Serializable
     {
         this.passRecoveryTokenDate = passRecoveryTokenDate;
     }
-    
-    private Integer userId;
-    private String username;
-    private String realname;
-    private String pass;
-    private String passRecoveryToken;
-    private Date passRecoveryTokenDate;
-    private String email;
-    private String emailToken;
-    private Date emailTokenDate;
-    private boolean emailActivated;
-    private Date registrationDate;
-    private static final long serialVersionUID = 1L;
+
+    public boolean isAdult()
+    {
+        return adult;
+    }
+
+    public void setAdult(boolean adult)
+    {
+        this.adult = adult;
+    }
 }

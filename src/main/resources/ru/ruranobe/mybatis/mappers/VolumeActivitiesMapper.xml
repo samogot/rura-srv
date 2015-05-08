@@ -13,6 +13,7 @@
     <resultMap type="ru.ruranobe.mybatis.tables.VolumeActivity" id="VolumeActivityResult">
         <id property="activityId" column="activity_id"/>
         <result property="activityName" column="activity_name"/>
+        <result property="activityType" column="activity_type"/>
     </resultMap>
 
 </mapper>

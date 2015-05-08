@@ -1,125 +1,108 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-	   
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="ru.ruranobe.mybatis.mappers.UsersMapper">
 
     <cache type="org.mybatis.caches.ehcache.EhcacheCache">
-        <property name="timeToIdleSeconds" value="3600"/><!--1 hour-->
-        <property name="timeToLiveSeconds" value="3600"/><!--1 hour-->
+        <property name="timeToIdleSeconds" value="3600"/>
+        <!--1 hour-->
+        <property name="timeToLiveSeconds" value="3600"/>
+        <!--1 hour-->
         <property name="maxEntriesLocalHeap" value="1000"/>
         <property name="maxEntriesLocalDisk" value="10000000"/>
         <property name="memoryStoreEvictionPolicy" value="LRU"/>
     </cache>
-    
-    <select id="getUserByEmail" parameterType="String" resultType="ru.ruranobe.mybatis.tables.User">
-        SELECT
-            user_id as userId,
-            username as username,
-            realname,
-            pass, 
-            pass_recovery_token as passRecoveryToken,
-            pass_recovery_token_date as passRecoveryTokenDate,
-            email,
-            email_token as emailToken,
-            email_token_date as emailTokenDate,
-            email_activated as emailActivated,
-            registration_date as registrationDate
+
+    <select id="getUserByEmail" parameterType="String" resultMap="UserResult">
+        SELECT *
         FROM users
         WHERE email = #{email}
     </select>
-    
-    <select id="getUserByUsername" parameterType="String" resultType="ru.ruranobe.mybatis.tables.User">
-        SELECT
-            user_id as userId,
-            username as username,
-            realname,
-            pass, 
-            pass_recovery_token as passRecoveryToken,
-            pass_recovery_token_date as passRecoveryTokenDate,
-            email,
-            email_token as emailToken,
-            email_token_date as emailTokenDate,
-            email_activated as emailActivated,
-            registration_date as registrationDate
+
+    <select id="getUserByUsername" parameterType="String" resultMap="UserResult">
+        SELECT *
         FROM users
         WHERE username = #{username}
     </select>
-    
-    <select id="getUserByPassRecoveryToken" parameterType="String" resultType="ru.ruranobe.mybatis.tables.User">
-        SELECT
-            user_id as userId,
-            username as username,
-            realname,
-            pass, 
-            pass_recovery_token as passRecoveryToken,
-            pass_recovery_token_date as passRecoveryTokenDate,
-            email,
-            email_token as emailToken,
-            email_token_date as emailTokenDate,
-            email_activated as emailActivated,
-            registration_date as registrationDate
+
+    <select id="getUserByPassRecoveryToken" parameterType="String" resultMap="UserResult">
+        SELECT *
         FROM users
         WHERE pass_recovery_token = #{passRecoveryToken}
     </select>
 
-    <select id="getUserByEmailToken" parameterType="String" resultType="ru.ruranobe.mybatis.tables.User">
-        SELECT
-            user_id as userId,
-            username as username,
-            realname,
-            pass, 
-            pass_recovery_token as passRecoveryToken,
-            pass_recovery_token_date as passRecoveryTokenDate,
-            email,
-            email_token as emailToken,
-            email_token_date as emailTokenDate,
-            email_activated as emailActivated,
-            registration_date as registrationDate
+    <select id="getUserByEmailToken" parameterType="String" resultMap="UserResult">
+        SELECT *
         FROM users
         WHERE email_token = #{emailToken}
     </select>
 
-    <select id="signInUser" parameterType="map" resultType="ru.ruranobe.mybatis.tables.User">
-        SELECT
-            user_id as userId,
-            username as username,
-            realname,
-            pass, 
-            pass_recovery_token as passRecoveryToken,
-            pass_recovery_token_date as passRecoveryTokenDate,
-            email,
-            email_token as emailToken,
-            email_token_date as emailTokenDate,
-            email_activated as emailActivated,
-            registration_date as registrationDate
+    <select id="signInUser" parameterType="map" resultMap="UserResult">
+        SELECT *
         FROM users
         WHERE username = #{username}
-          AND pass = #{pass}
+        AND pass = #{pass}
     </select>
 
-    <insert id="registerUser" parameterType="ru.ruranobe.mybatis.tables.User" keyProperty="userId" useGeneratedKeys="true">
-        INSERT INTO users (username, realname, pass, pass_recovery_token, pass_recovery_token_date, email, email_token, email_token_date, email_activated, registration_date)
-        VALUES(#{username}, #{realname}, #{pass}, #{passRecoveryToken}, #{passRecoveryTokenDate}, #{email}, #{emailToken}, #{emailTokenDate}, #{emailActivated}, #{registrationDate})
-        <!--selectKey keyProperty="userId" resultType="int">
+    <!--<insert id="registerUser" parameterType="ru.ruranobe.mybatis.tables.User" keyProperty="userId"
+            useGeneratedKeys="true">
+        INSERT INTO users (username, realname, pass, pass_recovery_token, pass_recovery_token_date, email, email_token,
+        email_token_date, email_activated, registration_date, adult)
+        VALUES(#{username}, #{realname}, #{pass}, #{passRecoveryToken}, #{passRecoveryTokenDate}, #{email},
+        #{emailToken}, #{emailTokenDate}, #{emailActivated}, #{registrationDate}, #{adult})
+        <selectKey keyProperty="userId" resultType="int">
             SELECT LAST_INSERT_ID() AS userId
-        </selectKey-->
+        </selectKey>
+    </insert>-->
+
+    <insert id="registerUser" parameterType="ru.ruranobe.mybatis.tables.User" keyProperty="userId"
+            useGeneratedKeys="true">
+        INSERT INTO users
+        SET
+        username = #{username},
+        realname = #{realname},
+        pass = #{pass},
+        pass_recovery_token = #{passRecoveryToken},
+        pass_recovery_token_date = #{passRecoveryTokenDate},
+        email = #{email},
+        email_token = #{emailToken},
+        email_token_date = #{emailTokenDate},
+        email_activated = #{emailActivated},
+        registration_date = #{registrationDate},
+        adult = #{adult}
     </insert>
 
     <update id="updateUser" parameterType="ru.ruranobe.mybatis.tables.User">
         UPDATE users
         SET
-            username = #{username}, 
-            realname = #{realname}, 
-            pass = #{pass}, 
-            pass_recovery_token = #{passRecoveryToken}, 
-            pass_recovery_token_date = #{passRecoveryTokenDate}, 
-            email = #{email}, 
-            email_token = #{emailToken}, 
-            email_token_date = #{emailTokenDate}, 
-            email_activated = #{emailActivated}, 
-            registration_date = #{registrationDate}
+        username = #{username},
+        realname = #{realname},
+        pass = #{pass},
+        pass_recovery_token = #{passRecoveryToken},
+        pass_recovery_token_date = #{passRecoveryTokenDate},
+        email = #{email},
+        email_token = #{emailToken},
+        email_token_date = #{emailTokenDate},
+        email_activated = #{emailActivated},
+        registration_date = #{registrationDate},
+        adult = #{adult}
         WHERE user_id = #{userId}
     </update>
-    
+
+    <resultMap id="UserResult" type="ru.ruranobe.mybatis.tables.User">
+        <id property="userId" column="user_id"/>
+        <result property="username" column="username"/>
+        <result property="realname" column="realname"/>
+        <result property="pass" column="pass"/>
+        <result property="passRecoveryToken" column="pass_recovery_token"/>
+        <result property="passRecoveryTokenDate" column="pass_recovery_token_date"/>
+        <result property="email" column="email"/>
+        <result property="emailToken" column="email_token"/>
+        <result property="emailTokenDate" column="email_token_date"/>
+        <result property="emailActivated" column="email_activated"/>
+        <result property="registrationDate" column="registration_date"/>
+        <result property="adult" column="adult"/>
+    </resultMap>
+
 </mapper>

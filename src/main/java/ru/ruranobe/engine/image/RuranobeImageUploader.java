@@ -2,12 +2,14 @@ package ru.ruranobe.engine.image;
 
 public class RuranobeImageUploader implements ImageUploader
 {
-    
+
+    private final Image image;
+
     public RuranobeImageUploader(Image image)
     {
         this.image = image;
     }
-    
+
     @Override
     public Image uploadImage(Image image)
     {
@@ -17,6 +19,4 @@ public class RuranobeImageUploader implements ImageUploader
         image.getImageSource().close();
         return image;
     }
-    
-    private final Image image;
 }

@@ -6,32 +6,34 @@ import java.io.InputStream;
 
 public abstract class ImageInMemorySource implements ImageSource
 {
+    private final byte[] imageContent;
+    private InputStream inputStream;
+
     public ImageInMemorySource(byte[] imageContent)
     {
         this.imageContent = imageContent;
         this.inputStream = new ByteArrayInputStream(imageContent);
     }
-    
+
     @Override
     public InputStream getInputStream()
     {
         return inputStream;
     }
-    
-    @Override 
+
+    @Override
     public void rewind()
     {
         try
         {
             inputStream.reset();
-        }
-        catch (IOException ex)
+        } catch (IOException ex)
         {
             throw new RuntimeException(ex);
         }
     }
-    
-    @Override 
+
+    @Override
     public void close()
     {
         if (inputStream != null)
@@ -39,14 +41,10 @@ public abstract class ImageInMemorySource implements ImageSource
             try
             {
                 inputStream.close();
-            }
-            catch (IOException ex)
+            } catch (IOException ex)
             {
                 throw new RuntimeException(ex);
             }
         }
     }
-    
-    private final byte[] imageContent;
-    private InputStream inputStream;
 }

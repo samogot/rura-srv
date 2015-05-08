@@ -5,6 +5,14 @@ import java.io.Serializable;
 public class ChapterImage implements Serializable
 {
 
+    private static final long serialVersionUID = 2L;
+    private Integer chapterId;
+    private Integer volumeId;
+    private ExternalResource coloredImage;
+    private ExternalResource nonColoredImage;
+    private Integer orderNumber;
+    private Boolean adult;
+
     public ChapterImage()
     {
     }
@@ -13,8 +21,8 @@ public class ChapterImage implements Serializable
     // presented as a reference to an entity. When we load ChapterImage we always load
     // images also. That's why I choose reference over id's. (Yet we don't have to alwasy
     // load chapter entity or volume entity...)
-    public ChapterImage(Integer chapterId, Integer volumeId, ExternalResource coloredImage, 
-            ExternalResource nonColoredImage, Integer orderNumber)
+    public ChapterImage(Integer chapterId, Integer volumeId, ExternalResource coloredImage,
+                        ExternalResource nonColoredImage, Integer orderNumber)
     {
         this.chapterId = chapterId;
         this.volumeId = volumeId;
@@ -72,11 +80,14 @@ public class ChapterImage implements Serializable
     {
         this.nonColoredImage = nonColoredImage;
     }
-    
-    private Integer chapterId;
-    private Integer volumeId;
-    private ExternalResource coloredImage;
-    private ExternalResource nonColoredImage;
-    private Integer orderNumber;
-    private static final long serialVersionUID = 1L;
+
+    public Boolean getAdult()
+    {
+        return adult;
+    }
+
+    public void setAdult(Boolean adult)
+    {
+        this.adult = adult;
+    }
 }
