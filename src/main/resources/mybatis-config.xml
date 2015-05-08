@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE configuration
-  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
-  <environments default="development">
-    <environment id="development">
-      <transactionManager type="JDBC"/>
-      <dataSource type="POOLED">
-        <property name="driver" value="com.mysql.jdbc.Driver"/>
-        <property name="url" value="jdbc:mysql://ruranobe.ru:3306/ruranobe"/>
-        <property name="username" value="ruranobe"/>
-        <property name="password" value="NcMvhRDum5WNS4cT"/>
-      </dataSource>
-    </environment>
-  </environments>
-  <mappers>
-    <mapper resource="ru/ruranobe/mybatis/mappers/UsersMapper.xml"/>
-    <mapper resource="ru/ruranobe/mybatis/mappers/OrphusCommentsMapper.xml"/>
-    <mapper resource="ru/ruranobe/mybatis/mappers/ExternalResourcesMapper.xml"/>
-    <mapper resource="ru/ruranobe/mybatis/mappers/ChapterImagesMapper.xml"/>
-    <mapper resource="ru/ruranobe/mybatis/mappers/ChaptersMapper.xml"/>
-    <mapper resource="ru/ruranobe/mybatis/mappers/ProjectsMapper.xml"/>
-    <mapper resource="ru/ruranobe/mybatis/mappers/TextsMapper.xml"/>
-    <mapper resource="ru/ruranobe/mybatis/mappers/VolumesMapper.xml"/>
-    <mapper resource="ru/ruranobe/mybatis/mappers/UpdatesMapper.xml"/>
-    <mapper resource="ru/ruranobe/mybatis/mappers/VolumeActivitiesMapper.xml"/>
-    <mapper resource="ru/ruranobe/mybatis/mappers/TeamsMapper.xml"/>
-    <mapper resource="ru/ruranobe/mybatis/mappers/TeamMembersMapper.xml"/>
-    <mapper resource="ru/ruranobe/mybatis/mappers/VolumeReleaseActivitiesMapper.xml"/>
-  </mappers>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://ruranobe.ru:3306/ruranobe"/>
+                <property name="username" value="ruranobe"/>
+                <property name="password" value="NcMvhRDum5WNS4cT"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <mapper resource="ru/ruranobe/mybatis/mappers/UsersMapper.xml"/>
+        <mapper resource="ru/ruranobe/mybatis/mappers/OrphusCommentsMapper.xml"/>
+        <mapper resource="ru/ruranobe/mybatis/mappers/ExternalResourcesMapper.xml"/>
+        <mapper resource="ru/ruranobe/mybatis/mappers/ChapterImagesMapper.xml"/>
+        <mapper resource="ru/ruranobe/mybatis/mappers/ChaptersMapper.xml"/>
+        <mapper resource="ru/ruranobe/mybatis/mappers/ProjectsMapper.xml"/>
+        <mapper resource="ru/ruranobe/mybatis/mappers/TextsMapper.xml"/>
+        <mapper resource="ru/ruranobe/mybatis/mappers/VolumesMapper.xml"/>
+        <mapper resource="ru/ruranobe/mybatis/mappers/UpdatesMapper.xml"/>
+        <mapper resource="ru/ruranobe/mybatis/mappers/VolumeActivitiesMapper.xml"/>
+        <mapper resource="ru/ruranobe/mybatis/mappers/TeamsMapper.xml"/>
+        <mapper resource="ru/ruranobe/mybatis/mappers/TeamMembersMapper.xml"/>
+        <mapper resource="ru/ruranobe/mybatis/mappers/VolumeReleaseActivitiesMapper.xml"/>
+    </mappers>
 </configuration>

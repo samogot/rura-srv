@@ -7,39 +7,40 @@ import java.io.InputStream;
 
 public class ImageFileSource implements ImageSource
 {
+    private final File imageFile;
+    private InputStream inputStream;
+
     public ImageFileSource(File imageFile)
     {
         this.imageFile = imageFile;
         try
         {
             this.inputStream = new FileInputStream(imageFile);
-        }
-        catch (IOException ex)
+        } catch (IOException ex)
         {
             throw new RuntimeException(ex);
         }
-    } 
-    
+    }
+
     @Override
-    public InputStream getInputStream() 
+    public InputStream getInputStream()
     {
         return inputStream;
     }
-    
-    @Override 
+
+    @Override
     public void rewind()
     {
         try
         {
             this.inputStream = new FileInputStream(imageFile);
-        }
-        catch (IOException ex)
+        } catch (IOException ex)
         {
             throw new RuntimeException(ex);
         }
     }
-    
-    @Override 
+
+    @Override
     public void close()
     {
         if (inputStream != null)
@@ -47,14 +48,10 @@ public class ImageFileSource implements ImageSource
             try
             {
                 inputStream.close();
-            }
-            catch (IOException ex)
+            } catch (IOException ex)
             {
                 throw new RuntimeException(ex);
             }
         }
     }
-    
-    private InputStream inputStream;
-    private final File imageFile;
 }

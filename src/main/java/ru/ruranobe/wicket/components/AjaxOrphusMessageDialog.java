@@ -39,6 +39,7 @@ public class AjaxOrphusMessageDialog extends WebComponent
             AjaxOrphusMessageDialog.class, "bootbox.min.js");
     private static final String SHOW_BOOTBOX = "showOrphusDialog('%s', '%s', '%s', '%s', '%s');";
     private final AbstractDefaultAjaxBehavior behavior;
+
     public AjaxOrphusMessageDialog(String id, IModel model)
     {
         super(id, model);

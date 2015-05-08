@@ -41,6 +41,7 @@ public class Updates extends SidebarLayoutPage
     {
         initComponents(null, 1, null, null);
     }
+
     public Updates(final PageParameters parameters)
     {
         String searchType = parameters.get("type").toOptionalString();

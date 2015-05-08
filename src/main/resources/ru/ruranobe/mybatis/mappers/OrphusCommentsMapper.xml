@@ -16,9 +16,9 @@
 
     <insert id="insertOrphusComment" parameterType="ru.ruranobe.mybatis.tables.OrphusComment">
         INSERT INTO orphus_comments (chapter_id, paragraph, start_offset, original_text, replacement_text,
-        optional_comment, created_when)
+                                     optional_comment, created_when)
         VALUES (#{chapterId}, #{paragraph}, #{startOffset}, #{originalText}, #{replacementText}, #{optionalComment},
-        #{createdWhen})
+                #{createdWhen})
     </insert>
 
 </mapper>

@@ -25,6 +25,7 @@ public class EmailPasswordRecoveryPanel extends Panel
     private static final long EXPIRATION_TIME_6_HOURS = 21600000L;
     private static final long serialVersionUID = 1L;
     private String email;
+
     public EmailPasswordRecoveryPanel(String id)
     {
         super(id);

@@ -1,11 +1,9 @@
 package ru.ruranobe.engine.image;
 
-import com.google.gdata.data.DateTime;
 import com.google.gdata.client.photos.PicasawebService;
 import com.google.gdata.data.Link;
 import com.google.gdata.data.PlainTextConstruct;
 import com.google.gdata.data.media.BaseMediaSource;
-import com.google.gdata.data.media.MediaFileSource;
 import com.google.gdata.data.media.MediaStreamSource;
 import com.google.gdata.data.photos.AlbumEntry;
 import com.google.gdata.data.photos.GphotoEntry;
@@ -13,17 +11,33 @@ import com.google.gdata.data.photos.PhotoEntry;
 import com.google.gdata.data.photos.UserFeed;
 import com.google.gdata.util.AuthenticationException;
 import com.google.gdata.util.ServiceException;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.*;
 import org.apache.wicket.util.string.Strings;
 
-public class PicasaUtils 
+import java.io.IOException;
+import java.net.URL;
+import java.util.*;
+
+public class PicasaUtils
 {
-    
-    public static synchronized Image uploadImage(Image image) 
+
+    private static final String USERNAME = "ruranobe";
+    private static final PicasawebService PICASA_WEBSERVICE = new PicasawebService(USERNAME);
+    private static final String API_PREFIX = "https://picasaweb.google.com/data/feed/api/user/";
+    private static Map<String, AlbumEntry> ALBUM_TITLE_TO_ALBUM_ENTRY;
+
+    static
+    {
+        try
+        {
+            PICASA_WEBSERVICE.setUserCredentials("ruranobe@gmail.com", "1qa2ws3ed4rf5tg6yh");
+        } catch (AuthenticationException e)
+        {
+            throw new IllegalArgumentException("Illegal username/password combination.");
+        }
+        reloadCache();
+    }
+
+    public static synchronized Image uploadImage(Image image)
     {
         String albumTitle = image.getPath();
         if (Strings.isEmpty(albumTitle))
@@ -35,15 +49,13 @@ public class PicasaUtils
             try
             {
                 insertAlbum(albumTitle);
-            }
-            catch (Exception ex1)
+            } catch (Exception ex1)
             {
                 reloadCache();
                 try
                 {
                     insertAlbum(albumTitle);
-                }
-                catch (Exception ex2)
+                } catch (Exception ex2)
                 {
                     throw new RuntimeException(ex2);
                 }
@@ -51,7 +63,7 @@ public class PicasaUtils
         }
         PhotoEntry photoEntry = new PhotoEntry();
         photoEntry.setTitle(new PlainTextConstruct(image.getTitle()));
-        BaseMediaSource imageMediaSource = 
+        BaseMediaSource imageMediaSource =
                 new MediaStreamSource(image.getImageSource().getInputStream(), image.getMimeType());
         image.getImageSource().getInputStream();
         photoEntry.setMediaSource(imageMediaSource);
@@ -59,33 +71,30 @@ public class PicasaUtils
         try
         {
             photoEntry = PICASA_WEBSERVICE.insert(
-                    new URL(ALBUM_TITLE_TO_ALBUM_ENTRY.get(albumTitle).getFeedLink().getHref()), 
+                    new URL(ALBUM_TITLE_TO_ALBUM_ENTRY.get(albumTitle).getFeedLink().getHref()),
                     photoEntry);
-        }
-        catch (Exception ex1)
+        } catch (Exception ex1)
         {
             reloadCache();
             try
             {
                 photoEntry = PICASA_WEBSERVICE.insert(
-                    new URL(ALBUM_TITLE_TO_ALBUM_ENTRY.get(albumTitle).getFeedLink().getHref()), 
-                    photoEntry);
-            }
-            catch (Exception ex2)
+                        new URL(ALBUM_TITLE_TO_ALBUM_ENTRY.get(albumTitle).getFeedLink().getHref()),
+                        photoEntry);
+            } catch (Exception ex2)
             {
                 throw new RuntimeException(ex2);
             }
         }
-        image.putPathOnImageServiceSystem(Image.ImageServiceSystem.PICASSA, 
+        image.putPathOnImageServiceSystem(Image.ImageServiceSystem.PICASSA,
                 photoEntry.getMediaThumbnails().get(0).getUrl());
         return image;
     }
-    
-    
+
     private static AlbumEntry insertAlbum(String albumTitle) throws IOException, ServiceException
     {
         AlbumEntry albumEntry = new AlbumEntry();
-        albumEntry.setId(albumTitle); 
+        albumEntry.setId(albumTitle);
         albumEntry.setDate(new Date(System.currentTimeMillis()));
         albumEntry.setAccess("private");
         albumEntry.setTitle(new PlainTextConstruct(albumTitle));
@@ -95,14 +104,14 @@ public class PicasaUtils
         ALBUM_TITLE_TO_ALBUM_ENTRY.put(albumTitle, albumEntry);
         return albumEntry;
     }
-    
+
     private static void reloadCache()
     {
         ALBUM_TITLE_TO_ALBUM_ENTRY = new HashMap<String, AlbumEntry>();
         try
         {
             List<AlbumEntry> albums = getAlbums();
-            for (AlbumEntry entry: albums)
+            for (AlbumEntry entry : albums)
             {
                 ALBUM_TITLE_TO_ALBUM_ENTRY.put(entry.getTitle().getPlainText(), entry);
             }
@@ -110,24 +119,22 @@ public class PicasaUtils
             {
                 ALBUM_TITLE_TO_ALBUM_ENTRY.put("unsorted", insertAlbum("unsorted"));
             }
-        }
-        catch (IOException ex)
+        } catch (IOException ex)
         {
             throw new RuntimeException(ex);
-        }
-        catch (ServiceException ex)
+        } catch (ServiceException ex)
         {
             throw new RuntimeException(ex);
         }
     }
-    
+
     static List<AlbumEntry> getAlbums() throws ServiceException, IOException
     {
         String albumUrl = API_PREFIX + "default";
         UserFeed userFeed = PICASA_WEBSERVICE.getFeed(new URL(albumUrl), UserFeed.class);
-        
+
         List<GphotoEntry> entries = userFeed.getEntries();
-        
+
         List<AlbumEntry> albums = new ArrayList<AlbumEntry>();
         for (GphotoEntry entry : entries)
         {
@@ -138,10 +145,10 @@ public class PicasaUtils
                 albums.add((AlbumEntry) adapted);
             }
         }
-        
+
         return albums;
     }
-    
+
     static <T extends GphotoEntry> T insert(GphotoEntry<?> parent, T entry)
             throws IOException, ServiceException
     {
@@ -159,23 +166,5 @@ public class PicasaUtils
             }
         }
         throw new IllegalArgumentException("Missing " + relValue + " link.");
-    }
-    
-    private static final String USERNAME = "ruranobe";
-    private static final PicasawebService PICASA_WEBSERVICE = new PicasawebService(USERNAME);
-    private static final String API_PREFIX = "https://picasaweb.google.com/data/feed/api/user/";
-    private static Map<String, AlbumEntry> ALBUM_TITLE_TO_ALBUM_ENTRY;
-    
-    static
-    {
-        try
-        {
-            PICASA_WEBSERVICE.setUserCredentials("ruranobe@gmail.com", "1qa2ws3ed4rf5tg6yh");
-        } 
-        catch (AuthenticationException e)
-        {
-            throw new IllegalArgumentException("Illegal username/password combination.");
-        }
-        reloadCache();
     }
 }

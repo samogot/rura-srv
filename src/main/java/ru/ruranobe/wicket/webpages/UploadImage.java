@@ -32,6 +32,7 @@ public class UploadImage extends WebPage
         private final FileUploadField fileUploadField;
         private TextField<String> picasaPathField;
         private TextField<String> titleField;
+
         public UploadImageForm(final String id)
         {
             super(id);
