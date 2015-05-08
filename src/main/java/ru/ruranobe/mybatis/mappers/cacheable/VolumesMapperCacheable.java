@@ -1,14 +1,18 @@
 package ru.ruranobe.mybatis.mappers.cacheable;
 
-import java.util.Collection;
-import java.util.concurrent.ConcurrentHashMap;
 import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.tables.ProjectInfo;
 import ru.ruranobe.mybatis.tables.Volume;
-import ru.ruranobe.mybatis.tables.ProjectInfo;
+
+import java.util.Collection;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class VolumesMapperCacheable implements VolumesMapper
 {
+    private static final ConcurrentHashMap<Integer, ProjectInfo> projectIdToProjectInfo =
+            new ConcurrentHashMap<Integer, ProjectInfo>();
+    private final VolumesMapper mapper;
+
     public VolumesMapperCacheable(VolumesMapper mapper)
     {
         this.mapper = mapper;
@@ -27,7 +31,7 @@ public class VolumesMapperCacheable implements VolumesMapper
         {
             return projectIdToProjectInfo.get(projectId);
         }
-        
+
         ProjectInfo projectInfo = mapper.getInfoByProjectId(projectId);
         if (projectInfo != null)
         {
@@ -35,20 +39,16 @@ public class VolumesMapperCacheable implements VolumesMapper
         }
         return projectInfo;
     }
-    
+
     @Override
     public Collection<Volume> getVolumesByProjectId(int projectId)
     {
         return mapper.getVolumesByProjectId(projectId);
     }
-    
+
     @Override
     public Volume getVolumeNextPrevByUrl(String url)
     {
         return mapper.getVolumeNextPrevByUrl(url);
     }
-    
-    private final VolumesMapper mapper;
-    private static final ConcurrentHashMap<Integer, ProjectInfo> projectIdToProjectInfo = 
-            new ConcurrentHashMap<Integer, ProjectInfo>();
 }

@@ -6,6 +6,14 @@ import java.util.Date;
 public class ExternalResource implements Serializable
 {
 
+    private static final long serialVersionUID = 1L;
+    private int resourceId;
+    private int userId;
+    private String mimeType;
+    private String url;
+    private String title;
+    private Date uploadedWhen;
+
     public ExternalResource()
     {
     }
@@ -78,13 +86,4 @@ public class ExternalResource implements Serializable
     {
         this.userId = userId;
     }
-    
-    private int resourceId;
-    private int userId;
-    private String mimeType;
-    private String url;
-    private String title;
-    private Date uploadedWhen;
-    
-    private static final long serialVersionUID = 1L;
 }

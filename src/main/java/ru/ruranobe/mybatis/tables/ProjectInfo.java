@@ -1,7 +1,12 @@
 package ru.ruranobe.mybatis.tables;
 
-public class ProjectInfo 
+public class ProjectInfo
 {
+    private String illustrator;
+    private String author;
+    private Integer volumesCount;
+    private String volumeStatus;
+
     public ProjectInfo()
     {
     }
@@ -53,9 +58,4 @@ public class ProjectInfo
     {
         this.illustrator = illustrator;
     }
-    
-    private String illustrator;
-    private String author;
-    private Integer volumesCount;
-    private String volumeStatus;
 }

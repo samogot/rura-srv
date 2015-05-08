@@ -7,12 +7,13 @@ import ru.ruranobe.wicket.webpages.VolumePage;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Update implements Serializable, Comparable<Update>, PageRepresentable
+public class Update implements Serializable, Comparable<Update>//, PageRepresentable
 {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
     private static final String SHORT_TITLE_REGEX = "[-\\.,—–:].*$";
     private Integer updateId;
+    private Integer projectId;
     private Integer volumeId;
     private Integer chapterId;
     private String updateType;
@@ -152,5 +153,15 @@ public class Update implements Serializable, Comparable<Update>, PageRepresentab
     {
         //todo supchapter
         return chapterTitle != null ? chapterTitle.replaceFirst(SHORT_TITLE_REGEX, "") : null;
+    }
+
+    public Integer getProjectId()
+    {
+        return projectId;
+    }
+
+    public void setProjectId(Integer projectId)
+    {
+        this.projectId = projectId;
     }
 }

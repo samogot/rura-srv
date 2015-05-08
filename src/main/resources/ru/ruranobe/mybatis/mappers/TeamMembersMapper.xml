@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ru.ruranobe.mybatis.mappers.TeamMembersMapper">
+
+    <select id="getTeamMemberById" parameterType="int" resultMap="TeamMemberResult">
+        SELECT *
+        FROM team_members
+        WHERE team_id = #{teamId}
+    </select>
+
+    <resultMap type="ru.ruranobe.mybatis.tables.TeamMember" id="TeamMemberResult">
+        <id property="memberId" column="member_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="teamШd" column="team_id"/>
+        <result property="nikname" column="nikname"/>
+        <result property="active" column="active"/>
+    </resultMap>
+
+</mapper>

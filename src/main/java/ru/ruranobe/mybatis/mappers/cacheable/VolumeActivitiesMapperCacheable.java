@@ -5,11 +5,13 @@ import ru.ruranobe.mybatis.tables.VolumeActivity;
 
 public class VolumeActivitiesMapperCacheable implements VolumeActivitiesMapper
 {
+    private VolumeActivitiesMapper mapper;
+
     public VolumeActivitiesMapperCacheable(VolumeActivitiesMapper mapper)
     {
         this.mapper = mapper;
     }
-    
+
     @Override
     public VolumeActivity getVolumeActivityById(int activityId)
     {
@@ -33,6 +35,4 @@ public class VolumeActivitiesMapperCacheable implements VolumeActivitiesMapper
     {
         mapper.updateVolumeActivity(volumeActivity);
     }
-    
-    private VolumeActivitiesMapper mapper;
 }

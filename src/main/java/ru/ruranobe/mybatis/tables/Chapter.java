@@ -5,7 +5,7 @@ import ru.ruranobe.wicket.webpages.FullVolumeTextViewer;
 
 import java.io.Serializable;
 
-public class Chapter implements Serializable, PageRepresentable
+public class Chapter implements Serializable//, PageRepresentable
 {
 
     private static final long serialVersionUID = 1L;

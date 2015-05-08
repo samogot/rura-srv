@@ -6,10 +6,10 @@ import ru.ruranobe.wicket.webpages.VolumePage;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Volume implements Serializable, PageRepresentable
+public class Volume implements Serializable//, PageRepresentable
 {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
     private Integer volumeId;
     private Integer projectId;
     private Integer imageOne;
@@ -31,11 +31,11 @@ public class Volume implements Serializable, PageRepresentable
     private Date releaseDate;
     private String isbn;
     private String externalUrl;
-    private String annotation;
+    private String volumeType;
     private String volumeStatus;
     private String volumeStatusHint;
-    private String volumeType;
     private boolean adult;
+    private String annotation;
     /* Optional */
     private String prevNameShort;
     private String prevUrl;

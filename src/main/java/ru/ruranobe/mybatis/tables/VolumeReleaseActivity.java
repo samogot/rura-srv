@@ -5,16 +5,21 @@ import java.io.Serializable;
 public class VolumeReleaseActivity implements Serializable
 {
 
+    private static final long serialVersionUID = 2L;
+    private Integer releaseActivityId;
+    private Integer volumeId;
+    private Integer activityId;
+    private Integer memberId;
+    private boolean teamHidden;
+
     public VolumeReleaseActivity()
     {
     }
 
-    public VolumeReleaseActivity(Integer volumeId, Integer teamId, Integer activityId, String assigneeTeamMember)
+    public VolumeReleaseActivity(Integer volumeId, Integer activityId)
     {
         this.volumeId = volumeId;
-        this.teamId = teamId;
         this.activityId = activityId;
-        this.assigneeTeamMember = assigneeTeamMember;
     }
 
     public Integer getActivityId()
@@ -25,26 +30,6 @@ public class VolumeReleaseActivity implements Serializable
     public void setActivityId(Integer activityId)
     {
         this.activityId = activityId;
-    }
-
-    public String getAssigneeTeamMember()
-    {
-        return assigneeTeamMember;
-    }
-
-    public void setAssigneeTeamMember(String assigneeTeamMember)
-    {
-        this.assigneeTeamMember = assigneeTeamMember;
-    }
-
-    public Integer getTeamId()
-    {
-        return teamId;
-    }
-
-    public void setTeamId(Integer teamId)
-    {
-        this.teamId = teamId;
     }
 
     public Integer getVolumeId()
@@ -66,11 +51,24 @@ public class VolumeReleaseActivity implements Serializable
     {
         this.releaseActivityId = releaseActivityId;
     }
-    
-    private Integer releaseActivityId;
-    private Integer volumeId;
-    private Integer teamId;
-    private Integer activityId;
-    private String assigneeTeamMember;
-    private static final long serialVersionUID = 1L;
+
+    public Integer getMemberId()
+    {
+        return memberId;
+    }
+
+    public void setMemberId(Integer memberId)
+    {
+        this.memberId = memberId;
+    }
+
+    public boolean isTeamHidden()
+    {
+        return teamHidden;
+    }
+
+    public void setTeamHidden(boolean teamHidden)
+    {
+        this.teamHidden = teamHidden;
+    }
 }

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-	   
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="ru.ruranobe.mybatis.mappers.ChapterImagesMapper">
 
     <cache type="org.mybatis.caches.ehcache.EhcacheCache">
-        <property name="timeToIdleSeconds" value="3600"/><!--1 hour-->
-        <property name="timeToLiveSeconds" value="3600"/><!--1 hour-->
+        <property name="timeToIdleSeconds" value="3600"/>
+        <!--1 hour-->
+        <property name="timeToLiveSeconds" value="3600"/>
+        <!--1 hour-->
         <property name="maxEntriesLocalHeap" value="1000"/>
         <property name="maxEntriesLocalDisk" value="10000000"/>
         <property name="memoryStoreEvictionPolicy" value="LRU"/>
@@ -19,38 +21,40 @@
             non_colored_image_id,
             colored_image_id,
             order_number,
-            
-            non_colored.user_id as userId1,
-            non_colored.mime_type as mimeType1,
-            non_colored.url as url1,
-            non_colored.title as title1,
-            non_colored.uploaded_when as uploadedWhen1,
-            
-            colored.user_id as userId2,
-            colored.mime_type as mimeType2,
-            colored.url as url2,
-            colored.title as title2,
-            colored.uploaded_when as uploadedWhen2
+        adult,
+
+        non_colored.user_id AS userId1,
+        non_colored.mime_type AS mimeType1,
+        non_colored.url AS url1,
+        non_colored.title AS title1,
+        non_colored.uploaded_when AS uploadedWhen1,
+
+        colored.user_id AS userId2,
+        colored.mime_type AS mimeType2,
+        colored.url AS url2,
+        colored.title AS title2,
+        colored.uploaded_when AS uploadedWhen2
         FROM chapter_images
         LEFT JOIN external_resources non_colored
-          ON non_colored.resource_id = chapter_images.non_colored_image_id
+        ON non_colored.resource_id = chapter_images.non_colored_image_id
         LEFT JOIN external_resources colored
-          ON colored.resource_id = chapter_images.colored_image_id
+        ON colored.resource_id = chapter_images.colored_image_id
         WHERE volume_id = #{volumeId}
     </select>
 
     <resultMap id="chapterImageMap" type="ru.ruranobe.mybatis.tables.ChapterImage">
-        
+
         <!--constructor>
             <idArg column="blog_id" javaType="int"/>
         </constructor-->
-        
+
         <result property="chapterId" column="chapter_id"/>
         <result property="volumeId" column="volume_id"/>
         <result property="nonColoredImageId" column="non_colored_image_id"/>
         <result property="coloredImageId" column="colored_image_id"/>
         <result property="orderNumber" column="order_number"/>
-        
+        <result property="adult" column="adult"/>
+
         <association property="nonColoredImage" javaType="ru.ruranobe.mybatis.tables.ExternalResource">
             <id property="userId" column="userId1"/>
             <result property="mimeType" column="mimeType1"/>
@@ -58,7 +62,7 @@
             <result property="title" column="title1"/>
             <result property="uploadedWhen" column="uploadedWhen1"/>
         </association>
-        
+
         <association property="coloredImage" javaType="ru.ruranobe.mybatis.tables.ExternalResource">
             <id property="userId" column="userId2"/>
             <result property="mimeType" column="mimeType2"/>
@@ -66,7 +70,7 @@
             <result property="title" column="title2"/>
             <result property="uploadedWhen" column="uploadedWhen2"/>
         </association>
-        
+
     </resultMap>
 
 </mapper>

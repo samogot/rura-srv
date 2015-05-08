@@ -5,6 +5,11 @@ import java.io.Serializable;
 public class VolumeActivity implements Serializable
 {
 
+    private static final long serialVersionUID = 2L;
+    private Integer activityId;
+    private String activityName;
+    private String activityType;
+
     public VolumeActivity()
     {
     }
@@ -33,8 +38,14 @@ public class VolumeActivity implements Serializable
     {
         this.activityName = activityName;
     }
-    
-    private Integer activityId;
-    private String activityName;
-    private static final long serialVersionUID = 1L;
+
+    public String getActivityType()
+    {
+        return activityType;
+    }
+
+    public void setActivityType(String activityType)
+    {
+        this.activityType = activityType;
+    }
 }

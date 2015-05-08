@@ -1,17 +1,20 @@
 package ru.ruranobe.mybatis.mappers.cacheable;
 
-import java.util.List;
 import ru.ruranobe.mybatis.mappers.ChaptersMapper;
 import ru.ruranobe.mybatis.tables.Chapter;
 
+import java.util.List;
+
 public class ChaptersMapperCacheable implements ChaptersMapper
 {
+
+    private ChaptersMapper mapper;
 
     public ChaptersMapperCacheable(ChaptersMapper mapper)
     {
         this.mapper = mapper;
     }
-    
+
     @Override
     public Chapter getChapterByUrl(String url)
     {
@@ -23,6 +26,4 @@ public class ChaptersMapperCacheable implements ChaptersMapper
     {
         return mapper.getChaptersByVolumeId(volumeId);
     }
-
-    private ChaptersMapper mapper;
 }

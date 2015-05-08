@@ -26,6 +26,7 @@
     <mapper resource="ru/ruranobe/mybatis/mappers/UpdatesMapper.xml"/>
     <mapper resource="ru/ruranobe/mybatis/mappers/VolumeActivitiesMapper.xml"/>
     <mapper resource="ru/ruranobe/mybatis/mappers/TeamsMapper.xml"/>
+    <mapper resource="ru/ruranobe/mybatis/mappers/TeamMembersMapper.xml"/>
     <mapper resource="ru/ruranobe/mybatis/mappers/VolumeReleaseActivitiesMapper.xml"/>
   </mappers>
 </configuration>
