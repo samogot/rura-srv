@@ -4,63 +4,67 @@
 
 <wicket:extend>
 
-    <div class="h3"><span wicket:id="volumeTitle"/></div>
-    <div class="releaseImg pull-left">
-        <img wicket:id="volumeImg"/>
+    <h1 wicket:id="nameTitle"></h1>
 
+    <div class="releaseImg pull-left">
+        <div wicket:id="volumeCoverCarousel"></div>
         <div class="nextVolume">
-            <div class="previous text-center"><a wicket:id="prevUrl"><i class="fa fa-chevron-left"></i>&nbsp;<span
-                    wicket:id="prevShortName"/></a></div>
-            <div class="text-center next"><a wicket:id="nextUrl"><span wicket:id="nextShortName"/>&nbsp;<i
-                    class="fa fa-chevron-right"></i></a></div>
+            <div class="previous text-center">
+                <a wicket:id="prevUrl"><i class="fa fa-chevron-left"></i> <span wicket:id="prevNameShort"></span></a>
+            </div>
+            <div class="text-center next">
+                <a wicket:id="nextUrl"><span wicket:id="nextNameShort"></span> <i class="fa fa-chevron-right"></i></a>
+            </div>
         </div>
     </div>
     <div class="aboutRelease">
-        <div class="h4">Информация</div>
-        <div><span class="bold">Серия: </span><a wicket:id="projectUrl"/></div>
-        <div><span class="bold">Название: </span><span wicket:id="volumeName"/></div>
-        <div><span class="bold">Автор: </span><span wicket:id="volumeAuthor"/></div>
-        <div><span class="bold">Иллюстратор: </span><span wicket:id="volumeIllustrator"/></div>
-        <div><span class="bold">ISBN: </span><a wicket:id="volumeIsbn"/></div>
-        <div><span class="bold">Статус перевода: </span><span wicket:id="volumeStatus"/></div>
-        <div class="h4">Перевод</div>
-        <wicket:container wicket:id="volumeReleaseActivitiesView">
-            <div><span class="bold" wicket:id="activityName"/><span wicket:id="teamMember"/></div>
-        </wicket:container>
-        <div class="h4">Аннотация</div>
-        <div class="annotation">
-            <span wicket:id="volumeAnnotation"/>
+        <h2>Информация</h2>
+
+        <div><strong>Серия</strong>: <a wicket:id="projectUrl"><span wicket:id="subProjectName"></span></a></div>
+        <div wicket:enclosure=""><strong>Название (яп.)</strong>: <span wicket:id="nameJp"></span></div>
+        <div wicket:enclosure=""><strong>Название (ромадзи)</strong>: <span wicket:id="nameRomaji"></span></div>
+        <div wicket:enclosure=""><strong>Название (англ.)</strong>: <span wicket:id="nameEn"></span></div>
+        <div wicket:enclosure=""><strong>Название (рус.)</strong>: <span wicket:id="nameRu"></span></div>
+        <div wicket:enclosure=""><strong>Автор</strong>: <span wicket:id="author"></span></div>
+        <div wicket:enclosure=""><strong>Иллюстратор</strong>: <span wicket:id="illustrator"></span></div>
+        <div wicket:enclosure=""><strong>Оригинальный дизайн</strong>: <span wicket:id="originalDesign"></span></div>
+        <div wicket:enclosure=""><strong>Дата публикации</strong>: <span wicket:id="releaseDate"></span></div>
+        <div wicket:enclosure=""><strong>ISBN</strong>: <a wicket:id="isbn"></a></div>
+        <div wicket:enclosure="fullStatus">
+            <strong>Статус перевода</strong>: <span wicket:id="fullStatus"></span>
+            <wicket:enclosure> (<span wicket:id="volumeStatusHint"></span>)</wicket:enclosure>
         </div>
+
+        <wicket:enclosure child="volumeReleaseActivitiesView">
+            <h2>Перевод</h2>
+
+            <div wicket:id="volumeReleaseActivitiesView">
+                <strong wicket:id="activityName"></strong>: <span wicket:id="memberName"></span>
+            </div>
+        </wicket:enclosure>
+
+        <wicket:enclosure>
+            <h2>Аннотация</h2>
+
+            <div class="annotation" wicket:id="annotationParsed"></div>
+        </wicket:enclosure>
     </div>
     <div class="h3">Читать</div>
     <div class="read">
-        <a href="#">
-            <div class="bold">Читать весь текст</div>
+        <a wicket:id="readAllLink">
+            <div><strong>Читать весь текст</strong></div>
         </a>
 
-        <wicket:container wicket:id="chaptersView"><a wicket:id="chapterLink">
-            <div><span wicket:id="chapterName"/></div>
-        </a></wicket:container>
-        <!--a href="#"><div>Начальные иллюстрации</div></a>
-                                <a href="#"><div>Пролог</div></a>
-                                <a href="#"><div class="italic bold">Часть 1. Чёрный мечник</div></a>
-                                <a href="#"><div>Глава 1</div></a>
-                                <a href="#"><div>Глава 2</div></a>
-                                <a href="#"><div>Глава 3</div></a>
-                                <a href="#"><div class="italic bold">Часть 2. Тепло сердца</div></a>
-                                <a href="#"><div>Глава 1</div></a>
-                                <a href="#"><div class="red">Глава 2</div></a>
-                                <a href="#"><div class="red">Глава 3</div></a>
-                                <a href="#"><div class="red">Глава 4</div></a>
-                                <a href="#"><div class="italic bold">Часть 3. Девочка утренней росы</div></a>
-                                <a href="#"><div class="red">Глава 1</div></a-->
+        <wicket:container wicket:id="chaptersView">
+            <a wicket:id="chapterLink">
+                <div wicket:id="chapterName"></div>
+            </a>
+        </wicket:container>
     </div>
     <h3 class="h3">Комментарии</h3>
 
-    <p>
-                    <span class="color110">На сайте РуРанобэ приветствуются <span class="bold">все комментарий</span>. Если вы не хотите быть анонимным, <a
-                            href="#">зарегистрируйтесь</a> или <a href="#">войдите</a>.</span>
-    </p>
+    <p><span class="color110">На сайте РуРанобэ приветствуются <span class="bold">все комментарий</span>. Если вы не хотите быть анонимным, <a
+            href="#">зарегистрируйтесь</a> или <a href="#">войдите</a>.</span></p>
 
     <div class="input-group input-group-lg sharp" style="margin-bottom:40px;">
         <textarea type="text" class="form-control" placeholder="Введите комментарии" rows="3"></textarea>

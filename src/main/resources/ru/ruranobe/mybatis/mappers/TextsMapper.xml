@@ -14,4 +14,14 @@
         <property name="memoryStoreEvictionPolicy" value="LRU"/>
     </cache>
 
+    <select id="getTextById" resultMap="TextResult">
+        SELECT * FROM texts WHERE text_id = #{textId}
+    </select>
+
+    <resultMap id="TextResult" type="ru.ruranobe.mybatis.tables.Text">
+        <id column="text_id" property="textId"/>
+        <result column="text_wiki" property="textWiki"/>
+        <result column="text_html" property="textHtml"/>
+    </resultMap>
+
 </mapper>

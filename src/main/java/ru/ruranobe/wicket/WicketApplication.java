@@ -49,7 +49,7 @@ public class WicketApplication extends AuthenticatedWebApplication
         mount(new MountedMapper("/r/${project}", ProjectPage.class));
         mount(new MountedMapper("/r/${project}/${volume}", VolumePage.class));
         mount(new MountedMapper("/updates", Updates.class));
-        mount(new MountedMapper("/r/${project}/${volume}/${chapter}", FullVolumeTextViewer.class));
+        mount(new MountedMapper("/r/${project}/${volume}/${chapter}", VolumeTextPage.class));
         mount(new MountedMapper("/user/register", RegistrationPage.class));
         mount(new MountedMapper("/user/login", LoginPage.class));
         mount(new MountedMapper("/user/recover/pass", PasswordRecoveryPage.class));

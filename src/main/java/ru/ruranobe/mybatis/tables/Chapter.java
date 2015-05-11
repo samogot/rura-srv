@@ -1,7 +1,7 @@
 package ru.ruranobe.mybatis.tables;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import ru.ruranobe.wicket.webpages.FullVolumeTextViewer;
+import ru.ruranobe.wicket.webpages.VolumeTextPage;
 
 import java.io.Serializable;
 
@@ -40,7 +40,7 @@ public class Chapter implements Serializable, PageRepresentable
 
     public Class getLinkClass()
     {
-        return FullVolumeTextViewer.class;
+        return VolumeTextPage.class;
     }
 
     public PageParameters getUrlParameters()

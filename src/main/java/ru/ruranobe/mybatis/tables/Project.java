@@ -1,12 +1,13 @@
 package ru.ruranobe.mybatis.tables;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import ru.ruranobe.engine.wiki.parser.WikiParser;
 import ru.ruranobe.wicket.webpages.ProjectPage;
 import ru.ruranobe.wicket.webpages.VolumePage;
 
 import java.io.Serializable;
 
-public class Project implements Serializable PageRepresentable
+public class Project implements Serializable, PageRepresentable
 {
 
     private static final long serialVersionUID = 3L;
@@ -233,5 +234,15 @@ public class Project implements Serializable PageRepresentable
     public String toString()
     {
         return "Project{" + "projectId=" + projectId + ", parentId=" + parentId + ", imageId=" + imageId + ", url=" + url + ", title=" + title + ", orderNumber=" + orderNumber + ", bannerHidden=" + bannerHidden + ", projectHidden=" + projectHidden + ", annotation=" + annotation + '}';
+    }
+
+    public String getAnnotationParsed()
+    {
+        return annotation == null ? null : WikiParser.parseText(annotation);
+    }
+
+    public String getFranchiseParsed()
+    {
+        return franchise == null ? null : WikiParser.parseText(franchise);
     }
 }

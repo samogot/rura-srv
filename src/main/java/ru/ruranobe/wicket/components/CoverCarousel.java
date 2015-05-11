@@ -15,10 +15,11 @@ import java.util.List;
  */
 public class CoverCarousel extends Panel
 {
-    public CoverCarousel(String id, final String markupId, List<SimpleEntry<String, String>> coversList)
+    public CoverCarousel(String id, List<SimpleEntry<String, String>> coversList)
     {
         super(id);
-        setMarkupId(markupId);
+        setOutputMarkupId(true);
+        final String markupId = getMarkupId();
         add(new AttributeAppender("class", " carousel slide"));
         add(new AttributeModifier("data-ride", "carousel"));
         ListView<SimpleEntry<String, String>> carouselIndicators = new ListView<SimpleEntry<String, String>>("carouselIndicators", coversList)

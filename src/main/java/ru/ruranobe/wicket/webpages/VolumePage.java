@@ -1,54 +1,45 @@
 package ru.ruranobe.wicket.webpages;
 
-import com.google.common.collect.ImmutableMap;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.wicket.Component;
-import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.link.AbstractLink;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.link.StatelessLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.request.resource.PackageResourceReference;
 import ru.ruranobe.mybatis.MybatisUtil;
-import ru.ruranobe.mybatis.mappers.*;
+import ru.ruranobe.mybatis.mappers.ChaptersMapper;
+import ru.ruranobe.mybatis.mappers.ExternalResourcesMapper;
+import ru.ruranobe.mybatis.mappers.VolumeReleaseActivitiesMapper;
+import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
-import ru.ruranobe.mybatis.tables.Chapter;
-import ru.ruranobe.mybatis.tables.ExternalResource;
-import ru.ruranobe.mybatis.tables.Volume;
-import ru.ruranobe.mybatis.tables.VolumeReleaseActivity;
-import ru.ruranobe.wicket.RuraConstants;
+import ru.ruranobe.mybatis.tables.*;
+import ru.ruranobe.wicket.components.CoverCarousel;
+import ru.ruranobe.wicket.components.LabelHideableOnNull;
 import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.UpdatesSidebarModule;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
 import java.io.Serializable;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 
 public class VolumePage extends SidebarLayoutPage
 {
     private static final RedirectToUrlException REDIRECT_TO_404 = new RedirectToUrlException("http://404");
-    private static final int UPDATES_BY_VOLUME_ON_PAGE = 3;
-    private static final Map<String, String> UPDATE_TYPE_TO_ICON_DIV_CLASS =
-            new ImmutableMap.Builder<String, String>()
-                    .put(RuraConstants.UPDATE_TYPE_TRANSLATE, "background-image:url(img/updIcons/icon4.png)")
-                    .put(RuraConstants.UPDATE_TYPE_IMAGES, "background-image:url(img/updIcons/icon5.png)")
-                    .put(RuraConstants.UPDATE_TYPE_PROOFREAD, "background-image:url(img/updIcons/icon3.png)")
-                    .put(RuraConstants.UPDATE_TYPE_OTHER, "background-image:url(img/updIcons/icon1.png)")
-                    .build();
 
     public VolumePage(PageParameters parameters)
     {
+        setStatelessHint(true);
         final String projectUrlValue = parameters.get("project").toString();
         String volumeShortUrl = parameters.get("volume").toString();
         if (volumeShortUrl == null || projectUrlValue == null)
@@ -69,103 +60,83 @@ public class VolumePage extends SidebarLayoutPage
             throw REDIRECT_TO_404;
         }
 
-        Label volumeTitle = new Label("volumeTitle", volume.getNameTitle());
-        add(volumeTitle);
+        setDefaultModel(new CompoundPropertyModel<Volume>(volume));
 
-        ExternalLink prevUrl = new ExternalLink("prevUrl", "/release/" +
-                                                           ((volume.getPrevUrl() == null) ? "null" : volume.getPrevUrl()));
-        Label prevShortName = new Label("prevShortName",
-                ((volume.getPrevNameShort() == null) ? "null" : volume.getPrevNameShort()));
-        prevUrl.add(prevShortName);
-
+        BookmarkablePageLink prevUrl = new BookmarkablePageLink("prevUrl", VolumePage.class, volume.getPrevUrlParameters());
+        prevUrl.add(new Label("prevNameShort"));
         prevUrl.setVisible(volume.getPrevUrl() != null);
         add(prevUrl);
-
-        ExternalLink nextUrl = new ExternalLink("nextUrl", "/release/" +
-                                                           ((volume.getNextUrl() == null) ? "null" : volume.getNextUrl()));
-        Label nextShortName = new Label("nextShortName",
-                ((volume.getNextNameShort() == null) ? "null" : volume.getNextNameShort()));
-        nextUrl.add(nextShortName);
-
+        BookmarkablePageLink nextUrl = new BookmarkablePageLink("nextUrl", VolumePage.class, volume.getNextUrlParameters());
+        nextUrl.add(new Label("nextNameShort"));
         nextUrl.setVisible(volume.getNextUrl() != null);
         add(nextUrl);
 
         ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.
                 getCacheableMapper(session, ExternalResourcesMapper.class);
-        ExternalResource volumeCover = externalResourcesMapperCacheable.getExternalResourceById(volume.getImageOne());
-        Image volumeImg = (volumeCover == null) ? (new Image("volumeImg", new PackageResourceReference(HomePage.class, "undefined.png")))
-                                                : (new Image("volumeImg", volumeCover.getUrl()));
-        volumeImg.add(new Behavior()
-        {
-            @Override
-            public void onComponentTag(Component component, ComponentTag tag)
-            {
-                tag.put("alt", volume.getNameRu());
-            }
-        });
-        add(volumeImg);
+        ExternalResource volumeCover;
+        List<SimpleEntry<String, String>> covers = new ArrayList<SimpleEntry<String, String>>();
+        volumeCover = externalResourcesMapperCacheable.getExternalResourceById(volume.getImageOne());
+        if (volumeCover != null) covers.add(new SimpleEntry<String, String>("", volumeCover.getUrl()));
+        volumeCover = externalResourcesMapperCacheable.getExternalResourceById(volume.getImageTwo());
+        if (volumeCover != null) covers.add(new SimpleEntry<String, String>("", volumeCover.getUrl()));
+        volumeCover = externalResourcesMapperCacheable.getExternalResourceById(volume.getImageThree());
+        if (volumeCover != null) covers.add(new SimpleEntry<String, String>("", volumeCover.getUrl()));
+        volumeCover = externalResourcesMapperCacheable.getExternalResourceById(volume.getImageFour());
+        if (volumeCover != null) covers.add(new SimpleEntry<String, String>("", volumeCover.getUrl()));
+        add(new CoverCarousel("volumeCoverCarousel", covers));
 
-        StatelessLink projectUrl = new StatelessLink("projectUrl")
-        {
-            @Override
-            public void onClick()
-            {
-                PageParameters projectLink = new PageParameters();
-                projectLink.add(projectUrlValue, null);
-                setResponsePage(ProjectPage.class, projectLink);
-            }
-        };
+        BookmarkablePageLink projectUrl = new BookmarkablePageLink("projectUrl", ProjectPage.class, Project.makeUrlParameters(projectUrlValue));
+        projectUrl.add(new Label("subProjectName"));
         add(projectUrl);
 
-        Label volumeName = new Label("volumeName", volume.getNameTitle());
-        add(volumeName);
+        add(new Label("nameTitle"));
+        add(new LabelHideableOnNull("nameJp"));
+        add(new LabelHideableOnNull("nameRomaji"));
+        add(new LabelHideableOnNull("nameEn"));
+        add(new LabelHideableOnNull("nameRu"));
+        add(new LabelHideableOnNull("author"));
+        add(new LabelHideableOnNull("illustrator"));
+        add(new LabelHideableOnNull("originalDesign"));
+        add(new LabelHideableOnNull("releaseDate"));
+        add(new LabelHideableOnNull("fullStatus"));
+        add(new LabelHideableOnNull("volumeStatusHint"));
+        Label annotationParsed;
+        add(annotationParsed = new LabelHideableOnNull("annotationParsed"));
+        annotationParsed.setEscapeModelStrings(false);
 
-        Label volumeAuthor = new Label("volumeAuthor", volume.getAuthor());
-        add(volumeAuthor);
-
-        Label volumeIllustrator = new Label("volumeIllustrator", volume.getIllustrator());
-        add(volumeIllustrator);
-
-        ExternalLink volumeIsbn = new ExternalLink("volumeIsbn",
-                "http://www.amazon.co.jp/s?search-alias=stripbooks&language=en_JP&field-isbn=" + volume.getIsbn(),
-                volume.getIsbn());
-        add(volumeIsbn);
-
-        Label volumeStatus = new Label("volumeStatus", volume.getVolumeStatus());
-        add(volumeStatus);
+        ExternalLink isbn = new ExternalLink("isbn",
+                "http://www.amazon.co.jp/s?search-alias=stripbooks&language=en_JP&field-isbn=" + volume.getIsbn(), volume.getIsbn());
+        isbn.setVisible(volume.getIsbn() != null);
+        add(isbn);
 
         VolumeReleaseActivitiesMapper volumeReleaseActivitiesMapperCacheable =
                 CachingFacade.getCacheableMapper(session, VolumeReleaseActivitiesMapper.class);
-        Collection<VolumeReleaseActivity> volumeReleaseActivities =
-                volumeReleaseActivitiesMapperCacheable.getVolumeReleaseActivitiesByVolumeId(volume.getVolumeId());
-        VolumeActivitiesMapper volumeActivitiesMapperCacheable =
-                CachingFacade.getCacheableMapper(session, VolumeActivitiesMapper.class);
+        List<VolumeReleaseActivity> volumeReleaseActivities = new ArrayList<VolumeReleaseActivity>(
+                volumeReleaseActivitiesMapperCacheable.getVolumeReleaseActivitiesByVolumeId(volume.getVolumeId()));
 
-        List<VolumeReleaseActivityExtended> releaseActivitiesList = new ArrayList<VolumeReleaseActivityExtended>();
-        for (VolumeReleaseActivity volumeReleaseActivity : volumeReleaseActivities)
+        add(new ListView<VolumeReleaseActivity>("volumeReleaseActivitiesView", volumeReleaseActivities)
         {
-            releaseActivitiesList.add(new VolumeReleaseActivityExtended(volumeReleaseActivity.getAssigneeTeamMember(),
-                    volumeActivitiesMapperCacheable.getVolumeActivityById(volumeReleaseActivity.getActivityId()).toString()));
-        }
+            @Override
+            protected void populateItem(ListItem<VolumeReleaseActivity> item)
+            {
+                item.setDefaultModel(new CompoundPropertyModel<VolumeReleaseActivity>(item.getModelObject()));
+                item.add(new Label("activityName"));
+                item.add(new Label("memberName"));
+            }
 
-        ListView<VolumeReleaseActivityExtended> volumeReleaseActivitiesView =
-                new ListView<VolumeReleaseActivityExtended>("volumeReleaseActivitiesView", releaseActivitiesList)
-                {
+            @Override
+            public boolean isVisible()
+            {
+                return !getModelObject().isEmpty();
+            }
+        });
 
-                    @Override
-                    protected void populateItem(ListItem<VolumeReleaseActivityExtended> item)
-                    {
-                        VolumeReleaseActivityExtended activity = item.getModelObject();
-                        Label activityName = new Label("activityName", activity.getActivityName());
-                        Label teamMember = new Label("teamMember", activity.getAssigneeTeamMember());
-                        item.add(activityName);
-                        item.add(teamMember);
-                    }
-                };
-        add(volumeReleaseActivitiesView);
-
-        Label volumeAnnotation = new Label("volumeAnnotation", volume.getAnnotation());
-        add(volumeAnnotation);
+        AbstractLink readAllLink;
+        if (volume.isStatusExternal() && volume.getExternalUrl() != null)
+            readAllLink = new ExternalLink("readAllLink", volume.getExternalUrl());
+        else
+            readAllLink = new BookmarkablePageLink("readAllLink", VolumeTextPage.class, volume.getFullTextUrlParameters());
+        add(readAllLink);
 
         ChaptersMapper chaptersMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
         List<Chapter> chapters = chaptersMapperCacheable.getChaptersByVolumeId(volume.getVolumeId());
@@ -175,9 +146,12 @@ public class VolumePage extends SidebarLayoutPage
             protected void populateItem(ListItem<Chapter> item)
             {
                 Chapter chapter = item.getModelObject();
-                Label chapterName = new Label("chapterName", chapter.getTitle());
-                ExternalLink chapterLink = new ExternalLink("chapterLink", chapter.getUrl());
-                chapterLink.add(chapterName);
+                WebMarkupContainer chapterLink;
+                if (chapter.isPublished())
+                    chapterLink = new BookmarkablePageLink("chapterLink", VolumeTextPage.class, chapter.getUrlParameters());
+                else chapterLink = new WebMarkupContainer("chapterLink");
+                if (chapter.isNested()) chapterLink.add(new AttributeAppender("class", " nested"));
+                chapterLink.add(new Label("chapterName", chapter.getTitle()));
                 item.add(chapterLink);
             }
         };
@@ -265,8 +239,6 @@ public class VolumePage extends SidebarLayoutPage
         add(moreUpdates);*/
 
 //        session.close();
-
-        ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
         sidebarModules.add(new UpdatesSidebarModule("sidebarModule", volume.getProjectId()));
         sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
         sidebarModules.add(new FriendsSidebarModule("sidebarModule"));

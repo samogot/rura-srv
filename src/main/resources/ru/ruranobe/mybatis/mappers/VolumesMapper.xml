@@ -16,13 +16,13 @@
 
     <select id="getInfoByProjectId" parameterType="int" resultType="ru.ruranobe.mybatis.tables.ProjectInfo">
         SELECT
-        count(*) AS volumesCount,
-        volumes.author,
-        volumes.illustrator,
-        volumes.volume_status AS volumeStatus
+            count(*)              AS volumesCount,
+            volumes.author,
+            volumes.illustrator,
+            volumes.volume_status AS volumeStatus
         FROM (SELECT count(*)
-        FROM volumes
-        WHERE project_id = #{projectId}) volumesCount, volumes
+              FROM volumes
+              WHERE project_id = #{projectId}) volumesCount, volumes
         WHERE volumes.project_id = #{projectId}
         ORDER BY volume_id DESC
         LIMIT 1
@@ -36,29 +36,31 @@
 
     <select id="getVolumeNextPrevByUrl" parameterType="String" resultMap="VolumeResult">
         SELECT
-        v.*,
-        prev_vol.name_short prev_name_short,
-        prev_vol.url prev_url,
-        next_vol.name_short next_name_short,
-        next_vol.url next_url
+            v.*,
+            prev_vol.name_short prev_name_short,
+            prev_vol.url        prev_url,
+            next_vol.name_short next_name_short,
+            next_vol.url        next_url
         FROM (SELECT
-        v.*,
-        (SELECT max(sequence_number)
-        FROM volumes
-        WHERE volumes.sequence_number &lt; v.sequence_number AND volumes.project_id = v.project_id
-        ORDER BY sequence_number DESC
-        LIMIT 1) prev_sequence_number,
-        (SELECT min(sequence_number)
-        FROM volumes
-        WHERE volumes.sequence_number &gt; v.sequence_number AND volumes.project_id = v.project_id
-        ORDER BY sequence_number ASC
-        LIMIT 1) next_sequence_number
-        FROM volumes v
-        WHERE v.url = #{url}) v
-        LEFT JOIN volumes prev_vol
-        ON v.prev_sequence_number = prev_vol.sequence_number AND v.project_id = prev_vol.project_id
-        LEFT JOIN volumes next_vol
-        ON v.next_sequence_number = next_vol.sequence_number AND v.project_id = next_vol.project_id
+                  v.*,
+                  projects.title AS project_title,
+                  (SELECT max(sequence_number)
+                   FROM volumes
+                   WHERE volumes.sequence_number &lt; v.sequence_number AND volumes.project_id = v.project_id
+                   ORDER BY sequence_number DESC
+                   LIMIT 1)      AS prev_sequence_number,
+                  (SELECT min(sequence_number)
+                   FROM volumes
+                   WHERE volumes.sequence_number &gt; v.sequence_number AND volumes.project_id = v.project_id
+                   ORDER BY sequence_number ASC
+                   LIMIT 1)      AS next_sequence_number
+              FROM volumes v
+                  INNER JOIN projects USING (project_id)
+              WHERE v.url = #{url}) v
+            LEFT JOIN volumes prev_vol
+                ON v.prev_sequence_number = prev_vol.sequence_number AND v.project_id = prev_vol.project_id
+            LEFT JOIN volumes next_vol
+                ON v.next_sequence_number = next_vol.sequence_number AND v.project_id = next_vol.project_id
     </select>
 
     <select id="getVolumesByProjectId" parameterType="int" resultMap="VolumeResult">
@@ -82,6 +84,7 @@
         <result property="nameRu" column="name_ru"/>
         <result property="nameRomaji" column="name_romaji"/>
         <result property="nameShort" column="name_short"/>
+        <result property="subProjectName" column="project_title"/>
         <result property="sequenceNumber" column="sequence_number"/>
         <result property="author" column="author"/>
         <result property="illustrator" column="illustrator"/>

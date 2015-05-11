@@ -1,7 +1,7 @@
 package ru.ruranobe.mybatis.tables;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import ru.ruranobe.wicket.webpages.FullVolumeTextViewer;
+import ru.ruranobe.wicket.webpages.VolumeTextPage;
 import ru.ruranobe.wicket.webpages.VolumePage;
 
 import java.io.Serializable;
@@ -45,7 +45,7 @@ public class Update implements Serializable, Comparable<Update>, PageRepresentab
 
     public Class getLinkClass()
     {
-        return chapterId != null ? FullVolumeTextViewer.class : VolumePage.class;
+        return chapterId != null ? VolumeTextPage.class : VolumePage.class;
     }
 
     public Integer getChapterId()

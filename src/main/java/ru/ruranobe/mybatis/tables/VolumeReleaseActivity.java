@@ -11,6 +11,9 @@ public class VolumeReleaseActivity implements Serializable
     private Integer activityId;
     private Integer memberId;
     private boolean teamHidden;
+    /* Optional. Doesn't exist in table, used only in mybatis selects and corresponding code. */
+    private String activityName;
+    private String memberName;
 
     public VolumeReleaseActivity()
     {
@@ -70,5 +73,15 @@ public class VolumeReleaseActivity implements Serializable
     public void setTeamHidden(boolean teamHidden)
     {
         this.teamHidden = teamHidden;
+    }
+
+    public String getActivityName()
+    {
+        return activityName;
+    }
+
+    public String getMemberName()
+    {
+        return memberName;
     }
 }

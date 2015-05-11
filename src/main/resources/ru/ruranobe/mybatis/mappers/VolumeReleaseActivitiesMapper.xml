@@ -5,8 +5,13 @@
 <mapper namespace="ru.ruranobe.mybatis.mappers.VolumeReleaseActivitiesMapper">
 
     <select id="getVolumeReleaseActivitiesByVolumeId" parameterType="int" resultMap="VolumeReleaseActivityResult">
-        SELECT *
-        FROM volume_release_activities
+        SELECT
+            vra.*,
+            activity_name,
+            nikname
+        FROM volume_release_activities vra
+            INNER JOIN volume_activities USING (activity_id)
+            INNER JOIN team_members USING (member_id)
         WHERE release_activity_id = #{volumeId}
     </select>
 
@@ -15,6 +20,8 @@
         <result property="volumeId" column="volume_id"/>
         <result property="activityId" column="activity_id"/>
         <result property="memberId" column="member_id"/>
+        <result property="activityName" column="activity_name"/>
+        <result property="memberName" column="nikname"/>
         <result property="teamHidden" column="team_hidden"/>
     </resultMap>
 

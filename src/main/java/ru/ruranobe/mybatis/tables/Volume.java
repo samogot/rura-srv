@@ -1,6 +1,8 @@
 package ru.ruranobe.mybatis.tables;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import ru.ruranobe.engine.wiki.parser.WikiParser;
+import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.webpages.VolumePage;
 
 import java.io.Serializable;
@@ -41,6 +43,7 @@ public class Volume implements Serializable, PageRepresentable
     private String prevUrl;
     private String nextNameShort;
     private String nextUrl;
+    private String subProjectName;
 
     public Volume()
     {
@@ -73,6 +76,11 @@ public class Volume implements Serializable, PageRepresentable
         return new PageParameters().set("project", urlParts[0]).set("volume", urlParts[1]);
     }
 
+    public PageParameters getFullTextUrlParameters()
+    {
+        return makeUrlParameters(url.split("/")).set("chapter", "text");
+    }
+
     public PageParameters getUrlParameters()
     {
         return makeUrlParameters(url.split("/"));
@@ -80,12 +88,12 @@ public class Volume implements Serializable, PageRepresentable
 
     public PageParameters getPrevUrlParameters()
     {
-        return makeUrlParameters(prevUrl.split("/"));
+        return prevUrl == null ? null : makeUrlParameters(prevUrl.split("/"));
     }
 
     public PageParameters getNextUrlParameters()
     {
-        return makeUrlParameters(nextUrl.split("/"));
+        return nextUrl == null ? null : makeUrlParameters(nextUrl.split("/"));
     }
 
     public Class getLinkClass()
@@ -378,5 +386,27 @@ public class Volume implements Serializable, PageRepresentable
     public String toString()
     {
         return "Volume{" + "volumeId=" + volumeId + ", projectId=" + projectId + ", url=" + url + ", nameFile=" + nameFile + ", nameTitle=" + nameTitle + ", nameJp=" + nameJp + ", nameEn=" + nameEn + ", nameRu=" + nameRu + ", nameShort=" + nameShort + ", sequenceNumber=" + sequenceNumber + ", author=" + author + ", illustrator=" + illustrator + ", releaseDate=" + releaseDate + ", isbn=" + isbn + ", externalUrl=" + externalUrl + ", annotation=" + annotation + ", volumeStatus=" + volumeStatus + ", volumeType=" + volumeType + ", adult=" + adult + '}';
+    }
+
+    public String getSubProjectName()
+    {
+        return subProjectName;
+    }
+
+    public boolean isStatusExternal()
+    {
+        return volumeStatus.equals(RuraConstants.VOLUME_STATUS_EXTERNAL_ACTIVE)
+               || volumeStatus.equals(RuraConstants.VOLUME_STATUS_EXTERNAL_DONE)
+               || volumeStatus.equals(RuraConstants.VOLUME_STATUS_EXTERNAL_DROPPED);
+    }
+
+    public String getFullStatus()
+    {
+        return RuraConstants.VOLUME_STATUS_TO_FULL_TEXT.get(volumeStatus);
+    }
+
+    public String getAnnotationParsed()
+    {
+        return annotation == null ? null : WikiParser.parseText(annotation);
     }
 }

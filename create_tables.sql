@@ -80,8 +80,8 @@ CREATE TABLE volumes
   image_three        INT(11),
   image_four         INT(11),
   url                VARCHAR(32) UNIQUE  NOT NULL,
-  name_file          VARCHAR(255),
-  name_title         VARCHAR(255),
+  name_file          VARCHAR(255) NOT NULL,
+  name_title         VARCHAR(255) NOT NULL,
   name_jp            VARCHAR(255),
   name_en            VARCHAR(255),
   name_ru            VARCHAR(255),
@@ -115,7 +115,7 @@ CREATE TABLE volumes
                           'proofread',
                           -- опубликован
                           'decor',
-                          'done')        NOT NULL DEFAULT 'onhold',
+                          'done')        NOT NULL DEFAULT 'on_hold',
   volume_status_hint VARCHAR(255),
   adult              BOOL                NOT NULL,
   annotation         TEXT

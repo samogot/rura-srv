@@ -256,7 +256,7 @@ public class ProjectPage extends SidebarLayoutPage
                     externalResourcesMapperCacheable.getExternalResourceById(volume.getImageOne()).getUrl()));
         }
 
-        add(new CoverCarousel("projectCoverCarousel", "project-cover-carousel", allCoverIds));
+        add(new CoverCarousel("projectCoverCarousel", allCoverIds));
 
         sidebarModules.add(new UpdatesSidebarModule("sidebarModule", mainProject.getProjectId()));
         sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));

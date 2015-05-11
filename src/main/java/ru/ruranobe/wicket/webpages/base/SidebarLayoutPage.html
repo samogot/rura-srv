@@ -4,6 +4,89 @@
 <wicket:extend>
     <div class="container">
         <div class="leftColumn">
+            <wicket:fragment wicket:id="textPageUtils">
+                <div class="leftbg"></div>
+                <div class="rightbg"></div>
+                <div class="leftMobile"></div>
+                <div class="rightMobile"></div>
+                <div class="controlText">
+                    <div>
+                        <a class="btn btn-white soderj-button" wicket:id="homeTextLink"><i class="fa fa-home"></i>
+                            <div class="hint">
+                                <div class="miniicon"></div>
+                                Содержание
+                            </div>
+                        </a>
+                        <a class="btn btn-white" wicket:id="prevTextLink"><i class="fa fa-reply"></i>
+                            <div class="hint">
+                                <div class="miniicon"></div>
+                                Предыдущая глава
+                            </div>
+                        </a>
+                        <a class="btn btn-white" wicket:id="nextTextLink"><i class="fa fa-share"></i>
+                            <div class="hint">
+                                <div class="miniicon"></div>
+                                Следующая глава
+                            </div>
+                        </a>
+                        <div class="btn btn-white bookmark-button" data-active="false"><i class="fa fa-bookmark"></i>
+                            <div class="hint">
+                                <div class="miniicon"></div>
+                                Создать закладку
+                            </div>
+                        </div>
+                        <div class="btn btn-white top-button"><i class="fa fa-arrow-up"></i>
+                            <div class="hint">
+                                <div class="miniicon"></div>
+                                Вверх
+                            </div>
+                        </div>
+                        <div class="btn btn-white mistake-button"><i class="fa fa-comment"></i>
+                            <div class="hint">
+                                <div class="miniicon"></div>
+                                Нашли ошибку? Тык!
+                            </div>
+                        </div>
+                        <div class="btn btn-white options-button"><i class="fa fa-cog"></i>
+                            <div class="hint">
+                                <div class="miniicon"></div>
+                                <p>Шрифт</p>
+
+                                <div class="font active" data-name="helvetica">
+                                    <div class="type helvetica">A</div>
+                                    <div class="fontname helvetica">Helvetica</div>
+                                </div>
+                                <div class="font" data-name="georgia">
+                                    <div class="type georgia">A</div>
+                                    <div class="fontname georgia">Georgia</div>
+                                </div>
+                                <p>Размер</p>
+
+                                <div class="fontslider" align="center">
+                                    <input id="fontslide" type="range" min="0" max="2" step="1"/>
+                                </div>
+                                <p>Цвета</p>
+
+                                <div class="pagecolors" align="center">
+                                    <div class="day">
+                                        <div class="pagecolor white" data-color="white"></div>
+                                        <div class="pagecolor red" data-color="red"></div>
+                                        <div class="pagecolor blue" data-color="blue"></div>
+                                        <div class="pagecolor black" data-color="black"></div>
+                                    </div>
+                                </div>
+                                <p>Режим</p>
+
+                                <div class="daynight" align="center">
+                                    <input type="checkbox" id="daynight" data-size="small" data-animate="true"
+                                           data-on-text="<i class='fa fa-moon-o'></i>"
+                                           data-off-text="<i class='fa fa-sun-o'></i>">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </wicket:fragment>
             <main class="content">
                 <wicket:child/>
             </main>
