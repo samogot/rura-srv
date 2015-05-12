@@ -16,6 +16,7 @@ import ru.ruranobe.mybatis.mappers.ChaptersMapper;
 import ru.ruranobe.mybatis.mappers.TextsMapper;
 import ru.ruranobe.mybatis.tables.Chapter;
 import ru.ruranobe.mybatis.tables.Text;
+import ru.ruranobe.wicket.components.sidebar.ContentsModule;
 import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.UpdatesSidebarModule;
@@ -44,6 +45,8 @@ public class VolumeTextPage extends SidebarLayoutPage
         }
         String chapterFullUrl = projectUrlValue + "/" + volumeUrlValue + "/" + chapterUrlValue;
 
+        //urlFor(VolumeTextPage.class, )
+
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
         SqlSession session = sessionFactory.openSession();
         ChaptersMapper chaptersMapper = session.getMapper(ChaptersMapper.class);
@@ -63,6 +66,7 @@ public class VolumeTextPage extends SidebarLayoutPage
         //sidebarModules.add(new UpdatesSidebarModule("sidebarModule", volume.getProjectId()));
         sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
         sidebarModules.add(new FriendsSidebarModule("sidebarModule"));
+        sidebarModules.add(new ContentsModule("sidebarModule"));
 
 
     }

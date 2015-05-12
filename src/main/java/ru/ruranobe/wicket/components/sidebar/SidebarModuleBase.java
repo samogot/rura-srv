@@ -9,7 +9,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  */
 public class SidebarModuleBase extends Panel
 {
-    protected WebMarkupContainer module, moduleHeading, moduleHeadingChevron, moduleBody;
+    protected WebMarkupContainer module, moduleWrapper, moduleHeading, moduleHeadingChevron, moduleBody;
     protected Label moduleHeadingName;
 
     public SidebarModuleBase(String id, String markupId, String moduleName)
@@ -17,9 +17,10 @@ public class SidebarModuleBase extends Panel
         super(id);
         add(module = new WebMarkupContainer("module"));
         if (markupId != null) module.setMarkupId(markupId + "-module");
-        module.add(moduleHeading = new WebMarkupContainer("moduleHeading"));
+        module.add(moduleWrapper = new WebMarkupContainer("moduleWrapper"));
+        moduleWrapper.add(moduleHeading = new WebMarkupContainer("moduleHeading"));
         moduleHeading.add(moduleHeadingName = new Label("moduleHeadingName", moduleName));
         moduleHeading.add(moduleHeadingChevron = new WebMarkupContainer("moduleHeadingChevron"));
-        module.add(moduleBody = new WebMarkupContainer("moduleBody"));
+        moduleWrapper.add(moduleBody = new WebMarkupContainer("moduleBody"));
     }
 }
