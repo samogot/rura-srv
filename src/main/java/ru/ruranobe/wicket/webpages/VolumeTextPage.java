@@ -61,8 +61,8 @@ public class VolumeTextPage extends SidebarLayoutPage
 
         textPageUtils.setVisible(true);
         //sidebarModules.add(new UpdatesSidebarModule("sidebarModule", volume.getProjectId()));
-        //sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
-        //sidebarModules.add(new FriendsSidebarModule("sidebarModule"));
+        sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
+        sidebarModules.add(new FriendsSidebarModule("sidebarModule"));
 
 
     }
