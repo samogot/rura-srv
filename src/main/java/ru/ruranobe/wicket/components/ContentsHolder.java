@@ -1,4 +1,4 @@
-package ru.ruranobe.misc;
+package ru.ruranobe.wicket.components;
 
 import java.util.ArrayList;
 import java.util.List;
