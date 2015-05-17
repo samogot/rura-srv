@@ -2,7 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <body>
 <wicket:extend>
-
+    <ul id="nav" class="nav ContentNav">
+        <li wicket:id="h2Repeater"><a wicket:id="h2Link"></a>
+            <ul wicket:enclosure="h3Repeater" class="nav ContentNav">
+                <li wicket:id="h3Repeater"><a wicket:id="h3Link"></a></li>
+            </ul>
+        </li>
+    </ul>
 </wicket:extend>
 </body>
 </html>

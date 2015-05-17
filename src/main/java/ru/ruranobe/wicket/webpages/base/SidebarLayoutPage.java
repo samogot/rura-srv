@@ -1,5 +1,6 @@
 package ru.ruranobe.wicket.webpages.base;
 
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -19,9 +20,9 @@ public class SidebarLayoutPage extends BaseLayoutPage
 {
     protected List<SidebarModuleBase> sidebarModules = new ArrayList<SidebarModuleBase>();
     protected WebMarkupContainer textPageUtils;
-    protected BookmarkablePageLink homeTextLink;
-    protected BookmarkablePageLink prevTextLink;
-    protected BookmarkablePageLink nextTextLink;
+    protected BookmarkablePageLink homeTextLink=null;
+    protected BookmarkablePageLink prevTextLink=null;
+    protected BookmarkablePageLink nextTextLink=null;
 
     public SidebarLayoutPage()
     {
@@ -36,8 +37,26 @@ public class SidebarLayoutPage extends BaseLayoutPage
         });
         add(textPageUtils = new WebMarkupContainer("textPageUtils"));
         textPageUtils.setVisible(false);
-        textPageUtils.add(homeTextLink = new BookmarkablePageLink("homeTextLink", VolumePage.class));
-        textPageUtils.add(prevTextLink = new BookmarkablePageLink("prevTextLink", VolumeTextPage.class));
-        textPageUtils.add(nextTextLink = new BookmarkablePageLink("nextTextLink", VolumeTextPage.class));
+    }
+
+    @Override
+    protected void onInitialize()
+    {
+        if(homeTextLink==null)
+        {
+            textPageUtils.add(homeTextLink = new BookmarkablePageLink("homeTextLink", VolumePage.class));
+            homeTextLink.add(new AttributeAppender("class", " disable"));
+        }
+        if(prevTextLink==null)
+        {
+            textPageUtils.add(prevTextLink = new BookmarkablePageLink("prevTextLink", VolumeTextPage.class));
+            prevTextLink.add(new AttributeAppender("class", " disable"));
+        }
+        if(nextTextLink==null)
+        {
+            textPageUtils.add(nextTextLink = new BookmarkablePageLink("nextTextLink", VolumeTextPage.class));
+            nextTextLink.add(new AttributeAppender("class", " disable"));
+        }
+        super.onInitialize();
     }
 }

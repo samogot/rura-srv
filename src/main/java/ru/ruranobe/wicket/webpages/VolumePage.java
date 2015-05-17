@@ -20,6 +20,7 @@ import ru.ruranobe.mybatis.mappers.VolumeReleaseActivitiesMapper;
 import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.mybatis.tables.*;
+import ru.ruranobe.wicket.components.CommentsPanel;
 import ru.ruranobe.wicket.components.CoverCarousel;
 import ru.ruranobe.wicket.components.LabelHideableOnNull;
 import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
@@ -239,6 +240,9 @@ public class VolumePage extends SidebarLayoutPage
         add(moreUpdates);*/
 
 //        session.close();
+
+        add(new CommentsPanel("comments"));
+
         sidebarModules.add(new UpdatesSidebarModule("sidebarModule", volume.getProjectId()));
         sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
         sidebarModules.add(new FriendsSidebarModule("sidebarModule"));

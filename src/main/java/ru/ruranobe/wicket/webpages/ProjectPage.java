@@ -21,6 +21,7 @@ import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.mybatis.tables.Project;
 import ru.ruranobe.mybatis.tables.Volume;
 import ru.ruranobe.wicket.RuraConstants;
+import ru.ruranobe.wicket.components.CommentsPanel;
 import ru.ruranobe.wicket.components.CoverCarousel;
 import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;

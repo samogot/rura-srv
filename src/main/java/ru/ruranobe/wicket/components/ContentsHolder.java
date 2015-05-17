@@ -16,6 +16,7 @@ public class ContentsHolder
     {
         this.url = url;
         this.title = title;
+        this.children = new ArrayList<ContentsHolder>();
     }
 
     public String getUrl()
@@ -50,7 +51,6 @@ public class ContentsHolder
 
     public void addChild(ContentsHolder child)
     {
-        if (children == null) children = new ArrayList<ContentsHolder>();
         children.add(child);
     }
 }
