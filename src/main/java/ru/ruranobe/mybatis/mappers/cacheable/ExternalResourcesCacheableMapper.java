@@ -23,7 +23,8 @@ public class ExternalResourcesCacheableMapper implements ExternalResourcesMapper
         if (cache.isKeyInCache(externalResourceId))
         {
             return (ExternalResource) cache.get(externalResourceId).getObjectValue();
-        } else
+        }
+        else
         {
             ExternalResource externalResource = mapper.getExternalResourceById(externalResourceId);
             cache.put(new Element(externalResourceId, externalResource));

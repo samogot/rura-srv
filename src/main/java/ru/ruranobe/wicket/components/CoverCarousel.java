@@ -31,7 +31,10 @@ public class CoverCarousel extends Panel
                 slideIndicator.add(new AttributeModifier("data-target", "#" + markupId));
                 slideIndicator.add(new AttributeModifier("data-slide-to", item.getIndex()));
                 slideIndicator.add(new AttributeModifier("title", item.getModelObject().getKey()));
-                if (item.getIndex() == 0) slideIndicator.add(new AttributeAppender("class", " active"));
+                if (item.getIndex() == 0)
+                {
+                    slideIndicator.add(new AttributeAppender("class", " active"));
+                }
                 item.add(slideIndicator);
             }
         };
@@ -43,7 +46,10 @@ public class CoverCarousel extends Panel
             protected void populateItem(ListItem<SimpleEntry<String, String>> item)
             {
                 WebMarkupContainer slideContainer = new WebMarkupContainer("slideContainer");
-                if (item.getIndex() == 0) slideContainer.add(new AttributeAppender("class", " active"));
+                if (item.getIndex() == 0)
+                {
+                    slideContainer.add(new AttributeAppender("class", " active"));
+                }
                 item.add(slideContainer);
                 WebMarkupContainer slideImage = new WebMarkupContainer("slideImage");
                 slideImage.add(new AttributeModifier("src", item.getModelObject().getValue()));

@@ -61,13 +61,16 @@ public class EmailPasswordRecoveryPanel extends Panel
             if (Strings.isEmpty(email))
             {
                 error("Укажите, пожалуйста, электронный адрес.");
-            } else if (!Email.isEmailSyntaxValid(email))
+            }
+            else if (!Email.isEmailSyntaxValid(email))
             {
                 error("Указан неверный адрес электронной почты.");
-            } else if (email.length() > 255)
+            }
+            else if (email.length() > 255)
             {
                 error("Длина электронного адреса не должна превышать 255 символов.");
-            } else
+            }
+            else
             {
                 SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
                 SqlSession session = sessionFactory.openSession();
@@ -79,14 +82,17 @@ public class EmailPasswordRecoveryPanel extends Panel
                     if (user == null)
                     {
                         error("Пользователь с таким электронным адресом не зарегистрирован в системе.");
-                    } else if (!user.isEmailActivated())
+                    }
+                    else if (!user.isEmailActivated())
                     {
                         error("Электронный адрес пользователя не был подтвержден.");
-                    } else if (user.getPassRecoveryToken() != null
-                               && user.getPassRecoveryTokenDate().getTime() > System.currentTimeMillis())
+                    }
+                    else if (user.getPassRecoveryToken() != null
+                             && user.getPassRecoveryTokenDate().getTime() > System.currentTimeMillis())
                     {
                         error("На указанный электронной адрес уже было отправлено письмо.");
-                    } else
+                    }
+                    else
                     {
                         Token token = Token.valueOf(user.getUserId(), EXPIRATION_TIME_6_HOURS);
                         user.setPassRecoveryToken(token.getTokenValue());
@@ -95,14 +101,16 @@ public class EmailPasswordRecoveryPanel extends Panel
                         try
                         {
                             Email.sendEmail(user.getEmail(), EMAIL_PASSWORD_RECOVERY_SUBJECT,
-                                    String.format(EMAIL_PASSWORD_RECOVERY_TEXT, user.getPassRecoveryToken()));
+                                            String.format(EMAIL_PASSWORD_RECOVERY_TEXT, user.getPassRecoveryToken()));
                             session.commit();
-                        } catch (MessagingException ex)
+                        }
+                        catch (MessagingException ex)
                         {
                             error("Отправка сообщения на указанный электронный адрес не удалась. Свяжитесь, пожалуйста, с администрацией сайта.");
                         }
                     }
-                } finally
+                }
+                finally
                 {
                     session.close();
                 }

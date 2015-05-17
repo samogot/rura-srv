@@ -53,7 +53,8 @@ public class RuranobeAuthenticationStrategy implements IAuthenticationStrategy
             try
             {
                 value = getCrypt().decryptUrlSafe(value);
-            } catch (RuntimeException e)
+            }
+            catch (RuntimeException e)
             {
                 getCookieUtils().remove(cookieKey);
                 value = null;

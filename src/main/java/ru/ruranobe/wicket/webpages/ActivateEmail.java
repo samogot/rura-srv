@@ -41,7 +41,8 @@ public class ActivateEmail extends WebPage
                 usersMapper.updateUser(user);
                 session.commit();
             }
-        } finally
+        }
+        finally
         {
             session.close();
         }

@@ -45,7 +45,10 @@ public class Chapter implements Serializable, PageRepresentable
 
     public PageParameters getUrlParameters()
     {
-        if (url == null) return null;
+        if (url == null)
+        {
+            return null;
+        }
         return makeUrlParameters(url.split("/"));
     }
 

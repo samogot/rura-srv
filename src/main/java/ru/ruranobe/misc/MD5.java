@@ -36,12 +36,14 @@ public class MD5
                 if ((0xff & hash[i]) < 0x10)
                 {
                     hexString.append("0" + Integer.toHexString((0xFF & hash[i])));
-                } else
+                }
+                else
                 {
                     hexString.append(Integer.toHexString(0xFF & hash[i]));
                 }
             }
-        } catch (NoSuchAlgorithmException e)
+        }
+        catch (NoSuchAlgorithmException e)
         {
             throw new RuntimeException("" + e);
         }

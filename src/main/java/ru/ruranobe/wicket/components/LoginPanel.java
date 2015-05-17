@@ -58,7 +58,8 @@ public class LoginPanel extends Panel
                     // If we get this far, it means that we should redirect to the home page
                     throw new RestartResponseException(getSession().getPageFactory().newPage(
                             getApplication().getHomePage()));
-                } else
+                }
+                else
                 {
                     // the loaded credentials are wrong. erase them.
                     authenticationStrategy.remove();
@@ -151,13 +152,15 @@ public class LoginPanel extends Panel
                 if (rememberMe == true)
                 {
                     strategy.save(username, password);
-                } else
+                }
+                else
                 {
                     strategy.remove();
                 }
 
                 onLoginSucceeded();
-            } else
+            }
+            else
             {
                 onLoginFailed();
                 strategy.remove();

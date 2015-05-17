@@ -21,7 +21,6 @@ import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.mybatis.tables.Project;
 import ru.ruranobe.mybatis.tables.Volume;
 import ru.ruranobe.wicket.RuraConstants;
-import ru.ruranobe.wicket.components.CommentsPanel;
 import ru.ruranobe.wicket.components.CoverCarousel;
 import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
@@ -129,7 +128,10 @@ public class ProjectPage extends SidebarLayoutPage
         for (Project project : projects)
         {
             String subProjectTitle = project.getTitle();
-            if (project == mainProject) subProjectTitle = "";
+            if (project == mainProject)
+            {
+                subProjectTitle = "";
+            }
             Collection<Volume> volumes = volumesMapperCacheable.getVolumesByProjectId(project.getProjectId());
             for (Volume volume : volumes)
             {
@@ -139,25 +141,37 @@ public class ProjectPage extends SidebarLayoutPage
                     if (volume.getImageOne() != null)
                     {
                         if (subProjectTitle.isEmpty() && type.equals(DISPLAYABLE_NAMES.get(0)) && mainProjectFirstCovers.size() < 3)
+                        {
                             mainProjectFirstCovers.add(volume);
+                        }
                         else if (mainProjectFirstCovers.isEmpty() && firstCovers.size() < 3)
+                        {
                             firstCovers.add(volume);
+                        }
 
                         if (volume.getVolumeStatus().equals(RuraConstants.VOLUME_STATUS_ONGOING)
                             || volume.getVolumeStatus().equals(RuraConstants.VOLUME_STATUS_TRANSLATING)
                             || volume.getVolumeStatus().equals(RuraConstants.VOLUME_STATUS_PROOFREAD))
                         {
                             if (subProjectTitle.isEmpty() && type.equals(DISPLAYABLE_NAMES.get(0)) && mainProjectActiveCovers.size() < 3)
+                            {
                                 mainProjectActiveCovers.add(volume);
+                            }
                             else if (mainProjectActiveCovers.isEmpty() && activeCovers.size() < 3)
+                            {
                                 activeCovers.add(volume);
+                            }
                         }
 
                         if (subProjectTitle.isEmpty() && type.equals(DISPLAYABLE_NAMES.get(0))
                             && (mainProjectLastCover == null || mainProjectLastCover.getProjectId() < volume.getProjectId()))
+                        {
                             mainProjectLastCover = volume;
+                        }
                         if (lastCover == null || lastCover.getProjectId() < volume.getProjectId())
+                        {
                             lastCover = volume;
+                        }
                     }
 
                     if (volumeTypeToSubProjectToVolumes.get(type) == null)
@@ -191,7 +205,10 @@ public class ProjectPage extends SidebarLayoutPage
             {
                 final String displayableName = listItem1.getModelObject();
                 Label volumeType = new Label("volumeType", displayableName);
-                if (volumeTypeToSubProjectToVolumes.get(displayableName) == null) volumeType.setVisible(false);
+                if (volumeTypeToSubProjectToVolumes.get(displayableName) == null)
+                {
+                    volumeType.setVisible(false);
+                }
                 listItem1.add(volumeType);
                 ListView<SimpleEntry<String, ArrayList<Volume>>> volumeSubProjectRepeater
                         = new ListView<SimpleEntry<String, ArrayList<Volume>>>("volumeSubProjectRepeater", volumeTypeToSubProjectToVolumes.get(displayableName))
@@ -202,7 +219,10 @@ public class ProjectPage extends SidebarLayoutPage
                         SimpleEntry<String, ArrayList<Volume>> projectTitleAndVolumes = listItem2.getModelObject();
                         String subProjectNameString = projectTitleAndVolumes.getKey();
                         Label projectName = new Label("projectName", subProjectNameString);
-                        if (subProjectNameString.isEmpty()) projectName.setVisible(false);
+                        if (subProjectNameString.isEmpty())
+                        {
+                            projectName.setVisible(false);
+                        }
                         listItem2.add(projectName);
                         ArrayList<Volume> volumes = projectTitleAndVolumes.getValue();
                         Collections.sort(volumes, COMPARATOR);
@@ -216,14 +236,18 @@ public class ProjectPage extends SidebarLayoutPage
                                 String nameShort = volume.getNameShort();
                                 Label volumeName = new Label("volumeName", nameShort);
                                 if (shortNameLabelWidth != null)
+                                {
                                     volumeName.add(new AttributeModifier("style", "width:" + (shortNameLabelWidth * 7.5 + 10) + "px;"));
+                                }
                                 listItem3.add(volumeName);
                                 String volumeStatusStr = volume.getVolumeStatus();
                                 Label volumeStatus = new Label("volumeStatus", VOLUME_STATUS_LABEL_TEXT.get(volumeStatusStr));
                                 volumeStatus.add(new AttributeAppender("class", " label-" + VOLUME_STATUS_LABEL_COLOR_CLASS.get(volumeStatusStr)));
                                 listItem3.add(volumeStatus);
                                 if (volumeStatusStr.equals(RuraConstants.VOLUME_STATUS_HIDDEN))
+                                {
                                     listItem3.setVisible(false); //todo show grayed if allowed to user
+                                }
                                 BookmarkablePageLink volumeLink = new BookmarkablePageLink("volumeLink", VolumePage.class, volume.getUrlParameters());
                                 volumeLink.setBody(new Model<String>(volume.getNameTitle()));
                                 listItem3.add(volumeLink);
@@ -239,22 +263,36 @@ public class ProjectPage extends SidebarLayoutPage
 
         Set<Volume> allCoversSet = new HashSet<Volume>();
         if (mainProjectFirstCovers.isEmpty())
+        {
             allCoversSet.addAll(firstCovers);
-        else allCoversSet.addAll(mainProjectFirstCovers);
+        }
+        else
+        {
+            allCoversSet.addAll(mainProjectFirstCovers);
+        }
         if (mainProjectActiveCovers.isEmpty())
+        {
             allCoversSet.addAll(activeCovers);
-        else allCoversSet.addAll(mainProjectActiveCovers);
+        }
+        else
+        {
+            allCoversSet.addAll(mainProjectActiveCovers);
+        }
         if (mainProjectLastCover != null)
+        {
             allCoversSet.add(mainProjectLastCover);
+        }
         if (lastCover != null)
+        {
             allCoversSet.add(lastCover);
+        }
         ArrayList<Volume> allCovers = new ArrayList<Volume>(allCoversSet);
         Collections.sort(allCovers, COMPARATOR);
         ArrayList<SimpleEntry<String, String>> allCoverIds = new ArrayList<SimpleEntry<String, String>>();
         for (Volume volume : allCovers)
         {
             allCoverIds.add(new SimpleEntry<String, String>(volume.getNameTitle(),
-                    externalResourcesMapperCacheable.getExternalResourceById(volume.getImageOne()).getUrl()));
+                                                            externalResourcesMapperCacheable.getExternalResourceById(volume.getImageOne()).getUrl()));
         }
 
         add(new CoverCarousel("projectCoverCarousel", allCoverIds));

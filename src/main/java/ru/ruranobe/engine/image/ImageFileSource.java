@@ -16,7 +16,8 @@ public class ImageFileSource implements ImageSource
         try
         {
             this.inputStream = new FileInputStream(imageFile);
-        } catch (IOException ex)
+        }
+        catch (IOException ex)
         {
             throw new RuntimeException(ex);
         }
@@ -34,7 +35,8 @@ public class ImageFileSource implements ImageSource
         try
         {
             this.inputStream = new FileInputStream(imageFile);
-        } catch (IOException ex)
+        }
+        catch (IOException ex)
         {
             throw new RuntimeException(ex);
         }
@@ -48,7 +50,8 @@ public class ImageFileSource implements ImageSource
             try
             {
                 inputStream.close();
-            } catch (IOException ex)
+            }
+            catch (IOException ex)
             {
                 throw new RuntimeException(ex);
             }

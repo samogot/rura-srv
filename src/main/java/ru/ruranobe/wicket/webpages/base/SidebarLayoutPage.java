@@ -20,9 +20,9 @@ public class SidebarLayoutPage extends BaseLayoutPage
 {
     protected List<SidebarModuleBase> sidebarModules = new ArrayList<SidebarModuleBase>();
     protected WebMarkupContainer textPageUtils;
-    protected BookmarkablePageLink homeTextLink=null;
-    protected BookmarkablePageLink prevTextLink=null;
-    protected BookmarkablePageLink nextTextLink=null;
+    protected BookmarkablePageLink homeTextLink = null;
+    protected BookmarkablePageLink prevTextLink = null;
+    protected BookmarkablePageLink nextTextLink = null;
 
     public SidebarLayoutPage()
     {
@@ -42,17 +42,17 @@ public class SidebarLayoutPage extends BaseLayoutPage
     @Override
     protected void onInitialize()
     {
-        if(homeTextLink==null)
+        if (homeTextLink == null)
         {
             textPageUtils.add(homeTextLink = new BookmarkablePageLink("homeTextLink", VolumePage.class));
             homeTextLink.add(new AttributeAppender("class", " disable"));
         }
-        if(prevTextLink==null)
+        if (prevTextLink == null)
         {
             textPageUtils.add(prevTextLink = new BookmarkablePageLink("prevTextLink", VolumeTextPage.class));
             prevTextLink.add(new AttributeAppender("class", " disable"));
         }
-        if(nextTextLink==null)
+        if (nextTextLink == null)
         {
             textPageUtils.add(nextTextLink = new BookmarkablePageLink("nextTextLink", VolumeTextPage.class));
             nextTextLink.add(new AttributeAppender("class", " disable"));

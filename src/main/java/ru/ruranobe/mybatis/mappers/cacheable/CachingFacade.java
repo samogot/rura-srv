@@ -34,10 +34,12 @@ public class CachingFacade
         {
             Constructor<?> constructor = mapperCacheableClass.getConstructor(mapperClass);
             return (T) constructor.newInstance(mapper);
-        } catch (NoSuchMethodException ex)
+        }
+        catch (NoSuchMethodException ex)
         {
             throw new IllegalArgumentException("There is no valid constructor with input parameter of type " + mapperClass.toString() + " in class " + mapperCacheableClass.toString(), ex);
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             throw new IllegalStateException(ex);
         }

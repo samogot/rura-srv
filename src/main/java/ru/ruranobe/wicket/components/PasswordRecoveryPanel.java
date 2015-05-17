@@ -73,19 +73,24 @@ public class PasswordRecoveryPanel extends Panel
             if (Strings.isEmpty(password))
             {
                 error("Введен пустой пароль учетной записи.");
-            } else if (password.length() < 8 || password.length() > 31)
+            }
+            else if (password.length() < 8 || password.length() > 31)
             {
                 error("Длина пароля не должна превышать 31 символ или быть меньше 8 символов.");
-            } else if (!password.equals(confirmPassword))
+            }
+            else if (!password.equals(confirmPassword))
             {
                 error("Введенные пароли не совпадают.");
-            } else if (!RuranobeUtils.isPasswordSyntaxValid(password))
+            }
+            else if (!RuranobeUtils.isPasswordSyntaxValid(password))
             {
                 error("Пароль может состоять только из больших и маленьких латинских букв, а также цифр.");
-            } else if (System.currentTimeMillis() > user.getPassRecoveryTokenDate().getTime())
+            }
+            else if (System.currentTimeMillis() > user.getPassRecoveryTokenDate().getTime())
             {
                 error("С момента отправки сообщения прошло слишком много времени. Отправьте сообщение о смене пароля еще раз.");
-            } else
+            }
+            else
             {
                 try
                 {
@@ -93,7 +98,8 @@ public class PasswordRecoveryPanel extends Panel
                     usersMapper.updateUser(user);
                     session.commit();
                     info("Пароль был успешно изменен.");
-                } finally
+                }
+                finally
                 {
                     session.close();
                 }

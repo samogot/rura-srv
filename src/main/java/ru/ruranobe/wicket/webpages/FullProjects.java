@@ -68,7 +68,10 @@ public class FullProjects extends BaseLayoutPage
 
                 BookmarkablePageLink linkOneViewTypeOne = new BookmarkablePageLink("linkOneViewTypeOne", ProjectPage.class, project.getUrlParameters());
                 WebMarkupContainer imageViewTypeOne = new WebMarkupContainer("imageViewTypeOne");
-                if (imageResource != null) imageViewTypeOne.add(new AttributeModifier("src", imageResource.getUrl()));
+                if (imageResource != null)
+                {
+                    imageViewTypeOne.add(new AttributeModifier("src", imageResource.getUrl()));
+                }
                 imageViewTypeOne.add(new AttributeModifier("title", project.getTitle()));
                 linkOneViewTypeOne.add(imageViewTypeOne);
                 listItem.add(linkOneViewTypeOne);
@@ -116,7 +119,10 @@ public class FullProjects extends BaseLayoutPage
 
                 BookmarkablePageLink linkOneViewTypeTwo = new BookmarkablePageLink("linkOneViewTypeTwo", ProjectPage.class, project.getUrlParameters());
                 WebMarkupContainer imageViewTypeTwo = new WebMarkupContainer("imageViewTypeTwo");
-                if (imageResource != null) imageViewTypeTwo.add(new AttributeModifier("src", imageResource.getUrl()));
+                if (imageResource != null)
+                {
+                    imageViewTypeTwo.add(new AttributeModifier("src", imageResource.getUrl()));
+                }
                 imageViewTypeTwo.add(new AttributeModifier("title", project.getTitle()));
                 linkOneViewTypeTwo.add(imageViewTypeTwo);
                 listItem.add(linkOneViewTypeTwo);

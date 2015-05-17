@@ -30,7 +30,8 @@ public class PicasaUtils
         try
         {
             PICASA_WEBSERVICE.setUserCredentials("ruranobe@gmail.com", "1qa2ws3ed4rf5tg6yh");
-        } catch (AuthenticationException e)
+        }
+        catch (AuthenticationException e)
         {
             throw new IllegalArgumentException("Illegal username/password combination.");
         }
@@ -49,13 +50,15 @@ public class PicasaUtils
             try
             {
                 insertAlbum(albumTitle);
-            } catch (Exception ex1)
+            }
+            catch (Exception ex1)
             {
                 reloadCache();
                 try
                 {
                     insertAlbum(albumTitle);
-                } catch (Exception ex2)
+                }
+                catch (Exception ex2)
                 {
                     throw new RuntimeException(ex2);
                 }
@@ -73,7 +76,8 @@ public class PicasaUtils
             photoEntry = PICASA_WEBSERVICE.insert(
                     new URL(ALBUM_TITLE_TO_ALBUM_ENTRY.get(albumTitle).getFeedLink().getHref()),
                     photoEntry);
-        } catch (Exception ex1)
+        }
+        catch (Exception ex1)
         {
             reloadCache();
             try
@@ -81,13 +85,14 @@ public class PicasaUtils
                 photoEntry = PICASA_WEBSERVICE.insert(
                         new URL(ALBUM_TITLE_TO_ALBUM_ENTRY.get(albumTitle).getFeedLink().getHref()),
                         photoEntry);
-            } catch (Exception ex2)
+            }
+            catch (Exception ex2)
             {
                 throw new RuntimeException(ex2);
             }
         }
         image.putPathOnImageServiceSystem(Image.ImageServiceSystem.PICASSA,
-                photoEntry.getMediaThumbnails().get(0).getUrl());
+                                          photoEntry.getMediaThumbnails().get(0).getUrl());
         return image;
     }
 
@@ -119,10 +124,12 @@ public class PicasaUtils
             {
                 ALBUM_TITLE_TO_ALBUM_ENTRY.put("unsorted", insertAlbum("unsorted"));
             }
-        } catch (IOException ex)
+        }
+        catch (IOException ex)
         {
             throw new RuntimeException(ex);
-        } catch (ServiceException ex)
+        }
+        catch (ServiceException ex)
         {
             throw new RuntimeException(ex);
         }

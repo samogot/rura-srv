@@ -61,7 +61,10 @@ public class ProjectBannersList extends Panel
                 return o1.getKey().getOrderNumber() - o2.getKey().getOrderNumber();
             }
         });
-        if (limit != null) projectsList.subList(limit, projectsList.size()).clear();
+        if (limit != null)
+        {
+            projectsList.subList(limit, projectsList.size()).clear();
+        }
         ListView<SimpleEntry<Project, ExternalResource>> bannersList = new ListView<SimpleEntry<Project, ExternalResource>>("bannersList", projectsList)
         {
             @Override
@@ -72,7 +75,10 @@ public class ProjectBannersList extends Panel
                 final Project project = projectExtended.getKey();
                 BookmarkablePageLink bannerLink = new BookmarkablePageLink("bannerLink", ProjectPage.class, project.getUrlParameters());
                 WebMarkupContainer bannerImage = new WebMarkupContainer("bannerImage");
-                if (imageResource != null) bannerImage.add(new AttributeModifier("src", imageResource.getUrl()));
+                if (imageResource != null)
+                {
+                    bannerImage.add(new AttributeModifier("src", imageResource.getUrl()));
+                }
                 bannerImage.add(new AttributeModifier("alt", project.getTitle()));
                 bannerLink.add(new AttributeModifier("title", project.getTitle()));
                 bannerLink.add(bannerImage);

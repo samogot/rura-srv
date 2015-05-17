@@ -1,8 +1,8 @@
 package ru.ruranobe.mybatis.tables;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import ru.ruranobe.wicket.webpages.VolumeTextPage;
 import ru.ruranobe.wicket.webpages.VolumePage;
+import ru.ruranobe.wicket.webpages.VolumeTextPage;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -143,9 +143,18 @@ public class Update implements Serializable, Comparable<Update>, PageRepresentab
     public String getShortTitle()
     {
         String shortTitle;
-        if (volumeTitleShort != null) shortTitle = volumeTitleShort;
-        else shortTitle = volumeTitle.replaceFirst(SHORT_TITLE_REGEX, "");
-        if (chapterTitle != null) shortTitle += " - " + getChapterShortTitle();
+        if (volumeTitleShort != null)
+        {
+            shortTitle = volumeTitleShort;
+        }
+        else
+        {
+            shortTitle = volumeTitle.replaceFirst(SHORT_TITLE_REGEX, "");
+        }
+        if (chapterTitle != null)
+        {
+            shortTitle += " - " + getChapterShortTitle();
+        }
         return shortTitle;
     }
 

@@ -51,6 +51,7 @@ public class RuraConstants
                     .build();
 
     public static final String NO_COVER_IMAGE = "http://ruranobe.ru/w/images/thumb/a/ad/nopic.png/300px-nopic.png";
+
     private RuraConstants()
     {
     }

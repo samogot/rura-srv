@@ -16,7 +16,10 @@ public class SidebarModuleBase extends Panel
     {
         super(id);
         add(module = new WebMarkupContainer("module"));
-        if (markupId != null) module.setMarkupId(markupId + "-module");
+        if (markupId != null)
+        {
+            module.setMarkupId(markupId + "-module");
+        }
         module.add(moduleWrapper = new WebMarkupContainer("moduleWrapper"));
         moduleWrapper.add(moduleHeading = new WebMarkupContainer("moduleHeading"));
         moduleHeading.add(moduleHeadingName = new Label("moduleHeadingName", moduleName));

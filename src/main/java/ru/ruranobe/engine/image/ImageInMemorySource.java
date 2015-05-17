@@ -27,7 +27,8 @@ public abstract class ImageInMemorySource implements ImageSource
         try
         {
             inputStream.reset();
-        } catch (IOException ex)
+        }
+        catch (IOException ex)
         {
             throw new RuntimeException(ex);
         }
@@ -41,7 +42,8 @@ public abstract class ImageInMemorySource implements ImageSource
             try
             {
                 inputStream.close();
-            } catch (IOException ex)
+            }
+            catch (IOException ex)
             {
                 throw new RuntimeException(ex);
             }

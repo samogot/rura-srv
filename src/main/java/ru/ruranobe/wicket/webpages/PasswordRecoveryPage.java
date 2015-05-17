@@ -38,7 +38,8 @@ public class PasswordRecoveryPage extends WebPage
                 throw RuranobeUtils.REDIRECT_TO_404;
             }
             add(new PasswordRecoveryPanel("passwordRecoveryPanel", user, usersMapper, session));
-        } finally
+        }
+        finally
         {
             session.close();
         }

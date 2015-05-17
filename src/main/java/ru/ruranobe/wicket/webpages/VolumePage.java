@@ -77,13 +77,25 @@ public class VolumePage extends SidebarLayoutPage
         ExternalResource volumeCover;
         List<SimpleEntry<String, String>> covers = new ArrayList<SimpleEntry<String, String>>();
         volumeCover = externalResourcesMapperCacheable.getExternalResourceById(volume.getImageOne());
-        if (volumeCover != null) covers.add(new SimpleEntry<String, String>("", volumeCover.getUrl()));
+        if (volumeCover != null)
+        {
+            covers.add(new SimpleEntry<String, String>("", volumeCover.getUrl()));
+        }
         volumeCover = externalResourcesMapperCacheable.getExternalResourceById(volume.getImageTwo());
-        if (volumeCover != null) covers.add(new SimpleEntry<String, String>("", volumeCover.getUrl()));
+        if (volumeCover != null)
+        {
+            covers.add(new SimpleEntry<String, String>("", volumeCover.getUrl()));
+        }
         volumeCover = externalResourcesMapperCacheable.getExternalResourceById(volume.getImageThree());
-        if (volumeCover != null) covers.add(new SimpleEntry<String, String>("", volumeCover.getUrl()));
+        if (volumeCover != null)
+        {
+            covers.add(new SimpleEntry<String, String>("", volumeCover.getUrl()));
+        }
         volumeCover = externalResourcesMapperCacheable.getExternalResourceById(volume.getImageFour());
-        if (volumeCover != null) covers.add(new SimpleEntry<String, String>("", volumeCover.getUrl()));
+        if (volumeCover != null)
+        {
+            covers.add(new SimpleEntry<String, String>("", volumeCover.getUrl()));
+        }
         add(new CoverCarousel("volumeCoverCarousel", covers));
 
         BookmarkablePageLink projectUrl = new BookmarkablePageLink("projectUrl", ProjectPage.class, Project.makeUrlParameters(projectUrlValue));
@@ -106,7 +118,7 @@ public class VolumePage extends SidebarLayoutPage
         annotationParsed.setEscapeModelStrings(false);
 
         ExternalLink isbn = new ExternalLink("isbn",
-                "http://www.amazon.co.jp/s?search-alias=stripbooks&language=en_JP&field-isbn=" + volume.getIsbn(), volume.getIsbn());
+                                             "http://www.amazon.co.jp/s?search-alias=stripbooks&language=en_JP&field-isbn=" + volume.getIsbn(), volume.getIsbn());
         isbn.setVisible(volume.getIsbn() != null);
         add(isbn);
 
@@ -134,9 +146,13 @@ public class VolumePage extends SidebarLayoutPage
 
         AbstractLink readAllLink;
         if (volume.isStatusExternal() && volume.getExternalUrl() != null)
+        {
             readAllLink = new ExternalLink("readAllLink", volume.getExternalUrl());
+        }
         else
+        {
             readAllLink = new BookmarkablePageLink("readAllLink", VolumeTextPage.class, volume.getFullTextUrlParameters());
+        }
         add(readAllLink);
 
         ChaptersMapper chaptersMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
@@ -149,9 +165,17 @@ public class VolumePage extends SidebarLayoutPage
                 Chapter chapter = item.getModelObject();
                 WebMarkupContainer chapterLink;
                 if (chapter.isPublished())
+                {
                     chapterLink = new BookmarkablePageLink("chapterLink", VolumeTextPage.class, chapter.getUrlParameters());
-                else chapterLink = new WebMarkupContainer("chapterLink");
-                if (chapter.isNested()) chapterLink.add(new AttributeAppender("class", " nested"));
+                }
+                else
+                {
+                    chapterLink = new WebMarkupContainer("chapterLink");
+                }
+                if (chapter.isNested())
+                {
+                    chapterLink.add(new AttributeAppender("class", " nested"));
+                }
                 chapterLink.add(new Label("chapterName", chapter.getTitle()));
                 item.add(chapterLink);
             }

@@ -64,7 +64,8 @@ public class UploadImage extends WebPage
                 try
                 {
                     file = uploadedFile.writeToTempFile();
-                } catch (IOException ex)
+                }
+                catch (IOException ex)
                 {
                     throw new RuntimeException(ex);
                 }
@@ -81,7 +82,8 @@ public class UploadImage extends WebPage
                     //       ExternalResource externalResource = new ExternalResource(0, mimeType, externalLink, title, uploadedWhen);
 //                    externalResourcesMapper.insertExternalResource(externalResource);
                     session.commit();
-                } finally
+                }
+                finally
                 {
                     session.close();
                 }

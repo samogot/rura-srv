@@ -113,28 +113,36 @@ public class RegistrationPanel extends Panel
             if (Strings.isEmpty(username))
             {
                 error("Введено пустое имя учетной записи.");
-            } else if (username.length() > 63)
+            }
+            else if (username.length() > 63)
             {
                 error("Длина имени учетной записи не должна превышать 63 символов.");
-            } else if (Strings.isEmpty(password))
+            }
+            else if (Strings.isEmpty(password))
             {
                 error("Введен пусто пароль учетной записи.");
-            } else if (password.length() < 8 || password.length() > 31)
+            }
+            else if (password.length() < 8 || password.length() > 31)
             {
                 error("Длина пароля не должна быть меньше 8 символов или превышать 31 символ.");
-            } else if (!password.equals(confirmPassword))
+            }
+            else if (!password.equals(confirmPassword))
             {
                 error("Введенные пароли не совпадают.");
-            } else if (!RuranobeUtils.isPasswordSyntaxValid(password))
+            }
+            else if (!RuranobeUtils.isPasswordSyntaxValid(password))
             {
                 error("Пароль может состоять только из больших и маленьких латинских букв, а также цифр.");
-            } else if (!Strings.isEmpty(email) && !Email.isEmailSyntaxValid(email))
+            }
+            else if (!Strings.isEmpty(email) && !Email.isEmailSyntaxValid(email))
             {
                 error("Указан неверный адрес электронной почты.");
-            } else if (email != null && email.length() > 255)
+            }
+            else if (email != null && email.length() > 255)
             {
                 error("Длина электронного адреса не должна превышать 255 символов.");
-            } else
+            }
+            else
             {
                 SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
                 SqlSession session = sessionFactory.openSession();
@@ -145,10 +153,12 @@ public class RegistrationPanel extends Panel
                     if (usersMapper.getUserByUsername(username) != null)
                     {
                         error("Пользователь с такой учетной записью уже зарегистрирован в системе.");
-                    } else if (usersMapper.getUserByEmail(email) != null)
+                    }
+                    else if (usersMapper.getUserByEmail(email) != null)
                     {
                         error("Пользователь с таким электронным адресом уже зарегистрирован в системе.");
-                    } else
+                    }
+                    else
                     {
                         User user = new User();
                         user.setUsername(username);
@@ -169,9 +179,10 @@ public class RegistrationPanel extends Panel
                             try
                             {
                                 Email.sendEmail(user.getEmail(), ACTIVATE_EMAIL_SUBJECT,
-                                        String.format(ACTIVATE_EMAIL_TEXT, user.getEmailToken()));
+                                                String.format(ACTIVATE_EMAIL_TEXT, user.getEmailToken()));
                                 usersMapper.updateUser(user);
-                            } catch (Exception ex)
+                            }
+                            catch (Exception ex)
                             {
                                 error("Отправка сообщения на указанный электронный адрес не удалась. Свяжитесь, пожалуйста, с администрацией сайта.");
                                 session.rollback();
@@ -179,7 +190,8 @@ public class RegistrationPanel extends Panel
                         }
                         session.commit();
                     }
-                } finally
+                }
+                finally
                 {
                     session.close();
                 }

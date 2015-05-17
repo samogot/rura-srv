@@ -22,7 +22,8 @@ public class MybatisUtil
         try
         {
             reader = Resources.getResourceAsReader("mybatis-config.xml");
-        } catch (IOException ex)
+        }
+        catch (IOException ex)
         {
             System.err.println("Initial SessionFactory creation failed." + ex);
             throw new ExceptionInInitializerError(ex);

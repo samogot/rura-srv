@@ -45,7 +45,10 @@ public class UpdatesWideList extends Panel
                 String iconDivClassValue = RuraConstants.UPDATE_TYPE_TO_ICON_CLASS.get(update.getUpdateType());
                 Date updateDateValue = update.getShowTime();
                 String updateTitleValue = update.getChapterShortTitle();
-                if (updateTitleValue == null) updateTitleValue = "Весь том";
+                if (updateTitleValue == null)
+                {
+                    updateTitleValue = "Весь том";
+                }
 
                 WebMarkupContainer iconDivClass = new WebMarkupContainer("iconDivClass");
                 iconDivClass.add(new AttributeAppender("class", " " + iconDivClassValue));

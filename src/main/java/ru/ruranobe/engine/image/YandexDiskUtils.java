@@ -38,12 +38,14 @@ public class YandexDiskUtils
             }
 
             image.putPathOnImageServiceSystem(Image.ImageServiceSystem.YANDEX_DISK,
-                    "Samogot Yandex Disk path: " + image.getPath() + "/" + image.getTitle());
+                                              "Samogot Yandex Disk path: " + image.getPath() + "/" + image.getTitle());
             return image;
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             throw new RuntimeException(ex);
-        } finally
+        }
+        finally
         {
             try
             {
@@ -51,7 +53,8 @@ public class YandexDiskUtils
                 {
                     out.close();
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new RuntimeException(ex);
             }
@@ -82,7 +85,8 @@ public class YandexDiskUtils
 
             JSONObject jsonResponse = new JSONObject(response.toString());
             return jsonResponse.getString("href");
-        } else
+        }
+        else
         {
             throw new RuntimeException("Irregular response code " + responseCode + " received while sending GET to " + url);
         }

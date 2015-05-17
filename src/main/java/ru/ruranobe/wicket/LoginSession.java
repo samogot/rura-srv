@@ -31,7 +31,8 @@ public class LoginSession extends AuthenticatedWebSession
         {
             UsersMapper usersMapper = session.getMapper(UsersMapper.class);
             signInUser = usersMapper.signInUser(username, password);
-        } finally
+        }
+        finally
         {
             session.close();
         }

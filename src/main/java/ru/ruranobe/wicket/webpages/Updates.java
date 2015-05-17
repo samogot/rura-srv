@@ -58,7 +58,8 @@ public class Updates extends SidebarLayoutPage
             page = Integer.parseInt(pageString);
             projectId = projectString != null ? Integer.parseInt(projectString) : null;
             volumeId = volumeString != null ? Integer.parseInt(volumeString) : null;
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             page = 1;
         }
@@ -147,15 +148,18 @@ public class Updates extends SidebarLayoutPage
         {
             AttributeModifier modifier = new AttributeModifier("class", "first active");
             first.add(modifier);
-        } else if (RuraConstants.UPDATE_TYPE_PROOFREAD.equals(searchType))
+        }
+        else if (RuraConstants.UPDATE_TYPE_PROOFREAD.equals(searchType))
         {
             AttributeModifier modifier = new AttributeModifier("class", "third active");
             third.add(modifier);
-        } else if (RuraConstants.UPDATE_TYPE_TRANSLATE.equals(searchType))
+        }
+        else if (RuraConstants.UPDATE_TYPE_TRANSLATE.equals(searchType))
         {
             AttributeModifier modifier = new AttributeModifier("class", "fourth active");
             fourth.add(modifier);
-        } else if (RuraConstants.UPDATE_TYPE_IMAGES.equals(searchType))
+        }
+        else if (RuraConstants.UPDATE_TYPE_IMAGES.equals(searchType))
         {
             AttributeModifier modifier = new AttributeModifier("class", "fifth active");
             fifth.add(modifier);
@@ -274,7 +278,8 @@ public class Updates extends SidebarLayoutPage
                 StatelessLink linkToLastPage = new StatelessLinkToPage("updatesPageLink", Integer.toString(numberOfPages), searchType, "updatesPageText", Integer.toString(numberOfPages));
                 references.add(linkToLastPage);
             }
-        } else if (page < numberOfPages - NUMBER_OF_PAGES_ON_UPDATE_LIST)
+        }
+        else if (page < numberOfPages - NUMBER_OF_PAGES_ON_UPDATE_LIST)
         {
             StatelessLink linkToFirstPage = new StatelessLinkToPage("updatesPageLink", "1", searchType, "updatesPageText", "1");
             references.add(linkToFirstPage);
@@ -293,7 +298,8 @@ public class Updates extends SidebarLayoutPage
             references.add(linkToNextPage);
             StatelessLink linkToLastPage = new StatelessLinkToPage("updatesPageLink", Integer.toString(numberOfPages), searchType, "updatesPageText", Integer.toString(numberOfPages));
             references.add(linkToLastPage);
-        } else
+        }
+        else
         {
             StatelessLink linkToFirstPage = new StatelessLinkToPage("updatesPageLink", "1", searchType, "updatesPageText", "1");
             references.add(linkToFirstPage);

@@ -48,8 +48,14 @@ public class VolumeTextPage extends SidebarLayoutPage
         SqlSession session = sessionFactory.openSession();
         ChaptersMapper chaptersMapper = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
         Chapter chapter = chaptersMapper.getChapterByUrl(chapterFullUrl);
-        if (chapter == null) throw REDIRECT_TO_404;
-        if (chapter.getTextId() == null) throw REDIRECT_TO_404;
+        if (chapter == null)
+        {
+            throw REDIRECT_TO_404;
+        }
+        if (chapter.getTextId() == null)
+        {
+            throw REDIRECT_TO_404;
+        }
         TextsMapper textsMapper = session.getMapper(TextsMapper.class);
         Text chapterText = textsMapper.getTextById(chapter.getTextId());
         //if(chapterText.getTextHtml()==null)
@@ -69,27 +75,45 @@ public class VolumeTextPage extends SidebarLayoutPage
             if (chapterFullUrl.equals(curChapter.getUrl()))
             {
                 if (i - 1 >= 0 && (!curChapter.isNested() || chapterList.get(i - 1).isNested()))
+                {
                     prevChapter = chapterList.get(i - 1);
+                }
                 else if (i - 2 >= 0)
+                {
                     prevChapter = chapterList.get(i - 2);
-                if (i + 1 < chapterList.size()) nextChapter = chapterList.get(i + 1);
-                ch = new ContentsHolder("#"+chapterUrlValue, curChapter.getTitle());
+                }
+                if (i + 1 < chapterList.size())
+                {
+                    nextChapter = chapterList.get(i + 1);
+                }
+                ch = new ContentsHolder("#" + chapterUrlValue, curChapter.getTitle());
             }
-            else ch = new ContentsHolder(urlFor(VolumeTextPage.class, curChapter.getUrlParameters()).toString(),
-                    curChapter.getTitle());
-            if (curChapter.isNested() && !contentsHolders.isEmpty())
-                contentsHolders.get(contentsHolders.size() - 1).addChild(ch);
             else
+            {
+                ch = new ContentsHolder(urlFor(VolumeTextPage.class, curChapter.getUrlParameters()).toString(),
+                                        curChapter.getTitle());
+            }
+            if (curChapter.isNested() && !contentsHolders.isEmpty())
+            {
+                contentsHolders.get(contentsHolders.size() - 1).addChild(ch);
+            }
+            else
+            {
                 contentsHolders.add(ch);
+            }
         }
         contentsHolders.add(new ContentsHolder("#comments", "Комментарии"));
 
         textPageUtils.setVisible(true);
         textPageUtils.add(homeTextLink = new BookmarkablePageLink("homeTextLink", VolumePage.class, volume.getUrlParameters()));
         if (nextChapter != null)
+        {
             textPageUtils.add(nextTextLink = new BookmarkablePageLink("nextTextLink", VolumeTextPage.class, nextChapter.getUrlParameters()));
+        }
         if (prevChapter != null)
+        {
             textPageUtils.add(prevTextLink = new BookmarkablePageLink("prevTextLink", VolumeTextPage.class, prevChapter.getUrlParameters()));
+        }
 
 
         Label textHandler = new Label("html", chapterText.getTextHtml());
