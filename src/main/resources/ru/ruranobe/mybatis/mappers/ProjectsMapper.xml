@@ -5,12 +5,12 @@
 <mapper namespace="ru.ruranobe.mybatis.mappers.ProjectsMapper">
 
     <!-- The only need for this cache is operation getProjectsByUrl -->
-    <cache type="org.mybatis.caches.ehcache.EhcacheCache">
+    <!--cache type="org.mybatis.caches.ehcache.EhcacheCache">
         <property name="timeToIdleSeconds" value="3600"/>
         <property name="timeToLiveSeconds" value="3600"/>
         <property name="maxEntriesLocalHeap" value="1000"/>
         <property name="memoryStoreEvictionPolicy" value="LRU"/>
-    </cache>
+    </cache-->
 
     <select id="getAllProjects" resultMap="ProjectResult">
         SELECT *
@@ -30,6 +30,27 @@
         ORDER BY order_number;
     </select>
 
+    <update id="updateProject" parameterType="ru.ruranobe.mybatis.tables.Project">
+        UPDATE projects
+        SET
+          parent_id = #{parentId},
+          image_id = #{imageId},
+          url = #{url},
+          name_jp = #{nameJp},
+          name_en = #{nameEn},
+          name_ru = #{nameRu},
+          name_romaji = #{nameRomaji},
+          author = #{author},
+          illustrator = #{illustrator},
+          order_number = #{orderNumber},
+          banner_hidden = #{bannerHidden},
+          project_hidden = #{projectHidden},
+          onevolume = #{onevolume},
+          franchise = #{franchise},
+          annotation = #{annotation}
+        WHERE project_id = #{projectId}
+    </update>
+
     <resultMap type="ru.ruranobe.mybatis.tables.Project" id="ProjectResult">
         <id property="projectId" column="project_id"/>
         <result property="parentId" column="parent_id"/>
@@ -42,9 +63,9 @@
         <result property="author" column="author"/>
         <result property="illustrator" column="illustrator"/>
         <result property="orderNumber" column="order_number"/>
-        <result property="bannerHidden" column="banner_hidden"/>
-        <result property="projectHidden" column="project_hidden"/>
-        <result property="oneVolume" column="onevolume"/>
+        <result property="bannerHidden" column="banner_hidden" javaType="java.lang.Boolean"/>
+        <result property="projectHidden" column="project_hidden" javaType="java.lang.Boolean"/>
+        <result property="onevolume" column="onevolume" javaType="java.lang.Boolean"/>
         <result property="franchise" column="franchise"/>
         <result property="annotation" column="annotation"/>
     </resultMap>

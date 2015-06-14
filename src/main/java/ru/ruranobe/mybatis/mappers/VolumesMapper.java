@@ -4,6 +4,7 @@ import ru.ruranobe.mybatis.tables.ProjectInfo;
 import ru.ruranobe.mybatis.tables.Volume;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface VolumesMapper
 {
@@ -13,5 +14,5 @@ public interface VolumesMapper
 
     public ProjectInfo getInfoByProjectId(int projectId);
 
-    public Collection<Volume> getVolumesByProjectId(int projectId);
+    public List<Volume> getVolumesByProjectId(int projectId);
 }

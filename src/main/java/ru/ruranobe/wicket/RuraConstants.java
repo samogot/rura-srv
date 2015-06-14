@@ -50,6 +50,23 @@ public class RuraConstants
                     .put(RuraConstants.VOLUME_STATUS_DONE, "Завершен")
                     .build();
 
+    public static final Map<String, String> VOLUME_STATUS_FULL_TEXT_TO_STATUS =
+            new ImmutableMap.Builder<String, String>()
+                    .put("Скрыт", RuraConstants.VOLUME_STATUS_HIDDEN)
+                    .put("Заброшенный сторонний перевод", RuraConstants.VOLUME_STATUS_EXTERNAL_DROPPED)
+                    .put("Активный сторонний перевод", RuraConstants.VOLUME_STATUS_EXTERNAL_ACTIVE)
+                    .put("Завершенный сторонний перевод", RuraConstants.VOLUME_STATUS_EXTERNAL_DONE)
+                    .put("Отсутствует анлейт", RuraConstants.VOLUME_STATUS_NO_ENG)
+                    .put("Заморожен", RuraConstants.VOLUME_STATUS_FREEZE)
+                    .put("Приостановлен", RuraConstants.VOLUME_STATUS_ON_HOLD)
+                    .put("Очередь перевода", RuraConstants.VOLUME_STATUS_QUEUE)
+                    .put("Перевод в онгоинге", RuraConstants.VOLUME_STATUS_ONGOING)
+                    .put("Перевод", RuraConstants.VOLUME_STATUS_TRANSLATING)
+                    .put("Редактура", RuraConstants.VOLUME_STATUS_PROOFREAD)
+                    .put("Не оформлен", RuraConstants.VOLUME_STATUS_DECOR)
+                    .put("Завершен", RuraConstants.VOLUME_STATUS_DONE)
+                    .build();
+
     public static final String NO_COVER_IMAGE = "http://ruranobe.ru/w/images/thumb/a/ad/nopic.png/300px-nopic.png";
 
     private RuraConstants()

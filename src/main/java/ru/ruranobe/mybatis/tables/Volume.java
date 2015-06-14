@@ -49,6 +49,28 @@ public class Volume implements Serializable, PageRepresentable
     {
     }
 
+    public Volume(Volume toClone, Integer sequenceNumber)
+    {
+        this.projectId = toClone.projectId;
+        this.url = toClone.url;
+        this.nameFile = toClone.nameFile;
+        this.nameTitle = toClone.nameTitle;
+        this.nameJp = toClone.nameJp;
+        this.nameEn = toClone.nameEn;
+        this.nameRu = toClone.nameRu;
+        this.nameShort = toClone.nameShort;
+        this.sequenceNumber = sequenceNumber;
+        this.author = toClone.author;
+        this.illustrator = toClone.illustrator;
+        this.releaseDate = toClone.releaseDate;
+        this.isbn = toClone.isbn;
+        this.externalUrl = toClone.externalUrl;
+        this.annotation = toClone.annotation;
+        this.volumeStatus = toClone.volumeStatus;
+        this.volumeType = toClone.volumeType;
+        this.
+    }
+
     public Volume(Integer projectId, String url, String nameFile, String nameTitle,
                   String nameJp, String nameEn, String nameRu, String nameShort,
                   Integer sequenceNumber, String author, String illustrator, Date releaseDate,
@@ -398,6 +420,23 @@ public class Volume implements Serializable, PageRepresentable
         return volumeStatus.equals(RuraConstants.VOLUME_STATUS_EXTERNAL_ACTIVE)
                || volumeStatus.equals(RuraConstants.VOLUME_STATUS_EXTERNAL_DONE)
                || volumeStatus.equals(RuraConstants.VOLUME_STATUS_EXTERNAL_DROPPED);
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Volume volume = (Volume) o;
+
+        return volumeId != null && volumeId.equals(volume.volumeId);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return volumeId != null ? volumeId.hashCode() : 0;
     }
 
     public String getFullStatus()

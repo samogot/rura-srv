@@ -4,6 +4,7 @@ import ru.ruranobe.mybatis.mappers.ProjectsMapper;
 import ru.ruranobe.mybatis.tables.Project;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -44,7 +45,7 @@ public class ProjectsMapperCacheable implements ProjectsMapper
     }
 
     @Override
-    public Collection<Project> getSubProjectsByParentProjectId(Integer parentId)
+    public List<Project> getSubProjectsByParentProjectId(Integer parentId)
     {
         return mapper.getSubProjectsByParentProjectId(parentId);
     }

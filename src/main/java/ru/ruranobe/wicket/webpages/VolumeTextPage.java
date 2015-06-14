@@ -15,7 +15,6 @@ import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.mybatis.tables.Chapter;
 import ru.ruranobe.mybatis.tables.Text;
 import ru.ruranobe.mybatis.tables.Volume;
-import ru.ruranobe.wicket.components.CommentsPanel;
 import ru.ruranobe.wicket.components.ContentsHolder;
 import ru.ruranobe.wicket.components.sidebar.ContentsModule;
 import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
@@ -120,7 +119,7 @@ public class VolumeTextPage extends SidebarLayoutPage
         textHandler.setEscapeModelStrings(false);
         add(textHandler);
 
-        add(new CommentsPanel("comments"));
+
 
         sidebarModules.add(new UpdatesSidebarModule("sidebarModule", volume.getProjectId()));
         sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));

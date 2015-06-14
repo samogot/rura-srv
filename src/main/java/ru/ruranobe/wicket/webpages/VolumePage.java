@@ -20,13 +20,13 @@ import ru.ruranobe.mybatis.mappers.VolumeReleaseActivitiesMapper;
 import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.mybatis.tables.*;
-import ru.ruranobe.wicket.components.CommentsPanel;
 import ru.ruranobe.wicket.components.CoverCarousel;
 import ru.ruranobe.wicket.components.LabelHideableOnNull;
 import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.UpdatesSidebarModule;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
+import ru.ruranobe.mybatis.tables.Project;
 
 import java.io.Serializable;
 import java.util.AbstractMap.SimpleEntry;
@@ -265,7 +265,7 @@ public class VolumePage extends SidebarLayoutPage
 
 //        session.close();
 
-        add(new CommentsPanel("comments"));
+//        add(new CommentsPanel("comments"));
 
         sidebarModules.add(new UpdatesSidebarModule("sidebarModule", volume.getProjectId()));
         sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));

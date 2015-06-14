@@ -5,6 +5,7 @@ import ru.ruranobe.mybatis.tables.ProjectInfo;
 import ru.ruranobe.mybatis.tables.Volume;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class VolumesMapperCacheable implements VolumesMapper
@@ -41,7 +42,7 @@ public class VolumesMapperCacheable implements VolumesMapper
     }
 
     @Override
-    public Collection<Volume> getVolumesByProjectId(int projectId)
+    public List<Volume> getVolumesByProjectId(int projectId)
     {
         return mapper.getVolumesByProjectId(projectId);
     }

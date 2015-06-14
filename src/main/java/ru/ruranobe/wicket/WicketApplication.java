@@ -1,6 +1,7 @@
 package ru.ruranobe.wicket;
 
 import net.ftlines.wicketsource.WicketSource;
+import org.apache.log4j.PropertyConfigurator;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.core.request.mapper.MountedMapper;
@@ -57,6 +58,7 @@ public class WicketApplication extends AuthenticatedWebApplication
         mount(new MountedMapper("/user/email/activate", ActivateEmail.class));
         mount(new MountedMapper("/upload/image", UploadImage.class));
         mount(new MountedMapper("/a/${project}/${volume}", VolumeEdit.class));
+        mount(new MountedMapper("/a/${project}", ProjectEdit.class));
     }
 
     @Override

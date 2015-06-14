@@ -23,9 +23,9 @@ public class Project implements Serializable, PageRepresentable
     private String author;
     private String illustrator;
     private Integer orderNumber;
-    private boolean bannerHidden;
-    private boolean projectHidden;
-    private boolean oneVolume;
+    private Boolean bannerHidden;
+    private Boolean projectHidden;
+    private Boolean onevolume;
     private String franchise;
     private String annotation;
 
@@ -52,12 +52,12 @@ public class Project implements Serializable, PageRepresentable
 
     public PageParameters getUrlParameters()
     {
-        return oneVolume ? makeUrlParameters(url).set("volume", "v1") : makeUrlParameters(url);
+        return onevolume ? makeUrlParameters(url).set("volume", "v1") : makeUrlParameters(url);
     }
 
     public Class getLinkClass()
     {
-        return oneVolume ? VolumePage.class : ProjectPage.class;
+        return onevolume ? VolumePage.class : ProjectPage.class;
     }
 
     public String getAnnotation()
@@ -220,14 +220,14 @@ public class Project implements Serializable, PageRepresentable
         this.nameRomaji = nameRomaji;
     }
 
-    public boolean isOneVolume()
+    public boolean getOnevolume()
     {
-        return oneVolume;
+        return onevolume;
     }
 
-    public void setOneVolume(boolean oneVolume)
+    public void setOnevolume(boolean onevolume)
     {
-        this.oneVolume = oneVolume;
+        this.onevolume = onevolume;
     }
 
     @Override

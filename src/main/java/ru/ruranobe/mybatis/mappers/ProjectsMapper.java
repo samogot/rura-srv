@@ -3,6 +3,7 @@ package ru.ruranobe.mybatis.mappers;
 import ru.ruranobe.mybatis.tables.Project;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface ProjectsMapper
 {
@@ -10,7 +11,7 @@ public interface ProjectsMapper
 
     public Project getProjectByUrl(String url);
 
-    public Collection<Project> getSubProjectsByParentProjectId(Integer parentId);
+    public List<Project> getSubProjectsByParentProjectId(Integer parentId);
 
     public Collection<Project> getAllProjects();
 

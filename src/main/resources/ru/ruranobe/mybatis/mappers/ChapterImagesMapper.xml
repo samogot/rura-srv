@@ -4,15 +4,13 @@
 
 <mapper namespace="ru.ruranobe.mybatis.mappers.ChapterImagesMapper">
 
-    <cache type="org.mybatis.caches.ehcache.EhcacheCache">
+    <!--cache type="org.mybatis.caches.ehcache.EhcacheCache">
         <property name="timeToIdleSeconds" value="3600"/>
-        <!--1 hour-->
         <property name="timeToLiveSeconds" value="3600"/>
-        <!--1 hour-->
         <property name="maxEntriesLocalHeap" value="1000"/>
         <property name="maxEntriesLocalDisk" value="10000000"/>
         <property name="memoryStoreEvictionPolicy" value="LRU"/>
-    </cache>
+    </cache-->
 
     <select id="getChapterImagesByVolumeId" parameterType="int" resultMap="chapterImageMap">
         SELECT
