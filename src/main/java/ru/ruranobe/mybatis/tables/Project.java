@@ -45,6 +45,28 @@ public class Project implements Serializable, PageRepresentable
     {
     }
 
+    public static Project subProjectOf(Project project, Integer orderNumber, String projectTitle)
+    {
+        Project subProject = new Project();
+        subProject.setParentId(project.getProjectId());
+        subProject.setUrl(null);
+        subProject.setOrderNumber(orderNumber);
+        subProject.setTitle(projectTitle);
+        subProject.setBannerHidden(true);
+        subProject.setProjectHidden(false);
+        subProject.setAuthor(project.getAuthor());
+        subProject.setIllustrator(project.getIllustrator());
+        subProject.setAnnotation("");
+        subProject.setFranchise("");
+        subProject.setImageId(null);
+        subProject.setNameEn("");
+        subProject.setNameJp("");
+        subProject.setNameRomaji("");
+        subProject.setNameRu("");
+        subProject.setOnevolume(false);
+        return subProject;
+    }
+
     public static PageParameters makeUrlParameters(String url)
     {
         return new PageParameters().set("project", url);

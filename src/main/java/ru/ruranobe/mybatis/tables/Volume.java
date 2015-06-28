@@ -49,15 +49,22 @@ public class Volume implements Serializable, PageRepresentable
     {
     }
 
+
+
     public Volume(Volume toClone, Integer sequenceNumber)
     {
         this.projectId = toClone.projectId;
+        this.imageOne = toClone.imageOne;
+        this.imageTwo = toClone.imageTwo;
+        this.imageThree = toClone.imageThree;
+        this.imageFour = toClone.imageFour;
         this.url = toClone.url;
         this.nameFile = toClone.nameFile;
         this.nameTitle = toClone.nameTitle;
         this.nameJp = toClone.nameJp;
         this.nameEn = toClone.nameEn;
         this.nameRu = toClone.nameRu;
+        this.nameRomaji = toClone.nameRomaji;
         this.nameShort = toClone.nameShort;
         this.sequenceNumber = sequenceNumber;
         this.author = toClone.author;
@@ -68,7 +75,8 @@ public class Volume implements Serializable, PageRepresentable
         this.annotation = toClone.annotation;
         this.volumeStatus = toClone.volumeStatus;
         this.volumeType = toClone.volumeType;
-        this.
+        this.volumeStatusHint = toClone.volumeStatusHint;
+        this.adult = toClone.adult;
     }
 
     public Volume(Integer projectId, String url, String nameFile, String nameTitle,

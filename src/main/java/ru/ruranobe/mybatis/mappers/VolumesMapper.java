@@ -15,4 +15,10 @@ public interface VolumesMapper
     public ProjectInfo getInfoByProjectId(int projectId);
 
     public List<Volume> getVolumesByProjectId(int projectId);
+
+    public void updateVolume(Volume volume);
+
+    public int insertVolume(Volume volumre);
+
+    public void deleteVolume(Integer volumeId);
 }

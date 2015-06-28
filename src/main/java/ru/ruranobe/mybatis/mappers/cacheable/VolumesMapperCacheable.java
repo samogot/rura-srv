@@ -50,6 +50,25 @@ public class VolumesMapperCacheable implements VolumesMapper
     @Override
     public Volume getVolumeNextPrevByUrl(String url)
     {
+
         return mapper.getVolumeNextPrevByUrl(url);
+    }
+
+    @Override
+    public void updateVolume(Volume volume)
+    {
+        mapper.updateVolume(volume);
+    }
+
+    @Override
+    public int insertVolume(Volume volume)
+    {
+        return mapper.insertVolume(volume);
+    }
+
+    @Override
+    public void deleteVolume(Integer volumeId)
+    {
+        mapper.deleteVolume(volumeId);
     }
 }

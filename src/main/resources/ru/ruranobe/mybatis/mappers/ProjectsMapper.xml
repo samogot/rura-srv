@@ -30,6 +30,13 @@
         ORDER BY order_number;
     </select>
 
+    <insert id="insertProject" parameterType="ru.ruranobe.mybatis.tables.Project" keyProperty="projectId" useGeneratedKeys="true">
+        insert into projects (parent_id, image_id, url, name_jp, name_en, name_ru, name_romaji,
+        author, illustrator, order_number, banner_hidden, project_hidden, onevolume, franchise, annotation, title)
+        values (#{parentId}, #{imageId}, #{url}, #{nameJp}, #{nameEn}, #{nameRu}, #{nameRomaji}, #{author}, #{illustrator},
+         #{orderNumber}, #{bannerHidden}, #{projectHidden}, #{onevolume}, #{franchise}, #{annotation}, #{title})
+    </insert>
+
     <update id="updateProject" parameterType="ru.ruranobe.mybatis.tables.Project">
         UPDATE projects
         SET
@@ -50,6 +57,10 @@
           annotation = #{annotation}
         WHERE project_id = #{projectId}
     </update>
+
+    <delete id="deleteProject" parameterType="int">
+        DELETE FROM projects WHERE project_id = #{projectId}
+    </delete>
 
     <resultMap type="ru.ruranobe.mybatis.tables.Project" id="ProjectResult">
         <id property="projectId" column="project_id"/>

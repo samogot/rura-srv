@@ -1,11 +1,13 @@
 package ru.ruranobe.wicket.webpages;
 
-import com.google.common.collect.ImmutableMap;
+import com.mysql.jdbc.StringUtils;
+import org.json.*;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.basic.Label;
@@ -36,7 +38,7 @@ public class ProjectEdit extends AdminLayoutPage
 
     public ProjectEdit(final PageParameters parameters)
     {
-        final Project project = getProject(parameters);
+        project = getProject(parameters);
 
         if (project == null)
         {
@@ -60,6 +62,7 @@ public class ProjectEdit extends AdminLayoutPage
         final TextArea<String> annotation = new TextArea<String>("annotation");
         final FeedbackPanel updateProjectAjaxFeedback = new FeedbackPanel("updateProjectAjaxFeedback");
         updateProjectAjaxFeedback.setOutputMarkupId(true);
+        updateProjectAjaxFeedback.setFilter(new ContainerFeedbackMessageFilter(projectInfoForm));
         final AjaxButton updateProjectAjax = new AjaxButton("updateProjectAjax", projectInfoForm)
         {
             @Override
@@ -449,14 +452,109 @@ public class ProjectEdit extends AdminLayoutPage
                 }
             };
 
+            final FeedbackPanel updateVolumesAjaxFeedback = new FeedbackPanel("updateVolumesAjaxFeedback");
+            updateVolumesAjaxFeedback.setOutputMarkupId(true);
+            updateVolumesAjaxFeedback.setFilter(new ContainerFeedbackMessageFilter(volumesForm));
+
+            AjaxButton updateVolumesAjax = new AjaxButton("updateVolumesAjax", volumesForm)
+            {
+                @Override
+                protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+                {
+                    info("Данные были успешно обновлены.");
+                    SqlSession session = MybatisUtil.getSessionFactory().openSession();
+                    try
+                    {
+                        VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
+
+                        for (Volume volume : volumes)
+                        {
+                            if (volume.getVolumeId() != null)
+                            {
+                                // update
+                                volumesMapperCacheable.updateVolume(volume);
+                            }
+                            else
+                            {
+                                // insert
+                                volumesMapperCacheable.insertVolume(volume);
+                            }
+                        }
+
+                        for (Integer volumeId : deletedVolumeIds)
+                        {
+                            // delete
+                            volumesMapperCacheable.deleteVolume(volumeId);
+                        }
+
+                        session.commit();
+
+                        deletedVolumeIds.clear();
+
+                        target.add(updateVolumesAjaxFeedback);
+                    }
+                    finally
+                    {
+                        session.close();
+                    }
+                }
+
+                @Override
+                protected void onError(AjaxRequestTarget target, Form<?> form)
+                {
+                    error("Не удалось обновить данные.");
+                    target.add(updateVolumesAjaxFeedback);
+                }
+
+            };
+
             volumesForm.add(addVolume);
             volumesForm.add(deleteVolume);
             volumesForm.add(cloneVolume);
             volumesForm.add(volumeRepeater);
+            volumesForm.add(updateVolumesAjax);
+            volumesForm.add(updateVolumesAjaxFeedback);
 
             add(volumesForm);
 
-            //List<Project> subProjects = CachingFacade.getCacheableMapper(session, ProjectsMapper.class).getSubProjectsByParentProjectId(project.getProjectId());
+            subProjects = CachingFacade.getCacheableMapper(session, ProjectsMapper.class).getSubProjectsByParentProjectId(project.getProjectId());
+            for (Project subProject : subProjects)
+            {
+                projectIdToProject.put(subProject.getProjectId(), subProject);
+            }
+
+            ListView<Project> subProjectRepeater = new ListView<Project>("subProjectRepeater", subProjects)
+            {
+                @Override
+                protected void populateItem(ListItem<Project> listItem)
+                {
+                    final Project subProject = listItem.getModelObject();
+                    TextField<String> subProjectName = new TextField<String>("subProjectName", new Model<String>()
+                    {
+
+                        @Override
+                        public String getObject()
+                        {
+                            return subProject.getTitle();
+                        }
+
+                    });
+                    HiddenField<String> subProjectId = new HiddenField<String>("subProjectId", new Model<String>()
+                    {
+
+                        @Override
+                        public String getObject()
+                        {
+                            return subProject.getProjectId().toString();
+                        }
+
+                    });
+                    listItem.add(subProjectId);
+                    listItem.add(subProjectName);
+                }
+            };
+            subProjectRepeater.setOutputMarkupId(true);
+            add(subProjectRepeater);
         }
         finally
         {
@@ -465,20 +563,6 @@ public class ProjectEdit extends AdminLayoutPage
 
         add(new SubVolumesEditAjaxBehavior());
         add(new SubProjectsEditAjaxBehavior());
-    }
-
-    private Project getProject(final PageParameters parameters)
-    {
-        String projectUrl = parameters.get("project").toOptionalString();
-        SqlSession session = MybatisUtil.getSessionFactory().openSession();
-        try
-        {
-            return CachingFacade.getCacheableMapper(session, ProjectsMapper.class).getProjectByUrl(projectUrl);
-        }
-        finally
-        {
-            session.close();
-        }
     }
 
     private class VolumesForm extends Form<List<Volume>>
@@ -514,6 +598,7 @@ public class ProjectEdit extends AdminLayoutPage
         {
             if (selectedVolume != null)
             {
+                deletedVolumeIds.add(selectedVolume.getVolumeId());
                 volumes.remove(selectedVolume);
             }
             selectedVolume = null;
@@ -544,10 +629,11 @@ public class ProjectEdit extends AdminLayoutPage
         @Override
         public void renderHead(Component component, IHeaderResponse response)
         {
+            super.renderHead(component, response);
             String componentMarkupId = component.getMarkupId();
             String callbackUrl = getCallbackUrl().toString();
 
-            response.render(JavaScriptHeaderItem.forScript("var componentMarkupId1='" + componentMarkupId + "'; var callbackUrl1='" + callbackUrl + "';", "values"));
+            response.render(JavaScriptHeaderItem.forScript("var componentMarkupId1='" + componentMarkupId + "'; var callbackUrl1='" + callbackUrl + "';", "volumes"));
         }
     }
 
@@ -557,21 +643,111 @@ public class ProjectEdit extends AdminLayoutPage
         @Override
         protected void respond(final AjaxRequestTarget target)
         {
+            JSONArray jsonSubProjects = new JSONArray(getRequest().getRequestParameters().getParameterValue("subProjects").toOptionalString());
+            SqlSession session = MybatisUtil.getSessionFactory().openSession();
+            try
+            {
+                ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
+                Set<Integer> subProjectIds = new HashSet<Integer>();
+                for (int i = 0; i < jsonSubProjects.length(); ++i)
+                {
+                    JSONObject jsonSubProject = jsonSubProjects.getJSONObject(i);
+                    String projectTitle = jsonSubProject.getString("projectTitle");
 
+                    if (StringUtils.isEmptyOrWhitespaceOnly(projectTitle))
+                    {
+                        throw new RuntimeException("Неправильно задано название подпроекта - оно пустое или состоит только из пробелов.");
+                    }
+
+                    Integer orderNumber = jsonSubProject.getInt("orderNumber");
+                    Integer projectId = null;
+                    try
+                    {
+                        projectId = jsonSubProject.getInt("projectId");
+                    }
+                    catch (JSONException ex)
+                    {
+                        // projectId not found...
+                    }
+
+                    if (projectId != null)
+                    {
+                        subProjectIds.add(projectId);
+                    }
+
+                    Project subProject = projectIdToProject.get(projectId);
+                    if (subProject != null)
+                    {
+                        // update
+                        subProject.setOrderNumber(orderNumber);
+                        subProject.setTitle(projectTitle);
+                        projectsMapperCacheable.updateProject(subProject);
+                    }
+                    else
+                    {
+                        // insert
+                        subProject = Project.subProjectOf(project, orderNumber, projectTitle);
+                        projectsMapperCacheable.insertProject(subProject);
+                        subProjects.add(subProject);
+                    }
+                }
+
+                // delete
+                Set<Integer> deletedSubProjectIds = new HashSet<Integer>(projectIdToProject.keySet());
+                deletedSubProjectIds.removeAll(subProjectIds);
+                for (Integer deletedSubProjectId : deletedSubProjectIds)
+                {
+                    projectsMapperCacheable.deleteProject(deletedSubProjectId);
+                    subProjects.remove(projectIdToProject.get(deletedSubProjectId));
+                    projectIdToProject.remove(deletedSubProjectId);
+                }
+
+                projectIdToProject.clear();
+                for (Project subProject : subProjects)
+                {
+                    projectIdToProject.put(subProject.getProjectId(), subProject);
+                }
+
+                session.commit();
+            }
+            finally
+            {
+                session.close();
+            }
         }
+
 
         @Override
         public void renderHead(Component component, IHeaderResponse response)
         {
+            super.renderHead(component, response);
             String componentMarkupId = component.getMarkupId();
             String callbackUrl = getCallbackUrl().toString();
 
-            response.render(JavaScriptHeaderItem.forScript("var componentMarkupId2='" + componentMarkupId + "'; var callbackUrl2='" + callbackUrl + "';", "values"));
+            response.render(JavaScriptHeaderItem.forScript("var componentMarkupId2='" + componentMarkupId + "'; var callbackUrl2='" + callbackUrl + "';", "subProjects"));
         }
     }
 
+    private Project getProject(final PageParameters parameters)
+    {
+        String projectUrl = parameters.get("project").toOptionalString();
+        SqlSession session = MybatisUtil.getSessionFactory().openSession();
+        try
+        {
+            return CachingFacade.getCacheableMapper(session, ProjectsMapper.class).getProjectByUrl(projectUrl);
+        }
+        finally
+        {
+            session.close();
+        }
+    }
+
+    private final List<Project> subProjects;
     private final List<Volume> volumes;
     private final Map<Integer, Volume> volumeTableOrderNumberToVolume = new HashMap<Integer, Volume>();
+    private final Map<Integer, Project> projectIdToProject = new HashMap<Integer, Project>();
     private Volume selectedVolume;
+    private final Project project;
+    private final Set<Integer> deletedVolumeIds = new HashSet<Integer>();
     private static final long serialVersionUID = 1L;
 }
