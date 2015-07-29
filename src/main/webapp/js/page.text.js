@@ -1,3 +1,7 @@
+ $(document).ready(function() {
+        $(".fancybox").fancybox();
+ });
+
 /* AFFIX */
 function reinitAffix() {
     $(window).off('.affix')
@@ -23,7 +27,22 @@ $(document).ready(function() {
 /* AFFIX */
 
 /* ИНСТРУМЕНТЫ */
-$("#daynight").bootstrapSwitch();
+$('.daynight-button').on('click', function(e) {
+    if ($(this).children('.fa').hasClass('fa-sun-o')){
+        $('body').addClass("night");
+        saveSettings({
+            key: 'night',
+            item: true
+        });
+    } else {
+        $('body').removeClass("night");
+        saveSettings({
+            key: 'night',
+            item: false
+        });
+    }
+    $(this).children('.fa').toggleClass('fa-sun-o fa-moon-o');
+});
 $('.controlText .btn').hover(
     function() {
         $(this).children('.hint').show()
@@ -179,21 +198,6 @@ $('.options-button .pagecolor').click(function() {
         });
     }
 })
-$('#daynight').on('switchChange.bootstrapSwitch', function(event, state) {
-    if (state == true) {
-        $('body').addClass("night");
-        saveSettings({
-            key: 'night',
-            item: true
-        });
-    } else {
-        $('body').removeClass("night");
-        saveSettings({
-            key: 'night',
-            item: false
-        });
-    }
-});
 $("#fontslide").on("change mousemove", function() {
     var font = '';
     switch ($(this).val()) {
@@ -240,9 +244,8 @@ function loadSettings() {
     }
     if (localStorage.getItem("night") == "true") {
         $('body').addClass("night");
-        $('#daynight').bootstrapSwitch('state', true)
+        $('.daynight-button .fa').toggleClass('fa-sun-o fa-moon-o');
     } else {
-        $('#daynight').bootstrapSwitch('state', false)
         $('body').removeClass("night");
     }
     if (localStorage.getItem("fontsize")) {
@@ -437,3 +440,12 @@ function getOrphusParameters() {
         };
     }
     /* ОШИБКИ */
+
+
+
+/* ПРИМЕЧАНИЯ */
+$(".reference").popover({
+    trigger: 'hover',
+    title: 'Примечание',
+    placement: 'bottom'
+});
