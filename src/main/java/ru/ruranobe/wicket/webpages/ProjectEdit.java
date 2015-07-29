@@ -1,6 +1,19 @@
 package ru.ruranobe.wicket.webpages;
 
 import com.mysql.jdbc.StringUtils;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.wicket.behavior.AbstractAjaxBehavior;
+import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
+import org.apache.wicket.protocol.http.servlet.ServletWebResponse;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
+import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.request.resource.ByteArrayResource;
+import org.apache.wicket.request.resource.IResource;
 import org.json.*;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.wicket.Component;
@@ -17,7 +30,6 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
@@ -28,7 +40,15 @@ import ru.ruranobe.mybatis.tables.Project;
 import ru.ruranobe.mybatis.tables.Volume;
 import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
+import sun.misc.IOUtils;
 
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -523,6 +543,7 @@ public class ProjectEdit extends AdminLayoutPage
                 projectIdToProject.put(subProject.getProjectId(), subProject);
             }
 
+            subProjectForm = new Form("subProjectForm");
             ListView<Project> subProjectRepeater = new ListView<Project>("subProjectRepeater", subProjects)
             {
                 @Override
@@ -553,8 +574,9 @@ public class ProjectEdit extends AdminLayoutPage
                     listItem.add(subProjectName);
                 }
             };
+            subProjectForm.add(subProjectRepeater);
             subProjectRepeater.setOutputMarkupId(true);
-            add(subProjectRepeater);
+            add(subProjectForm);
         }
         finally
         {
@@ -563,6 +585,7 @@ public class ProjectEdit extends AdminLayoutPage
 
         add(new SubVolumesEditAjaxBehavior());
         add(new SubProjectsEditAjaxBehavior());
+        add(new ImageUploadAjaxBehaviour());
     }
 
     private class VolumesForm extends Form<List<Volume>>
@@ -714,6 +737,18 @@ public class ProjectEdit extends AdminLayoutPage
             {
                 session.close();
             }
+
+            Collections.sort(subProjects, new Comparator<Project>()
+            {
+                @Override
+                public int compare(Project o1, Project o2)
+                {
+                    return o1.getOrderNumber().compareTo(o2.getOrderNumber());
+                }
+            });
+
+            target.add(subProjectForm);
+            target.appendJavaScript("$('.list-group').listgroup();");
         }
 
 
@@ -725,6 +760,78 @@ public class ProjectEdit extends AdminLayoutPage
             String callbackUrl = getCallbackUrl().toString();
 
             response.render(JavaScriptHeaderItem.forScript("var componentMarkupId2='" + componentMarkupId + "'; var callbackUrl2='" + callbackUrl + "';", "subProjects"));
+        }
+    }
+
+    private class ImageUploadAjaxBehaviour extends AbstractDefaultAjaxBehavior
+    {
+        @Override
+        protected void respond(final AjaxRequestTarget target)
+        {
+            HttpServletRequest request = (HttpServletRequest) getRequest().getContainerRequest();
+            if (ServletFileUpload.isMultipartContent(request))
+            {
+                File beach = new File("C:/Users/Viktor/ljhfsd.jpg");
+                FileItemFactory factory = new DiskFileItemFactory();
+                ServletFileUpload upload = new ServletFileUpload(factory);
+                try
+                {
+                    String filename = null;
+                    List<FileItem> items = upload.parseRequest(request);
+                    for (FileItem item : items)
+                    {
+                        filename = filename == null ? item.getName() : null;
+                        item.write(beach);
+                    }
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.YYYY HH:mm:ss");
+
+                    JSONObject file = new JSONObject();
+                    file.put("url", beach.toPath().toAbsolutePath().toString());
+                    file.put("name", filename);
+                    file.put("ts", sdf.format(new Date()));
+                    file.put("id", new Integer(123));
+
+                    JSONArray files = new JSONArray();
+                    files.put(file);
+
+                    JSONObject responseString = new JSONObject();
+                    responseString.put("files", files);
+                }
+                catch (Exception ex)
+                {
+                    throw new RuntimeException(ex);
+                }
+
+            }
+            //target.add(subProjectForm);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.YYYY HH:mm:ss");
+
+            JSONObject file = new JSONObject();
+            file.put("url", "sdvdsfvds");
+            file.put("name", "dhfndgfmhj");
+            file.put("ts", sdf.format(new Date()));
+            file.put("id", new Integer(123));
+
+            JSONArray files = new JSONArray();
+            files.put(file);
+
+            JSONObject responseString = new JSONObject();
+            responseString.put("files", files);
+
+            IResource jsonResource = new ByteArrayResource("text/plain", responseString.toString().getBytes());
+            IRequestHandler requestHandler = new ResourceRequestHandler(jsonResource, null);
+            requestHandler.respond(getRequestCycle());
+        }
+
+        @Override
+        public void renderHead(Component component, IHeaderResponse response)
+        {
+            super.renderHead(component, response);
+            String componentMarkupId = component.getMarkupId();
+            String callbackUrl = getCallbackUrl().toString();
+
+            response.render(JavaScriptHeaderItem.forScript("var componentMarkupId3='" + componentMarkupId + "'; var callbackUrl3='" + callbackUrl + "';", "imageUpload"));
         }
     }
 
@@ -748,6 +855,7 @@ public class ProjectEdit extends AdminLayoutPage
     private final Map<Integer, Project> projectIdToProject = new HashMap<Integer, Project>();
     private Volume selectedVolume;
     private final Project project;
+    private final Form subProjectForm;
     private final Set<Integer> deletedVolumeIds = new HashSet<Integer>();
     private static final long serialVersionUID = 1L;
 }
