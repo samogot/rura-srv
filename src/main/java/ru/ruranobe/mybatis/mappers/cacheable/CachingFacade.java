@@ -19,6 +19,7 @@ public class CachingFacade
                     .put(VolumeReleaseActivitiesMapper.class, VolumeReleaseActivitiesMapperCacheable.class)
                     .put(TeamsMapper.class, TeamsMapperCacheable.class)
                     .put(ChaptersMapper.class, ChaptersMapperCacheable.class)
+                    .put(TeamMembersMapper.class, TeamMembersMapperCacheable.class)
                     .build();
 
     public static <T> T getCacheableMapper(SqlSession session, Class<T> mapperClass)

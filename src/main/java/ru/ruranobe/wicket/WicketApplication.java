@@ -7,6 +7,7 @@ import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.core.request.mapper.MountedMapper;
 import org.apache.wicket.core.util.file.WebApplicationPath;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.renderStrategy.AbstractHeaderRenderStrategy;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebResponse;
 import org.apache.wicket.request.Url;
@@ -47,6 +48,7 @@ public class WicketApplication extends AuthenticatedWebApplication
                 return null;
             }
         });
+
 
         getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
         getMarkupSettings().setDefaultMarkupEncoding("UTF-8");

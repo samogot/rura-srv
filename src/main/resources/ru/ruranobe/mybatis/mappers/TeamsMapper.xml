@@ -10,6 +10,26 @@
         WHERE team_id = #{memberId}
     </select>
 
+    <select id="getAllTeams" resultMap="TeamResult">
+        SELECT *
+        FROM teams
+        order by team_id asc
+    </select>
+
+    <insert id="insertTeam" parameterType="ru.ruranobe.mybatis.tables.Team" keyProperty="teamId" useGeneratedKeys="true">
+        insert into teams (team_name, team_website_link)
+        values (#{teamName}, #{teamWebsiteLink})
+    </insert>
+
+    <delete id="deleteTeam" parameterType="int">
+        delete from teams where team_id=#{teamId}
+    </delete>
+
+    <update id="updateTeam" parameterType="ru.ruranobe.mybatis.tables.Team">
+        update teams set team_name = #{teamName}, team_website_link=#{teamWebsiteLink}
+        where team_id=#{teamId}
+    </update>
+
     <resultMap type="ru.ruranobe.mybatis.tables.Team" id="TeamResult">
         <id property="teamId" column="team_id"/>
         <result property="teamName" column="team_name"/>

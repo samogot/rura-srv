@@ -267,4 +267,20 @@ public class Project implements Serializable, PageRepresentable
     {
         return franchise == null ? null : WikiParser.parseText(franchise);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Project project = (Project) o;
+
+        return projectId.equals(project.projectId);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return projectId.hashCode();
+    }
 }

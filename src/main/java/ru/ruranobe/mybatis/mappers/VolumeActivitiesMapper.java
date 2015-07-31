@@ -2,9 +2,13 @@ package ru.ruranobe.mybatis.mappers;
 
 import ru.ruranobe.mybatis.tables.VolumeActivity;
 
+import java.util.List;
+
 public interface VolumeActivitiesMapper
 {
     public VolumeActivity getVolumeActivityById(int activityId);
+
+    public List<VolumeActivity> getAllVolumeActivities();
 
     public void insertVolumeActivity(VolumeActivity volumeActivity);
 
