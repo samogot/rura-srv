@@ -1,5 +1,7 @@
 package ru.ruranobe.wicket;
 
+import com.google.common.collect.HashBiMap;
+import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableMap;
 
 import java.util.Map;
@@ -33,8 +35,8 @@ public class RuraConstants
     public static final String VOLUME_STATUS_PROOFREAD = "proofread";
     public static final String VOLUME_STATUS_DECOR = "decor";
     public static final String VOLUME_STATUS_DONE = "done";
-    public static final Map<String, String> VOLUME_STATUS_TO_FULL_TEXT =
-            new ImmutableMap.Builder<String, String>()
+    public static final ImmutableBiMap<String, String> VOLUME_STATUS_TO_FULL_TEXT =
+            new ImmutableBiMap.Builder<String, String>()
                     .put(RuraConstants.VOLUME_STATUS_HIDDEN, "Скрыт")
                     .put(RuraConstants.VOLUME_STATUS_EXTERNAL_DROPPED, "Заброшенный сторонний перевод")
                     .put(RuraConstants.VOLUME_STATUS_EXTERNAL_ACTIVE, "Активный сторонний перевод")
@@ -51,20 +53,22 @@ public class RuraConstants
                     .build();
 
     public static final Map<String, String> VOLUME_STATUS_FULL_TEXT_TO_STATUS =
+            VOLUME_STATUS_TO_FULL_TEXT.inverse();
+
+    public static final ImmutableMap<String, String> VOLUME_STATUS_TO_LABEL_TEXT =
             new ImmutableMap.Builder<String, String>()
-                    .put("Скрыт", RuraConstants.VOLUME_STATUS_HIDDEN)
-                    .put("Заброшенный сторонний перевод", RuraConstants.VOLUME_STATUS_EXTERNAL_DROPPED)
-                    .put("Активный сторонний перевод", RuraConstants.VOLUME_STATUS_EXTERNAL_ACTIVE)
-                    .put("Завершенный сторонний перевод", RuraConstants.VOLUME_STATUS_EXTERNAL_DONE)
-                    .put("Отсутствует анлейт", RuraConstants.VOLUME_STATUS_NO_ENG)
-                    .put("Заморожен", RuraConstants.VOLUME_STATUS_FREEZE)
-                    .put("Приостановлен", RuraConstants.VOLUME_STATUS_ON_HOLD)
-                    .put("Очередь перевода", RuraConstants.VOLUME_STATUS_QUEUE)
-                    .put("Перевод в онгоинге", RuraConstants.VOLUME_STATUS_ONGOING)
-                    .put("Перевод", RuraConstants.VOLUME_STATUS_TRANSLATING)
-                    .put("Редактура", RuraConstants.VOLUME_STATUS_PROOFREAD)
-                    .put("Не оформлен", RuraConstants.VOLUME_STATUS_DECOR)
-                    .put("Завершен", RuraConstants.VOLUME_STATUS_DONE)
+                    .put(RuraConstants.VOLUME_STATUS_EXTERNAL_DROPPED, "сторонний перевод")
+                    .put(RuraConstants.VOLUME_STATUS_EXTERNAL_ACTIVE, "сторонний перевод")
+                    .put(RuraConstants.VOLUME_STATUS_EXTERNAL_DONE, "сторонний перевод")
+                    .put(RuraConstants.VOLUME_STATUS_NO_ENG, "нет анлейта")
+                    .put(RuraConstants.VOLUME_STATUS_FREEZE, "заморожен")
+                    .put(RuraConstants.VOLUME_STATUS_ON_HOLD, "приостановлен")
+                    .put(RuraConstants.VOLUME_STATUS_QUEUE, "очередь")
+                    .put(RuraConstants.VOLUME_STATUS_ONGOING, "онгоинг")
+                    .put(RuraConstants.VOLUME_STATUS_TRANSLATING, "перевод")
+                    .put(RuraConstants.VOLUME_STATUS_PROOFREAD, "редакт")
+                    .put(RuraConstants.VOLUME_STATUS_DECOR, "не оформлен")
+                    .put(RuraConstants.VOLUME_STATUS_DONE, "завершен")
                     .build();
 
     public static final String NO_COVER_IMAGE = "http://ruranobe.ru/w/images/thumb/a/ad/nopic.png/300px-nopic.png";

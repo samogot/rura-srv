@@ -16,8 +16,7 @@
         SELECT
             chapter_id,
             volume_id,
-            non_colored_image_id,
-            colored_image_id,
+
             order_number,
             adult,
 
@@ -48,8 +47,8 @@
 
         <result property="chapterId" column="chapter_id"/>
         <result property="volumeId" column="volume_id"/>
-        <result property="nonColoredImageId" column="non_colored_image_id"/>
-        <result property="coloredImageId" column="colored_image_id"/>
+        <!--result property="nonColoredImageId" column="non_colored_image_id"/>
+        <result property="coloredImageId" column="colored_image_id"/-->
         <result property="orderNumber" column="order_number"/>
         <result property="adult" column="adult"/>
 
