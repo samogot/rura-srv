@@ -84,4 +84,12 @@ public class VolumeReleaseActivity implements Serializable
     {
         return memberName;
     }
+
+    public void setActivityName(String activityName) {
+        this.activityName = activityName;
+    }
+
+    public void setMemberName(String memberName) {
+        this.memberName = memberName;
+    }
 }

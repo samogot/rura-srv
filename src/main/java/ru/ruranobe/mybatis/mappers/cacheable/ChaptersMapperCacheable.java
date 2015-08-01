@@ -26,4 +26,19 @@ public class ChaptersMapperCacheable implements ChaptersMapper
     {
         return mapper.getChaptersByVolumeId(volumeId);
     }
+
+    @Override
+    public void insertChapter(Chapter chapter) {
+        mapper.insertChapter(chapter);
+    }
+
+    @Override
+    public void deleteChapter(int activityId) {
+        mapper.deleteChapter(activityId);
+    }
+
+    @Override
+    public void updateChapter(Chapter chapter) {
+        mapper.updateChapter(chapter);
+    }
 }
