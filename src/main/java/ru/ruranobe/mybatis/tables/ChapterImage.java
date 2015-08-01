@@ -6,6 +6,7 @@ public class ChapterImage implements Serializable
 {
 
     private static final long serialVersionUID = 2L;
+    private Integer chapterImageId;
     private Integer chapterId;
     private Integer volumeId;
     private ExternalResource coloredImage;
@@ -21,9 +22,10 @@ public class ChapterImage implements Serializable
     // presented as a reference to an entity. When we load ChapterImage we always load
     // images also. That's why I choose reference over id's. (Yet we don't have to alwasy
     // load chapter entity or volume entity...)
-    public ChapterImage(Integer chapterId, Integer volumeId, ExternalResource coloredImage,
+    public ChapterImage(Integer chapterImageId, Integer chapterId, Integer volumeId, ExternalResource coloredImage,
                         ExternalResource nonColoredImage, Integer orderNumber)
     {
+        this.chapterImageId = chapterImageId;
         this.chapterId = chapterId;
         this.volumeId = volumeId;
         this.coloredImage = coloredImage;
@@ -89,5 +91,13 @@ public class ChapterImage implements Serializable
     public void setAdult(Boolean adult)
     {
         this.adult = adult;
+    }
+
+    public Integer getChapterImageId() {
+        return chapterImageId;
+    }
+
+    public void setChapterImageId(Integer chapterImageId) {
+        this.chapterImageId = chapterImageId;
     }
 }

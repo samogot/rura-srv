@@ -39,12 +39,28 @@
         WHERE volume_id = #{volumeId}
     </select>
 
+    <insert id="insertChapterImage" parameterType="ru.ruranobe.mybatis.tables.ChapterImage" keyProperty="chapterImageId" useGeneratedKeys="true">
+        insert into chapter_images (volume_id, non_colored_image_id, colored_image_id, order_number, adult)
+        values (#{volumeId}, #{nonColoredImageId}, #{coloredImageId}, #{orderNumber}, #{adult})
+    </insert>
+
+    <delete id="deleteChapterImage" parameterType="int">
+        delete from chapter_images where chapter_image_id=#{chapterImageId}
+    </delete>
+
+    <update id="updateChapterImage" parameterType="ru.ruranobe.mybatis.tables.ChapterImage">
+        update chapter_images set volume_id = #{volumeId}, non_colored_image_id=#{nonColoredImageId},
+        colored_image_id=#{coloredImageId}, order_number=#{orderNumber}, adult=#{adult}
+        where activity_id=#{activityId}
+    </update>
+
     <resultMap id="chapterImageMap" type="ru.ruranobe.mybatis.tables.ChapterImage">
 
         <!--constructor>
             <idArg column="blog_id" javaType="int"/>
         </constructor-->
 
+        <result property="chapterImageId" column="chapter_image_id"/>
         <result property="chapterId" column="chapter_id"/>
         <result property="volumeId" column="volume_id"/>
         <!--result property="nonColoredImageId" column="non_colored_image_id"/>

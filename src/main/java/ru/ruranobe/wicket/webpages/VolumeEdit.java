@@ -26,18 +26,20 @@ import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
 import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
-import sun.java2d.pipe.SpanShapeRenderer;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class VolumeEdit extends AdminLayoutPage {
+public class VolumeEdit extends AdminLayoutPage
+{
 
-    public VolumeEdit(final PageParameters parameters) {
+    public VolumeEdit(final PageParameters parameters)
+    {
         String projectName = parameters.get("project").toOptionalString();
         String volumeName = parameters.get("volume").toOptionalString();
-        if (Strings.isEmpty(projectName) || Strings.isEmpty(volumeName)) {
+        if (Strings.isEmpty(projectName) || Strings.isEmpty(volumeName))
+        {
             throw RuranobeUtils.REDIRECT_TO_404;
         }
 
@@ -51,12 +53,14 @@ public class VolumeEdit extends AdminLayoutPage {
         List<TeamMember> teamMembers = null;
         List<Chapter> chapters = null;
         List<Update> updates = null;
+        List<ChapterImage> volumeImages = null;
         try
         {
             VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
             volume = volumesMapperCacheable.getVolumeByUrl(volumeUrl);
 
-            if (volume == null) {
+            if (volume == null)
+            {
                 throw RuranobeUtils.REDIRECT_TO_404;
             }
 
@@ -75,11 +79,11 @@ public class VolumeEdit extends AdminLayoutPage {
             UpdatesMapper updatesMapperCacheable = CachingFacade.getCacheableMapper(session, UpdatesMapper.class);
             updates = updatesMapperCacheable.getUpdatesByVolumeId(volume.getVolumeId());
 
-            ChapterImagesMapper chapterImagesMapperCacheable = CachingFacade.getCacheableMapper(session, ChapterImagesMapper.class);
-            List<ChapterImage> chapterImages = chapterImagesMapperCacheable.getChapterImagesByVolumeId(volume.getVolumeId());
-
             ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
             projects = Lists.newArrayList(projectsMapperCacheable.getAllProjects());
+
+            ChapterImagesMapper chapterImagesMapperCacheable = CachingFacade.getCacheableMapper(session, ChapterImagesMapper.class);
+            volumeImages = chapterImagesMapperCacheable.getChapterImagesByVolumeId(volume.getVolumeId());
         }
         finally
         {
@@ -90,9 +94,349 @@ public class VolumeEdit extends AdminLayoutPage {
         add(new VolumeReleaseActivityForm(volumeReleaseActivities, volume, activities, teamMembers));
         add(new ChaptersForm(chapters, volume));
         add(new UpdatesForm(updates, chapters, volume));
+        add(new ImagesForm(volumeImages, volume, chapters));
         /*sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
         sidebarModules.add(new FriendsSidebarModule("sidebarModule"));*/
     }
+
+    private static class ImagesForm extends Form
+    {
+        public ImagesForm(List<ChapterImage> volumeImages, Volume volumeVar, final List<Chapter> chapters)
+        {
+            super("imagesForm");
+
+            images = volumeImages;
+            volume = volumeVar;
+
+            /*for (Chapter chapter: chapters)
+            {
+                chapterNameToId.put(chapter.getTitle(), chapter.getChapterId());
+            }
+            chapterIdToName = chapterNameToId.inverse();*/
+
+            AjaxButton addImage = new AjaxButton("addImage", this)
+            {
+                @Override
+                protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+                {
+                    ChapterImage image = new ChapterImage();
+                    image.setVolumeId(volume.getVolumeId());
+                    image.setAdult(false);
+                    if (chapters.size() > 0)
+                    {
+                        image.setChapterId(chapters.get(0).getChapterId());
+                    }
+                    images.add(0, image);
+                    target.add(form);
+                    target.appendJavaScript("$('.list-group').listgroup();");
+                }
+            };
+            this.add(addImage);
+
+            final ListView<Chapter> imageChapterRepeater = new ListView<Chapter>("imageChapterRepeater", chapters)
+            {
+                @Override
+                protected void populateItem(ListItem<Chapter> item)
+                {
+                    int orderNumber = item.getIndex();
+                    Chapter chapter = item.getModelObject();
+
+                    WebMarkupContainer imageDataChapterId = new WebMarkupContainer("imageDataChapterId");
+                    AttributeAppender dataChapterId = new AttributeAppender("data-chapter-id", chapter.getChapterId());
+                    imageDataChapterId.add(dataChapterId);
+                    AttributeAppender value = new AttributeAppender("value", orderNumber);
+                    imageDataChapterId.add(value);
+                    item.add(imageDataChapterId);
+
+                    Label imageChapterName = new Label("imageChapterName", chapter.getTitle());
+                    imageDataChapterId.add(imageChapterName);
+
+                    List<ChapterImage> chapterImages = new ArrayList<ChapterImage>();
+                    for (ChapterImage image : images)
+                    {
+                        if (image.getChapterId().equals(chapter.getChapterId()))
+                        {
+                            chapterImages.add(image);
+                        }
+                    }
+
+                    final ListView<ChapterImage> imageInfoRepeater = new ListView<ChapterImage>("imageInfoRepeater", chapterImages)
+                    {
+                        @Override
+                        protected void populateItem(ListItem<ChapterImage> item)
+                        {
+                            int orderNumber = item.getIndex();
+                            String generatedImageId = "image" + Integer.toString(orderNumber);
+
+                            WebMarkupContainer visibilityController = new WebMarkupContainer("imageVisibilityController");
+                            AttributeAppender addHref = new AttributeAppender("href", "#"+generatedImageId);
+                            visibilityController.add(addHref);
+                            AttributeAppender addAriaControls = new AttributeAppender("aria-controls", generatedImageId);
+                            visibilityController.add(addAriaControls);
+
+                            ChapterImage image = item.getModelObject();
+
+                            ExternalResource nonColoredImage = image.getNonColoredImage();
+                            ExternalResource coloredImage = image.getColoredImage();
+                            String url = "";
+                            Date date = null;
+                            if (nonColoredImage!=null)
+                            {
+                                url = nonColoredImage.getUrl();
+                                date = nonColoredImage.getUploadedWhen();
+                            }
+                            if (coloredImage!= null)
+                            {
+                                if (Strings.isEmpty(url))
+                                {
+                                    url = coloredImage.getUrl();
+                                }
+                                if (date == null)
+                                {
+                                    date = coloredImage.getUploadedWhen();
+                                }
+                            }
+                            if (date == null)
+                            {
+                                date = new Date();
+                            }
+
+                            WebMarkupContainer imageUrl = new WebMarkupContainer("imageUrl");
+                            AttributeAppender addSrc = new AttributeAppender("src", url);
+                            imageUrl.add(addSrc);
+                            visibilityController.add(imageUrl);
+
+                            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.YYYY");
+                            Label imageUploadDate = new Label("imageUploadDate", sdf.format(date));
+                            visibilityController.add(imageUploadDate);
+
+                            item.add(visibilityController);
+                        }
+                    };
+                    item.add(imageInfoRepeater);
+                }
+            };
+            this.add(imageChapterRepeater);
+
+            final ListView<ChapterImage> imageRepeater = new ListView<ChapterImage>("imageRepeater", images)
+            {
+                @Override
+                protected void populateItem(ListItem<ChapterImage> item)
+                {
+                    int orderNumber = item.getIndex();
+                    String generatedImageId = "image" + Integer.toString(orderNumber);
+
+                    WebMarkupContainer imageDiv = new WebMarkupContainer("imageDiv");
+                    imageDiv.setOutputMarkupId(true);
+                    imageDiv.setMarkupId(generatedImageId);
+
+                    final ChapterImage image = item.getModelObject();
+
+                    HiddenField<Integer> imageId = new HiddenField<Integer>("imageId", new Model<Integer>()
+                    {
+                        @Override
+                        public Integer getObject()
+                        {
+                            return image.getChapterImageId();
+                        }
+                    });
+                    imageId.setOutputMarkupId(true);
+                    imageId.setMarkupId(generatedImageId + "_id");
+                    imageDiv.add(imageId);
+
+                    HiddenField<String> imageOrder = new HiddenField<String>("imageOrder", new Model<String>()
+                    {
+
+                        @Override
+                        public void setObject(String orderNumber)
+                        {
+                            image.setOrderNumber(Integer.parseInt(orderNumber));
+                        }
+                    });
+                    imageOrder.setOutputMarkupId(true);
+                    imageOrder.setMarkupId(generatedImageId + "_order");
+                    imageDiv.add(imageOrder);
+
+                    HiddenField<String> imageChapterId = new HiddenField<String>("imageChapterId", new Model<String>()
+                    {
+                        @Override
+                        public String getObject()
+                        {
+                            return Integer.toString(image.getChapterId());
+                        }
+
+                        @Override
+                        public void setObject(String chapterId)
+                        {
+                            image.setChapterId(Integer.parseInt(chapterId));
+                        }
+                    });
+                    imageChapterId.setOutputMarkupId(true);
+                    imageChapterId.setMarkupId(generatedImageId + "_chapter_id");
+                    imageDiv.add(imageChapterId);
+
+                    HiddenField<String> imageDeleted = new HiddenField<String>("imageDeleted", new Model<String>()
+                    {
+
+                        @Override
+                        public void setObject(String object)
+                        {
+                            Boolean value = Boolean.valueOf(object);
+                            if (value)
+                            {
+                                deletedImages.add(image.getChapterImageId());
+                            }
+                        }
+                    });
+                    imageDeleted.setOutputMarkupId(true);
+                    imageDeleted.setMarkupId(generatedImageId + "_delete");
+                    imageDiv.add(imageDeleted);
+
+                    final ExternalResource nonColoredImage = image.getNonColoredImage();
+
+                    WebMarkupContainer imageNonColoredUrl = new WebMarkupContainer("imageNonColoredUrl");
+                    Label imageNonColoredUploadDate = new Label("imageNonColoredUploadDate","");
+                    Label imageNonColoredFileName = new Label("imageNonColoredFileName","");
+                    if (nonColoredImage == null)
+                    {
+                        imageNonColoredUrl.setVisible(false);
+                        imageNonColoredUploadDate.setVisible(false);
+                        imageNonColoredFileName.setVisible(false);
+                    }
+                    else
+                    {
+                        AttributeAppender addSrc = new AttributeAppender("src", nonColoredImage.getUrl());
+                        imageNonColoredUrl.add(addSrc);
+
+                        imageNonColoredUploadDate = new Label("imageNonColoredUploadDate",
+                                new Model<String>()
+                                {
+                                    @Override
+                                    public String getObject()
+                                    {
+                                        return sdf.format(nonColoredImage.getUploadedWhen());
+                                    }
+
+                                    private final SimpleDateFormat sdf = new SimpleDateFormat("MM.dd.YYYY HH:mm:ss");
+                                }
+                        );
+
+                        imageNonColoredFileName = new Label("imageNonColoredFileName", Model.of(nonColoredImage.getTitle()));
+                    }
+                    imageDiv.add(imageNonColoredUrl);
+                    imageDiv.add(imageNonColoredUploadDate);
+                    imageDiv.add(imageNonColoredFileName);
+
+                    final ExternalResource coloredImage = image.getColoredImage();
+
+                    WebMarkupContainer imageColoredUrl = new WebMarkupContainer("imageColoredUrl");
+                    Label imageColoredUploadDate = new Label("imageColoredUploadDate","");
+                    Label imageColoredFileName = new Label("imageColoredFileName","");
+                    if (coloredImage == null)
+                    {
+                        imageColoredUrl.setVisible(false);
+                        imageColoredUploadDate.setVisible(false);
+                        imageColoredFileName.setVisible(false);
+                    }
+                    else
+                    {
+                        AttributeAppender addSrc = new AttributeAppender("src", coloredImage.getUrl());
+                        imageColoredUrl.add(addSrc);
+
+                        imageColoredUploadDate = new Label("imageColoredUploadDate",
+                                new Model<String>()
+                                {
+                                    @Override
+                                    public String getObject()
+                                    {
+                                        return sdf.format(coloredImage.getUploadedWhen());
+                                    }
+
+                                    private final SimpleDateFormat sdf = new SimpleDateFormat("MM.dd.YYYY HH:mm:ss");
+                                }
+                        );
+
+                        imageColoredFileName = new Label("imageColoredFileName", Model.of(coloredImage.getTitle()));
+                    }
+                    imageDiv.add(imageColoredUrl);
+                    imageDiv.add(imageColoredUploadDate);
+                    imageDiv.add(imageColoredFileName);
+
+                    item.add(imageDiv);
+                }
+            };
+            this.add(imageRepeater);
+
+            AjaxButton updateImagesAjax = new AjaxButton("updateImagesAjax", this)
+            {
+                @Override
+                protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+                {
+                    SqlSession session = MybatisUtil.getSessionFactory().openSession();
+                    try
+                    {
+                        ChapterImagesMapper chapterImagesMapperCacheable = CachingFacade.getCacheableMapper(session, ChapterImagesMapper.class);
+                        String exceptionText = validateData();
+                        if (!Strings.isEmpty(exceptionText))
+                        {
+                            target.appendJavaScript("alert('" + exceptionText + "')");
+                        }
+                        else
+                        {
+                            for (ChapterImage image : images)
+                            {
+                                if (image.getChapterImageId() != null)
+                                {
+                                    // update
+                                    chapterImagesMapperCacheable.updateChapterImage(image);
+                                }
+                                else
+                                {
+                                    // insert
+                                    chapterImagesMapperCacheable.insertChapterImage(image);
+                                }
+                            }
+
+                            for (Integer imageId : deletedImages)
+                            {
+                                // delete
+                                chapterImagesMapperCacheable.deleteChapterImage(imageId);
+                            }
+
+                            session.commit();
+                        }
+                    }
+                    finally
+                    {
+                        session.close();
+                    }
+
+                    deletedImages.clear();
+                }
+            };
+            this.add(updateImagesAjax);
+        }
+
+        private String validateData()
+        {
+            String exceptionText = null;
+            for (ChapterImage image : images)
+            {
+                if (image.getNonColoredImage() == null && image.getColoredImage() == null)
+                {
+                    exceptionText = "Для одной из картинок не указан ни покрас ни база";
+                }
+            }
+            return exceptionText;
+        }
+
+        /*private final BiMap <String, Integer> chapterNameToId = HashBiMap.create();
+        private final Map <Integer, String> chapterIdToName;*/
+        private final List<ChapterImage> images;
+        private final Set<Integer> deletedImages = new HashSet<Integer>();
+        private final Volume volume;
+    }
+
 
     private static class UpdatesForm extends Form
     {
