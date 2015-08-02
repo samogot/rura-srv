@@ -3,11 +3,19 @@ package ru.ruranobe.wicket.webpages;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
@@ -15,8 +23,14 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.ByteArrayResource;
+import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.util.string.Strings;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.*;
@@ -27,6 +41,8 @@ import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
 import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -94,19 +110,90 @@ public class VolumeEdit extends AdminLayoutPage
         add(new VolumeReleaseActivityForm(volumeReleaseActivities, volume, activities, teamMembers));
         add(new ChaptersForm(chapters, volume));
         add(new UpdatesForm(updates, chapters, volume));
-        add(new ImagesForm(volumeImages, volume, chapters));
+        ImagesForm imagesForm = new ImagesForm(volumeImages, volume, chapters);
+        imagesForm.setOutputMarkupId(true);
+        add(imagesForm);
+        add(new ImageUploadAjaxBehavior(imagesForm));
         /*sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
         sidebarModules.add(new FriendsSidebarModule("sidebarModule"));*/
     }
 
+    private class ImageUploadAjaxBehavior extends AbstractDefaultAjaxBehavior
+    {
+        public ImageUploadAjaxBehavior(ImagesForm imagesForm)
+        {
+            super();
+            this.imagesForm = imagesForm;
+        }
+
+        @Override
+        protected void respond(final AjaxRequestTarget target)
+        {
+            HttpServletRequest request = (HttpServletRequest) getRequest().getContainerRequest();
+            if (ServletFileUpload.isMultipartContent(request))
+            {
+                /* Upload somewhere... */
+                /*File beach = new File("");
+                FileItemFactory factory = new DiskFileItemFactory();
+                ServletFileUpload upload = new ServletFileUpload(factory);
+                try
+                {
+                    String filename = null;
+                    List<FileItem> items = upload.parseRequest(request);
+                    for (FileItem item : items)
+                    {
+                        filename = filename == null ? item.getName() : null;
+                        item.write(beach);
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }*/
+            }
+            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.YYYY HH:mm:ss");
+
+            JSONObject file = new JSONObject();
+            file.put("url", "sdvdsfvds");
+            file.put("name", "dhfndgfmhj");
+            file.put("ts", sdf.format(new Date()));
+            file.put("id", new Integer(123));
+
+            JSONArray files = new JSONArray();
+            files.put(file);
+
+            JSONObject responseString = new JSONObject();
+            responseString.put("files", files);
+
+            IResource jsonResource = new ByteArrayResource("text/plain", responseString.toString().getBytes());
+            IRequestHandler requestHandler = new ResourceRequestHandler(jsonResource, null);
+            requestHandler.respond(getRequestCycle());
+
+            //target.add(imagesForm);
+            //imagesForm.addImage("", target);
+        }
+
+        @Override
+        public void renderHead(Component component, IHeaderResponse response)
+        {
+            super.renderHead(component, response);
+            String callbackUrl = getCallbackUrl().toString();
+            response.render(JavaScriptHeaderItem.forScript("var addImageCallbackUrl='" + callbackUrl + "';", "imageUpload"));
+        }
+
+        public final ImagesForm imagesForm;
+    }
+
+
     private static class ImagesForm extends Form
     {
-        public ImagesForm(List<ChapterImage> volumeImages, Volume volumeVar, final List<Chapter> chapters)
+        public ImagesForm(List<ChapterImage> volumeImages, Volume volumeVar, final List<Chapter> chaptersVar)
         {
             super("imagesForm");
 
             images = volumeImages;
             volume = volumeVar;
+            chapters = chaptersVar;
 
             /*for (Chapter chapter: chapters)
             {
@@ -114,7 +201,7 @@ public class VolumeEdit extends AdminLayoutPage
             }
             chapterIdToName = chapterNameToId.inverse();*/
 
-            AjaxButton addImage = new AjaxButton("addImage", this)
+            /*AjaxButton addImage = new AjaxButton("addImage", this)
             {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form)
@@ -131,7 +218,7 @@ public class VolumeEdit extends AdminLayoutPage
                     target.appendJavaScript("$('.list-group').listgroup();");
                 }
             };
-            this.add(addImage);
+            this.add(addImage);*/
 
             final ListView<Chapter> imageChapterRepeater = new ListView<Chapter>("imageChapterRepeater", chapters)
             {
@@ -430,8 +517,23 @@ public class VolumeEdit extends AdminLayoutPage
             return exceptionText;
         }
 
+        public void addImage(String url, final AjaxRequestTarget target)
+        {
+            ChapterImage image = new ChapterImage();
+            image.setVolumeId(volume.getVolumeId());
+            image.setAdult(false);
+            if (chapters.size() > 0)
+            {
+                image.setChapterId(chapters.get(0).getChapterId());
+            }
+            images.add(0, image);
+            target.add(this);
+            target.appendJavaScript("$('.list-group').listgroup();");
+        }
+
         /*private final BiMap <String, Integer> chapterNameToId = HashBiMap.create();
         private final Map <Integer, String> chapterIdToName;*/
+        private final List<Chapter> chapters;
         private final List<ChapterImage> images;
         private final Set<Integer> deletedImages = new HashSet<Integer>();
         private final Volume volume;

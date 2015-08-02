@@ -323,7 +323,7 @@
                     <div class="admin-header">
                         <span>Изображения</span>
                         <div class="btn-group" role="group" aria-label="Панель изображений">
-                            <button wicket:id="addImage" type="button" class="btn btn-success" title="Добавить новые изображения" id="btn-image-add"><i class="fa fa-plus"></i>
+                            <button type="button" class="btn btn-success" title="Добавить новые изображения" id="btn-image-add"><i class="fa fa-plus"></i>
                                 <input type="file" class='fileupload' multiple>
                             </button>
                             <button type="button" class="btn btn-default btn-border" title="Режим замены изображений" id="btn-image-replace-main"><i class="fa fa-retweet"></i>
@@ -1127,7 +1127,7 @@
             $('.btn-image-replace').each(function(){
                 var $this = $(this);
                 $(this).fileupload({
-                    url: callbackUrl3,
+                    url: addImageCallbackUrl,
                     headers: {'Wicket-Ajax': true, 'Wicket-Ajax-BaseURL': 'a/sao?0', 'Accept': 'application/json'},
                     dataType: 'json',
                     formData: {
@@ -1189,7 +1189,7 @@
 
         // настраиваем jQuery File Upload для кнопки добавить или затягивания файла на список иллюстраций
         $('#btn-image-add').fileupload({
-            url: callbackUrl3,
+            url: addImageCallbackUrl,
             headers: {'Wicket-Ajax': true, 'Wicket-Ajax-BaseURL': 'a/sao?0', 'Accept': 'application/json'},
             dataType: 'json',
             formData: {ctype: 'main'},
