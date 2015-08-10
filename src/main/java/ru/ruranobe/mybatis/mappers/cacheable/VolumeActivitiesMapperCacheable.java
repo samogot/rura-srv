@@ -3,6 +3,8 @@ package ru.ruranobe.mybatis.mappers.cacheable;
 import ru.ruranobe.mybatis.mappers.VolumeActivitiesMapper;
 import ru.ruranobe.mybatis.tables.VolumeActivity;
 
+import java.util.List;
+
 public class VolumeActivitiesMapperCacheable implements VolumeActivitiesMapper
 {
     private VolumeActivitiesMapper mapper;
@@ -16,6 +18,11 @@ public class VolumeActivitiesMapperCacheable implements VolumeActivitiesMapper
     public VolumeActivity getVolumeActivityById(int activityId)
     {
         return mapper.getVolumeActivityById(activityId);
+    }
+
+    @Override
+    public List<VolumeActivity> getAllVolumeActivities() {
+        return mapper.getAllVolumeActivities();
     }
 
     @Override

@@ -135,6 +135,7 @@ CREATE TABLE chapters
 
 CREATE TABLE chapter_images
 (
+  chapter_image_id INT(11) PRIMARY KEY AUTO_INCREMENT,
   chapter_id           INT(11),
   volume_id            INT(11) NOT NULL,
   --  image_id int(11), NOT NULL

@@ -1,11 +1,13 @@
 package ru.ruranobe.wicket.webpages;
 
+import com.google.common.collect.ImmutableMap;
 import com.mysql.jdbc.StringUtils;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.protocol.http.servlet.ServletWebResponse;
@@ -31,11 +33,17 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import ru.ruranobe.config.ApplicationContext;
+import ru.ruranobe.config.ConfigurationManager;
+import ru.ruranobe.engine.Webpage;
+import ru.ruranobe.engine.image.ImageServices;
+import ru.ruranobe.engine.image.RuraImage;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.ProjectsMapper;
 import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
+import ru.ruranobe.mybatis.tables.ExternalResource;
 import ru.ruranobe.mybatis.tables.Project;
 import ru.ruranobe.mybatis.tables.Volume;
 import ru.ruranobe.wicket.RuraConstants;
@@ -771,57 +779,67 @@ public class ProjectEdit extends AdminLayoutPage
             HttpServletRequest request = (HttpServletRequest) getRequest().getContainerRequest();
             if (ServletFileUpload.isMultipartContent(request))
             {
-                File beach = new File("C:/Users/Viktor/ljhfsd.jpg");
-                FileItemFactory factory = new DiskFileItemFactory();
-                ServletFileUpload upload = new ServletFileUpload(factory);
+                File imageTempFile;
                 try
                 {
-                    String filename = null;
+                    imageTempFile = File.createTempFile("ruranobe-image_temp", ".tmp");
+                }
+                catch (IOException ex)
+                {
+                    throw new RuntimeException("Unable to create temp file during image upload", ex);
+                }
+
+                FileItemFactory factory = new DiskFileItemFactory();
+                ServletFileUpload upload = new ServletFileUpload(factory);
+                String uploadingFileExtension = null;
+                String filename = null;
+                try
+                {
                     List<FileItem> items = upload.parseRequest(request);
                     for (FileItem item : items)
                     {
                         filename = filename == null ? item.getName() : null;
-                        item.write(beach);
+                        uploadingFileExtension = FilenameUtils.getExtension(filename);
+                        item.write(imageTempFile);
                     }
-
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.YYYY HH:mm:ss");
-
-                    JSONObject file = new JSONObject();
-                    file.put("url", beach.toPath().toAbsolutePath().toString());
-                    file.put("name", filename);
-                    file.put("ts", sdf.format(new Date()));
-                    file.put("id", new Integer(123));
-
-                    JSONArray files = new JSONArray();
-                    files.put(file);
-
-                    JSONObject responseString = new JSONObject();
-                    responseString.put("files", files);
                 }
                 catch (Exception ex)
                 {
-                    throw new RuntimeException(ex);
+                    throw new RuntimeException("Unable to write uploading image to temp file", ex);
                 }
 
+                ApplicationContext context = RuranobeUtils.getApplicationContext();
+                Webpage webpage = context.getWebpageByPageClass(this.getClass().getName());
+                if (webpage == null)
+                {
+                    webpage = context.getWebpageByPageClass(ProjectEdit.class.getName());
+                }
+                Map<String, String> pageContextVariables = new ImmutableMap.Builder<String, String>()
+                        .put("project", project.getTitle())
+                        .build();
+                RuraImage image = new RuraImage(imageTempFile, uploadingFileExtension, filename);
+                List<ExternalResource> externalResources = ImageServices.uploadImage(image, webpage.getImageStorages(), pageContextVariables);
+                ExternalResource externalResource = externalResources.iterator().next();
+                project.setImageId(externalResource.getResourceId());
+                imageTempFile.delete();
+
+                SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.YYYY HH:mm:ss");
+                JSONObject file = new JSONObject();
+                file.put("url", externalResource.getUrl());
+                file.put("name", filename);
+                file.put("ts", sdf.format(externalResource.getUploadedWhen()));
+                file.put("id", externalResource.getResourceId());
+
+                JSONArray files = new JSONArray();
+                files.put(file);
+
+                JSONObject responseString = new JSONObject();
+                responseString.put("files", files);
+
+                IResource jsonResource = new ByteArrayResource("text/plain", responseString.toString().getBytes());
+                IRequestHandler requestHandler = new ResourceRequestHandler(jsonResource, null);
+                requestHandler.respond(getRequestCycle());
             }
-            //target.add(subProjectForm);
-            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.YYYY HH:mm:ss");
-
-            JSONObject file = new JSONObject();
-            file.put("url", "sdvdsfvds");
-            file.put("name", "dhfndgfmhj");
-            file.put("ts", sdf.format(new Date()));
-            file.put("id", new Integer(123));
-
-            JSONArray files = new JSONArray();
-            files.put(file);
-
-            JSONObject responseString = new JSONObject();
-            responseString.put("files", files);
-
-            IResource jsonResource = new ByteArrayResource("text/plain", responseString.toString().getBytes());
-            IRequestHandler requestHandler = new ResourceRequestHandler(jsonResource, null);
-            requestHandler.respond(getRequestCycle());
         }
 
         @Override

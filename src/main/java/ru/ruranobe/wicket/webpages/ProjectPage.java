@@ -34,21 +34,6 @@ public class ProjectPage extends SidebarLayoutPage
 {
     private static final RedirectToUrlException REDIRECT_TO_404 = new RedirectToUrlException("http://404");
     private static final ArrayList<String> DISPLAYABLE_NAMES = Lists.newArrayList("Ранобэ", "Побочные истории", "Авторские додзинси", "Другое");
-    private static final Map<String, String> VOLUME_STATUS_LABEL_TEXT =
-            new ImmutableMap.Builder<String, String>()
-                    .put(RuraConstants.VOLUME_STATUS_EXTERNAL_DROPPED, "сторонний перевод")
-                    .put(RuraConstants.VOLUME_STATUS_EXTERNAL_ACTIVE, "сторонний перевод")
-                    .put(RuraConstants.VOLUME_STATUS_EXTERNAL_DONE, "сторонний перевод")
-                    .put(RuraConstants.VOLUME_STATUS_NO_ENG, "нет анлейта")
-                    .put(RuraConstants.VOLUME_STATUS_FREEZE, "заморожен")
-                    .put(RuraConstants.VOLUME_STATUS_ON_HOLD, "приостановлен")
-                    .put(RuraConstants.VOLUME_STATUS_QUEUE, "очередь")
-                    .put(RuraConstants.VOLUME_STATUS_ONGOING, "онгоинг")
-                    .put(RuraConstants.VOLUME_STATUS_TRANSLATING, "перевод")
-                    .put(RuraConstants.VOLUME_STATUS_PROOFREAD, "редакт")
-                    .put(RuraConstants.VOLUME_STATUS_DECOR, "не оформлен")
-                    .put(RuraConstants.VOLUME_STATUS_DONE, "завершен")
-                    .build();
     private static final Map<String, String> VOLUME_STATUS_LABEL_COLOR_CLASS =
             new ImmutableMap.Builder<String, String>()
                     .put(RuraConstants.VOLUME_STATUS_EXTERNAL_DROPPED, "danger")
@@ -241,7 +226,8 @@ public class ProjectPage extends SidebarLayoutPage
                                 }
                                 listItem3.add(volumeName);
                                 String volumeStatusStr = volume.getVolumeStatus();
-                                Label volumeStatus = new Label("volumeStatus", VOLUME_STATUS_LABEL_TEXT.get(volumeStatusStr));
+                                Label volumeStatus = new Label("volumeStatus",
+                                        RuraConstants.VOLUME_STATUS_TO_LABEL_TEXT.get(volumeStatusStr));
                                 volumeStatus.add(new AttributeAppender("class", " label-" + VOLUME_STATUS_LABEL_COLOR_CLASS.get(volumeStatusStr)));
                                 listItem3.add(volumeStatus);
                                 if (volumeStatusStr.equals(RuraConstants.VOLUME_STATUS_HIDDEN))

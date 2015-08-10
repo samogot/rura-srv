@@ -1,16 +1,30 @@
-package ru.ruranobe.engine.image;
+package ru.ruranobe.engine.files;
 
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
+import org.apache.wicket.util.string.Strings;
+import ru.ruranobe.engine.files.FileStorageService;
+import ru.ruranobe.engine.files.StorageService;
+import ru.ruranobe.engine.image.ImageStorage;
+import ru.ruranobe.engine.image.RuraImage;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
-public class YandexDiskUtils
+public class YandexDiskService
 {
-    public static Image uploadFile(Image image)
+
+    public static void initializeService(FileStorageService fileStorageService)
+    {
+        if (Strings.isEmpty(fileStorageService.getAccessToken()))
+        {
+            throw new IllegalArgumentException("AccessToken is required for YandexDisk. Correct configuration file.");
+        }
+        YANDEX_DISK_ACCESS_TOKEN = fileStorageService.getAccessToken();
+    }
+
+    public static RuraImage uploadFile(RuraImage image, ImageStorage storage)
     {
         DataOutputStream out = null;
         try
@@ -22,7 +36,7 @@ public class YandexDiskUtils
             connection.setRequestMethod("PUT");
             out = new DataOutputStream(connection.getOutputStream());
 
-            InputStream in = image.getImageSource().getInputStream();
+            InputStream in = image.getInputStream();
             int bytesRead;
             byte[] buffer = new byte[1024];
             while ((bytesRead = in.read(buffer, 0, buffer.length)) > 0)
@@ -37,8 +51,8 @@ public class YandexDiskUtils
                 throw new RuntimeException("Uploading failed. Received response code " + responseCode);
             }
 
-            image.putPathOnImageServiceSystem(Image.ImageServiceSystem.YANDEX_DISK,
-                                              "Samogot Yandex Disk path: " + image.getPath() + "/" + image.getTitle());
+            image.setPathOnImageServiceSystem(StorageService.YANDEX_DISK,
+                    image.getPath() + "/" + image.getTitle() + "." + image.getExtension());
             return image;
         }
         catch (Exception ex)
@@ -62,13 +76,13 @@ public class YandexDiskUtils
     }
 
     private static String requestLinkForUpload(String path)
-            throws MalformedURLException, IOException, JSONException
+            throws IOException, JSONException
     {
         URL url = new URL("https://cloud-api.yandex.net/v1/disk/resources/upload/?overwrite=true&path=" + path);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
         connection.setRequestMethod("GET");
-        connection.setRequestProperty("Authorization", "546c9d23e516468f8bd5d3298d8af447");
+        connection.setRequestProperty("Authorization", YANDEX_DISK_ACCESS_TOKEN);
         int responseCode = connection.getResponseCode();
 
         if (responseCode == 200)
@@ -92,8 +106,5 @@ public class YandexDiskUtils
         }
     }
 
-    static void isImagePresentOnServer(Image image)
-    {
-
-    }
+    public static String YANDEX_DISK_ACCESS_TOKEN;
 }

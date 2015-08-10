@@ -7,6 +7,7 @@ import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.core.request.mapper.MountedMapper;
 import org.apache.wicket.core.util.file.WebApplicationPath;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.renderStrategy.AbstractHeaderRenderStrategy;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebResponse;
 import org.apache.wicket.request.Url;
@@ -17,6 +18,7 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.UrlResourceReference;
 import org.apache.wicket.settings.IRequestCycleSettings;
 import org.apache.wicket.util.crypt.CachingSunJceCryptFactory;
+import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.wicket.webpages.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -36,6 +38,9 @@ public class WicketApplication extends AuthenticatedWebApplication
         super.init();
         WicketSource.configure(this);
 
+        // preload rura configuration
+        RuranobeUtils.getApplicationContext();
+
         getResourceSettings().getResourceFinders().add(
                 new WebApplicationPath(getServletContext(), "markupFolder"));
 
@@ -47,6 +52,7 @@ public class WicketApplication extends AuthenticatedWebApplication
                 return null;
             }
         });
+
 
         getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
         getMarkupSettings().setDefaultMarkupEncoding("UTF-8");

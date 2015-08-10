@@ -16,4 +16,12 @@ public interface UpdatesMapper
     public int getUpdatesCountBy(@Param("projectId") Integer projectId,
                                  @Param("volumeId") Integer volumeId,
                                  @Param("updateType") String updateType);
+
+    public List<Update> getUpdatesByVolumeId(@Param("volumeId") Integer volumeId);
+
+    public void updateUpdate(Update update);
+
+    public void deleteUpdate(int update);
+
+    public void insertUpdate(Update update);
 }

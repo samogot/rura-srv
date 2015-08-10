@@ -3,6 +3,8 @@ package ru.ruranobe.mybatis.mappers.cacheable;
 import ru.ruranobe.mybatis.mappers.TeamsMapper;
 import ru.ruranobe.mybatis.tables.Team;
 
+import java.util.List;
+
 public class TeamsMapperCacheable implements TeamsMapper
 {
     private TeamsMapper mapper;
@@ -16,6 +18,11 @@ public class TeamsMapperCacheable implements TeamsMapper
     public Team getTeamById(int teamId)
     {
         return mapper.getTeamById(teamId);
+    }
+
+    @Override
+    public List<Team> getAllTeams() {
+        return mapper.getAllTeams();
     }
 
     @Override

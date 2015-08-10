@@ -1,6 +1,9 @@
 package ru.ruranobe.misc;
 
 import org.apache.wicket.request.flow.RedirectToUrlException;
+import ru.ruranobe.config.ApplicationContext;
+import ru.ruranobe.config.ConfigurationManager;
+import ru.ruranobe.wicket.RuraConstants;
 
 import java.util.regex.Pattern;
 
@@ -14,4 +17,11 @@ public class RuranobeUtils
     {
         return PASSWORD_PATTERN.matcher(password).matches();
     }
+
+    public static ApplicationContext getApplicationContext()
+    {
+        return ConfigurationManager.getApplicationContext(RuraConstants.PATH_TO_CONFIGURATION_FILE,
+                RuraConstants.PATH_TO_CONFIGURATION_FILE_SCHEMA);
+    }
+
 }
