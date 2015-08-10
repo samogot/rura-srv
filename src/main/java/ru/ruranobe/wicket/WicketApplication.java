@@ -18,6 +18,7 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.UrlResourceReference;
 import org.apache.wicket.settings.IRequestCycleSettings;
 import org.apache.wicket.util.crypt.CachingSunJceCryptFactory;
+import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.wicket.webpages.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -36,6 +37,9 @@ public class WicketApplication extends AuthenticatedWebApplication
     {
         super.init();
         WicketSource.configure(this);
+
+        // preload rura configuration
+        RuranobeUtils.getApplicationContext();
 
         getResourceSettings().getResourceFinders().add(
                 new WebApplicationPath(getServletContext(), "markupFolder"));

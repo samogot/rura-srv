@@ -1,7 +1,14 @@
 package ru.ruranobe.engine.image;
 
+import com.google.api.client.auth.oauth2.*;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.http.BasicAuthentication;
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.gdata.client.photos.PicasawebService;
-import com.google.gdata.data.Link;
 import com.google.gdata.data.PlainTextConstruct;
 import com.google.gdata.data.media.BaseMediaSource;
 import com.google.gdata.data.media.MediaStreamSource;
@@ -9,38 +16,81 @@ import com.google.gdata.data.photos.AlbumEntry;
 import com.google.gdata.data.photos.GphotoEntry;
 import com.google.gdata.data.photos.PhotoEntry;
 import com.google.gdata.data.photos.UserFeed;
-import com.google.gdata.util.AuthenticationException;
 import com.google.gdata.util.ServiceException;
 import org.apache.wicket.util.string.Strings;
+import ru.ruranobe.engine.files.FileStorageService;
+import ru.ruranobe.engine.files.StorageService;
+import ru.ruranobe.wicket.RuraConstants;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
-public class PicasaUtils
+public class PicasaService
 {
 
-    private static final String USERNAME = "ruranobe";
-    private static final PicasawebService PICASA_WEBSERVICE = new PicasawebService(USERNAME);
-    private static final String API_PREFIX = "https://picasaweb.google.com/data/feed/api/user/";
-    private static Map<String, AlbumEntry> ALBUM_TITLE_TO_ALBUM_ENTRY;
-
-    static
+    public static void initializeService(FileStorageService fileStorageService)
     {
-        try
+        if (Strings.isEmpty(fileStorageService.getClientId())
+                || Strings.isEmpty(fileStorageService.getClientSecret())
+                || Strings.isEmpty(fileStorageService.getRefreshToken()))
         {
-            PICASA_WEBSERVICE.setUserCredentials("ruranobe@gmail.com", "1qa2ws3ed4rf5tg6yh");
+            throw new IllegalArgumentException("ClientId, ClientSecret and RefreshToken are mandatory for Picassa. Correct configuration file.");
         }
-        catch (AuthenticationException e)
-        {
-            throw new IllegalArgumentException("Illegal username/password combination.");
-        }
-        reloadCache();
+
+        HttpTransport httpTransport = new NetHttpTransport();
+        JsonFactory jsonFactory = new JacksonFactory();
+
+        setRefreshAndAccessTokens(fileStorageService, httpTransport, jsonFactory);
+
+        GoogleCredential credential = new GoogleCredential.Builder()
+                .setClientSecrets(fileStorageService.getClientId(), fileStorageService.getClientSecret())
+                .setJsonFactory(jsonFactory)
+                .setTransport(httpTransport)
+                .build()
+                .setAccessToken(GOOGLE_OAUTH_ACCESS_TOKEN)
+                .setRefreshToken(GOOGLE_OAUTH_REFRESH_TOKEN);
+
+        PICASA_WEBSERVICE = new PicasawebService(RuraConstants.GOOGLE_APPLICATION_NAME);
+        PICASA_WEBSERVICE.setOAuth2Credentials(credential);
+
+        reloadAlbumCache();
     }
 
-    public static synchronized Image uploadImage(Image image)
+    private static void setRefreshAndAccessTokens(FileStorageService fileStorageService, HttpTransport httpTransport, JsonFactory jsonFactory)
     {
-        String albumTitle = image.getPath();
+        GOOGLE_OAUTH_REFRESH_TOKEN = fileStorageService.getRefreshToken();
+
+        RefreshTokenRequest refreshTokenRequest = new RefreshTokenRequest(httpTransport,
+                jsonFactory,
+                new GenericUrl(RuraConstants.GOOGLE_TOKEN_SERVER_URL),
+                GOOGLE_OAUTH_REFRESH_TOKEN);
+
+        refreshTokenRequest.setClientAuthentication(
+                new BasicAuthentication(fileStorageService.getClientId(),
+                        fileStorageService.getClientSecret()));
+
+        List<String> scope = Arrays.asList("http://picasaweb.google.com/data/");
+        refreshTokenRequest.setScopes(scope);
+
+        try
+        {
+            TokenResponse tokenResponse = refreshTokenRequest.execute();
+            GOOGLE_OAUTH_ACCESS_TOKEN = tokenResponse.getAccessToken();
+        }
+        catch (IOException ex)
+        {
+            throw new RuntimeException("Unable to get access token by refresh token.", ex);
+        }
+    }
+
+    public static synchronized RuraImage uploadImage(RuraImage toUpload, ImageStorage storage)
+    {
+        String albumTitle = toUpload.getPath();
+        if (albumTitle.contains("/") || albumTitle.contains("\\"))
+        {
+            throw new IllegalArgumentException("Storage path for picassa " + albumTitle + " is illegal. Picassa doesn't support nested albums. Check configuration file.");
+        }
         if (Strings.isEmpty(albumTitle))
         {
             albumTitle = "unsorted";
@@ -53,7 +103,7 @@ public class PicasaUtils
             }
             catch (Exception ex1)
             {
-                reloadCache();
+                reloadAlbumCache();
                 try
                 {
                     insertAlbum(albumTitle);
@@ -65,10 +115,9 @@ public class PicasaUtils
             }
         }
         PhotoEntry photoEntry = new PhotoEntry();
-        photoEntry.setTitle(new PlainTextConstruct(image.getTitle()));
+        photoEntry.setTitle(new PlainTextConstruct(toUpload.getTitle()));
         BaseMediaSource imageMediaSource =
-                new MediaStreamSource(image.getImageSource().getInputStream(), image.getMimeType());
-        image.getImageSource().getInputStream();
+                new MediaStreamSource(toUpload.getInputStream(), toUpload.getMimeType());
         photoEntry.setMediaSource(imageMediaSource);
         photoEntry.setAlbumAccess(API_PREFIX);
         try
@@ -79,7 +128,7 @@ public class PicasaUtils
         }
         catch (Exception ex1)
         {
-            reloadCache();
+            reloadAlbumCache();
             try
             {
                 photoEntry = PICASA_WEBSERVICE.insert(
@@ -91,9 +140,9 @@ public class PicasaUtils
                 throw new RuntimeException(ex2);
             }
         }
-        image.putPathOnImageServiceSystem(Image.ImageServiceSystem.PICASSA,
-                                          photoEntry.getMediaThumbnails().get(0).getUrl());
-        return image;
+        toUpload.setPathOnImageServiceSystem(StorageService.PICASA,
+                photoEntry.getMediaThumbnails().get(0).getUrl());
+        return toUpload;
     }
 
     private static AlbumEntry insertAlbum(String albumTitle) throws IOException, ServiceException
@@ -110,7 +159,7 @@ public class PicasaUtils
         return albumEntry;
     }
 
-    private static void reloadCache()
+    private static void reloadAlbumCache()
     {
         ALBUM_TITLE_TO_ALBUM_ENTRY = new HashMap<String, AlbumEntry>();
         try
@@ -156,7 +205,7 @@ public class PicasaUtils
         return albums;
     }
 
-    static <T extends GphotoEntry> T insert(GphotoEntry<?> parent, T entry)
+   /* static <T extends GphotoEntry> T insert(GphotoEntry<?> parent, T entry)
             throws IOException, ServiceException
     {
         String feedUrl = getLinkByRel(parent.getLinks(), Link.Rel.FEED);
@@ -173,5 +222,11 @@ public class PicasaUtils
             }
         }
         throw new IllegalArgumentException("Missing " + relValue + " link.");
-    }
+    }*/
+
+    private static PicasawebService PICASA_WEBSERVICE;
+    private static String API_PREFIX = "https://picasaweb.google.com/data/feed/api/user/";
+    private static Map<String, AlbumEntry> ALBUM_TITLE_TO_ALBUM_ENTRY;
+    private static String GOOGLE_OAUTH_REFRESH_TOKEN;
+    private static String GOOGLE_OAUTH_ACCESS_TOKEN;
 }
