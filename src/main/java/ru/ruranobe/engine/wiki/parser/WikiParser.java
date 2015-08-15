@@ -370,16 +370,16 @@ public class WikiParser
         }
     }
 
-    private static final List<Replacement> states1 = new ArrayList<Replacement>();
-    private static final List<Replacement> states2 = new ArrayList<Replacement>();
-    private static final List<Replacement> states3 = new ArrayList<Replacement>();
-    private static final List<Replacement> states4 = new ArrayList<Replacement>();
-    private static final List<Replacement> states5 = new ArrayList<Replacement>();
-    private static final List<Replacement> states6 = new ArrayList<Replacement>();
-    private static final List<Replacement> states7 = new ArrayList<Replacement>();
-    private static final List<Replacement> states8 = new ArrayList<Replacement>();
-    private static final List<Replacement> states9 = new ArrayList<Replacement>();
-    private static final List<Replacement> states10 = new ArrayList<Replacement>();
+    private final List<Replacement> states1 = new ArrayList<Replacement>();
+    private final List<Replacement> states2 = new ArrayList<Replacement>();
+    private final List<Replacement> states3 = new ArrayList<Replacement>();
+    private final List<Replacement> states4 = new ArrayList<Replacement>();
+    private final List<Replacement> states5 = new ArrayList<Replacement>();
+    private final List<Replacement> states6 = new ArrayList<Replacement>();
+    private final List<Replacement> states7 = new ArrayList<Replacement>();
+    private final List<Replacement> states8 = new ArrayList<Replacement>();
+    private final List<Replacement> states9 = new ArrayList<Replacement>();
+    private final List<Replacement> states10 = new ArrayList<Replacement>();
     /*
      * 1 -> {{Подзаголовок|
      * 2 -> ==
