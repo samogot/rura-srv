@@ -2,103 +2,150 @@ package ru.ruranobe.engine.wiki.parser;
 
 import java.util.*;
 
+/**
+ * .substring(int beginIndex, int endIndex) complexity in Java 7 (or higher) is O(n)
+ * .substring(int beginIndex, int endIndex) complexity in pre-Java 7 or is O(1)
+ */
 public class WikiParser
 {
 
-    public static String parseWikiText(String s)
+    public String parseWikiText(String s, List<String> imageUrls, boolean appendExtraImagesAtTheEnd)
     {
+        // Detect special tags in text and remember them
         for (int i = 0; i < s.length(); )
         {
             int symbolsTillEnd = s.length() - i;
-            if (symbolsTillEnd > 14)
+            if (s.codePointAt(i) == '{')
             {
-                if (s.substring(i, i+15).equals("{{Подзаголовок|"))
+                if (symbolsTillEnd > 14)
                 {
-                    states1.add(new Replacement(i, 15, 1));
-                    i+=15;
-                    continue;
-                }
+                    if (s.substring(i, i+15).equals("{{Подзаголовок|"))
+                    {
+                        states1.add(new Replacement(i, 15, 1));
+                        i+=15;
+                        continue;
+                    }
 
-                if (s.substring(i, i+15).equals("{{Иллюстрация}}"))
+                    if (s.substring(i, i+15).equals("{{Иллюстрация}}"))
+                    {
+                        states7.add(new Replacement(i, 14, 7));
+                        i+=15;
+                        continue;
+                    }
+                }
+                if (symbolsTillEnd > 5)
                 {
-                    states7.add(new Replacement(i, 15, 7));
-                    i+=15;
-                    continue;
+                    if (s.substring(i, i+6).equals("{{ref|"))
+                    {
+                        states10.add(new Replacement(i, 6, 10));
+                        i+=6;
+                        continue;
+                    }
                 }
             }
-            if (symbolsTillEnd > 3)
+            if (s.codePointAt(i)=='=')
             {
-                if (s.substring(i, i+4).equals("===="))
+                if (symbolsTillEnd > 3 && s.substring(i, i+4).equals("===="))
                 {
                     states4.add(new Replacement(i, 4, 4));
                     i+=4;
                     continue;
                 }
-            }
-            if (symbolsTillEnd > 2)
-            {
-                if (s.substring(i, i+3).equals("\'\'\'"))
-                {
-                    states6.add(new Replacement(i, 3, 6));
-                    i+=3;
-                    continue;
-                }
-                if (s.substring(i, i+3).equals("==="))
+                if (symbolsTillEnd > 2 && s.substring(i, i+3).equals("==="))
                 {
                     states3.add(new Replacement(i, 3, 3));
                     i+=3;
                     continue;
                 }
-            }
-            if (symbolsTillEnd > 1)
-            {
-                if (s.substring(i, i+2).equals("\'\'"))
-                {
-                    states5.add(new Replacement(i, 2, 5));
-                    i+=2;
-                    continue;
-                }
-                if (s.substring(i, i+2).equals("=="))
+                if (symbolsTillEnd > 1 && s.substring(i, i+2).equals("=="))
                 {
                     states2.add(new Replacement(i, 2, 2));
                     i+=2;
                     continue;
                 }
-                if (s.substring(i, i+2).equals("}}"))
+            }
+            if (s.codePointAt(i)=='\'')
+            {
+                if (symbolsTillEnd > 2 && s.substring(i, i+3).equals("\'\'\'"))
+                {
+                    states6.add(new Replacement(i, 3, 6));
+                    i+=3;
+                    continue;
+                }
+                if (symbolsTillEnd > 1 && s.substring(i, i+2).equals("\'\'"))
+                {
+                    states5.add(new Replacement(i, 2, 5));
+                    i+=2;
+                    continue;
+                }
+            }
+            if (s.codePointAt(i)=='}')
+            {
+                if (symbolsTillEnd > 1 && s.substring(i, i+2).equals("}}"))
                 {
                     states8.add(new Replacement(i, 2, 8));
                     i+=2;
                     continue;
                 }
             }
-            if (symbolsTillEnd > 0)
+            if (s.codePointAt(i) == '\n' && symbolsTillEnd > 0)
             {
-                if (s.codePointAt(i) == '\n')
-                {
-                    states9.add(new Replacement(i, 1, 9));
-                    states9.add(new Replacement(i, 1, 9));
-                    i++;
-                    continue;
-                }
+                states9.add(new Replacement(i, 1, 9));
+                states9.add(new Replacement(i, 1, 9));
+                i++;
+                continue;
             }
             i++;
         }
 
+        // Connect related special tags together. Determine tag's end position in text.
         int j = 0;
-        for (Replacement state1 : states1)
+        int k = 0;
+        for (int i = 0; i < states8.size(); ++i)
         {
-            int startPoint = state1.startPoint;
-            for (;j < states8.size(); ++j)
+            Replacement state8 = states8.get(i);
+            Replacement state1 = null;
+            Replacement state10 = null;
+
+            int startPoint = Integer.MAX_VALUE;
+            if (j < states1.size())
             {
-                if (states8.get(j).startPoint > startPoint)
+                state1 = states1.get(j);
+                startPoint = Math.min(startPoint, state1.startPoint);
+            }
+            if (k < states10.size())
+            {
+                state10 = states10.get(k);
+                startPoint = Math.min(startPoint, state10.startPoint);
+            }
+
+            if (state8.startPoint > startPoint)
+            {
+                if (state1 != null && state1.startPoint == startPoint)
                 {
-                    state1.setEndPoint(states8.get(j).startPoint + 2);
+                    state1.setEndPoint(state8.startPoint + 2);
                     state1.setEndSequenceLength(2);
-                    states8.remove(j);
-                    j--;
+                    states8.remove(i);
+                    j++;
+                    i--;
+                }
+                else if (state10 != null && state10.startPoint == startPoint)
+                {
+                    state10.setEndPoint(state8.startPoint + 2);
+                    state10.setEndSequenceLength(2);
+                    states8.remove(i);
+                    k++;
+                    i--;
                 }
             }
         }
+
+        for (Replacement state7 : states7)
+        {
+            state7.setEndPoint(state7.startPoint + state7.startSequenceLength+1);
+            state7.setEndSequenceLength(1);
+        }
+
         resolveObviousTags(states4);
         resolveObviousTags(states6);
         resolveObviousTags(states3);
@@ -116,8 +163,15 @@ public class WikiParser
         addReplacementPoints(startPointToReplacement, endPointToReplacement, states6);
         addReplacementPoints(startPointToReplacement, endPointToReplacement, states7);
         addReplacementPoints(startPointToReplacement, endPointToReplacement, states9);
+        addReplacementPoints(startPointToReplacement, endPointToReplacement, states10);
 
-        StringBuilder parsedWikiText = new StringBuilder("<p>");
+        // Form output html text
+        int paragraphId = 1;
+        int referenceId = 0;
+        StringBuilder references = new StringBuilder("<h2><span>Примечания</span></h2><ol class=\"references\">");
+        StringBuilder parsedWikiText = new StringBuilder("<p id=\'p_id-1\'>");
+        Iterator<String> imageUrlsIterator = imageUrls.iterator();
+        boolean insideReference = false;
         for (int i = 0; i < s.length(); )
         {
             Replacement r = startPointToReplacement.get(i);
@@ -125,29 +179,103 @@ public class WikiParser
             boolean updated = false;
             if (r != null)
             {
-                parsedWikiText.append(r.getHtmlStartSequence());
+                String htmlStartSequence = r.getHtmlStartSequence();
+                if (r.stateId == 10)
+                {
+                    // reference
+                    htmlStartSequence = String.format(htmlStartSequence, "cite_ref-" + referenceId, "cite_note-" + referenceId, referenceId);
+                    references.append("<li id=\"cite_note-%d\"><a href=\"#cite_ref-%d\">↑</a></span>", referenceId, referenceId);
+                    referenceId++;
+                }
+                else if (r.stateId == 7)
+                {
+                    // image
+                    if (imageUrlsIterator.hasNext())
+                    {
+                        htmlStartSequence = String.format(htmlStartSequence, imageUrlsIterator.next());
+                    }
+                    else
+                    {
+                        htmlStartSequence = String.format(htmlStartSequence, "unknownSource");
+                    }
+                }
+
+                if (insideReference)
+                {
+                    references.append(htmlStartSequence);
+                }
+                else
+                {
+                    parsedWikiText.append(htmlStartSequence);
+                }
                 i+=r.startSequenceLength;
                 updated = true;
             }
             if (r2 != null)
             {
-                parsedWikiText.append(r2.getHtmlEndSequence());
+                if (r2.stateId == 10)
+                {
+                    references.append("</li>");
+                    insideReference = false;
+                }
+                else
+                {
+                    String htmlEndSequence = r2.getHtmlEndSequence();
+                    if (r2.stateId == 9)
+                    {
+                        // <p>
+                        paragraphId++;
+                        htmlEndSequence = String.format(htmlEndSequence, "p_id-"+paragraphId);
+                    }
+
+                    if (insideReference)
+                    {
+                        references.append(htmlEndSequence);
+                    }
+                    else
+                    {
+                        parsedWikiText.append(htmlEndSequence);
+                    }
+                }
                 i+=!updated ? r2.endSequenceLength : 0;
                 updated = true;
             }
             if (!updated)
             {
-
-                parsedWikiText.appendCodePoint(s.codePointAt(i));
+                if (insideReference)
+                {
+                    references.appendCodePoint(s.codePointAt(i));
+                }
+                else
+                {
+                    parsedWikiText.appendCodePoint(s.codePointAt(i));
+                }
                 i++;
+            }
+
+            if (r != null && r.stateId == 10)
+            {
+                insideReference = true;
+            }
+        }
+        if (appendExtraImagesAtTheEnd)
+        {
+            while(imageUrlsIterator.hasNext())
+            {
+                parsedWikiText.append(String.format("<img src=\'%s\'>", imageUrlsIterator.next()));
             }
         }
         parsedWikiText.append("</p>");
+        references.append("</ol>");
+        if (!states10.isEmpty())
+        {
+            parsedWikiText.append(references.toString());
+        }
         return parsedWikiText.toString();
     }
 
 
-    private static void addReplacementPoints(Map<Integer, Replacement> startPointToReplacement, Map<Integer, Replacement> endPointToReplacement, List<Replacement> states)
+    private void addReplacementPoints(Map<Integer, Replacement> startPointToReplacement, Map<Integer, Replacement> endPointToReplacement, List<Replacement> states)
     {
         for (Replacement r : states)
         {
@@ -159,7 +287,7 @@ public class WikiParser
         }
     }
 
-    private static void resolveObviousTags(List<Replacement> tags)
+    private void resolveObviousTags(List<Replacement> tags)
     {
         for (int i = 0; i < tags.size(); i++)
         {
@@ -232,8 +360,13 @@ public class WikiParser
             stateIdToHtmlStartSequence.put(6, "<b>");
             stateIdToHtmlEndSequence.put(6,"</b>");
 
+            stateIdToHtmlStartSequence.put(7, "<img src=\'%s\'>");
+            stateIdToHtmlEndSequence.put(7,"</img>");
+
             stateIdToHtmlStartSequence.put(9, "</p>");
-            stateIdToHtmlEndSequence.put(9,"<p>");
+            stateIdToHtmlEndSequence.put(9,"<p id=\'%s\'>");
+
+            stateIdToHtmlStartSequence.put(10, "<sup id=\"%s\" class=\"reference\"><a href=\"#%s\">[%d]</a></sup>");
         }
     }
 
@@ -246,6 +379,7 @@ public class WikiParser
     private static final List<Replacement> states7 = new ArrayList<Replacement>();
     private static final List<Replacement> states8 = new ArrayList<Replacement>();
     private static final List<Replacement> states9 = new ArrayList<Replacement>();
+    private static final List<Replacement> states10 = new ArrayList<Replacement>();
     /*
      * 1 -> {{Подзаголовок|
      * 2 -> ==
@@ -256,5 +390,6 @@ public class WikiParser
      * 7 -> {{Иллюстрация}}
      * 8 -> }}
      * 9 -> \n (start and end of paragraph aka <p></p>)
+     * 10 -> {{ref|
      */
 }
