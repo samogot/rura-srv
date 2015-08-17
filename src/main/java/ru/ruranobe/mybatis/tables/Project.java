@@ -6,6 +6,7 @@ import ru.ruranobe.wicket.webpages.ProjectPage;
 import ru.ruranobe.wicket.webpages.VolumePage;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Project implements Serializable, PageRepresentable
 {
@@ -260,12 +261,14 @@ public class Project implements Serializable, PageRepresentable
 
     public String getAnnotationParsed()
     {
-        return annotation == null ? null : WikiParser.parseText(annotation);
+        WikiParser wikiParser = new WikiParser(0,annotation);
+        return annotation == null ? null : wikiParser.parseWikiText(new ArrayList<String>(), false);
     }
 
     public String getFranchiseParsed()
     {
-        return franchise == null ? null : WikiParser.parseText(franchise);
+        WikiParser wikiParser = new WikiParser(0,franchise);
+        return franchise == null ? null : wikiParser.parseWikiText(new ArrayList<String>(), false);
     }
 
     @Override

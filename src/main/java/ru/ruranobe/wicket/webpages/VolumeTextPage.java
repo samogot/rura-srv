@@ -58,7 +58,7 @@ public class VolumeTextPage extends SidebarLayoutPage
         TextsMapper textsMapper = session.getMapper(TextsMapper.class);
         Text chapterText = textsMapper.getTextById(chapter.getTextId());
         //if(chapterText.getTextHtml()==null)
-        chapterText.setTextHtml(WikiParser.parseText(chapterText.getTextWiki()));
+        //chapterText.setTextHtml(WikiParser.parseText(chapterText.getTextWiki()));
 
 
         VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);

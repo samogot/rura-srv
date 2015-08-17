@@ -21,6 +21,11 @@ public class ChapterImagesMapperCacheable implements ChapterImagesMapper
     }
 
     @Override
+    public List<ChapterImage> getChapterImagesByChapterId(Integer chapterId) {
+        return mapper.getChapterImagesByChapterId(chapterId);
+    }
+
+    @Override
     public void insertChapterImage(ChapterImage chapterImage) {
         mapper.insertChapterImage(chapterImage);
     }

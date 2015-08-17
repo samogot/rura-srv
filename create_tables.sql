@@ -34,7 +34,9 @@ CREATE TABLE texts
 (
   text_id   INT(11) PRIMARY KEY AUTO_INCREMENT,
   text_wiki MEDIUMTEXT NOT NULL,
-  text_html MEDIUMTEXT NOT NULL
+  text_html MEDIUMTEXT,
+  footnotes MEDIUMTEXT,
+  contents MEDIUMTEXT
 );
 
 CREATE TABLE orphus_comments
