@@ -18,6 +18,13 @@ public class Chapter implements Serializable, PageRepresentable
     private boolean published;
     private boolean nested;
 
+    /* Optional */
+    private String nextUrl;
+    private String prevUrl;
+    private Integer nextChapterId;
+    private Integer prevChapterId;
+    private boolean prevChapterNested;
+
     public Chapter()
     {
     }
@@ -130,5 +137,45 @@ public class Chapter implements Serializable, PageRepresentable
     public void setVolumeId(Integer volumeId)
     {
         this.volumeId = volumeId;
+    }
+
+    public String getNextUrl() {
+        return nextUrl;
+    }
+
+    public void setNextUrl(String nextUrl) {
+        this.nextUrl = nextUrl;
+    }
+
+    public String getPrevUrl() {
+        return prevUrl;
+    }
+
+    public void setPrevUrl(String prevUrl) {
+        this.prevUrl = prevUrl;
+    }
+
+    public Integer getNextChapterId() {
+        return nextChapterId;
+    }
+
+    public void setNextChapterId(Integer nextChapterId) {
+        this.nextChapterId = nextChapterId;
+    }
+
+    public Integer getPrevChapterId() {
+        return prevChapterId;
+    }
+
+    public void setPrevChapterId(Integer prevChapterId) {
+        this.prevChapterId = prevChapterId;
+    }
+
+    public boolean isPrevChapterNested() {
+        return prevChapterNested;
+    }
+
+    public void setPrevChapterNested(boolean prevChapterNested) {
+        this.prevChapterNested = prevChapterNested;
     }
 }

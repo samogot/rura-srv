@@ -1,5 +1,6 @@
 package ru.ruranobe.wicket.webpages;
 
+import com.google.common.collect.Lists;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -24,8 +25,6 @@ import ru.ruranobe.mybatis.tables.ExternalResource;
 import ru.ruranobe.mybatis.tables.Volume;
 import ru.ruranobe.wicket.webpages.base.TextLayoutPage;
 
-import javax.management.Attribute;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,35 +34,15 @@ public class Text extends TextLayoutPage
 {
     public Text(PageParameters parameters)
     {
-        String projectUrl = parameters.get("project").toString();
-        if (Strings.isEmpty(projectUrl))
-        {
-            throw RuranobeUtils.REDIRECT_TO_404;
-        }
-
-        String volumeUrl = parameters.get("volume").toString();
-        if (Strings.isEmpty(volumeUrl))
-        {
-            throw RuranobeUtils.REDIRECT_TO_404;
-        }
-
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
         SqlSession session = sessionFactory.openSession();
         StringBuilder volumeText = new StringBuilder();
         StringBuilder volumeFootnotes = new StringBuilder();
         final List<ContentItem> volumeContents = new ArrayList<ContentItem>();
+
         try
         {
-            VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
-            Volume volume = volumesMapperCacheable.getVolumeByUrl(projectUrl + "/" + volumeUrl);
-
-            if (volume == null)
-            {
-                throw RuranobeUtils.REDIRECT_TO_404;
-            }
-
-            ChaptersMapper chaptersMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
-            List<Chapter> chapterList = chaptersMapperCacheable.getChaptersByVolumeId(volume.getVolumeId());
+            List<Chapter> chapterList = getChaptersToDisplay(parameters, session);
 
             TextsMapper textsMapperCacheable = CachingFacade.getCacheableMapper(session, TextsMapper.class);
             ChapterImagesMapper chapterImagesMapperCacheable = CachingFacade.getCacheableMapper(session, ChapterImagesMapper.class);
@@ -72,12 +51,19 @@ public class Text extends TextLayoutPage
             for (Chapter chapter : chapterList)
             {
                 Integer textId = chapter.getTextId();
-                ru.ruranobe.mybatis.tables.Text chapterText = textsMapperCacheable.getHtmlInfoById(textId);
-                String textHtml = chapterText.getTextHtml();
-                String chapterFootnotes = chapterText.getFootnotes();
-                String chapterContents = chapterText.getContents();
+                ru.ruranobe.mybatis.tables.Text chapterText = null;
+                String textHtml = "";
+                String chapterFootnotes = "";
+                String chapterContents = "";
+                if (textId != null)
+                {
+                    chapterText = textsMapperCacheable.getHtmlInfoById(textId);
+                    textHtml = chapterText.getTextHtml();
+                    chapterFootnotes = chapterText.getFootnotes();
+                    chapterContents = chapterText.getContents();
+                }
 
-                if (Strings.isEmpty(textHtml))
+                if (Strings.isEmpty(textHtml) && textId != null)
                 {
                     committionNeeded = true;
 
@@ -112,9 +98,10 @@ public class Text extends TextLayoutPage
                     for (int i = 0; i < contentList.size(); ++i)
                     {
                         ContentItem contentItem = contentList.get(i);
-                        contents.append(contentItem.getTagName()).append(",")
-                                .append(contentItem.getTagId()).append(",")
-                                .append(contentItem.getTitle()).append(i < contentList.size() ? "," : "");
+                        String s = ((i < contentList.size()-1) ? DELIMITER : "");
+                        contents.append(contentItem.getTagName()).append(DELIMITER)
+                                .append(contentItem.getTagId()).append(DELIMITER)
+                                .append(contentItem.getTitle()).append(s);
                     }
                     chapterText.setContents(contents.toString());
 
@@ -123,7 +110,7 @@ public class Text extends TextLayoutPage
                     for (int i = 0; i < footnoteList.size(); ++i)
                     {
                         String footnote = footnoteList.get(i);
-                        footnotes.append(footnote).append(i < footnoteList.size() ? "," : "");
+                        footnotes.append(footnote).append(i < footnoteList.size()-1 ? DELIMITER : "");
                     }
                     chapterText.setFootnotes(footnotes.toString());
 
@@ -134,18 +121,27 @@ public class Text extends TextLayoutPage
                     chapterContents = contents.toString();
                 }
 
-                if (!Strings.isEmpty(chapterFootnotes))
-                {
-                    String[] footnotes = chapterFootnotes.split(",");
-                    for (String footnote : footnotes)
-                    {
-                        volumeFootnotes.append("<li>").append(footnote).append("</li>");
-                    }
-                }
+                String headerTag = chapter.isNested() ? "h3" : "h2";
+
+                StringBuilder chapterContentsExtended = new StringBuilder();
+                String s = Strings.isEmpty(chapterContents) ? "" : DELIMITER;
+                chapterContentsExtended.append(headerTag).append(DELIMITER)
+                                       .append(chapter.getChapterId()).append(DELIMITER)
+                                       .append(chapter.getTitle()).append(s)
+                        .append(chapterContents);
+                chapterContents = chapterContentsExtended.toString();
+
+                StringBuilder textHtmlExtended = new StringBuilder();
+                textHtmlExtended.append("<").append(headerTag).append(" id=\"h_id-")
+                                .append(chapter.getChapterId()).append("\">")
+                                .append(chapter.getTitle()).append("</")
+                                .append(headerTag).append(">")
+                        .append(textHtml);
+                textHtml = textHtmlExtended.toString();
 
                 if (!Strings.isEmpty(chapterFootnotes))
                 {
-                    String[] footnotes = chapterFootnotes.split(",");
+                    String[] footnotes = chapterFootnotes.split(DELIMITER);
                     for (String footnote : footnotes)
                     {
                         volumeFootnotes.append("<li>").append(footnote).append("</li>");
@@ -154,7 +150,12 @@ public class Text extends TextLayoutPage
 
                 if (!Strings.isEmpty(chapterContents))
                 {
-                    String[] contents = chapterContents.split(",");
+                    if (nested && "h3".equals(chapterContents.substring(0, 2)))
+                    {
+                        volumeContents.add(new ContentItem("h2", 0, ""));
+                    }
+
+                    String[] contents = chapterContents.split(DELIMITER);
                     for (int i = 0; i < contents.length;)
                     {
                         volumeContents.add(new ContentItem(contents[i], Long.valueOf(contents[i+1]), contents[i+2]));
@@ -177,7 +178,7 @@ public class Text extends TextLayoutPage
 
         if (!Strings.isEmpty(volumeFootnotes))
         {
-            volumeFootnotes.insert(0, "<h2 id=\"comments\"><span>Примечания</span></h2><ol class=\"references\">");
+            volumeFootnotes.insert(0, "<h2 id=\"footnotes\"><span>Примечания</span></h2><ol class=\"references\">");
             volumeFootnotes.append("</ol>");
             volumeText.append(volumeFootnotes);
         }
@@ -234,6 +235,17 @@ public class Text extends TextLayoutPage
             }
         }
 
+        if (h3s != null && h4s != null && !h4s.isEmpty())
+        {
+            h3Toh4.put(h3s.get(h3s.size() - 1), h4s);
+        }
+
+        if (h2 != null && h3s != null && !h3s.isEmpty())
+        {
+            h2Toh3.put(h2, h3s);
+        }
+
+
         ListView<ContentItem> h2Repeater = new ListView<ContentItem>("h2Repeater", h2s)
         {
             @Override
@@ -241,6 +253,10 @@ public class Text extends TextLayoutPage
             {
                 ContentItem contentItem = item.getModelObject();
                 Label h2level = new Label("h2level",contentItem.getTitle());
+                if (Strings.isEmpty(contentItem.getTitle()))
+                {
+                    h2level.setVisible(false);
+                }
                 AttributeAppender href = new AttributeAppender("href", "#h_id-"+contentItem.getTagId());
                 h2level.add(href);
                 item.add(h2level);
@@ -259,8 +275,7 @@ public class Text extends TextLayoutPage
                         item.add(h3level);
 
                         List<ContentItem> h4s = h3Toh4.get(contentItem);
-                        ListView<ContentItem> h4Repeater;
-                        h4Repeater = new ListView<ContentItem>("h4Repeater", h4s)
+                        ListView<ContentItem> h4Repeater = new ListView<ContentItem>("h4Repeater", h4s)
                         {
                             @Override
                             protected void populateItem(ListItem<ContentItem> item)
@@ -272,23 +287,95 @@ public class Text extends TextLayoutPage
                                 item.add(h4level);
                             }
                         };
+                        if (h4s == null || h4s.isEmpty())
+                        {
+                            h4Repeater.setVisible(false);
+                        }
 
                         item.add(h4Repeater);
                     }
-                    };
+                };
+
+                if (h3s == null || h3s.isEmpty())
+                {
+                    h3Repeater.setVisible(false);
+                }
+
                 item.add(h3Repeater);
             }
         };
         add(h2Repeater);
 
-        WebMarkupContainer footnotes = new WebMarkupContainer("footnotes");
-        AttributeAppender href = new AttributeAppender("href", "#footnotes");
-        footnotes.add(href);
-        add(footnotes);
+        WebMarkupContainer nextChapter = new WebMarkupContainer("nextChapter");
+        nextChapter.setVisible(!Strings.isEmpty(nextUrl));
+        AttributeAppender href = new AttributeAppender("href", "../../"+nextUrl);
+        nextChapter.add(href);
+        add(nextChapter);
 
-        WebMarkupContainer comments = new WebMarkupContainer("comments");
-        href = new AttributeAppender("href", "#comments");
-        comments.add(href);
-        add(comments);
+        WebMarkupContainer prevChapter = new WebMarkupContainer("prevChapter");
+        prevChapter.setVisible(!Strings.isEmpty(prevUrl));
+        href = new AttributeAppender("href", "../../"+prevUrl);
+        prevChapter.add(href);
+        add(prevChapter);
     }
+
+    private List<Chapter> getChaptersToDisplay(PageParameters parameters, SqlSession session)
+    {
+        List<Chapter> chapterList;
+
+        String projectUrl = parameters.get("project").toString();
+        if (Strings.isEmpty(projectUrl))
+        {
+            throw RuranobeUtils.REDIRECT_TO_404;
+        }
+
+        String volumeUrl = parameters.get("volume").toString();
+        if (Strings.isEmpty(volumeUrl))
+        {
+            throw RuranobeUtils.REDIRECT_TO_404;
+        }
+
+        String chapterUrl = parameters.get("chapter").toString();
+
+        ChaptersMapper chaptersMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
+        if (Strings.isEmpty(chapterUrl))
+        {
+            VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
+            Volume volume = volumesMapperCacheable.getVolumeByUrl(projectUrl + "/" + volumeUrl);
+
+            if (volume == null)
+            {
+                throw RuranobeUtils.REDIRECT_TO_404;
+            }
+
+            chapterList = chaptersMapperCacheable.getChaptersByVolumeId(volume.getVolumeId());
+        }
+        else
+        {
+            Chapter chapter = chaptersMapperCacheable.getChapterNextPrevByUrl(projectUrl + "/" + volumeUrl + "/" + chapterUrl);
+
+            if (chapter == null)
+            {
+                throw RuranobeUtils.REDIRECT_TO_404;
+            }
+
+            nested = chapter.isNested();
+            prevUrl = chapter.getPrevUrl();
+            nextUrl = chapter.getNextUrl();
+            chapterList = Lists.newArrayList();
+            if (chapter.isNested() && !chapter.isPrevChapterNested())
+            {
+                // show prev chapter
+                chapterList.add(chaptersMapperCacheable.getChapterById(chapter.getPrevChapterId()));
+            }
+            chapterList.add(chapter);
+        }
+
+        return chapterList;
+    }
+
+    private boolean nested = false;
+    private String nextUrl = null;
+    private String prevUrl = null;
+    private static final String DELIMITER = ",;,";
 }

@@ -16,9 +16,19 @@ public class ChaptersMapperCacheable implements ChaptersMapper
     }
 
     @Override
+    public Chapter getChapterById(int chapterId) {
+        return mapper.getChapterById(chapterId);
+    }
+
+    @Override
     public Chapter getChapterByUrl(String url)
     {
         return mapper.getChapterByUrl(url);
+    }
+
+    @Override
+    public Chapter getChapterNextPrevByUrl(String url) {
+        return mapper.getChapterNextPrevByUrl(url);
     }
 
     @Override

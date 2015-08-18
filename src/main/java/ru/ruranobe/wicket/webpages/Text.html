@@ -14,11 +14,11 @@
                         <div class="hint">
                             <div class="miniicon"></div>Содержание</div>
                     </a>
-                    <a class="btn btn-white disable"> <i class="fa fa-reply"></i>
+                    <a wicket:id="prevChapter" class="btn btn-white"> <i class="fa fa-reply"></i>
                         <div class="hint">
                             <div class="miniicon"></div>Предыдущая глава</div>
                     </a>
-                    <a class="btn btn-white"> <i class="fa fa-share"></i>
+                    <a wicket:id="nextChapter" class="btn btn-white"> <i class="fa fa-share"></i>
                         <div class="hint">
                             <div class="miniicon"></div>Следующая глава</div>
                     </a>
@@ -159,27 +159,27 @@
                     <wicket:container wicket:id="h2Repeater">
                         <li>
                             <a wicket:id="h2level"/>
-                            <wicket:container wicket:id="h3Repeater">
-                                <ul class="nav ContentNav">
+                            <ul class="nav ContentNav">
+                                <wicket:container wicket:id="h3Repeater">
                                     <li>
                                         <a wicket:id="h3level"/>
-                                        <wicket:container wicket:id="h3Repeater">
-                                            <ul class="nav ContentNav">
+                                        <ul class="nav ContentNav">
+                                            <wicket:container wicket:id="h4Repeater">
                                                 <a wicket:id="h4level"/>
-                                            </ul>
-                                        </wicket:container>
+                                            </wicket:container>
+                                        </ul>
                                     </li>
-                                </ul>
-                            </wicket:container>
+                                </wicket:container>
+                            </ul>
                         </li>
                     </wicket:container>
 
                     <li>
-                        <a wicket:id="footnotes">Примечания</a>
+                        <a href="#footnotes">Примечания</a>
                     </li>
 
                     <li>
-                        <a wicket:id="comments">Комментарии</a>
+                        <a href="#comments">Комментарии</a>
                     </li>
                     <!--li><a href="#p1">Пролог 1</a>
                         <ul class="nav ContentNav">
