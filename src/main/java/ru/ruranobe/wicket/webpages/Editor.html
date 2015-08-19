@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org" lang="en">
+<body>
+    <wicket:extend>
+        <div class="container">
+            <main class="content">
+                <form wicket:id="editorForm">
+                    <h2>Редактирование текста</h2>
+                    <div class="btn-toolbar edittext" role="toolbar" aria-label="Toolbar">
+                        <div class="btn-group BoldItalian" role="group" aria-label="Жирный / Курсив / Подчеркнутый">
+                            <button type="button" class="btn btn-default" title="Жирный" data-insert="'''insert'''"><i class="fa fa-bold"></i></button>
+                            <button type="button" class="btn btn-default" title="Курсив"  data-insert="''insert''"><i class="fa fa-italic"></i></button>
+                        </div>
+                        <div class="btn-group Heading" role="group" aria-label="Заголовки">
+                            <button type="button" class="btn btn-default" title="Заголовок 2-го уровня"  data-insert="==insert=="><i class="fa fa-header"></i>2</button>
+                            <button type="button" class="btn btn-default" title="Заголовок 3-го уровня"  data-insert="===insert==="><i class="fa fa-header"></i>3</button>
+                            <button type="button" class="btn btn-default" title="Заголовок 4-го уровня"  data-insert="====insert===="><i class="fa fa-header"></i>3</button>
+                            <button type="button" class="btn btn-default UnderHead" title="Подзаголовок"  data-insert="{{Подзаголовок|insert}}"><i class="fa fa-header"></i><i class="fa fa-align-center" style="font-size:80%"></i></button>
+                        </div>
+                        <div class="btn-group Another" role="group" aria-label="Разное">
+                            <button type="button" class="btn btn-default" title="Примечание"  data-insert="{{ref|insert}}"><i class="fa fa-file-text"></i></button>
+                            <button type="button" class="btn btn-default" title="Комментарий"  data-insert="<!— insert —>"><i class="fa fa-tag"></i></button>
+                            <button type="button" class="btn btn-default Illus" title="Иллюстрация" data-insert="{{Иллюстрация}}insert "><i class="fa fa-picture-o"></i></button>
+                            <button type="button" class="btn btn-default" title="Ссылка на Википедию" data-insert="Подробнее на [insert Википедии]"><i class="fa fa-link"></i><span style="font-size: 72%; margin-left: -2px; vertical-align: super; font-weight: bold;">W</span></button>
+                        </div>
+                        <div class="btn-group Save" role="group" aria-label="Сохранение изменений">
+                            <button wicket:id="saveTextAjax" type="button" class="btn btn-primary" title="Сохранить"><i class="fa fa-floppy-o"></i></button>
+                        </div>
+                    </div>
+                    <textarea wicket:id="editor" class="form-control" id="textarea" name="textarea" cols="30" rows="50" style="min-height:400px;"></textarea>
+                </form>
+            </main>
+        </div>
+    </wicket:extend>
+</body>
+</html>

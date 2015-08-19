@@ -23,6 +23,8 @@ import ru.ruranobe.mybatis.tables.Chapter;
 import ru.ruranobe.mybatis.tables.ChapterImage;
 import ru.ruranobe.mybatis.tables.ExternalResource;
 import ru.ruranobe.mybatis.tables.Volume;
+import ru.ruranobe.wicket.components.ContentsHolder;
+import ru.ruranobe.wicket.components.sidebar.ContentsModule;
 import ru.ruranobe.wicket.webpages.base.TextLayoutPage;
 
 import java.util.ArrayList;
@@ -51,7 +53,7 @@ public class Text extends TextLayoutPage
             for (Chapter chapter : chapterList)
             {
                 Integer textId = chapter.getTextId();
-                ru.ruranobe.mybatis.tables.Text chapterText = null;
+                ru.ruranobe.mybatis.tables.Text chapterText;
                 String textHtml = "";
                 String chapterFootnotes = "";
                 String chapterContents = "";
@@ -245,66 +247,30 @@ public class Text extends TextLayoutPage
             h2Toh3.put(h2, h3s);
         }
 
-
-        ListView<ContentItem> h2Repeater = new ListView<ContentItem>("h2Repeater", h2s)
+        List<ContentsHolder> contentsHolders = new ArrayList<ContentsHolder>();
+        for (ContentItem h2Tag : h2s)
         {
-            @Override
-            protected void populateItem(ListItem<ContentItem> item)
+            ContentsHolder h2Content = new ContentsHolder("#h_id-" + h2Tag.getTagId(), h2Tag.getTitle());
+            List<ContentItem> h3Tags = h2Toh3.get(h2Tag);
+            if (h3Tags != null)
             {
-                ContentItem contentItem = item.getModelObject();
-                Label h2level = new Label("h2level",contentItem.getTitle());
-                if (Strings.isEmpty(contentItem.getTitle()))
+                for (ContentItem h3Tag : h3Tags)
                 {
-                    h2level.setVisible(false);
-                }
-                AttributeAppender href = new AttributeAppender("href", "#h_id-"+contentItem.getTagId());
-                h2level.add(href);
-                item.add(h2level);
-
-                List<ContentItem> h3s = h2Toh3.get(contentItem);
-                ListView<ContentItem> h3Repeater;
-                h3Repeater = new ListView<ContentItem>("h3Repeater", h3s)
-                {
-                    @Override
-                    protected void populateItem(ListItem<ContentItem> item)
+                    ContentsHolder h3Content = new ContentsHolder("#h_id-" + h3Tag.getTagId(), h3Tag.getTitle());
+                    h2Content.addChild(h3Content);
+                    List<ContentItem> h4Tags = h3Toh4.get(h3Tag);
+                    if (h4Tags != null)
                     {
-                        ContentItem contentItem = item.getModelObject();
-                        Label h3level = new Label("h3level",contentItem.getTitle());
-                        AttributeAppender href = new AttributeAppender("href", "#h_id-"+contentItem.getTagId());
-                        h3level.add(href);
-                        item.add(h3level);
-
-                        List<ContentItem> h4s = h3Toh4.get(contentItem);
-                        ListView<ContentItem> h4Repeater = new ListView<ContentItem>("h4Repeater", h4s)
+                        for (ContentItem h4Tag : h4Tags)
                         {
-                            @Override
-                            protected void populateItem(ListItem<ContentItem> item)
-                            {
-                                ContentItem contentItem = item.getModelObject();
-                                Label h4level = new Label("h4level",contentItem.getTitle());
-                                AttributeAppender href = new AttributeAppender("href", "#h_id-"+contentItem.getTagId());
-                                h4level.add(href);
-                                item.add(h4level);
-                            }
-                        };
-                        if (h4s == null || h4s.isEmpty())
-                        {
-                            h4Repeater.setVisible(false);
+                            ContentsHolder h4Content = new ContentsHolder("#h_id-" + h4Tag.getTagId(), h4Tag.getTitle());
+                            h3Content.addChild(h4Content);
                         }
-
-                        item.add(h4Repeater);
                     }
-                };
-
-                if (h3s == null || h3s.isEmpty())
-                {
-                    h3Repeater.setVisible(false);
                 }
-
-                item.add(h3Repeater);
             }
-        };
-        add(h2Repeater);
+            contentsHolders.add(h2Content);
+        }
 
         WebMarkupContainer nextChapter = new WebMarkupContainer("nextChapter");
         nextChapter.setVisible(!Strings.isEmpty(nextUrl));
@@ -317,6 +283,8 @@ public class Text extends TextLayoutPage
         href = new AttributeAppender("href", "../../"+prevUrl);
         prevChapter.add(href);
         add(prevChapter);
+
+        sidebarModules.add(new ContentsModule("sidebarModule", contentsHolders));
     }
 
     private List<Chapter> getChaptersToDisplay(PageParameters parameters, SqlSession session)

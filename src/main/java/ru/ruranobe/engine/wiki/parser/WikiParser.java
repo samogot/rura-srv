@@ -198,7 +198,16 @@ public class WikiParser
         connectIdenticalTags(wikiTagTypeToWikiTags.get(WikiTagType.THREE_EQUAL));
         connectIdenticalTags(wikiTagTypeToWikiTags.get(WikiTagType.TWO_EQUAL));
         connectIdenticalTags(wikiTagTypeToWikiTags.get(WikiTagType.TWO_QUOTES));
-        connectIdenticalTags(wikiTagTypeToWikiTags.get(WikiTagType.NEW_LINE));
+
+        List<WikiTag> newLines = wikiTagTypeToWikiTags.get(WikiTagType.NEW_LINE);
+        if (newLines != null)
+        {
+            for (WikiTag newLine : newLines)
+            {
+                startPositionToReplacement.put(newLine.getStartPosition(),
+                        new Replacement(newLine));
+            }
+        }
 
         for (HashMap.SimpleEntry<Integer, Integer> entry : preParsingBoundaries)
         {
@@ -303,7 +312,8 @@ public class WikiParser
 
         if (appendExtraImagesAtTheEnd)
         {
-            while(imageUrlsIterator.hasNext()) {
+            while(imageUrlsIterator.hasNext())
+            {
                 htmlText.append(String.format("<img src=\'%s\'>", imageUrlsIterator.next()));
             }
         }

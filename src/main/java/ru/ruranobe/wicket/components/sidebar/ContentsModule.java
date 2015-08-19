@@ -34,6 +34,21 @@ public class ContentsModule extends SidebarModuleBase
                     {
                         ContentsHolder ch = item.getModelObject();
                         item.add(new ExternalLink("h3Link", ch.getUrl(), ch.getTitle()));
+                        item.add(new ListView<ContentsHolder>("h4Repeater", ch.getChildren())
+                        {
+                            @Override
+                            protected void populateItem(ListItem<ContentsHolder> item)
+                            {
+                                ContentsHolder ch = item.getModelObject();
+                                item.add(new ExternalLink("h4Link", ch.getUrl(), ch.getTitle()));
+                            }
+
+                            @Override
+                            public boolean isVisible()
+                            {
+                                return !getModelObject().isEmpty();
+                            }
+                        });
                     }
 
                     @Override
