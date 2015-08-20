@@ -612,7 +612,7 @@ public class VolumeEdit extends AdminLayoutPage
                     updateDiv.setMarkupId(generatedUpdateId);
                     final Update update = item.getModelObject();
 
-                    HiddenField<Integer> updateId = new HiddenField<Integer>("updateId =", new Model<Integer>()
+                    HiddenField<Integer> updateId = new HiddenField<Integer>("updateId", new Model<Integer>()
                     {
                         @Override
                         public Integer getObject()
