@@ -356,3 +356,89 @@ UPDATE volumes
 SET image_one = resource_id;
 
 
+
+
+
+UPDATE texts
+SET text_wiki=replace(text_wiki, '\n\n','\n');
+
+# повторить для замены всех иллюстраций
+
+UPDATE texts
+SET text_wiki=concat(
+  left(text_wiki, locate('{{Иллюстрация|', text_wiki)+12), 
+  substr(`text_wiki`, locate('}}', text_wiki, locate('{{Иллюстрация|', text_wiki)))) 
+WHERE text_wiki LIKE '%{{Иллюстрация|%';
+UPDATE texts
+SET text_wiki=concat(
+  left(text_wiki, locate('{{Иллюстрация|', text_wiki)+12), 
+  substr(`text_wiki`, locate('}}', text_wiki, locate('{{Иллюстрация|', text_wiki)))) 
+WHERE text_wiki LIKE '%{{Иллюстрация|%';
+UPDATE texts
+SET text_wiki=concat(
+  left(text_wiki, locate('{{Иллюстрация|', text_wiki)+12), 
+  substr(`text_wiki`, locate('}}', text_wiki, locate('{{Иллюстрация|', text_wiki)))) 
+WHERE text_wiki LIKE '%{{Иллюстрация|%';
+UPDATE texts
+SET text_wiki=concat(
+  left(text_wiki, locate('{{Иллюстрация|', text_wiki)+12), 
+  substr(`text_wiki`, locate('}}', text_wiki, locate('{{Иллюстрация|', text_wiki)))) 
+WHERE text_wiki LIKE '%{{Иллюстрация|%';
+UPDATE texts
+SET text_wiki=concat(
+  left(text_wiki, locate('{{Иллюстрация|', text_wiki)+12), 
+  substr(`text_wiki`, locate('}}', text_wiki, locate('{{Иллюстрация|', text_wiki)))) 
+WHERE text_wiki LIKE '%{{Иллюстрация|%';
+UPDATE texts
+SET text_wiki=concat(
+  left(text_wiki, locate('{{Иллюстрация|', text_wiki)+12), 
+  substr(`text_wiki`, locate('}}', text_wiki, locate('{{Иллюстрация|', text_wiki)))) 
+WHERE text_wiki LIKE '%{{Иллюстрация|%';
+UPDATE texts
+SET text_wiki=concat(
+  left(text_wiki, locate('{{Иллюстрация|', text_wiki)+12), 
+  substr(`text_wiki`, locate('}}', text_wiki, locate('{{Иллюстрация|', text_wiki)))) 
+WHERE text_wiki LIKE '%{{Иллюстрация|%';
+UPDATE texts
+SET text_wiki=concat(
+  left(text_wiki, locate('{{Иллюстрация|', text_wiki)+12), 
+  substr(`text_wiki`, locate('}}', text_wiki, locate('{{Иллюстрация|', text_wiki)))) 
+WHERE text_wiki LIKE '%{{Иллюстрация|%';
+UPDATE texts
+SET text_wiki=concat(
+  left(text_wiki, locate('{{Иллюстрация|', text_wiki)+12), 
+  substr(`text_wiki`, locate('}}', text_wiki, locate('{{Иллюстрация|', text_wiki)))) 
+WHERE text_wiki LIKE '%{{Иллюстрация|%';
+UPDATE texts
+SET text_wiki=concat(
+  left(text_wiki, locate('{{Иллюстрация|', text_wiki)+12), 
+  substr(`text_wiki`, locate('}}', text_wiki, locate('{{Иллюстрация|', text_wiki)))) 
+WHERE text_wiki LIKE '%{{Иллюстрация|%';
+UPDATE texts
+SET text_wiki=concat(
+  left(text_wiki, locate('{{Иллюстрация|', text_wiki)+12), 
+  substr(`text_wiki`, locate('}}', text_wiki, locate('{{Иллюстрация|', text_wiki)))) 
+WHERE text_wiki LIKE '%{{Иллюстрация|%';
+UPDATE texts
+SET text_wiki=concat(
+  left(text_wiki, locate('{{Иллюстрация|', text_wiki)+12), 
+  substr(`text_wiki`, locate('}}', text_wiki, locate('{{Иллюстрация|', text_wiki)))) 
+WHERE text_wiki LIKE '%{{Иллюстрация|%';
+UPDATE texts
+SET text_wiki=concat(
+  left(text_wiki, locate('{{Иллюстрация|', text_wiki)+12), 
+  substr(`text_wiki`, locate('}}', text_wiki, locate('{{Иллюстрация|', text_wiki)))) 
+WHERE text_wiki LIKE '%{{Иллюстрация|%';
+UPDATE texts
+SET text_wiki=concat(
+  left(text_wiki, locate('{{Иллюстрация|', text_wiki)+12), 
+  substr(`text_wiki`, locate('}}', text_wiki, locate('{{Иллюстрация|', text_wiki)))) 
+WHERE text_wiki LIKE '%{{Иллюстрация|%';
+UPDATE texts
+SET text_wiki=concat(
+  left(text_wiki, locate('{{Иллюстрация|', text_wiki)+12), 
+  substr(`text_wiki`, locate('}}', text_wiki, locate('{{Иллюстрация|', text_wiki)))) 
+WHERE text_wiki LIKE '%{{Иллюстрация|%';
+
+
+
