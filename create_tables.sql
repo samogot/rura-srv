@@ -203,6 +203,17 @@ CREATE TABLE updates
   description VARCHAR(255)
 );
 
+create table texts_history
+(
+  current_text_id INT(11) PRIMARY KEY AUTO_INCREMENT,
+  previous_text_id INT(11),
+  insertion_time DATETIME NOT NULL
+);
+
+alter table texts_history add constraint fk_current_text_id foreign key (current_text_id) references texts (text_id);
+
+alter table texts_history add constraint fk_previous_text_id foreign key (previous_text_id) references texts (text_id);
+
 ALTER TABLE chapter_images ADD CONSTRAINT fk_colored_image_id FOREIGN KEY (colored_image_id) REFERENCES external_resources (resource_id);
 
 ALTER TABLE chapter_images ADD CONSTRAINT fk_non_colored_image_id FOREIGN KEY (non_colored_image_id) REFERENCES external_resources (resource_id);

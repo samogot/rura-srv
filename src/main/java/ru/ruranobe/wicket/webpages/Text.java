@@ -345,5 +345,4 @@ public class Text extends TextLayoutPage
     private boolean nested = false;
     private String nextUrl = null;
     private String prevUrl = null;
-    private static final String DELIMITER = ",;,";
 }

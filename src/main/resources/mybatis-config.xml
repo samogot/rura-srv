@@ -8,9 +8,9 @@
             <transactionManager type="JDBC"/>
             <dataSource type="POOLED">
                 <property name="driver" value="com.mysql.jdbc.Driver"/>
-                <property name="url" value="jdbc:mysql://185.65.244.11:3306/ruranobe"/>
-                <property name="username" value="ruranobe"/>
-                <property name="password" value="NcMvhRDum5WNS4cT"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/ruranobe"/>
+                <property name="username" value="root"/>
+                <property name="password" value="parolyaNet0"/>
             </dataSource>
         </environment>
     </environments>
@@ -28,5 +28,6 @@
         <mapper resource="ru/ruranobe/mybatis/mappers/TeamsMapper.xml"/>
         <mapper resource="ru/ruranobe/mybatis/mappers/TeamMembersMapper.xml"/>
         <mapper resource="ru/ruranobe/mybatis/mappers/VolumeReleaseActivitiesMapper.xml"/>
+        <mapper resource="ru/ruranobe/mybatis/mappers/TextsHistoryMapper.xml"/>
     </mappers>
 </configuration>
