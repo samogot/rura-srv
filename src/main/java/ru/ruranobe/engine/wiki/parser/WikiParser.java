@@ -1,7 +1,5 @@
 package ru.ruranobe.engine.wiki.parser;
 
-import org.apache.wicket.util.string.Strings;
-
 import java.util.*;
 
 /**
@@ -11,12 +9,29 @@ import java.util.*;
 public class WikiParser
 {
 
+    private final Map<WikiTagType, ArrayList<WikiTag>> wikiTagTypeToWikiTags = new
+            EnumMap<WikiTagType, ArrayList<WikiTag>>(WikiTagType.class);
+    private final Map<Integer, Replacement> startPositionToReplacement = new
+            HashMap<Integer, Replacement>();
+    private final int textId;
+    private final String wikiText;
+    //private StringBuilder footnotes = new StringBuilder();
+    private List<String> footnotes = new ArrayList<String>();
+    private List<ContentItem> contents = new ArrayList<ContentItem>();
+    private int orderNumber = 0;
+
+    public WikiParser(int textId, String wikiText)
+    {
+        this.textId = textId;
+        this.wikiText = wikiText;
+    }
+
     public String parseWikiText(List<String> imageUrls, boolean appendExtraImagesAtTheEnd)
     {
         fillWikiTags();
         Iterator<String> imageUrlsIterator = imageUrls.iterator();
         connectWikiTags(imageUrlsIterator);
-        long uniqueId = Long.valueOf(Integer.toString(textId) + Integer.toString(orderNumber+1));
+        long uniqueId = Long.valueOf(Integer.toString(textId) + Integer.toString(orderNumber + 1));
         StringBuilder htmlText = new StringBuilder(String.format("<p id=\"p_id-%d\">", uniqueId));
         parseWikiTextToHtmlText(0, wikiText.length(), htmlText, imageUrlsIterator, appendExtraImagesAtTheEnd);
         htmlText.append("</p>");
@@ -67,7 +82,7 @@ public class WikiParser
                     continue;
                 }
             }
-            if (wikiText.codePointAt(i)=='=')
+            if (wikiText.codePointAt(i) == '=')
             {
                 tagType = WikiTagType.resolve("====");
                 if (curI != (i = addWikiTagIfMetToMap(wikiText, i, tagType)))
@@ -85,7 +100,7 @@ public class WikiParser
                     continue;
                 }
             }
-            if (wikiText.codePointAt(i)=='\'')
+            if (wikiText.codePointAt(i) == '\'')
             {
                 tagType = WikiTagType.resolve("\'\'\'");
                 if (curI != (i = addWikiTagIfMetToMap(wikiText, i, tagType)))
@@ -99,7 +114,7 @@ public class WikiParser
                     continue;
                 }
             }
-            if (wikiText.codePointAt(i)=='}')
+            if (wikiText.codePointAt(i) == '}')
             {
                 tagType = WikiTagType.resolve("}}");
                 if (curI != (i = addWikiTagIfMetToMap(wikiText, i, tagType)))
@@ -119,7 +134,7 @@ public class WikiParser
     // Connect related special tags together. Determine tag's end position in text.
     private void connectWikiTags(Iterator<String> imageUrlsIterator)
     {
-        List<HashMap.SimpleEntry<Integer,Integer>> preParsingBoundaries = new ArrayList<HashMap.SimpleEntry<Integer, Integer>>();
+        List<HashMap.SimpleEntry<Integer, Integer>> preParsingBoundaries = new ArrayList<HashMap.SimpleEntry<Integer, Integer>>();
 
         int j = 0;
         int k = 0;
@@ -155,8 +170,7 @@ public class WikiParser
                             startPositionToReplacement.put(replacement.getStartPosition(), replacement);
                         }
                         j++;
-                    }
-                    else if (footnote != null && footnote.getStartPosition() == startPosition)
+                    } else if (footnote != null && footnote.getStartPosition() == startPosition)
                     {
                         footnote.setListOrderNumber(k);
 
@@ -182,8 +196,7 @@ public class WikiParser
                 if (imageUrlsIterator.hasNext())
                 {
                     image.setImageUrl(imageUrlsIterator.next());
-                }
-                else
+                } else
                 {
                     image.setImageUrl("unknown source");
                 }
@@ -223,12 +236,12 @@ public class WikiParser
         {
             for (int i = 0; i < tags.size(); )
             {
-                if (i+1 >= tags.size())
+                if (i + 1 >= tags.size())
                 {
                     break;
                 }
                 WikiTag tag1 = tags.get(i);
-                WikiTag tag2 = tags.get(i+1);
+                WikiTag tag2 = tags.get(i + 1);
                 List<Replacement> replacements = Replacement.getReplacementsForPair(tag1, tag2);
                 for (Replacement replacement : replacements)
                 {
@@ -250,18 +263,16 @@ public class WikiParser
                 {
                     contents.add(new ContentItem("h2", tag1.getUniqueId(),
                             wikiText.substring(tag1.getStartPosition() + tag1.getWikiTagLength(), tag2.getStartPosition())));
-                }
-                else if (tags.get(i).getWikiTagType() == WikiTagType.THREE_EQUAL)
+                } else if (tags.get(i).getWikiTagType() == WikiTagType.THREE_EQUAL)
                 {
                     contents.add(new ContentItem("h3", tag1.getUniqueId(),
                             wikiText.substring(tag1.getStartPosition() + tag1.getWikiTagLength(), tag2.getStartPosition())));
-                }
-                else if (tags.get(i).getWikiTagType() == WikiTagType.FOUR_EQUAL)
+                } else if (tags.get(i).getWikiTagType() == WikiTagType.FOUR_EQUAL)
                 {
                     contents.add(new ContentItem("h4", tag1.getUniqueId(),
                             wikiText.substring(tag1.getStartPosition() + tag1.getWikiTagLength(), tag2.getStartPosition())));
                 }
-                i+=2;
+                i += 2;
             }
         }
     }
@@ -271,8 +282,8 @@ public class WikiParser
         int symbolsTillEnd = s.length() - i;
         int tagLength = tagType.getWikiTagSize();
 
-        if (symbolsTillEnd > tagLength-1 &&
-                s.substring(i, i+tagLength).equals(tagType.getWikiTagCharSequence()))
+        if (symbolsTillEnd > tagLength - 1 &&
+            s.substring(i, i + tagLength).equals(tagType.getWikiTagCharSequence()))
         {
             long uniqueId = Long.valueOf(Integer.toString(textId) + Integer.toString(orderNumber));
             WikiTag tag = new WikiTag(tagType, i, uniqueId);
@@ -281,8 +292,7 @@ public class WikiParser
                 ArrayList<WikiTag> tags = new ArrayList<WikiTag>();
                 tags.add(tag);
                 wikiTagTypeToWikiTags.put(tagType, tags);
-            }
-            else
+            } else
             {
                 wikiTagTypeToWikiTags.get(tagType).add(tag);
             }
@@ -302,8 +312,7 @@ public class WikiParser
             {
                 htmlText.append(replacement.getReplacementText());
                 i += replacement.getEndPosition() - replacement.getStartPosition();
-            }
-            else
+            } else
             {
                 htmlText.appendCodePoint(wikiText.codePointAt(i));
                 i++;
@@ -312,28 +321,13 @@ public class WikiParser
 
         if (appendExtraImagesAtTheEnd)
         {
-            while(imageUrlsIterator.hasNext())
+            while (imageUrlsIterator.hasNext())
             {
-                htmlText.append(String.format("<img src=\'%s\'>", imageUrlsIterator.next()));
+                String url = imageUrlsIterator.next();
+                htmlText.append(String.format("<a class=\"fancybox\" rel=\"group\" href=\"%s\">" +
+                                              "<img src=\"%s\" alt=\"\" class=\"img-responsive center-block img-thumbnail\"/>" +
+                                              "</a>", url, url));
             }
         }
     }
-
-    public WikiParser(int textId, String wikiText)
-    {
-        this.textId = textId;
-        this.wikiText = wikiText;
-    }
-
-    //private StringBuilder footnotes = new StringBuilder();
-    private List<String> footnotes = new ArrayList<String>();
-    private List<ContentItem> contents = new ArrayList<ContentItem>();
-
-    private final Map<WikiTagType, ArrayList<WikiTag>> wikiTagTypeToWikiTags = new
-            EnumMap<WikiTagType, ArrayList<WikiTag>>(WikiTagType.class);
-    private final Map<Integer, Replacement> startPositionToReplacement = new
-            HashMap<Integer, Replacement>();
-    private final int textId;
-    private final String wikiText;
-    private int orderNumber = 0;
 }
