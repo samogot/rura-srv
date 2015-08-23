@@ -1,5 +1,7 @@
 # use ruranobe;
 
+SET NAMES UTF8;
+
 INSERT IGNORE INTO projects (project_id, parent_id, url, title, order_number)
   SELECT
     series_id,
