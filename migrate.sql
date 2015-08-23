@@ -559,18 +559,26 @@ WHERE text_wiki LIKE '%{{Иллюстрация|%';
 
 
 CREATE TEMPORARY TABLE ch_parent_first (
-  parent_new_text_id INTEGER PRIMARY KEY,
-  parent_chapter_id  INTEGER UNIQUE,
-  first_url          VARCHAR(32),
-  first_text_id      INTEGER UNIQUE
+  parent_new_text_id                   INTEGER PRIMARY KEY,
+  parent_chapter_id                    INTEGER UNIQUE,
+  first_chapter_id                     INTEGER UNIQUE,
+  first_url                            VARCHAR(32),
+  first_text_id                        INTEGER UNIQUE,
+  min_first_chapter_image_order_number INTEGER
 );
 
 INSERT INTO ch_parent_first
   SELECT
     @merge_id := @merge_id + 1,
     p.chapter_id,
+    f.chapter_id,
     f.url,
-    t.text_id
+    t.text_id,
+    (SELECT order_number
+     FROM chapter_images
+     WHERE f.chapter_id = chapter_id
+     ORDER BY order_number
+     LIMIT 1)
   FROM chapters p, chapters f, texts t, (SELECT @merge_id := max(text_id)
                                          FROM texts) xxx
   WHERE p.text_id IS NULL
@@ -595,11 +603,11 @@ INSERT INTO texts (text_id, text_wiki)
 
 UPDATE chapters
   INNER JOIN ch_parent_first ON chapter_id = parent_chapter_id
-SET text_id = parent_new_text_id, url = if(right(first_url, 1) = 'p',
-                                           left(first_url, length(first_url) - 1),
-                                           if(right(first_url, 3) LIKE 'ch%',
-                                              left(first_url, length(first_url) - 3),
-                                              left(first_url, length(first_url) - 2)));
+SET text_id = parent_new_text_id, published = 1, url = if(right(first_url, 1) = 'p',
+                                                          left(first_url, length(first_url) - 1),
+                                                          if(right(first_url, 3) LIKE 'ch%',
+                                                             left(first_url, length(first_url) - 3),
+                                                             left(first_url, length(first_url) - 2)));
 
 UPDATE texts
   INNER JOIN ch_parent_first ON text_id = first_text_id
@@ -609,12 +617,11 @@ UPDATE texts
 SET text_wiki = substr(text_wiki, locate('\n', text_wiki, locate('==', text_wiki)) + 1)
 WHERE text_wiki LIKE '==%' OR text_wiki LIKE '\n==%';
 
-SELECT
-  url,
-  text_wiki,
-  locate('\n', text_wiki, locate('==', text_wiki)),
-  substr(text_wiki, locate('\n', text_wiki, locate('==', text_wiki)) + 1)
-FROM texts
-  LEFT JOIN chapters USING (text_id)
-WHERE text_wiki LIKE '==%'
-      OR text_wiki LIKE '\n==%';
+UPDATE chapter_images
+  INNER JOIN ch_parent_first ON first_chapter_id = chapter_id
+  INNER JOIN texts ON parent_new_text_id = text_id
+SET chapter_images.chapter_id = parent_chapter_id
+WHERE text_wiki LIKE '{{Иллюстрация}}%'
+      AND order_number < min_first_chapter_image_order_number
+                         + round((char_length(text_wiki) - char_length(replace(text_wiki, '{{Иллюстрация}}', ''))) /
+                                 char_length('{{Иллюстрация}}'), 0);
