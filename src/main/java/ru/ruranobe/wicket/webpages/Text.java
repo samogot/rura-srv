@@ -295,11 +295,6 @@ public class Text extends TextLayoutPage
         add(prevChapter);
 
         sidebarModules.add(new ContentsModule("sidebarModule", contentsHolders));
-
-        Label c = new Label("c");;
-        c.setMarkupId("c");
-        c.add(new BookmarksStatelessAjaxEventBehavior());
-        add(c);
     }
 
     private List<Chapter> getChaptersToDisplay(PageParameters parameters, SqlSession session)
@@ -355,62 +350,6 @@ public class Text extends TextLayoutPage
         }
 
         return chapterList;
-    }
-
-    private class BookmarksStatelessAjaxEventBehavior extends AbstractAjaxBehavior
-    {
-
-        protected void respond(final AjaxRequestTarget target)
-        {
-            HttpServletRequest request = (HttpServletRequest) getRequest().getContainerRequest();
-            System.out.println("sfvds");
-        }
-
-        @Override
-        public void renderHead(Component component, IHeaderResponse response)
-        {
-            super.renderHead(component, response);
-
-            CoreLibrariesContributor.contributeAjax(component.getApplication(), response);
-
-            RequestCycle requestCycle = component.getRequestCycle();
-            Url baseUrl = requestCycle.getUrlRenderer().getBaseUrl();
-            CharSequence ajaxBaseUrl = Strings.escapeMarkup(baseUrl.toString());
-            response.render(JavaScriptHeaderItem.forScript("Wicket.Ajax.baseUrl=\"" + ajaxBaseUrl
-                    + "\";", "wicket-ajax-base-url"));
-
-            String callbackUrl = getCallbackUrl().toString();
-            response.render(JavaScriptHeaderItem.forScript("var bookmarksListenerUrl='" + callbackUrl + "';", "bookmarksListener"));
-        }
-
-        @Override
-        public CharSequence getCallbackUrl()
-        {
-            final Url url = Url.parse(super.getCallbackUrl().toString());
-            final PageParameters params = getPageParameters();
-
-            return RuranobeUtils.mergeParameters(url, params).toString();
-        }
-
-        @Override
-        public final void onRequest()
-        {
-            WebApplication app = (WebApplication)getComponent().getApplication();
-            AjaxRequestTarget target = app.newAjaxRequestTarget(getComponent().getPage());
-
-            RequestCycle requestCycle = RequestCycle.get();
-            requestCycle.scheduleRequestHandlerAfterCurrent(target);
-
-            respond(target);
-        }
-
-        @Override
-        public boolean getStatelessHint(final Component component)
-        {
-            return true;
-        }
-
-        private static final long serialVersionUID = 2387070289758596955L;
     }
 
     private boolean nested = false;
