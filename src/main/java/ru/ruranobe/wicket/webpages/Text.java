@@ -3,11 +3,7 @@ package ru.ruranobe.wicket.webpages;
 import com.google.common.collect.Lists;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.wicket.behavior.AttributeAppender;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
 import ru.ruranobe.engine.wiki.parser.ContentItem;
@@ -23,6 +19,7 @@ import ru.ruranobe.mybatis.tables.Chapter;
 import ru.ruranobe.mybatis.tables.ChapterImage;
 import ru.ruranobe.mybatis.tables.ExternalResource;
 import ru.ruranobe.mybatis.tables.Volume;
+import ru.ruranobe.wicket.components.CommentsPanel;
 import ru.ruranobe.wicket.components.ContentsHolder;
 import ru.ruranobe.wicket.components.sidebar.ContentsModule;
 import ru.ruranobe.wicket.webpages.base.TextLayoutPage;
@@ -34,6 +31,9 @@ import java.util.Map;
 
 public class Text extends TextLayoutPage
 {
+    private boolean nested = false;
+    private String nextUrl = null;
+    private String prevUrl = null;
     public Text(PageParameters parameters)
     {
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
@@ -272,7 +272,19 @@ public class Text extends TextLayoutPage
             contentsHolders.add(h2Content);
         }
 
-        WebMarkupContainer nextChapter = new WebMarkupContainer("nextChapter");
+
+        textPageUtils.setVisible(true);
+        /*textPageUtils.add(homeTextLink = new BookmarkablePageLink("homeTextLink", VolumePage.class, volume.getUrlParameters()));
+        if (nextChapter != null)
+        {
+            textPageUtils.add(nextTextLink = new BookmarkablePageLink("nextTextLink", VolumeTextPage.class, nextChapter.getUrlParameters()));
+        }
+        if (prevChapter != null)
+        {
+            textPageUtils.add(prevTextLink = new BookmarkablePageLink("prevTextLink", VolumeTextPage.class, prevChapter.getUrlParameters()));
+        }*/
+
+        /*WebMarkupContainer nextChapter = new WebMarkupContainer("nextChapter");
         nextChapter.setVisible(!Strings.isEmpty(nextUrl));
         AttributeAppender href = new AttributeAppender("href", "../../"+nextUrl);
         nextChapter.add(href);
@@ -282,8 +294,9 @@ public class Text extends TextLayoutPage
         prevChapter.setVisible(!Strings.isEmpty(prevUrl));
         href = new AttributeAppender("href", "../../"+prevUrl);
         prevChapter.add(href);
-        add(prevChapter);
+        add(prevChapter);*/
 
+        add(new CommentsPanel("comments"));
         sidebarModules.add(new ContentsModule("sidebarModule", contentsHolders));
     }
 
@@ -341,8 +354,4 @@ public class Text extends TextLayoutPage
 
         return chapterList;
     }
-
-    private boolean nested = false;
-    private String nextUrl = null;
-    private String prevUrl = null;
 }
