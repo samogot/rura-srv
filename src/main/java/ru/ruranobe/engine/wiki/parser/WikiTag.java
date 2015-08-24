@@ -1,12 +1,15 @@
 package ru.ruranobe.engine.wiki.parser;
 
+import java.util.Map;
+
 public class WikiTag
 {
-    public WikiTag(WikiTagType wikiTagType, int startPosition, long uniqueId)
+    public WikiTag(WikiTagType wikiTagType, int startPosition, String uniqueId, Map<String, String> attributeNameToValue)
     {
         this.wikiTagType = wikiTagType;
         this.startPosition = startPosition;
         this.uniqueId = uniqueId;
+        this.attributeNameToValue = attributeNameToValue;
     }
 
     public WikiTagType getWikiTagType()
@@ -24,7 +27,7 @@ public class WikiTag
         return wikiTagType.getWikiTagSize();
     }
 
-    public long getUniqueId()
+    public String getUniqueId()
     {
         return uniqueId;
     }
@@ -32,6 +35,11 @@ public class WikiTag
     public int getListOrderNumber()
     {
         return listOrderNumber;
+    }
+
+    public Map<String, String> getAttributeNameToValue()
+    {
+        return attributeNameToValue;
     }
 
     public void setListOrderNumber(int listOrderNumber) {
@@ -69,7 +77,8 @@ public class WikiTag
 
     private final WikiTagType wikiTagType;
     private final int startPosition;
-    private final long uniqueId;
+    private final String uniqueId;
+    private final Map<String, String> attributeNameToValue;
     private int listOrderNumber;
     private String imageUrl;
 }

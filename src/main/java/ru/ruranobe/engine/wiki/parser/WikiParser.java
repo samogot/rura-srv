@@ -1,7 +1,9 @@
 package ru.ruranobe.engine.wiki.parser;
 
 import org.apache.wicket.util.string.Strings;
+import ru.ruranobe.misc.RuranobeUtils;
 
+import java.nio.charset.Charset;
 import java.util.*;
 
 /**
@@ -16,8 +18,24 @@ public class WikiParser
         fillWikiTags();
         Iterator<String> imageUrlsIterator = imageUrls.iterator();
         connectWikiTags(imageUrlsIterator);
-        long uniqueId = Long.valueOf(Integer.toString(textId) + Integer.toString(orderNumber+1));
-        StringBuilder htmlText = new StringBuilder(String.format("<p id=\"p_id-%d\">", uniqueId));
+
+        StringBuilder additionalTags = new StringBuilder("lineNo=\"");
+        additionalTags.append(Integer.toString(paragraphOrderNumber));
+        additionalTags.append("\" ");
+        if (textId != null)
+        {
+            additionalTags.append("textId=\"").append(textId.toString()).append("\" ");
+        }
+        if (chapterId != null)
+        {
+            additionalTags.append("chapterId=\"").append(chapterId.toString()).append("\" ");
+        }
+        StringBuilder htmlText = new StringBuilder(String.format("<p id=\"%s\" %s>",
+                RuranobeUtils.paragraphIdOf(chapterId, textId, paragraphOrderNumber),
+                additionalTags.toString()));
+
+        paragraphOrderNumber++;
+
         parseWikiTextToHtmlText(0, wikiText.length(), htmlText, imageUrlsIterator, appendExtraImagesAtTheEnd);
         htmlText.append("</p>");
         return htmlText.toString();
@@ -26,12 +44,6 @@ public class WikiParser
     public List<String> getFootnotes()
     {
         return footnotes;
-        /*String footnotesVal = footnotes.toString();
-        if (Strings.isEmpty(footnotesVal))
-        {
-            return null;
-        }
-        return "<h2><span>Примечания</span></h2><ol class=\"references\">"+footnotesVal+"</ol>";*/
     }
 
     public List<ContentItem> getContents()
@@ -274,8 +286,36 @@ public class WikiParser
         if (symbolsTillEnd > tagLength-1 &&
                 s.substring(i, i+tagLength).equals(tagType.getWikiTagCharSequence()))
         {
-            long uniqueId = Long.valueOf(Integer.toString(textId) + Integer.toString(orderNumber));
-            WikiTag tag = new WikiTag(tagType, i, uniqueId);
+            String textIdStr = textId == null ? "" : Integer.toString(textId);
+            String chapterIdStr = chapterId == null ? "" : Integer.toString(chapterId);
+            String orderNumberStr = Integer.toString(orderNumber);
+            Map<String, String> attributeNameToValue = null;
+
+            String uniqueId = textIdStr + chapterIdStr + orderNumberStr;
+
+            if (tagType == WikiTagType.FOOTNOTE)
+            {
+                attributeNameToValue = new HashMap<String, String>();
+                attributeNameToValue.put("href", "#cite_note-" + uniqueId);
+            }
+            else if (tagType == WikiTagType.NEW_LINE)
+            {
+                uniqueId = RuranobeUtils.paragraphIdOf(chapterId, textId, paragraphOrderNumber);
+
+                attributeNameToValue = new HashMap<String, String>();
+                if (textId != null)
+                {
+                    attributeNameToValue.put("textId", textId.toString());
+                }
+                if (chapterId != null)
+                {
+                    attributeNameToValue.put("chapterId", chapterId.toString());
+                }
+                attributeNameToValue.put("lineNo", Integer.toString(paragraphOrderNumber));
+                paragraphOrderNumber++;
+            }
+
+            WikiTag tag = new WikiTag(tagType, i, uniqueId, attributeNameToValue);
             if (wikiTagTypeToWikiTags.get(tagType) == null)
             {
                 ArrayList<WikiTag> tags = new ArrayList<WikiTag>();
@@ -319,8 +359,10 @@ public class WikiParser
         }
     }
 
-    public WikiParser(int textId, String wikiText)
+    // textId and chapterId can be nullable
+    public WikiParser(Integer textId, Integer chapterId, String wikiText)
     {
+        this.chapterId = chapterId;
         this.textId = textId;
         this.wikiText = wikiText;
     }
@@ -333,7 +375,9 @@ public class WikiParser
             EnumMap<WikiTagType, ArrayList<WikiTag>>(WikiTagType.class);
     private final Map<Integer, Replacement> startPositionToReplacement = new
             HashMap<Integer, Replacement>();
-    private final int textId;
+    private final Integer textId;
+    private final Integer chapterId;
     private final String wikiText;
     private int orderNumber = 0;
+    int paragraphOrderNumber = 0;
 }

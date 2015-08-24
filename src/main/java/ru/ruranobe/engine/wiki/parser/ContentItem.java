@@ -2,7 +2,7 @@ package ru.ruranobe.engine.wiki.parser;
 
 public class ContentItem
 {
-    public ContentItem(String tagName, long tagId, String title)
+    public ContentItem(String tagName, String tagId, String title)
     {
         this.tagName = tagName;
         this.tagId = tagId;
@@ -17,11 +17,11 @@ public class ContentItem
         return tagName;
     }
 
-    public long getTagId() {
+    public String getTagId() {
         return tagId;
     }
 
     private final String tagName;
-    private final long tagId;
+    private final String tagId;
     private final String title;
 }

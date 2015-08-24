@@ -1,23 +1,20 @@
 package ru.ruranobe.wicket;
 
 import net.ftlines.wicketsource.WicketSource;
-import org.apache.log4j.PropertyConfigurator;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.core.request.mapper.MountedMapper;
 import org.apache.wicket.core.util.file.WebApplicationPath;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.renderStrategy.AbstractHeaderRenderStrategy;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebResponse;
-import org.apache.wicket.request.Url;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.request.resource.UrlResourceReference;
-import org.apache.wicket.settings.IRequestCycleSettings;
 import org.apache.wicket.util.crypt.CachingSunJceCryptFactory;
+import ru.ruranobe.wicket.resources.BookmarksRestWebService;
+import ru.ruranobe.wicket.resources.OrphusRestWebService;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.wicket.webpages.*;
 
@@ -81,6 +78,28 @@ public class WicketApplication extends AuthenticatedWebApplication
         mount(new MountedMapper("/a/${project}/${volume}", VolumeEdit.class));
         mount(new MountedMapper("/a/${project}", ProjectEdit.class));
         mount(new MountedMapper("/a", GlobalEdit.class));
+
+        mountResource("/bookmarks", new ResourceReference("bookmarksResource")
+        {
+            BookmarksRestWebService bookmarksResource = new BookmarksRestWebService();
+
+            @Override
+            public IResource getResource()
+            {
+                return bookmarksResource;
+            }
+        });
+
+        mountResource("/orphus", new ResourceReference("orphusResource")
+        {
+            OrphusRestWebService orphusResource = new OrphusRestWebService();
+
+            @Override
+            public IResource getResource()
+            {
+                return orphusResource;
+            }
+        });
     }
 
     protected WebResponse newWebResponse(final WebRequest webRequest,
@@ -100,5 +119,4 @@ public class WicketApplication extends AuthenticatedWebApplication
     {
         return LoginPage.class;
     }
-
 }

@@ -19,7 +19,9 @@ public class Replacement
         String replacementText = TAG_TO_REPLACEMENT_TEXT.get(tag.getWikiTagType());
         if (tag.getWikiTagType() == FOOTNOTE)
         {
-            this.replacementText = String.format(replacementText, tag.getUniqueId(), tag.getUniqueId(), tag.getListOrderNumber());
+            Map<String, String> attributeNameToValue = tag.getAttributeNameToValue();
+            String hrefTag = "href=\"" + attributeNameToValue.get("href") + "\"";
+            this.replacementText = String.format(replacementText, tag.getUniqueId(), hrefTag, tag.getListOrderNumber());
         }
         else if (tag.getWikiTagType() == IMAGE)
         {
@@ -27,7 +29,21 @@ public class Replacement
         }
         else if (tag.getWikiTagType() == NEW_LINE)
         {
-            this.replacementText = String.format(replacementText, tag.getUniqueId());;
+            String additionalTags = "";
+            Map<String, String> attributeNameToValue = tag.getAttributeNameToValue();
+            if (attributeNameToValue != null && !attributeNameToValue.isEmpty())
+            {
+                StringBuilder additionalTagsBuilder = new StringBuilder();
+                for (Map.Entry<String, String> entry: attributeNameToValue.entrySet())
+                {
+                    additionalTagsBuilder.append(entry.getKey())
+                            .append("=\"")
+                            .append(entry.getValue())
+                            .append("\" ");
+                    additionalTags = additionalTagsBuilder.toString();
+                }
+            }
+            this.replacementText = String.format(replacementText, tag.getUniqueId(), additionalTags);
         }
         else
         {
@@ -141,17 +157,17 @@ public class Replacement
             new EnumMap<WikiTagType, String>(WikiTagType.class)
     {
         {
-            put(NEW_LINE, "</p><p id=\"p_id-%d\">");
-            put(FOOTNOTE, "<sup id=\"cite_ref-%d\" class=\"reference\"><a href=\"#cite_note-%d\">[%d]</a></sup>");
+            put(NEW_LINE, "</p><p id=\"%s\" %s>");
+            put(FOOTNOTE, "<sup id=\"cite_ref-%s\" class=\"reference\"><a href=\"%s\">[%d]</a></sup>");
             put(IMAGE, "<img src=\'%s\'/>");
         }
     };
 
     private static final Map<WikiTagPair, String> PAIR_TO_START_REPLACEMENT_TEXT = new ImmutableMap.Builder<WikiTagPair, String>()
             .put(new WikiTagPair(SUBTITLE, DOUBLE_END_BRACKET), "<div class=\"subtitle\">")
-            .put(new WikiTagPair(TWO_EQUAL, TWO_EQUAL), "<h2 id=\"h_id-%d\">")
-            .put(new WikiTagPair(THREE_EQUAL, THREE_EQUAL), "<h3 id=\"h_id-%d\">")
-            .put(new WikiTagPair(FOUR_EQUAL, FOUR_EQUAL), "<h4 id=\"h_id-%d\">")
+            .put(new WikiTagPair(TWO_EQUAL, TWO_EQUAL), "<h2 id=\"h_id-%s\">")
+            .put(new WikiTagPair(THREE_EQUAL, THREE_EQUAL), "<h3 id=\"h_id-%s\">")
+            .put(new WikiTagPair(FOUR_EQUAL, FOUR_EQUAL), "<h4 id=\"h_id-%s\">")
             .put(new WikiTagPair(TWO_QUOTES, TWO_QUOTES), "<i>")
             .put(new WikiTagPair(THREE_QUOTES, THREE_QUOTES), "<b>")
             .build();

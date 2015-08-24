@@ -159,7 +159,7 @@ public class Editor extends TextLayoutPage
                     imageUrls.add(imageUrl);
                 }
 
-                WikiParser wikiParser = new WikiParser(text.getTextId(), text.getTextWiki());
+                WikiParser wikiParser = new WikiParser(text.getTextId(), chapter.getChapterId(), text.getTextWiki());
                 text.setTextHtml(wikiParser.parseWikiText(imageUrls, true));
 
                 StringBuilder contents = new StringBuilder();

@@ -3,12 +3,19 @@ package ru.ruranobe.wicket.webpages;
 import com.google.common.collect.Lists;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.resource.CoreLibrariesContributor;
 import org.apache.wicket.util.string.Strings;
 import ru.ruranobe.engine.wiki.parser.ContentItem;
 import ru.ruranobe.engine.wiki.parser.WikiParser;
@@ -27,6 +34,7 @@ import ru.ruranobe.wicket.components.ContentsHolder;
 import ru.ruranobe.wicket.components.sidebar.ContentsModule;
 import ru.ruranobe.wicket.webpages.base.TextLayoutPage;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +44,8 @@ public class Text extends TextLayoutPage
 {
     public Text(PageParameters parameters)
     {
+        setStatelessHint(true);
+
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
         SqlSession session = sessionFactory.openSession();
         StringBuilder volumeText = new StringBuilder();
@@ -92,7 +102,7 @@ public class Text extends TextLayoutPage
                         imageUrls.add(imageUrl);
                     }
 
-                    WikiParser wikiParser = new WikiParser(chapterText.getTextId(), chapterText.getTextWiki());
+                    WikiParser wikiParser = new WikiParser(chapterText.getTextId(), chapter.getChapterId(), chapterText.getTextWiki());
                     chapterText.setTextHtml(wikiParser.parseWikiText(imageUrls, true));
 
                     StringBuilder contents = new StringBuilder();
@@ -154,13 +164,13 @@ public class Text extends TextLayoutPage
                 {
                     if (nested && "h3".equals(chapterContents.substring(0, 2)))
                     {
-                        volumeContents.add(new ContentItem("h2", 0, ""));
+                        volumeContents.add(new ContentItem("h2", "", ""));
                     }
 
                     String[] contents = chapterContents.split(DELIMITER);
                     for (int i = 0; i < contents.length;)
                     {
-                        volumeContents.add(new ContentItem(contents[i], Long.valueOf(contents[i+1]), contents[i+2]));
+                        volumeContents.add(new ContentItem(contents[i], contents[i+1], contents[i+2]));
                         i+=3;
                     }
                 }
@@ -285,6 +295,11 @@ public class Text extends TextLayoutPage
         add(prevChapter);
 
         sidebarModules.add(new ContentsModule("sidebarModule", contentsHolders));
+
+        Label c = new Label("c");;
+        c.setMarkupId("c");
+        c.add(new BookmarksStatelessAjaxEventBehavior());
+        add(c);
     }
 
     private List<Chapter> getChaptersToDisplay(PageParameters parameters, SqlSession session)
@@ -340,6 +355,62 @@ public class Text extends TextLayoutPage
         }
 
         return chapterList;
+    }
+
+    private class BookmarksStatelessAjaxEventBehavior extends AbstractAjaxBehavior
+    {
+
+        protected void respond(final AjaxRequestTarget target)
+        {
+            HttpServletRequest request = (HttpServletRequest) getRequest().getContainerRequest();
+            System.out.println("sfvds");
+        }
+
+        @Override
+        public void renderHead(Component component, IHeaderResponse response)
+        {
+            super.renderHead(component, response);
+
+            CoreLibrariesContributor.contributeAjax(component.getApplication(), response);
+
+            RequestCycle requestCycle = component.getRequestCycle();
+            Url baseUrl = requestCycle.getUrlRenderer().getBaseUrl();
+            CharSequence ajaxBaseUrl = Strings.escapeMarkup(baseUrl.toString());
+            response.render(JavaScriptHeaderItem.forScript("Wicket.Ajax.baseUrl=\"" + ajaxBaseUrl
+                    + "\";", "wicket-ajax-base-url"));
+
+            String callbackUrl = getCallbackUrl().toString();
+            response.render(JavaScriptHeaderItem.forScript("var bookmarksListenerUrl='" + callbackUrl + "';", "bookmarksListener"));
+        }
+
+        @Override
+        public CharSequence getCallbackUrl()
+        {
+            final Url url = Url.parse(super.getCallbackUrl().toString());
+            final PageParameters params = getPageParameters();
+
+            return RuranobeUtils.mergeParameters(url, params).toString();
+        }
+
+        @Override
+        public final void onRequest()
+        {
+            WebApplication app = (WebApplication)getComponent().getApplication();
+            AjaxRequestTarget target = app.newAjaxRequestTarget(getComponent().getPage());
+
+            RequestCycle requestCycle = RequestCycle.get();
+            requestCycle.scheduleRequestHandlerAfterCurrent(target);
+
+            respond(target);
+        }
+
+        @Override
+        public boolean getStatelessHint(final Component component)
+        {
+            return true;
+        }
+
+        private static final long serialVersionUID = 2387070289758596955L;
     }
 
     private boolean nested = false;
