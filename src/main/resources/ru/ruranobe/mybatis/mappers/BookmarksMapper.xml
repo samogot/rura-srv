@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ru.ruranobe.mybatis.mappers.BookmarksMapper">
+
+    <!--cache type="org.mybatis.caches.ehcache.EhcacheCache">
+        <property name="timeToIdleSeconds" value="3600"/>
+        <property name="timeToLiveSeconds" value="3600"/>
+        <property name="maxEntriesLocalHeap" value="1000"/>
+        <property name="maxEntriesLocalDisk" value="10000000"/>
+        <property name="memoryStoreEvictionPolicy" value="LRU"/>
+    </cache-->
+
+    <insert id="insertBookmark" parameterType="ru.ruranobe.mybatis.tables.Bookmark" keyProperty="bookmarkId" useGeneratedKeys="true">
+        insert into bookmarks (chapter_id, user_id, paragraph_id, insertion_time)
+        values (#{chapterId}, #{userId}, #{paragraphId}, #{insertionTime})
+    </insert>
+
+
+</mapper>
