@@ -1,6 +1,5 @@
 package ru.ruranobe.wicket.webpages;
 
-import com.google.common.collect.Lists;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.markup.html.basic.Label;
@@ -25,15 +24,12 @@ import ru.ruranobe.wicket.components.sidebar.ContentsModule;
 import ru.ruranobe.wicket.webpages.base.TextLayoutPage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class Text extends TextLayoutPage
 {
-    private boolean nested = false;
-    private String nextUrl = null;
-    private String prevUrl = null;
+
     public Text(PageParameters parameters)
     {
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
@@ -41,131 +37,202 @@ public class Text extends TextLayoutPage
         StringBuilder volumeText = new StringBuilder();
         StringBuilder volumeFootnotes = new StringBuilder();
         final List<ContentItem> volumeContents = new ArrayList<ContentItem>();
+        Chapter currentChapter = null;
+        Volume volume = null;
+        List<Chapter> allChapterList;
 
         try
         {
-            List<Chapter> chapterList = getChaptersToDisplay(parameters, session);
+            String projectUrl = parameters.get("project").toString();
+            if (Strings.isEmpty(projectUrl))
+            {
+                throw RuranobeUtils.REDIRECT_TO_404;
+            }
+
+            String volumeUrl = parameters.get("volume").toString();
+            if (Strings.isEmpty(volumeUrl))
+            {
+                throw RuranobeUtils.REDIRECT_TO_404;
+            }
+
+            ChaptersMapper chaptersMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
+            VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
+            volume = volumesMapperCacheable.getVolumeByUrl(projectUrl + "/" + volumeUrl);
+
+            if (volume == null)
+            {
+                throw RuranobeUtils.REDIRECT_TO_404;
+            }
+
+            allChapterList = chaptersMapperCacheable.getChaptersByVolumeId(volume.getVolumeId());
+
+            String chapterUrl = parameters.get("chapter").toString();
+            if (Strings.isEmpty(chapterUrl))
+            {
+                for (Chapter chapter : allChapterList)
+                {
+                    chapter.setVisibleOnPage(true);
+                }
+            }
+            else
+            {
+                Chapter parent = null;
+                Chapter prevNested = null;
+                String curUrl = projectUrl + "/" + volumeUrl + "/" + chapterUrl;
+                for (Chapter chapter : allChapterList)
+                {
+                    if (chapter.getUrl().equals(curUrl))
+                    {
+                        currentChapter = chapter;
+                    }
+                    if (chapter.isNested())
+                    {
+                        if (parent != null)
+                        {
+                            chapter.setParentChapter(parent);
+                            parent.addChildChapter(chapter);
+                        }
+                        if (prevNested != null)
+                        {
+                            prevNested.setNextChapter(chapter);
+                            chapter.setPrevChapter(prevNested);
+                        }
+                        else if (parent != null)
+                        {
+                            chapter.setPrevChapter(parent.getPrevChapter());
+                        }
+                        prevNested = chapter;
+                    }
+                    else
+                    {
+                        if (parent != null)
+                        {
+                            parent.setNextChapter(chapter);
+                            chapter.setPrevChapter(parent);
+                        }
+                        if (prevNested != null)
+                        {
+                            prevNested.setNextChapter(chapter);
+                            if (prevNested.getParentChapter() != parent)
+                            {
+                                prevNested = null;
+                            }
+                        }
+                        parent = chapter;
+                    }
+                }
+
+                if (currentChapter == null)
+                {
+                    throw RuranobeUtils.REDIRECT_TO_404;
+                }
+
+                currentChapter.setVisibleOnPage(true);
+                if (currentChapter.hasChildChapters())
+                {
+                    for (Chapter chapter : currentChapter.getChildChapters())
+                    {
+                        chapter.setVisibleOnPage(true);
+                    }
+                }
+                else if (currentChapter.getParentChapter() != null && currentChapter == currentChapter.getParentChapter().getChildChapters().get(0))
+                {
+                    currentChapter.getParentChapter().setVisibleOnPage(true);
+                }
+            }
 
             TextsMapper textsMapperCacheable = CachingFacade.getCacheableMapper(session, TextsMapper.class);
             ChapterImagesMapper chapterImagesMapperCacheable = CachingFacade.getCacheableMapper(session, ChapterImagesMapper.class);
             boolean committionNeeded = false;
 
-            for (Chapter chapter : chapterList)
+            for (Chapter chapter : allChapterList)
             {
-                Integer textId = chapter.getTextId();
-                ru.ruranobe.mybatis.tables.Text chapterText;
-                String textHtml = "";
-                String chapterFootnotes = "";
-                String chapterContents = "";
-                if (textId != null)
+                if (chapter.isVisibleOnPage())
                 {
-                    chapterText = textsMapperCacheable.getHtmlInfoById(textId);
-                    textHtml = chapterText.getTextHtml();
-                    chapterFootnotes = chapterText.getFootnotes();
-                    chapterContents = chapterText.getContents();
-                }
-
-                if (Strings.isEmpty(textHtml) && textId != null)
-                {
-                    committionNeeded = true;
-
-                    chapterText = textsMapperCacheable.getTextById(textId);
-                    List<ChapterImage> chapterImages = chapterImagesMapperCacheable.getChapterImagesByChapterId(chapter.getChapterId());
-
-                    List<String> imageUrls = new ArrayList<String>();
-                    for (ChapterImage chapterImage : chapterImages)
+                    Integer textId = chapter.getTextId();
+                    ru.ruranobe.mybatis.tables.Text chapterText = null;
+                    String textHtml = "";
+                    String chapterFootnotes = "";
+                    if (textId != null)
                     {
-                        String imageUrl = "unknownSource";
-                        ExternalResource coloredImage = chapterImage.getColoredImage();
-                        if (coloredImage != null && !Strings.isEmpty(coloredImage.getUrl()))
+                        chapterText = textsMapperCacheable.getHtmlInfoById(textId);
+                        textHtml = chapterText.getTextHtml();
+                        chapterFootnotes = chapterText.getFootnotes();
+                    }
+
+                    if (Strings.isEmpty(textHtml) && textId != null)
+                    {
+                        committionNeeded = true;
+
+                        chapterText = textsMapperCacheable.getTextById(textId);
+                        List<ChapterImage> chapterImages = chapterImagesMapperCacheable.getChapterImagesByChapterId(chapter.getChapterId());
+
+                        List<String> imageUrls = new ArrayList<String>();
+                        for (ChapterImage chapterImage : chapterImages)
                         {
-                            imageUrl = coloredImage.getUrl();
-                        }
-                        else
-                        {
-                            ExternalResource nonColoredImage = chapterImage.getNonColoredImage();
-                            if (nonColoredImage != null && !Strings.isEmpty(nonColoredImage.getUrl()))
+                            String imageUrl = "unknownSource";
+                            ExternalResource coloredImage = chapterImage.getColoredImage();
+                            if (coloredImage != null && !Strings.isEmpty(coloredImage.getUrl()))
                             {
-                                imageUrl = nonColoredImage.getUrl();
+                                imageUrl = coloredImage.getUrl();
                             }
+                            else
+                            {
+                                ExternalResource nonColoredImage = chapterImage.getNonColoredImage();
+                                if (nonColoredImage != null && !Strings.isEmpty(nonColoredImage.getUrl()))
+                                {
+                                    imageUrl = nonColoredImage.getUrl();
+                                }
+                            }
+                            imageUrls.add(imageUrl);
                         }
-                        imageUrls.add(imageUrl);
+
+                        WikiParser wikiParser = new WikiParser(chapterText.getTextId(), chapterText.getTextWiki());
+                        chapterText.setTextHtml(wikiParser.parseWikiText(imageUrls, true));
+
+                        StringBuilder contents = new StringBuilder();
+                        List<ContentItem> contentList = wikiParser.getContents();
+                        for (int i = 0; i < contentList.size(); ++i)
+                        {
+                            ContentItem contentItem = contentList.get(i);
+                            String s = ((i < contentList.size() - 1) ? DELIMITER : "");
+                            contents.append(contentItem.getTagName()).append(DELIMITER)
+                                    .append(contentItem.getTagId()).append(DELIMITER)
+                                    .append(contentItem.getTitle()).append(s);
+                        }
+                        chapterText.setContents(contents.toString());
+
+                        StringBuilder footnotes = new StringBuilder();
+                        List<String> footnoteList = wikiParser.getFootnotes();
+                        for (int i = 0; i < footnoteList.size(); ++i)
+                        {
+                            String footnote = footnoteList.get(i);
+                            footnotes.append(footnote).append(i < footnoteList.size() - 1 ? DELIMITER : "");
+                        }
+                        chapterText.setFootnotes(footnotes.toString());
+
+                        textsMapperCacheable.updateText(chapterText);
+
+                        textHtml = chapterText.getTextHtml();
+                        chapterFootnotes = footnotes.toString();
                     }
+                    chapter.setText(chapterText);
 
-                    WikiParser wikiParser = new WikiParser(chapterText.getTextId(), chapterText.getTextWiki());
-                    chapterText.setTextHtml(wikiParser.parseWikiText(imageUrls, true));
+                    String headerTag = chapter.isNested() ? "h3" : "h2";
 
-                    StringBuilder contents = new StringBuilder();
-                    List<ContentItem> contentList = wikiParser.getContents();
-                    for (int i = 0; i < contentList.size(); ++i)
+                    textHtml = "<" + headerTag + " id=\"" + chapter.getUrlPart() + "\">" + chapter.getTitle() + "</" + headerTag + ">" + textHtml;
+
+                    if (!Strings.isEmpty(chapterFootnotes))
                     {
-                        ContentItem contentItem = contentList.get(i);
-                        String s = ((i < contentList.size()-1) ? DELIMITER : "");
-                        contents.append(contentItem.getTagName()).append(DELIMITER)
-                                .append(contentItem.getTagId()).append(DELIMITER)
-                                .append(contentItem.getTitle()).append(s);
+                        String[] footnotes = chapterFootnotes.split(DELIMITER);
+                        for (String footnote : footnotes)
+                        {
+                            volumeFootnotes.append("<li>").append(footnote).append("</li>");
+                        }
                     }
-                    chapterText.setContents(contents.toString());
 
-                    StringBuilder footnotes = new StringBuilder();
-                    List<String> footnoteList = wikiParser.getFootnotes();
-                    for (int i = 0; i < footnoteList.size(); ++i)
-                    {
-                        String footnote = footnoteList.get(i);
-                        footnotes.append(footnote).append(i < footnoteList.size()-1 ? DELIMITER : "");
-                    }
-                    chapterText.setFootnotes(footnotes.toString());
-
-                    textsMapperCacheable.updateText(chapterText);
-
-                    textHtml = chapterText.getTextHtml();
-                    chapterFootnotes = footnotes.toString();
-                    chapterContents = contents.toString();
+                    volumeText.append(textHtml);
                 }
-
-                String headerTag = chapter.isNested() ? "h3" : "h2";
-
-                StringBuilder chapterContentsExtended = new StringBuilder();
-                String s = Strings.isEmpty(chapterContents) ? "" : DELIMITER;
-                chapterContentsExtended.append(headerTag).append(DELIMITER)
-                                       .append(chapter.getChapterId()).append(DELIMITER)
-                                       .append(chapter.getTitle()).append(s)
-                        .append(chapterContents);
-                chapterContents = chapterContentsExtended.toString();
-
-                StringBuilder textHtmlExtended = new StringBuilder();
-                textHtmlExtended.append("<").append(headerTag).append(" id=\"h_id-")
-                                .append(chapter.getChapterId()).append("\">")
-                                .append(chapter.getTitle()).append("</")
-                                .append(headerTag).append(">")
-                        .append(textHtml);
-                textHtml = textHtmlExtended.toString();
-
-                if (!Strings.isEmpty(chapterFootnotes))
-                {
-                    String[] footnotes = chapterFootnotes.split(DELIMITER);
-                    for (String footnote : footnotes)
-                    {
-                        volumeFootnotes.append("<li>").append(footnote).append("</li>");
-                    }
-                }
-
-                if (!Strings.isEmpty(chapterContents))
-                {
-                    if (nested && "h3".equals(chapterContents.substring(0, 2)))
-                    {
-                        volumeContents.add(new ContentItem("h2", 0, ""));
-                    }
-
-                    String[] contents = chapterContents.split(DELIMITER);
-                    for (int i = 0; i < contents.length;)
-                    {
-                        volumeContents.add(new ContentItem(contents[i], Long.valueOf(contents[i+1]), contents[i+2]));
-                        i+=3;
-                    }
-                }
-
-                volumeText.append(textHtml);
             }
 
             if (committionNeeded)
@@ -180,178 +247,105 @@ public class Text extends TextLayoutPage
 
         if (!Strings.isEmpty(volumeFootnotes))
         {
-            volumeFootnotes.insert(0, "<h2 id=\"footnotes\"><span>Примечания</span></h2><ol class=\"references\">");
+            volumeFootnotes.insert(0, "<h2 id=\"footnotes\">Примечания</h2><ol class=\"references\">");
             volumeFootnotes.append("</ol>");
             volumeText.append(volumeFootnotes);
         }
 
         add(new Label("htmlText", volumeText.toString()).setEscapeModelStrings(false));
 
-        List<ContentItem> h2s = new ArrayList<ContentItem>();
-        final Map<ContentItem, ArrayList<ContentItem>> h2Toh3 = new HashMap<ContentItem, ArrayList<ContentItem>>();
-        final Map<ContentItem, ArrayList<ContentItem>> h3Toh4 = new HashMap<ContentItem, ArrayList<ContentItem>>();
-
-        ContentItem h2 = null;
-        ArrayList<ContentItem> h3s = null;
-        ArrayList<ContentItem> h4s = null;
-        for (ContentItem contentItem : volumeContents)
-        {
-            if ("h2".equals(contentItem.getTagName()))
-            {
-                h2s.add(contentItem);
-                if (h2 != null && h3s != null && h3s.size() > 0)
-                {
-                    h2Toh3.put(h2, h3s);
-                    if (h4s != null && h4s.size() > 0)
-                    {
-                        h3Toh4.put(h3s.get(h3s.size() - 1), h4s);
-                        h4s = null;
-                    }
-                    h3s = null;
-                }
-                h2 = contentItem;
-            }
-            else if ("h3".equals(contentItem.getTagName()) && h2 != null)
-            {
-                if (h3s != null && h3s.size() > 0)
-                {
-                    if (h4s != null && h4s.size() > 0)
-                    {
-                        h3Toh4.put(h3s.get(h3s.size() - 1), h4s);
-                        h4s = null;
-                    }
-                }
-                else
-                {
-                    h3s = new ArrayList<ContentItem>();
-                }
-                h3s.add(contentItem);
-            }
-            else if ("h4".equals(contentItem.getTagName()) && h3s != null)
-            {
-                if (h4s == null || h4s.size() == 0)
-                {
-                    h4s = new ArrayList<ContentItem>();
-                }
-                h4s.add(contentItem);
-            }
-        }
-
-        if (h3s != null && h4s != null && !h4s.isEmpty())
-        {
-            h3Toh4.put(h3s.get(h3s.size() - 1), h4s);
-        }
-
-        if (h2 != null && h3s != null && !h3s.isEmpty())
-        {
-            h2Toh3.put(h2, h3s);
-        }
-
         List<ContentsHolder> contentsHolders = new ArrayList<ContentsHolder>();
-        for (ContentItem h2Tag : h2s)
+        for (Chapter chapter : allChapterList)
         {
-            ContentsHolder h2Content = new ContentsHolder("#h_id-" + h2Tag.getTagId(), h2Tag.getTitle());
-            List<ContentItem> h3Tags = h2Toh3.get(h2Tag);
-            if (h3Tags != null)
+            if (chapter.getParentChapter() == null)
             {
-                for (ContentItem h3Tag : h3Tags)
+                processChapterContents(chapter, contentsHolders, 2);
+                if (chapter.getChildChapters() != null)
                 {
-                    ContentsHolder h3Content = new ContentsHolder("#h_id-" + h3Tag.getTagId(), h3Tag.getTitle());
-                    h2Content.addChild(h3Content);
-                    List<ContentItem> h4Tags = h3Toh4.get(h3Tag);
-                    if (h4Tags != null)
+                    for (Chapter nestedChapter : chapter.getChildChapters())
                     {
-                        for (ContentItem h4Tag : h4Tags)
+                        ContentsHolder lastContentsHolder = contentsHolders.get(contentsHolders.size() - 1);
+                        if (lastContentsHolder.getChildren() == null)
                         {
-                            ContentsHolder h4Content = new ContentsHolder("#h_id-" + h4Tag.getTagId(), h4Tag.getTitle());
-                            h3Content.addChild(h4Content);
+                            lastContentsHolder.setChildren(new ArrayList<ContentsHolder>());
                         }
+                        processChapterContents(chapter, lastContentsHolder.getChildren(), 3);
                     }
                 }
             }
-            contentsHolders.add(h2Content);
         }
+        if (!Strings.isEmpty(volumeFootnotes))
+        {
+            contentsHolders.add(new ContentsHolder("#footnotes", "Примечания"));
+        }
+        contentsHolders.add(new ContentsHolder("#comments", "Комментарии"));
 
 
         textPageUtils.setVisible(true);
-        /*textPageUtils.add(homeTextLink = new BookmarkablePageLink("homeTextLink", VolumePage.class, volume.getUrlParameters()));
-        if (nextChapter != null)
+        if (volume != null)
         {
-            textPageUtils.add(nextTextLink = new BookmarkablePageLink("nextTextLink", VolumeTextPage.class, nextChapter.getUrlParameters()));
+            textPageUtils.add(homeTextLink = volume.makeBookmarkablePageLink("homeTextLink"));
         }
-        if (prevChapter != null)
+        if (currentChapter != null && currentChapter.getNextChapter() != null)
         {
-            textPageUtils.add(prevTextLink = new BookmarkablePageLink("prevTextLink", VolumeTextPage.class, prevChapter.getUrlParameters()));
-        }*/
-
-        /*WebMarkupContainer nextChapter = new WebMarkupContainer("nextChapter");
-        nextChapter.setVisible(!Strings.isEmpty(nextUrl));
-        AttributeAppender href = new AttributeAppender("href", "../../"+nextUrl);
-        nextChapter.add(href);
-        add(nextChapter);
-
-        WebMarkupContainer prevChapter = new WebMarkupContainer("prevChapter");
-        prevChapter.setVisible(!Strings.isEmpty(prevUrl));
-        href = new AttributeAppender("href", "../../"+prevUrl);
-        prevChapter.add(href);
-        add(prevChapter);*/
+            textPageUtils.add(nextTextLink = currentChapter.getNextChapter().makeBookmarkablePageLink("nextTextLink"));
+        }
+        if (currentChapter != null && currentChapter.getPrevChapter() != null)
+        {
+            textPageUtils.add(prevTextLink = currentChapter.getPrevChapter().makeBookmarkablePageLink("prevTextLink"));
+        }
 
         add(new CommentsPanel("comments"));
+//        sidebarModules.add(new UpdatesSidebarModule("sidebarModule", volume.getProjectId()));
+//        sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
+//        sidebarModules.add(new FriendsSidebarModule("sidebarModule"));
         sidebarModules.add(new ContentsModule("sidebarModule", contentsHolders));
     }
 
-    private List<Chapter> getChaptersToDisplay(PageParameters parameters, SqlSession session)
+    private void processChapterContents(Chapter chapter, List<ContentsHolder> contentsHolders, int level)
     {
-        List<Chapter> chapterList;
-
-        String projectUrl = parameters.get("project").toString();
-        if (Strings.isEmpty(projectUrl))
+        String chapterLink = chapter.isVisibleOnPage() ? "#" + chapter.getUrlPart() : chapter.getBookmarkablePageUrlString(this);
+        ContentsHolder holder = new ContentsHolder(chapterLink, chapter.getTitle());
+        contentsHolders.add(holder);
+        if (chapter.getText() != null && !Strings.isEmpty(chapter.getText().getContents()))
         {
-            throw RuranobeUtils.REDIRECT_TO_404;
-        }
-
-        String volumeUrl = parameters.get("volume").toString();
-        if (Strings.isEmpty(volumeUrl))
-        {
-            throw RuranobeUtils.REDIRECT_TO_404;
-        }
-
-        String chapterUrl = parameters.get("chapter").toString();
-
-        ChaptersMapper chaptersMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
-        if (Strings.isEmpty(chapterUrl))
-        {
-            VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
-            Volume volume = volumesMapperCacheable.getVolumeByUrl(projectUrl + "/" + volumeUrl);
-
-            if (volume == null)
+            String[] contents = chapter.getText().getContents().split(DELIMITER);
+            List<ContentItem> chapterContents = new LinkedList<ContentItem>();
+            for (int i = 0; i < contents.length; i += 3)
             {
-                throw RuranobeUtils.REDIRECT_TO_404;
+                chapterContents.add(new ContentItem(contents[i], Long.valueOf(contents[i + 1]), contents[i + 2]));
             }
+            processChapterTextContents(level, level, contentsHolders, chapterContents);
+        }
+    }
 
-            chapterList = chaptersMapperCacheable.getChaptersByVolumeId(volume.getVolumeId());
+    private void processChapterTextContents(int minLevel, int prevLevel, List<ContentsHolder> contentsHolders, List<ContentItem> chapterContents)
+    {
+        if (chapterContents.isEmpty())
+        {
+            return;
+        }
+        ContentItem current = chapterContents.get(0);
+        int curLevel = Integer.valueOf(current.getTagName().substring(1));
+        if (curLevel < prevLevel && curLevel >= minLevel)
+        {
+            return;
+        }
+        else if (curLevel > prevLevel)
+        {
+            ContentsHolder lastContentsHolder = contentsHolders.get(contentsHolders.size() - 1);
+            if (lastContentsHolder.getChildren() == null)
+            {
+                lastContentsHolder.setChildren(new ArrayList<ContentsHolder>());
+            }
+            processChapterTextContents(minLevel, curLevel, lastContentsHolder.getChildren(), chapterContents);
         }
         else
         {
-            Chapter chapter = chaptersMapperCacheable.getChapterNextPrevByUrl(projectUrl + "/" + volumeUrl + "/" + chapterUrl);
-
-            if (chapter == null)
-            {
-                throw RuranobeUtils.REDIRECT_TO_404;
-            }
-
-            nested = chapter.isNested();
-            prevUrl = chapter.getPrevUrl();
-            nextUrl = chapter.getNextUrl();
-            chapterList = Lists.newArrayList();
-            if (chapter.isNested() && !chapter.isPrevChapterNested())
-            {
-                // show prev chapter
-                chapterList.add(chaptersMapperCacheable.getChapterById(chapter.getPrevChapterId()));
-            }
-            chapterList.add(chapter);
+            contentsHolders.add(new ContentsHolder("#h_id-" + current.getTagId(), current.getTitle()));
+            chapterContents.remove(0);
         }
-
-        return chapterList;
+        processChapterTextContents(minLevel, prevLevel, contentsHolders, chapterContents);
     }
+
 }

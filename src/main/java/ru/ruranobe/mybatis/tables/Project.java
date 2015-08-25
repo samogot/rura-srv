@@ -8,7 +8,7 @@ import ru.ruranobe.wicket.webpages.VolumePage;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Project implements Serializable, PageRepresentable
+public class Project extends PageRepresentable implements Serializable
 {
 
     private static final long serialVersionUID = 3L;

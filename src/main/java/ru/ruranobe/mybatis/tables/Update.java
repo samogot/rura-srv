@@ -7,7 +7,7 @@ import ru.ruranobe.wicket.webpages.VolumeTextPage;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Update implements Serializable, Comparable<Update>, PageRepresentable
+public class Update extends PageRepresentable implements Serializable, Comparable<Update>
 {
 
     private static final long serialVersionUID = 2L;

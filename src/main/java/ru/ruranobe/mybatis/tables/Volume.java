@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Volume implements Serializable, PageRepresentable
+public class Volume extends PageRepresentable implements Serializable
 {
 
     private static final long serialVersionUID = 2L;
