@@ -190,7 +190,7 @@ public class Replacement
             };
 
     private static final Map<WikiTagPair, String> PAIR_TO_START_REPLACEMENT_TEXT = new ImmutableMap.Builder<WikiTagPair, String>()
-            .put(new WikiTagPair(SUBTITLE, DOUBLE_END_BRACKET), "<div class=\"subtitle\">")
+            .put(new WikiTagPair(SUBTITLE, DOUBLE_END_BRACKET), "<div class=\"center subtitle\">")
             .put(new WikiTagPair(TWO_EQUAL, TWO_EQUAL), "<h2 id=\"h_id-%s\">")
             .put(new WikiTagPair(THREE_EQUAL, THREE_EQUAL), "<h3 id=\"h_id-%s\">")
             .put(new WikiTagPair(FOUR_EQUAL, FOUR_EQUAL), "<h4 id=\"h_id-%s\">")
