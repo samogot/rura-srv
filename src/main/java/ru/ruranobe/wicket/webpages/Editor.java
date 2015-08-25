@@ -121,7 +121,7 @@ public class Editor extends TextLayoutPage
     {
         public SaveText(String name, Form form, ru.ruranobe.mybatis.tables.Text text, Chapter chapter, ru.ruranobe.mybatis.tables.Text previousText)
         {
-            super(name,form);
+            super(name, form);
             this.chapter = chapter;
             this.text = text;
             this.previousText = previousText;
@@ -168,7 +168,7 @@ public class Editor extends TextLayoutPage
                 for (int i = 0; i < contentList.size(); ++i)
                 {
                     ContentItem contentItem = contentList.get(i);
-                    String s = ((i < contentList.size()-1) ? DELIMITER : "");
+                    String s = ((i < contentList.size() - 1) ? DELIMITER : "");
                     contents.append(contentItem.getTagName()).append(DELIMITER)
                             .append(contentItem.getTagId()).append(DELIMITER)
                             .append(contentItem.getTitle()).append(s);
@@ -180,7 +180,7 @@ public class Editor extends TextLayoutPage
                 for (int i = 0; i < footnoteList.size(); ++i)
                 {
                     FootnoteItem footnoteItem = footnoteList.get(i);
-                    String s = ((i < footnoteList.size()-1) ? DELIMITER : "");
+                    String s = ((i < footnoteList.size() - 1) ? DELIMITER : "");
                     footnotes.append(footnoteItem.getFootnoteId()).append(DELIMITER)
                              .append(footnoteItem.getFootnoteText()).append(s);
                 }

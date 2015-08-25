@@ -3,7 +3,6 @@ package ru.ruranobe.engine.files;
 import org.apache.wicket.util.string.Strings;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class FileStorageService implements Serializable
 {
@@ -28,19 +27,23 @@ public class FileStorageService implements Serializable
         return fileExtensions;
     }*/
 
-    public String getRefreshToken() {
+    public String getRefreshToken()
+    {
         return refreshToken;
     }
 
-    public String getClientId() {
+    public String getClientId()
+    {
         return clientId;
     }
 
-    public String getClientSecret() {
+    public String getClientSecret()
+    {
         return clientSecret;
     }
 
-    public String getAccessToken() {
+    public String getAccessToken()
+    {
         return accessToken;
     }
 
@@ -49,19 +52,23 @@ public class FileStorageService implements Serializable
 
     }
 
-    protected void setAccessToken(String accessToken) {
+    protected void setAccessToken(String accessToken)
+    {
         this.accessToken = accessToken;
     }
 
-    protected void setClientSecret(String clientSecret) {
+    protected void setClientSecret(String clientSecret)
+    {
         this.clientSecret = clientSecret;
     }
 
-    protected void setClientId(String clientId) {
+    protected void setClientId(String clientId)
+    {
         this.clientId = clientId;
     }
 
-    protected void setRefreshToken(String refreshToken) {
+    protected void setRefreshToken(String refreshToken)
+    {
         this.refreshToken = refreshToken;
     }
 
@@ -156,8 +163,8 @@ public class FileStorageService implements Serializable
         private final FileStorageService fileStorageService;
     }
 
-/*    private String login;
-    private String password;*/
+    /*    private String login;
+        private String password;*/
     private String serviceName;
     private String refreshToken;
     private String clientId;

@@ -31,7 +31,7 @@ public class UpdatesSidebarModule extends SidebarModuleBase
         SqlSession session = sessionFactory.openSession();
         UpdatesMapper updatesMapperCacheable = session.getMapper(UpdatesMapper.class);
         List<Update> updates = updatesMapperCacheable.
-                getLastUpdatesBy(projectId, null, null, 0, UPDATES_BY_PROJECT_ON_PAGE);
+                                                             getLastUpdatesBy(projectId, null, null, 0, UPDATES_BY_PROJECT_ON_PAGE);
 
         ListView<Update> updatesView = new ListView<Update>("updatesList", updates)
         {

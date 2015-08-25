@@ -24,22 +24,26 @@ public class TeamMembersMapperCacheable implements TeamMembersMapper
     }
 
     @Override
-    public List<TeamMember> getAllTeamMembers() {
+    public List<TeamMember> getAllTeamMembers()
+    {
         return mapper.getAllTeamMembers();
     }
 
     @Override
-    public void insertTeamMember(TeamMember teamMember) {
+    public void insertTeamMember(TeamMember teamMember)
+    {
         mapper.insertTeamMember(teamMember);
     }
 
     @Override
-    public void deleteTeamMember(int teamMemberId) {
+    public void deleteTeamMember(int teamMemberId)
+    {
         mapper.deleteTeamMember(teamMemberId);
     }
 
     @Override
-    public void updateTeamMember(TeamMember teamMember) {
+    public void updateTeamMember(TeamMember teamMember)
+    {
         mapper.updateTeamMember(teamMember);
     }
 }

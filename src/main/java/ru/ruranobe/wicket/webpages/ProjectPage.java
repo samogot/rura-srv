@@ -82,7 +82,7 @@ public class ProjectPage extends SidebarLayoutPage
         add(projectTitle);
 
         final ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.
-                getCacheableMapper(session, ExternalResourcesMapper.class);
+                                                                                              getCacheableMapper(session, ExternalResourcesMapper.class);
 
         Label projectName = new Label("projectName", mainProject.getTitle());
         add(projectName);
@@ -278,7 +278,7 @@ public class ProjectPage extends SidebarLayoutPage
         for (Volume volume : allCovers)
         {
             allCoverIds.add(new SimpleEntry<String, String>(volume.getNameTitle(),
-                                                            externalResourcesMapperCacheable.getExternalResourceById(volume.getImageOne()).getUrl()));
+                    externalResourcesMapperCacheable.getExternalResourceById(volume.getImageOne()).getUrl()));
         }
 
         add(new CoverCarousel("projectCoverCarousel", allCoverIds));

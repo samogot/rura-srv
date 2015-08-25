@@ -101,7 +101,7 @@ public class EmailPasswordRecoveryPanel extends Panel
                         try
                         {
                             Email.sendEmail(user.getEmail(), EMAIL_PASSWORD_RECOVERY_SUBJECT,
-                                            String.format(EMAIL_PASSWORD_RECOVERY_TEXT, user.getPassRecoveryToken()));
+                                    String.format(EMAIL_PASSWORD_RECOVERY_TEXT, user.getPassRecoveryToken()));
                             session.commit();
                         }
                         catch (MessagingException ex)

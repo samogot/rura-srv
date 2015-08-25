@@ -14,7 +14,8 @@ import java.util.Map;
 
 public class RuraImage
 {
-    public RuraImage(File imageFile, String extension, String title) {
+    public RuraImage(File imageFile, String extension, String title)
+    {
         this.imageFile = imageFile;
         this.extension = extension;
         this.title = title;
@@ -35,19 +36,23 @@ public class RuraImage
         this.mimeType = mimeType;
     }
 
-    public File getImageFile() {
+    public File getImageFile()
+    {
         return imageFile;
     }
 
-    public String getPath() {
+    public String getPath()
+    {
         return path;
     }
 
-    public String getExtension() {
+    public String getExtension()
+    {
         return extension;
     }
 
-    public String getTitle() {
+    public String getTitle()
+    {
         return title;
     }
 
@@ -56,7 +61,8 @@ public class RuraImage
         return mimeType;
     }
 
-    public void setPath(String path) {
+    public void setPath(String path)
+    {
         this.path = path;
     }
 
@@ -65,11 +71,13 @@ public class RuraImage
         return imageStream;
     }
 
-    public String getPathOnImageServiceSystem(StorageService storageService) {
+    public String getPathOnImageServiceSystem(StorageService storageService)
+    {
         return imageServiceSystemToUrl.get(storageService);
     }
 
-    public void setPathOnImageServiceSystem(StorageService storageService, String pathOnImageServiceSystem) {
+    public void setPathOnImageServiceSystem(StorageService storageService, String pathOnImageServiceSystem)
+    {
         imageServiceSystemToUrl.put(storageService, pathOnImageServiceSystem);
     }
 
@@ -107,13 +115,13 @@ public class RuraImage
 
     private static final Map<String, String> FILE_EXTENSION_TO_MIME_TYPE =
             new ImmutableMap.Builder<String, String>().
-                    put("gif", "image/gif").
-                    put("jpg", "image/jpeg").
-                    put("jpeg", "image/jpeg").
-                    put("png", "image/png").
-                    put("ico", "image/vnd.microsoft.icon").
-                    put("bmp", "image/vnd.wap.wbmp")
-            .build();
+                                                              put("gif", "image/gif").
+                                                              put("jpg", "image/jpeg").
+                                                              put("jpeg", "image/jpeg").
+                                                              put("png", "image/png").
+                                                              put("ico", "image/vnd.microsoft.icon").
+                                                              put("bmp", "image/vnd.wap.wbmp")
+                                                      .build();
     private InputStream imageStream;
     private final File imageFile;
     private String path;

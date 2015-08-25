@@ -13,9 +13,9 @@ import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.crypt.CachingSunJceCryptFactory;
+import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.wicket.resources.BookmarksRestWebService;
 import ru.ruranobe.wicket.resources.OrphusRestWebService;
-import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.wicket.webpages.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -43,9 +43,11 @@ public class WicketApplication extends AuthenticatedWebApplication
 
         mountPages();
 
-        getJavaScriptLibrarySettings().setJQueryReference(new ResourceReference("") {
+        getJavaScriptLibrarySettings().setJQueryReference(new ResourceReference("")
+        {
             @Override
-            public IResource getResource() {
+            public IResource getResource()
+            {
                 return null;
             }
         });
@@ -105,7 +107,7 @@ public class WicketApplication extends AuthenticatedWebApplication
     protected WebResponse newWebResponse(final WebRequest webRequest,
                                          final HttpServletResponse httpServletResponse)
     {
-        return new ServletWebResponse((ServletWebRequest)webRequest, httpServletResponse);
+        return new ServletWebResponse((ServletWebRequest) webRequest, httpServletResponse);
     }
 
     @Override

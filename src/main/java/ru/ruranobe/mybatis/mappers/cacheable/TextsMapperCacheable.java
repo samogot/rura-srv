@@ -1,6 +1,5 @@
 package ru.ruranobe.mybatis.mappers.cacheable;
 
-import ru.ruranobe.mybatis.mappers.TeamsMapper;
 import ru.ruranobe.mybatis.mappers.TextsMapper;
 import ru.ruranobe.mybatis.tables.Text;
 
@@ -17,7 +16,7 @@ public class TextsMapperCacheable implements TextsMapper
     @Override
     public Text getTextById(Integer textId)
     {
-       return mapper.getTextById(textId);
+        return mapper.getTextById(textId);
     }
 
     @Override

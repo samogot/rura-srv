@@ -64,7 +64,7 @@ public class GlobalEdit extends AdminLayoutPage
 
     private static class TeamMembersForm extends Form
     {
-        public TeamMembersForm(List <TeamMember> teamMembersVar, List <Team> teams)
+        public TeamMembersForm(List<TeamMember> teamMembersVar, List<Team> teams)
         {
             super("teamMembersForm");
 
@@ -99,7 +99,7 @@ public class GlobalEdit extends AdminLayoutPage
                     int orderNumber = item.getIndex();
                     String generatedTeamMemberId = "teammembers" + Integer.toString(orderNumber);
                     WebMarkupContainer visibilityController = new WebMarkupContainer("teamMemberVisibilityController");
-                    AttributeAppender addHref = new AttributeAppender("href", "#"+generatedTeamMemberId);
+                    AttributeAppender addHref = new AttributeAppender("href", "#" + generatedTeamMemberId);
                     visibilityController.add(addHref);
                     AttributeAppender addAriaControls = new AttributeAppender("aria-controls", generatedTeamMemberId);
                     visibilityController.add(addAriaControls);
@@ -288,15 +288,15 @@ public class GlobalEdit extends AdminLayoutPage
             return exceptionText;
         }
 
-        private Map <String, Integer> teamNameToTeamId = new HashMap<String, Integer>();
-        private Map <Integer, String> teamIdToTeamName = new HashMap<Integer, String>();
-        private Set <Integer> deletedTeamMembers = new HashSet<Integer>();
+        private Map<String, Integer> teamNameToTeamId = new HashMap<String, Integer>();
+        private Map<Integer, String> teamIdToTeamName = new HashMap<Integer, String>();
+        private Set<Integer> deletedTeamMembers = new HashSet<Integer>();
         private final List<TeamMember> teamMembers;
     }
 
     private static class TeamsForm extends Form
     {
-        public TeamsForm(List <Team> teamsVar)
+        public TeamsForm(List<Team> teamsVar)
         {
             super("teamsForm");
 
@@ -325,7 +325,7 @@ public class GlobalEdit extends AdminLayoutPage
                     int orderNumber = item.getIndex();
                     String generatedTeamId = "teams" + Integer.toString(orderNumber);
                     WebMarkupContainer visibilityController = new WebMarkupContainer("teamVisibilityController");
-                    AttributeAppender addHref = new AttributeAppender("href", "#"+generatedTeamId);
+                    AttributeAppender addHref = new AttributeAppender("href", "#" + generatedTeamId);
                     visibilityController.add(addHref);
                     AttributeAppender addAriaControls = new AttributeAppender("aria-controls", generatedTeamId);
                     visibilityController.add(addAriaControls);
@@ -333,7 +333,7 @@ public class GlobalEdit extends AdminLayoutPage
                     String name = team.getTeamName();
                     Label teamName = new Label("teamName", name);
                     teamName.setOutputMarkupId(true);
-                    teamName.setMarkupId(generatedTeamId+"_name");
+                    teamName.setMarkupId(generatedTeamId + "_name");
                     visibilityController.add(teamName);
                     item.add(visibilityController);
                 }
@@ -486,13 +486,13 @@ public class GlobalEdit extends AdminLayoutPage
             return exceptionText;
         }
 
-        private Set <Integer> deletedTeams = new HashSet<Integer>();
+        private Set<Integer> deletedTeams = new HashSet<Integer>();
         private final List<Team> teams;
     }
 
     private static class ActivitiesForm extends Form
     {
-        public ActivitiesForm(List <VolumeActivity> activitiesVar)
+        public ActivitiesForm(List<VolumeActivity> activitiesVar)
         {
             super("activitiesForm");
 
@@ -521,7 +521,7 @@ public class GlobalEdit extends AdminLayoutPage
                     int orderNumber = item.getIndex();
                     String generatedActivityId = "activities" + Integer.toString(orderNumber);
                     WebMarkupContainer visibilityController = new WebMarkupContainer("activityVisibilityController");
-                    AttributeAppender addHref = new AttributeAppender("href", "#"+generatedActivityId);
+                    AttributeAppender addHref = new AttributeAppender("href", "#" + generatedActivityId);
                     visibilityController.add(addHref);
                     AttributeAppender addAriaControls = new AttributeAppender("aria-controls", generatedActivityId);
                     visibilityController.add(addAriaControls);
@@ -529,7 +529,7 @@ public class GlobalEdit extends AdminLayoutPage
                     String name = activity.getActivityName();
                     Label activityName = new Label("activityName", name);
                     activityName.setOutputMarkupId(true);
-                    activityName.setMarkupId(generatedActivityId+"_name");
+                    activityName.setMarkupId(generatedActivityId + "_name");
                     visibilityController.add(activityName);
                     item.add(visibilityController);
                 }
@@ -609,7 +609,7 @@ public class GlobalEdit extends AdminLayoutPage
                             activity.setActivityType(ACTIVITY_TYPE_TO_DB_TYPE.get(value));
                         }
 
-                    }, Arrays.asList("текст","изображение"));
+                    }, Arrays.asList("текст", "изображение"));
                     activityType.setOutputMarkupId(true);
                     activityType.setMarkupId(generatedActivityId + "_type_input");
                     activityDiv.add(activityType);
@@ -687,25 +687,25 @@ public class GlobalEdit extends AdminLayoutPage
             return exceptionText;
         }
 
-        private Set <Integer> deletedActivities = new HashSet<Integer>();
+        private Set<Integer> deletedActivities = new HashSet<Integer>();
         private final List<VolumeActivity> activities;
 
         private static final Map<String, String> ACTIVITY_DB_TYPE_TO_TYPE =
                 new ImmutableMap.Builder<String, String>()
-                    .put("text", "текст")
-                    .put("image", "изображение")
-                .build();
+                        .put("text", "текст")
+                        .put("image", "изображение")
+                        .build();
 
         private static final Map<String, String> ACTIVITY_TYPE_TO_DB_TYPE =
                 new ImmutableMap.Builder<String, String>()
-                    .put("текст", "text")
-                    .put("изображение", "image")
-                .build();
+                        .put("текст", "text")
+                        .put("изображение", "image")
+                        .build();
     }
 
     private static class ProjectsForm extends Form
     {
-        public ProjectsForm(List <Project> projectsVar)
+        public ProjectsForm(List<Project> projectsVar)
         {
             super("projectsForm");
 
@@ -734,7 +734,7 @@ public class GlobalEdit extends AdminLayoutPage
                     int orderNumber = item.getIndex();
                     String generatedSeriesId = "series" + Integer.toString(orderNumber);
                     WebMarkupContainer visibilityController = new WebMarkupContainer("projectVisibilityController");
-                    AttributeAppender addHref = new AttributeAppender("href", "#"+generatedSeriesId);
+                    AttributeAppender addHref = new AttributeAppender("href", "#" + generatedSeriesId);
                     visibilityController.add(addHref);
                     AttributeAppender addAriaControls = new AttributeAppender("aria-controls", generatedSeriesId);
                     visibilityController.add(addAriaControls);
@@ -743,7 +743,7 @@ public class GlobalEdit extends AdminLayoutPage
                     name = Strings.isEmpty(name) ? project.getTitle() : name;
                     Label projectName = new Label("projectName", name);
                     projectName.setOutputMarkupId(true);
-                    projectName.setMarkupId(generatedSeriesId+"_name");
+                    projectName.setMarkupId(generatedSeriesId + "_name");
                     visibilityController.add(projectName);
                     item.add(visibilityController);
                 }
@@ -914,7 +914,7 @@ public class GlobalEdit extends AdminLayoutPage
             return exceptionText;
         }
 
-        private Set <Integer> deletedProjects = new HashSet<Integer>();
+        private Set<Integer> deletedProjects = new HashSet<Integer>();
         private final List<Project> projects;
     }
 }

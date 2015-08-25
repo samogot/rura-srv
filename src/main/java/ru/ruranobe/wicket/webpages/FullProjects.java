@@ -35,7 +35,7 @@ public class FullProjects extends BaseLayoutPage
         Collection<ru.ruranobe.mybatis.tables.Project> projects = projectsMapperCacheable.getAllProjects();
         List<ProjectExtendedWithInfo> projectsList = new ArrayList<ProjectExtendedWithInfo>();
         ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.
-                getCacheableMapper(session, ExternalResourcesMapper.class);
+                                                                                        getCacheableMapper(session, ExternalResourcesMapper.class);
         VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
 
         for (ru.ruranobe.mybatis.tables.Project project : projects)

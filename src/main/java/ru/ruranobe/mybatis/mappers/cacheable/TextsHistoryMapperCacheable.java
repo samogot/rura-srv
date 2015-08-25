@@ -12,7 +12,8 @@ public class TextsHistoryMapperCacheable implements TextsHistoryMapper
     }
 
     @Override
-    public void insertTextHistory(TextHistory textHistory) {
+    public void insertTextHistory(TextHistory textHistory)
+    {
         mapper.insertTextHistory(textHistory);
     }
 

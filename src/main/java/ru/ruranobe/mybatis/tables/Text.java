@@ -52,19 +52,23 @@ public class Text implements Serializable
         this.textWiki = textWiki;
     }
 
-    public String getContents() {
+    public String getContents()
+    {
         return contents;
     }
 
-    public void setContents(String contents) {
+    public void setContents(String contents)
+    {
         this.contents = contents;
     }
 
-    public String getFootnotes() {
+    public String getFootnotes()
+    {
         return footnotes;
     }
 
-    public void setFootnotes(String footnotes) {
+    public void setFootnotes(String footnotes)
+    {
         this.footnotes = footnotes;
     }
 }

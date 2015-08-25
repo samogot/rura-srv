@@ -21,7 +21,8 @@ public class VolumeActivitiesMapperCacheable implements VolumeActivitiesMapper
     }
 
     @Override
-    public List<VolumeActivity> getAllVolumeActivities() {
+    public List<VolumeActivity> getAllVolumeActivities()
+    {
         return mapper.getAllVolumeActivities();
     }
 

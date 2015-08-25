@@ -10,27 +10,33 @@ public class TextHistory implements Serializable
     {
     }
 
-    public Integer getCurrentTextId() {
+    public Integer getCurrentTextId()
+    {
         return currentTextId;
     }
 
-    public void setCurrentTextId(Integer currentTextId) {
+    public void setCurrentTextId(Integer currentTextId)
+    {
         this.currentTextId = currentTextId;
     }
 
-    public Integer getPreviousTextId() {
+    public Integer getPreviousTextId()
+    {
         return previousTextId;
     }
 
-    public void setPreviousTextId(Integer previousTextId) {
+    public void setPreviousTextId(Integer previousTextId)
+    {
         this.previousTextId = previousTextId;
     }
 
-    public Date getInsertionTime() {
+    public Date getInsertionTime()
+    {
         return insertionTime;
     }
 
-    public void setInsertionTime(Date insertionTime) {
+    public void setInsertionTime(Date insertionTime)
+    {
         this.insertionTime = insertionTime;
     }
 

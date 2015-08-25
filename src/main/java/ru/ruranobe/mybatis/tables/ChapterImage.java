@@ -93,11 +93,13 @@ public class ChapterImage implements Serializable
         this.adult = adult;
     }
 
-    public Integer getChapterImageId() {
+    public Integer getChapterImageId()
+    {
         return chapterImageId;
     }
 
-    public void setChapterImageId(Integer chapterImageId) {
+    public void setChapterImageId(Integer chapterImageId)
+    {
         this.chapterImageId = chapterImageId;
     }
 }

@@ -16,7 +16,8 @@ public class ChaptersMapperCacheable implements ChaptersMapper
     }
 
     @Override
-    public Chapter getChapterById(int chapterId) {
+    public Chapter getChapterById(int chapterId)
+    {
         return mapper.getChapterById(chapterId);
     }
 
@@ -27,7 +28,8 @@ public class ChaptersMapperCacheable implements ChaptersMapper
     }
 
     @Override
-    public Chapter getChapterNextPrevByUrl(String url) {
+    public Chapter getChapterNextPrevByUrl(String url)
+    {
         return mapper.getChapterNextPrevByUrl(url);
     }
 
@@ -38,17 +40,20 @@ public class ChaptersMapperCacheable implements ChaptersMapper
     }
 
     @Override
-    public void insertChapter(Chapter chapter) {
+    public void insertChapter(Chapter chapter)
+    {
         mapper.insertChapter(chapter);
     }
 
     @Override
-    public void deleteChapter(int activityId) {
+    public void deleteChapter(int activityId)
+    {
         mapper.deleteChapter(activityId);
     }
 
     @Override
-    public void updateChapter(Chapter chapter) {
+    public void updateChapter(Chapter chapter)
+    {
         mapper.updateChapter(chapter);
     }
 }

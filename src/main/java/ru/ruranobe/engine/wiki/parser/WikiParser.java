@@ -175,7 +175,8 @@ public class WikiParser
                             startPositionToReplacement.put(replacement.getStartPosition(), replacement);
                         }
                         j++;
-                    } else if (footnote != null && footnote.getStartPosition() == startPosition)
+                    }
+                    else if (footnote != null && footnote.getStartPosition() == startPosition)
                     {
                         footnote.setListOrderNumber(k);
                         AbstractMap.SimpleEntry<Integer, Integer> entry = new AbstractMap.SimpleEntry<Integer, Integer>
@@ -204,7 +205,8 @@ public class WikiParser
                 if (imageUrlsIterator.hasNext())
                 {
                     image.setImageUrl(imageUrlsIterator.next());
-                } else
+                }
+                else
                 {
                     image.setImageUrl("unknown source");
                 }
@@ -303,11 +305,13 @@ public class WikiParser
                 {
                     contents.add(new ContentItem("h2", tag1.getUniqueId(),
                             wikiText.substring(tag1.getStartPosition() + tag1.getWikiTagLength(), tag2.getStartPosition())));
-                } else if (tags.get(i).getWikiTagType() == WikiTagType.THREE_EQUAL)
+                }
+                else if (tags.get(i).getWikiTagType() == WikiTagType.THREE_EQUAL)
                 {
                     contents.add(new ContentItem("h3", tag1.getUniqueId(),
                             wikiText.substring(tag1.getStartPosition() + tag1.getWikiTagLength(), tag2.getStartPosition())));
-                } else if (tags.get(i).getWikiTagType() == WikiTagType.FOUR_EQUAL)
+                }
+                else if (tags.get(i).getWikiTagType() == WikiTagType.FOUR_EQUAL)
                 {
                     contents.add(new ContentItem("h4", tag1.getUniqueId(),
                             wikiText.substring(tag1.getStartPosition() + tag1.getWikiTagLength(), tag2.getStartPosition())));
@@ -357,16 +361,16 @@ public class WikiParser
             }
             else if (tagType == WikiTagType.LINK)
             {
-                int j = i+tagLength;
-                for (; j < s.length() && j < i+tagLength+300 && s.charAt(j) != ' '; ++j);
-                String href = ((s.charAt(j) == ' ') ? ("http" + s.substring(i+tagLength, j)) : null);
+                int j = i + tagLength;
+                for (; j < s.length() && j < i + tagLength + 300 && s.charAt(j) != ' '; ++j) ;
+                String href = ((s.charAt(j) == ' ') ? ("http" + s.substring(i + tagLength, j)) : null);
                 if (href != null)
                 {
                     attributeNameToValue = new HashMap<String, String>();
                     attributeNameToValue.put("href", href);
                     tag = new WikiTag(tagType, i, uniqueId, attributeNameToValue);
-                    tag.setWikiTagLength(j-i);
-                    i = j-tagLength;
+                    tag.setWikiTagLength(j - i);
+                    i = j - tagLength;
                 }
             }
 
@@ -380,7 +384,8 @@ public class WikiParser
                 ArrayList<WikiTag> tags = new ArrayList<WikiTag>();
                 tags.add(tag);
                 wikiTagTypeToWikiTags.put(tagType, tags);
-            } else
+            }
+            else
             {
                 wikiTagTypeToWikiTags.get(tagType).add(tag);
             }
@@ -400,7 +405,8 @@ public class WikiParser
             {
                 htmlText.append(replacement.getReplacementText());
                 i += replacement.getEndPosition() - replacement.getStartPosition();
-            } else
+            }
+            else
             {
                 htmlText.appendCodePoint(wikiText.codePointAt(i));
                 i++;

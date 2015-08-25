@@ -138,7 +138,7 @@ public class LoginPanel extends Panel
         public final void onSubmit()
         {
             IAuthenticationStrategy strategy = getApplication().getSecuritySettings()
-                    .getAuthenticationStrategy();
+                                                               .getAuthenticationStrategy();
 
             if (login(getUsername(), getPassword()))
             {

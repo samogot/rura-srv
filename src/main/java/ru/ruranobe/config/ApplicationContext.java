@@ -1,12 +1,17 @@
 package ru.ruranobe.config;
 
-import org.dom4j.xpath.*;
-import org.dom4j.*;
+import org.dom4j.Document;
+import org.dom4j.Element;
+import org.dom4j.XPath;
+import org.dom4j.xpath.DefaultXPath;
 import ru.ruranobe.engine.Webpage;
 import ru.ruranobe.engine.files.FileStorageService;
 import ru.ruranobe.engine.image.ImageStorage;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ApplicationContext
 {

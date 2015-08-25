@@ -72,7 +72,7 @@ public class VolumePage extends SidebarLayoutPage
         add(nextUrl);
 
         ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.
-                getCacheableMapper(session, ExternalResourcesMapper.class);
+                                                                                        getCacheableMapper(session, ExternalResourcesMapper.class);
         ExternalResource volumeCover;
         List<SimpleEntry<String, String>> covers = new ArrayList<SimpleEntry<String, String>>();
         volumeCover = externalResourcesMapperCacheable.getExternalResourceById(volume.getImageOne());
@@ -117,7 +117,7 @@ public class VolumePage extends SidebarLayoutPage
         annotationParsed.setEscapeModelStrings(false);
 
         ExternalLink isbn = new ExternalLink("isbn",
-                                             "http://www.amazon.co.jp/s?search-alias=stripbooks&language=en_JP&field-isbn=" + volume.getIsbn(), volume.getIsbn());
+                "http://www.amazon.co.jp/s?search-alias=stripbooks&language=en_JP&field-isbn=" + volume.getIsbn(), volume.getIsbn());
         isbn.setVisible(volume.getIsbn() != null);
         add(isbn);
 

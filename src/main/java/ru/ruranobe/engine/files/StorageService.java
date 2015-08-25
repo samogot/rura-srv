@@ -33,10 +33,10 @@ public enum StorageService
 
     private static final Map<String, StorageService> SERVICE_NAME_TO_STORAGE_SERVICE =
             new ImmutableMap.Builder<String, StorageService>()
-            .put("picasa", PICASA)
-            .put("picassa", PICASA)
-            .put("yandexdisk", YANDEX_DISK)
-            .put("localstorage", LOCAL_STORAGE)
-            .build();
+                    .put("picasa", PICASA)
+                    .put("picassa", PICASA)
+                    .put("yandexdisk", YANDEX_DISK)
+                    .put("localstorage", LOCAL_STORAGE)
+                    .build();
 
 }

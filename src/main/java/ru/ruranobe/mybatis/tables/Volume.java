@@ -51,7 +51,6 @@ public class Volume extends PageRepresentable implements Serializable
     }
 
 
-
     public Volume(Volume toClone, Integer sequenceNumber)
     {
         this.projectId = toClone.projectId;
@@ -429,8 +428,14 @@ public class Volume extends PageRepresentable implements Serializable
     @Override
     public boolean equals(Object o)
     {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+        {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass())
+        {
+            return false;
+        }
 
         Volume volume = (Volume) o;
 

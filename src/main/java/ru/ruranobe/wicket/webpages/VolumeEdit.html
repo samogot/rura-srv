@@ -8,12 +8,15 @@
         <div class="leftColumn">
             <main class="content">
                 <h2>Редактирование тома</h2>
+
                 <form wicket:id="volumeForm" class="admin-block">
                     <!--input type="hidden" id="volume_id" name="volume_id"-->
                     <div class="admin-header">
                         <span>Информация</span>
+
                         <div class="btn-group" role="group" aria-label="Панель">
-                            <button wicket:id="updateVolumeAjax" type="button" class="btn btn-primary" title="Сохранить"><i class="fa fa-floppy-o"></i>
+                            <button wicket:id="updateVolumeAjax" type="button" class="btn btn-primary"
+                                    title="Сохранить"><i class="fa fa-floppy-o"></i>
                             </button>
                         </div>
                     </div>
@@ -65,12 +68,14 @@
                     </div>
                     <div class="form-group">
                         <label wicket:for="author">Автор</label>
+
                         <div id="author-name-typeahead">
                             <input wicket:id="author" class="form-control typeahead author-name" type="text">
                         </div>
                     </div>
                     <div class="form-group">
                         <label wicket:for="illustrator">Иллюстратор</label>
+
                         <div id="illustrator-name-typeahead">
                             <input wicket:id="illustrator" class="form-control typeahead illustrator-name" type="text">
                         </div>
@@ -128,7 +133,8 @@
                     </div>
                     <div class="form-group checkbox">
                         <label>
-                            <input wicket:id="adult" type="checkbox" class="form-control"> &emsp;18+ (Непотребное содержание)
+                            <input wicket:id="adult" type="checkbox" class="form-control"> &emsp;18+ (Непотребное
+                            содержание)
                         </label>
                     </div>
                     <div id="testdibv"></div>
@@ -138,12 +144,17 @@
                 <form wicket:id="volumeReleaseActivityForm" class="admin-block" id="stuffHead">
                     <div class="admin-header">
                         <span>Этапы/Стаф</span>
+
                         <div class="btn-group" role="group" aria-label="Панель участника">
-                            <button wicket:id="addVolumeReleaseActivity" type="button" class="btn btn-success" title="Добавить нового участника" id="btn-participant-add"><i class="fa fa-plus"></i>
+                            <button wicket:id="addVolumeReleaseActivity" type="button" class="btn btn-success"
+                                    title="Добавить нового участника" id="btn-participant-add"><i
+                                    class="fa fa-plus"></i>
                             </button>
-                            <button type="button" class="btn btn-danger" title="Удалить участника" id="btn-participant-delete"><i class="fa fa-trash-o"></i>
+                            <button type="button" class="btn btn-danger" title="Удалить участника"
+                                    id="btn-participant-delete"><i class="fa fa-trash-o"></i>
                             </button>
-                            <button wicket:id="updateVolumeReleaseActivitiesAjax" type="button" class="btn btn-primary" title="Сохранить"><i class="fa fa-floppy-o"></i>
+                            <button wicket:id="updateVolumeReleaseActivitiesAjax" type="button" class="btn btn-primary"
+                                    title="Сохранить"><i class="fa fa-floppy-o"></i>
                             </button>
                         </div>
                     </div>
@@ -151,42 +162,56 @@
                         <div class="col-xs-4">
                             <div class="list-group select sortable" id="participantselect">
                                 <wicket:container wicket:id="volumeReleaseActivityNameRepeater">
-                                    <a wicket:id="volumeReleaseActivityVisibilityController" data-toggle="collapse" data-parent="#participantform" aria-expanded="true" class="list-group-item">
+                                    <a wicket:id="volumeReleaseActivityVisibilityController" data-toggle="collapse"
+                                       data-parent="#participantform" aria-expanded="true" class="list-group-item">
                                         <i class="fa fa-ellipsis-v move"></i>
-                                        <span wicket:id="volumeReleaseActivityMemberName" class="hidden-sm hidden-xs"/> - <span wicket:id="volumeReleaseActivityName" class="hidden-sm hidden-xs"/>
+                                        <span wicket:id="volumeReleaseActivityMemberName" class="hidden-sm hidden-xs"/>
+                                        - <span wicket:id="volumeReleaseActivityName" class="hidden-sm hidden-xs"/>
                                     </a>
                                 </wicket:container>
                             </div>
                         </div>
-                        <div class="col-xs-8 admin-affix" id="participantform" role="tablist" aria-multiselectable="true">
+                        <div class="col-xs-8 admin-affix" id="participantform" role="tablist"
+                             aria-multiselectable="true">
                             <div class="progress collapse">
-                                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                <div class="progress-bar progress-bar-striped active" role="progressbar"
+                                     aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
                                     <span class="sr-only">0% Complete</span>
                                 </div>
                             </div>
                             <wicket:container wicket:id="volumeReleaseActivityRepeater">
                                 <div class="panel">
-                                    <div wicket:id="volumeReleaseActivityDiv" class="row collapse participant-data" role="tabpanel">
+                                    <div wicket:id="volumeReleaseActivityDiv" class="row collapse participant-data"
+                                         role="tabpanel">
                                         <input wicket:id="volumeReleaseActivityId" type="hidden">
                                         <!--input type="hidden" id="participant1_order"-->
-                                        <input wicket:id="volumeReleaseActivityDeleted" type="hidden" id="participant1_delete">
+                                        <input wicket:id="volumeReleaseActivityDeleted" type="hidden"
+                                               id="participant1_delete">
+
                                         <div class="participant-data-main">
                                             <h3>Настройка участника</h3>
+
                                             <div class="form-group">
                                                 <label wicket:for="volumeReleaseActivityMemberTitle">Участник</label>
+
                                                 <div wicket:id="volumeReleaseActivityMemberTitleDiv">
-                                                    <input wicket:id="volumeReleaseActivityMemberTitle" class="form-control typeahead name-input" type="text">
+                                                    <input wicket:id="volumeReleaseActivityMemberTitle"
+                                                           class="form-control typeahead name-input" type="text">
                                                 </div>
                                                 <label wicket:for="volumeReleaseActivityActivityName">Роль</label>
-                                                <select wicket:id="volumeReleaseActivityActivityName" class="form-control role-input">
+                                                <select wicket:id="volumeReleaseActivityActivityName"
+                                                        class="form-control role-input">
                                                     <option selected>Перевод с английского</option>
                                                     <option>Эдит</option>
                                                     <option>Редактура</option>
                                                     <option>Test</option>
                                                 </select>
+
                                                 <div class="form-group checkbox">
                                                     <label>
-                                                        <input wicket:id="volumeReleaseActivityTeamHidden" type="checkbox" class="form-control" name="participant1_team_show"> &emsp;Отображать команду
+                                                        <input wicket:id="volumeReleaseActivityTeamHidden"
+                                                               type="checkbox" class="form-control"
+                                                               name="participant1_team_show"> &emsp;Отображать команду
                                                     </label>
                                                 </div>
                                             </div>
@@ -202,12 +227,16 @@
                 <form wicket:id="chaptersForm" class="admin-block" id="volumeHead">
                     <div class="admin-header">
                         <span>Главы</span>
+
                         <div class="btn-group" role="group" aria-label="Панель глав">
-                            <button wicket:id="addChapter" type="button" class="btn btn-success" title="Добавить новую главу" id="btn-chapter-add"><i class="fa fa-plus"></i>
+                            <button wicket:id="addChapter" type="button" class="btn btn-success"
+                                    title="Добавить новую главу" id="btn-chapter-add"><i class="fa fa-plus"></i>
                             </button>
-                            <button type="button" class="btn btn-danger" title="Удалить главу" id="btn-chapter-delete"><i class="fa fa-trash-o"></i>
+                            <button type="button" class="btn btn-danger" title="Удалить главу" id="btn-chapter-delete">
+                                <i class="fa fa-trash-o"></i>
                             </button>
-                            <button wicket:id="updateChaptersAjax" type="button" class="btn btn-primary" title="Сохранить"><i class="fa fa-floppy-o"></i>
+                            <button wicket:id="updateChaptersAjax" type="button" class="btn btn-primary"
+                                    title="Сохранить"><i class="fa fa-floppy-o"></i>
                             </button>
                         </div>
                     </div>
@@ -215,7 +244,8 @@
                         <div class="col-xs-4">
                             <div class="list-group select sortable" id="chapterselect">
                                 <wicket:container wicket:id="chapterNameRepeater">
-                                    <a wicket:id="chapterVisibilityController" data-toggle="collapse" data-parent="#chapterform" aria-expanded="true" class="list-group-item">
+                                    <a wicket:id="chapterVisibilityController" data-toggle="collapse"
+                                       data-parent="#chapterform" aria-expanded="true" class="list-group-item">
                                         <i class="fa fa-ellipsis-v move"></i>
                                         <span wicket:id="chapterName" class="hidden-sm hidden-xs"/>
                                     </a>
@@ -225,7 +255,8 @@
                         <div class="col-xs-8 admin-affix" id="chapterform" role="tablist" aria-multiselectable="true">
                             &nbsp;
                             <div class="progress collapse">
-                                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                <div class="progress-bar progress-bar-striped active" role="progressbar"
+                                     aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
                                     <span class="sr-only">0% Complete</span>
                                 </div>
                             </div>
@@ -235,18 +266,23 @@
                                         <input wicket:id="chapterId" type="hidden">
                                         <input wicket:id="chapterOrder" type="hidden">
                                         <input wicket:id="chapterDeleted" type="hidden">
+
                                         <div class="chapter-data-main">
                                             <h3>Настройка главы</h3>
+
                                             <div class="form-group checkbox">
                                                 <label>
-                                                    <input wicket:id="chapterNested" type="checkbox" class="form-control is-subchapter"> &emsp;Подглава
+                                                    <input wicket:id="chapterNested" type="checkbox"
+                                                           class="form-control is-subchapter"> &emsp;Подглава
                                                 </label>
                                             </div>
                                             <div class="form-group">
                                                 <label wicket:for="chapterUrl">Ссылка</label>
-                                                <input wicket:id="chapterUrl" class="form-control url-input" type="text">
+                                                <input wicket:id="chapterUrl" class="form-control url-input"
+                                                       type="text">
                                                 <label wicket:for="chapterTitle">Заголовок</label>
-                                                <input wicket:id="chapterTitle" class="form-control name-input" type="text">
+                                                <input wicket:id="chapterTitle" class="form-control name-input"
+                                                       type="text">
                                             </div>
                                         </div>
                                     </div>
@@ -260,12 +296,16 @@
                 <form wicket:id="updatesForm" class="admin-block" id="updateHead">
                     <div class="admin-header">
                         <span>Обновления</span>
+
                         <div class="btn-group" role="group" aria-label="Панель глав">
-                            <button wicket:id="addUpdate" type="button" class="btn btn-success" title="Добавить новую главу" id="btn-update-add"><i class="fa fa-plus"></i>
+                            <button wicket:id="addUpdate" type="button" class="btn btn-success"
+                                    title="Добавить новую главу" id="btn-update-add"><i class="fa fa-plus"></i>
                             </button>
-                            <button type="button" class="btn btn-danger" title="Удалить главу" id="btn-update-delete"><i class="fa fa-trash-o"></i>
+                            <button type="button" class="btn btn-danger" title="Удалить главу" id="btn-update-delete"><i
+                                    class="fa fa-trash-o"></i>
                             </button>
-                            <button wicket:id="updateUpdatesAjax" type="button" class="btn btn-primary" title="Сохранить"><i class="fa fa-floppy-o"></i>
+                            <button wicket:id="updateUpdatesAjax" type="button" class="btn btn-primary"
+                                    title="Сохранить"><i class="fa fa-floppy-o"></i>
                             </button>
                         </div>
                     </div>
@@ -273,8 +313,10 @@
                         <div class="col-xs-4">
                             <div class="list-group select sortable" id="updateselect">
                                 <wicket:container wicket:id="updateNameRepeater">
-                                    <a wicket:id="updateVisibilityController" data-toggle="collapse" data-parent="#updateform" aria-expanded="true" class="list-group-item">
-                                        <span wicket:id="updateDateInSelector" class="hidden-sm hidden-xs"/> : <span wicket:id="updateChapterInSelector" class="hidden-sm hidden-xs"/>
+                                    <a wicket:id="updateVisibilityController" data-toggle="collapse"
+                                       data-parent="#updateform" aria-expanded="true" class="list-group-item">
+                                        <span wicket:id="updateDateInSelector" class="hidden-sm hidden-xs"/> : <span
+                                            wicket:id="updateChapterInSelector" class="hidden-sm hidden-xs"/>
                                     </a>
                                 </wicket:container>
                             </div>
@@ -282,7 +324,8 @@
                         <div class="col-xs-8 admin-affix" id="updateform" role="tablist" aria-multiselectable="true">
                             &nbsp;
                             <div class="progress collapse update-insert">
-                                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                <div class="progress-bar progress-bar-striped active" role="progressbar"
+                                     aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
                                     <span class="sr-only">0% Complete</span>
                                 </div>
                             </div>
@@ -292,8 +335,10 @@
                                         <input wicket:id="updateId" type="hidden">
                                         <!--input type="hidden" id="update1_order"-->
                                         <input wicket:id="updateDeleted" type="hidden">
+
                                         <div class="update-data-main">
                                             <h3>Настройка обновления</h3>
+
                                             <div class="form-group">
                                                 <label wicket:for="updateType">Тип</label>
                                                 <select wicket:id="updateType" class="form-control update_type">
@@ -303,12 +348,15 @@
                                                     <option>Другое</option>
                                                 </select>
                                                 <label wicket:for="updateChapter">Глава</label>
-                                                <select wicket:id="updateChapter" id="update1_chapter_select" class="form-control update_chapter">
+                                                <select wicket:id="updateChapter" id="update1_chapter_select"
+                                                        class="form-control update_chapter">
                                                 </select>
                                                 <label wicket:for="updateDate">Дата</label>
-                                                <input wicket:id="updateDate" class="form-control date-input" type="text" id="update1_date_input" value="2015-05-01 03-12">
+                                                <input wicket:id="updateDate" class="form-control date-input"
+                                                       type="text" id="update1_date_input" value="2015-05-01 03-12">
                                                 <label wicket:for="updateDescription">Описание (опционально)</label>
-                                                <input wicket:id="updateDescription" class="form-control" type="text" id="update1_description" placeholder="Перевод">
+                                                <input wicket:id="updateDescription" class="form-control" type="text"
+                                                       id="update1_description" placeholder="Перевод">
                                             </div>
                                         </div>
                                     </div>
@@ -322,17 +370,25 @@
                 <form wicket:id="imagesForm" class="admin-block" id="imagesHead">
                     <div class="admin-header">
                         <span>Изображения</span>
+
                         <div class="btn-group" role="group" aria-label="Панель изображений">
-                            <button type="button" class="btn btn-success" title="Добавить новые изображения" id="btn-image-add"><i class="fa fa-plus"></i>
+                            <button type="button" class="btn btn-success" title="Добавить новые изображения"
+                                    id="btn-image-add"><i class="fa fa-plus"></i>
                                 <input type="file" class='fileupload' multiple>
                             </button>
-                            <button type="button" class="btn btn-default btn-border" title="Режим замены изображений" id="btn-image-replace-main"><i class="fa fa-retweet"></i>
+                            <button type="button" class="btn btn-default btn-border" title="Режим замены изображений"
+                                    id="btn-image-replace-main"><i class="fa fa-retweet"></i>
                             </button>
-                            <button type="button" class="btn btn-default btn-border" title="Режим добавления/замены покрасов" id="btn-image-reset-color"><i class="fa fa-retweet" style="color: #60a9d4;"></i><i class="fa fa-paint-brush" style="font-size: 9px;margin-left: -9px;"></i>
+                            <button type="button" class="btn btn-default btn-border"
+                                    title="Режим добавления/замены покрасов" id="btn-image-reset-color"><i
+                                    class="fa fa-retweet" style="color: #60a9d4;"></i><i class="fa fa-paint-brush"
+                                                                                         style="font-size: 9px;margin-left: -9px;"></i>
                             </button>
-                            <button type="button" class="btn btn-danger" title="Удалить изображение" id="btn-image-delete"><i class="fa fa-trash-o"></i>
+                            <button type="button" class="btn btn-danger" title="Удалить изображение"
+                                    id="btn-image-delete"><i class="fa fa-trash-o"></i>
                             </button>
-                            <button wicket:id="updateImagesAjax" type="button" class="btn btn-primary" title="Сохранить"><i class="fa fa-floppy-o"></i>
+                            <button wicket:id="updateImagesAjax" type="button" class="btn btn-primary"
+                                    title="Сохранить"><i class="fa fa-floppy-o"></i>
                             </button>
                         </div>
                     </div>
@@ -344,7 +400,8 @@
                                         <span wicket:id="imageChapterName" class="move"/>
                                     </a>
                                     <wicket:container wicket:id="imageInfoRepeater">
-                                        <a wicket:id="imageVisibilityController" data-toggle="collapse" data-parent="#imageform" aria-expanded="true" class="list-group-item">
+                                        <a wicket:id="imageVisibilityController" data-toggle="collapse"
+                                           data-parent="#imageform" aria-expanded="true" class="list-group-item">
                                             <i class="fa fa-ellipsis-v move"></i>
                                             <center>
                                                 <img wicket:id="imageUrl">
@@ -358,7 +415,8 @@
                         <div class="col-xs-8 admin-affix" id="imageform" role="tablist" aria-multiselectable="true">
                             &nbsp;
                             <div class="progress collapse">
-                                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                <div class="progress-bar progress-bar-striped active" role="progressbar"
+                                     aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
                                     <span class="sr-only">0% Complete</span>
                                 </div>
                             </div>
@@ -369,34 +427,47 @@
                                         <input wicket:id="imageOrder" type="hidden">
                                         <input wicket:id="imageChapterId" type="hidden">
                                         <input wicket:id="imageDeleted" type="hidden">
+
                                         <div class="col-xs-6 image-data-main">
-                                            <h3>Основа <button type="button" class="btn btn-default btn-image-replace" title="Заменить изображение"><i class="fa fa-retweet"></i><input type="file" class='fileupload'></button></h3>
+                                            <h3>Основа
+                                                <button type="button" class="btn btn-default btn-image-replace"
+                                                        title="Заменить изображение"><i class="fa fa-retweet"></i><input
+                                                        type="file" class='fileupload'></button>
+                                            </h3>
                                             <center class="btn-image-replace">
                                                 <input type="file" class='fileupload'>
                                                 <img wicket:id="imageNonColoredUrl" class="img-responsive">
                                             </center>
                                             <div class="form-group">
                                                 <label>Дата загрузки</label>
-                                                <input wicket:id="imageNonColoredUploadDate" type="text" class="form-control disable" disabled/>
+                                                <input wicket:id="imageNonColoredUploadDate" type="text"
+                                                       class="form-control disable" disabled/>
                                             </div>
                                             <div class="form-group">
                                                 <label>Имя файла</label>
-                                                <input wicket:id="imageNonColoredFileName" type="text" class="form-control disable" disabled/>
+                                                <input wicket:id="imageNonColoredFileName" type="text"
+                                                       class="form-control disable" disabled/>
                                             </div>
                                         </div>
                                         <div class="col-xs-6 image-data-color">
-                                            <h3>Покрас <button type="button" class="btn btn-default btn-image-replace" title="Добавить изображение"><i class="fa fa-plus"></i><input type="file" class='fileupload'></button></h3>
+                                            <h3>Покрас
+                                                <button type="button" class="btn btn-default btn-image-replace"
+                                                        title="Добавить изображение"><i class="fa fa-plus"></i><input
+                                                        type="file" class='fileupload'></button>
+                                            </h3>
                                             <center class="btn-image-replace">
                                                 <input type="file" class='fileupload'>
                                                 <img wicket:id="imageColoredUrl" class="img-responsive">
                                             </center>
                                             <div class="form-group">
                                                 <label>Дата загрузки</label>
-                                                <input wicket:id="imageColoredUploadDate" type="text" class="form-control disable" disabled/>
+                                                <input wicket:id="imageColoredUploadDate" type="text"
+                                                       class="form-control disable" disabled/>
                                             </div>
                                             <div class="form-group">
                                                 <label>Имя файла</label>
-                                                <input wicket:id="imageColoredFileName" type="text" class="form-control disable" disabled/>
+                                                <input wicket:id="imageColoredFileName" type="text"
+                                                       class="form-control disable" disabled/>
                                             </div>
                                         </div>
                                     </div>
@@ -409,33 +480,47 @@
                                     <input type="hidden" id="image2_order">
                                     <input type="hidden" id="image2_chapter_id">
                                     <input type="hidden" id="image2_delete">
+
                                     <div class="col-xs-6 image-data-main">
-                                        <h3>Основа <button type="button" class="btn btn-default btn-image-replace" title="Заменить изображение"><i class="fa fa-retweet"></i><input type="file" class='fileupload'></button></h3>
+                                        <h3>Основа
+                                            <button type="button" class="btn btn-default btn-image-replace"
+                                                    title="Заменить изображение"><i class="fa fa-retweet"></i><input
+                                                    type="file" class='fileupload'></button>
+                                        </h3>
                                         <center class="btn-image-replace">
                                             <input type="file" class='fileupload'>
-                                            <img src="http://ruranobe.ru/w/images/d/d9/AW_v09_02.png" class="img-responsive">
+                                            <img src="http://ruranobe.ru/w/images/d/d9/AW_v09_02.png"
+                                                 class="img-responsive">
                                         </center>
                                         <div class="form-group">
                                             <label for="image2_main_date">Дата загрузки</label>
-                                            <input type="text" class="form-control disable" disabled id="image2_main_date" value="20.02.2015 10:00:00">
+                                            <input type="text" class="form-control disable" disabled
+                                                   id="image2_main_date" value="20.02.2015 10:00:00">
                                         </div>
                                         <div class="form-group">
                                             <label for="image2_main_name">Имя файла</label>
-                                            <input type="text" class="form-control disable" disabled id="image2_main_name" value="*имя*">
+                                            <input type="text" class="form-control disable" disabled
+                                                   id="image2_main_name" value="*имя*">
                                         </div>
                                     </div>
                                     <div class="col-xs-6 image-data-color">
-                                        <h3>Покрас <button type="button" class="btn btn-default btn-image-replace" title="Добавить изображение"><i class="fa fa-plus"></i><input type="file" class='fileupload'></button></h3>
+                                        <h3>Покрас
+                                            <button type="button" class="btn btn-default btn-image-replace"
+                                                    title="Добавить изображение"><i class="fa fa-plus"></i><input
+                                                    type="file" class='fileupload'></button>
+                                        </h3>
                                         <center class="btn-image-replace">
                                             <input type="file" class='fileupload'>
                                         </center>
                                         <div class="form-group">
                                             <label for="image2_color_date">Дата загрузки</label>
-                                            <input type="text" class="form-control disable" disabled id="image2_color_date" value="20.02.2015 10:00:00">
+                                            <input type="text" class="form-control disable" disabled
+                                                   id="image2_color_date" value="20.02.2015 10:00:00">
                                         </div>
                                         <div class="form-group">
                                             <label for="image2_color_name">Имя файла</label>
-                                            <input type="text" class="form-control disable" disabled id="image2_color_name" value="*имя*">
+                                            <input type="text" class="form-control disable" disabled
+                                                   id="image2_color_name" value="*имя*">
                                         </div>
                                     </div>
                                 </div>
@@ -446,33 +531,47 @@
                                     <input type="hidden" id="image3_order">
                                     <input type="hidden" id="image3_chapter_id">
                                     <input type="hidden" id="image3_delete">
+
                                     <div class="col-xs-6 image-data-main">
-                                        <h3>Основа <button type="button" class="btn btn-default btn-image-replace" title="Заменить изображение"><i class="fa fa-retweet"></i><input type="file" class='fileupload'></button></h3>
+                                        <h3>Основа
+                                            <button type="button" class="btn btn-default btn-image-replace"
+                                                    title="Заменить изображение"><i class="fa fa-retweet"></i><input
+                                                    type="file" class='fileupload'></button>
+                                        </h3>
                                         <center class="btn-image-replace">
                                             <input type="file" class='fileupload'>
-                                            <img src="http://ruranobe.ru/w/images/4/45/AW_v09_06.png" class="img-responsive">
+                                            <img src="http://ruranobe.ru/w/images/4/45/AW_v09_06.png"
+                                                 class="img-responsive">
                                         </center>
                                         <div class="form-group">
                                             <label for="image3_main_date">Дата загрузки</label>
-                                            <input type="text" class="form-control disable" disabled id="image3_main_date" value="20.02.2015 10:00:00">
+                                            <input type="text" class="form-control disable" disabled
+                                                   id="image3_main_date" value="20.02.2015 10:00:00">
                                         </div>
                                         <div class="form-group">
                                             <label for="image3_main_name">Имя файла</label>
-                                            <input type="text" class="form-control disable" disabled id="image3_main_name" value="*имя*">
+                                            <input type="text" class="form-control disable" disabled
+                                                   id="image3_main_name" value="*имя*">
                                         </div>
                                     </div>
                                     <div class="col-xs-6 image-data-color">
-                                        <h3>Покрас <button type="button" class="btn btn-default btn-image-replace" title="Добавить изображение"><i class="fa fa-plus"></i><input type="file" class='fileupload'></button></h3>
+                                        <h3>Покрас
+                                            <button type="button" class="btn btn-default btn-image-replace"
+                                                    title="Добавить изображение"><i class="fa fa-plus"></i><input
+                                                    type="file" class='fileupload'></button>
+                                        </h3>
                                         <center class="btn-image-replace">
                                             <input type="file" class='fileupload'>
                                         </center>
                                         <div class="form-group">
                                             <label for="image3_color_date">Дата загрузки</label>
-                                            <input type="text" class="form-control disable" disabled id="image3_color_date" value="20.02.2015 10:00:00">
+                                            <input type="text" class="form-control disable" disabled
+                                                   id="image3_color_date" value="20.02.2015 10:00:00">
                                         </div>
                                         <div class="form-group">
                                             <label for="image3_color_name">Имя файла</label>
-                                            <input type="text" class="form-control disable" disabled id="image3_color_name" value="*имя*">
+                                            <input type="text" class="form-control disable" disabled
+                                                   id="image3_color_name" value="*имя*">
                                         </div>
                                     </div>
                                 </div>
@@ -483,33 +582,47 @@
                                     <input type="hidden" id="image4_order">
                                     <input type="hidden" id="image4_chapter_id">
                                     <input type="hidden" id="image4_delete">
+
                                     <div class="col-xs-6 image-data-main">
-                                        <h3>Основа <button type="button" class="btn btn-default btn-image-replace" title="Заменить изображение"><i class="fa fa-retweet"></i><input type="file" class='fileupload'></button></h3>
+                                        <h3>Основа
+                                            <button type="button" class="btn btn-default btn-image-replace"
+                                                    title="Заменить изображение"><i class="fa fa-retweet"></i><input
+                                                    type="file" class='fileupload'></button>
+                                        </h3>
                                         <center class="btn-image-replace">
                                             <input type="file" class='fileupload'>
-                                            <img src="http://ruranobe.ru/w/images/d/d7/AW_v09_07.jpg" class="img-responsive">
+                                            <img src="http://ruranobe.ru/w/images/d/d7/AW_v09_07.jpg"
+                                                 class="img-responsive">
                                         </center>
                                         <div class="form-group">
                                             <label for="image4_main_date">Дата загрузки</label>
-                                            <input type="text" class="form-control disable" disabled id="image4_main_date" value="20.02.2015 10:00:00">
+                                            <input type="text" class="form-control disable" disabled
+                                                   id="image4_main_date" value="20.02.2015 10:00:00">
                                         </div>
                                         <div class="form-group">
                                             <label for="image4_main_name">Имя файла</label>
-                                            <input type="text" class="form-control disable" disabled id="image4_main_name" value="*имя*">
+                                            <input type="text" class="form-control disable" disabled
+                                                   id="image4_main_name" value="*имя*">
                                         </div>
                                     </div>
                                     <div class="col-xs-6 image-data-color">
-                                        <h3>Покрас <button type="button" class="btn btn-default btn-image-replace" title="Добавить изображение"><i class="fa fa-plus"></i><input type="file" class='fileupload'></button></h3>
+                                        <h3>Покрас
+                                            <button type="button" class="btn btn-default btn-image-replace"
+                                                    title="Добавить изображение"><i class="fa fa-plus"></i><input
+                                                    type="file" class='fileupload'></button>
+                                        </h3>
                                         <center class="btn-image-replace">
                                             <input type="file" class='fileupload'>
                                         </center>
                                         <div class="form-group">
                                             <label for="image4_color_date">Дата загрузки</label>
-                                            <input type="text" class="form-control disable" disabled id="image4_color_date" value="20.02.2015 10:00:00">
+                                            <input type="text" class="form-control disable" disabled
+                                                   id="image4_color_date" value="20.02.2015 10:00:00">
                                         </div>
                                         <div class="form-group">
                                             <label for="image4_color_name">Имя файла</label>
-                                            <input type="text" class="form-control disable" disabled id="image4_color_name" value="*имя*">
+                                            <input type="text" class="form-control disable" disabled
+                                                   id="image4_color_name" value="*имя*">
                                         </div>
                                     </div>
                                 </div>
@@ -520,35 +633,50 @@
                                     <input type="hidden" id="image5_order">
                                     <input type="hidden" id="image5_chapter_id">
                                     <input type="hidden" id="image5_delete">
+
                                     <div class="col-xs-6 image-data-main">
-                                        <h3>Основа <button type="button" class="btn btn-default btn-image-replace" title="Заменить изображение"><i class="fa fa-retweet"></i><input type="file" class='fileupload'></button></h3>
+                                        <h3>Основа
+                                            <button type="button" class="btn btn-default btn-image-replace"
+                                                    title="Заменить изображение"><i class="fa fa-retweet"></i><input
+                                                    type="file" class='fileupload'></button>
+                                        </h3>
                                         <center class="btn-image-replace">
                                             <input type="file" class='fileupload'>
-                                            <img src="http://ruranobe.ru/w/images/d/d7/AW_v09_07.jpg" class="img-responsive">
+                                            <img src="http://ruranobe.ru/w/images/d/d7/AW_v09_07.jpg"
+                                                 class="img-responsive">
                                         </center>
                                         <div class="form-group">
 
                                             <label for="image5_main_date">Дата загрузки</label>
-                                            <input type="text" class="form-control disable" disabled id="image5_main_date" value="20.02.2015 10:00:00">
+                                            <input type="text" class="form-control disable" disabled
+                                                   id="image5_main_date" value="20.02.2015 10:00:00">
                                         </div>
                                         <div class="form-group">
                                             <label for="image5_main_name">Имя файла</label>
-                                            <input type="text" class="form-control disable" disabled id="image5_main_name" value="*имя*">
+                                            <input type="text" class="form-control disable" disabled
+                                                   id="image5_main_name" value="*имя*">
                                         </div>
                                     </div>
                                     <div class="col-xs-6 image-data-color">
-                                        <h3>Покрас <button type="button" class="btn btn-default btn-image-replace" title="Заменить изображение"><i class="fa fa-retweet"></i><input type="file" class='fileupload'></button></h3>
+                                        <h3>Покрас
+                                            <button type="button" class="btn btn-default btn-image-replace"
+                                                    title="Заменить изображение"><i class="fa fa-retweet"></i><input
+                                                    type="file" class='fileupload'></button>
+                                        </h3>
                                         <center class="btn-image-replace">
                                             <input type="file" class='fileupload'>
-                                            <img src="http://ruranobe.ru/w/images/d/d7/AW_v09_07.jpg" class="img-responsive">
+                                            <img src="http://ruranobe.ru/w/images/d/d7/AW_v09_07.jpg"
+                                                 class="img-responsive">
                                         </center>
                                         <div class="form-group">
                                             <label for="image5_color_date">Дата загрузки</label>
-                                            <input type="text" class="form-control disable" disabled id="image5_color_date" value="20.02.2015 10:00:00">
+                                            <input type="text" class="form-control disable" disabled
+                                                   id="image5_color_date" value="20.02.2015 10:00:00">
                                         </div>
                                         <div class="form-group">
                                             <label for="image5_color_name">Имя файла</label>
-                                            <input type="text" class="form-control disable" disabled id="image5_color_name" value="*имя*">
+                                            <input type="text" class="form-control disable" disabled
+                                                   id="image5_color_name" value="*имя*">
                                         </div>
                                     </div>
                                 </div>
@@ -561,28 +689,28 @@
     </div>
 
     <script type="text/javascript">
-        (function($) {
-            $.trimLeft = function(element, options) {
+        (function ($) {
+            $.trimLeft = function (element, options) {
                 var trim = this;
                 var $element = $(element), // reference to the jQuery version of DOM element
                         element = element; // reference to the actual DOM element
                 var initialText = element.innerHTML;
-                trim.init = function() {
-                    overrideNodeMethod("html", function() {
+                trim.init = function () {
+                    overrideNodeMethod("html", function () {
                         return initialText;
                     });
                     trimContents(element, element);
                     return trim;
                 };
-                trim.reset = function() {
+                trim.reset = function () {
                     element.innerHTML = initialText;
                     return trim;
                 };
                 //Overide .html() to return initialText.
-                var overrideNodeMethod = function(methodName, action) {
+                var overrideNodeMethod = function (methodName, action) {
                     var originalVal = $.fn[methodName];
                     var thisNode = $element;
-                    $.fn[methodName] = function() {
+                    $.fn[methodName] = function () {
                         if (this[0] == thisNode[0]) {
                             return action.apply(this, arguments);
                         } else {
@@ -590,7 +718,7 @@
                         }
                     };
                 };
-                var trimContents = function(row, node) {
+                var trimContents = function (row, node) {
                     while (row.scrollWidth > row.offsetWidth) {
                         var childNode = node.firstChild;
                         if (!childNode)
@@ -603,9 +731,10 @@
                                 node.removeChild(childNode);
                             }
                         }
-                    };
+                    }
+                    ;
                 };
-                var trimText = function(row, node, textNode) {
+                var trimText = function (row, node, textNode) {
                     var value = '\u2026' + textNode.nodeValue;
                     do {
                         value = '\u2026' + value.substr(4);
@@ -619,21 +748,21 @@
                 };
                 trim.init();
             };
-            $.fn.trimLeft = (function(options) {
+            $.fn.trimLeft = (function (options) {
                 var othat = this;
-                var single = function(that) {
+                var single = function (that) {
                     if (undefined == $(that).data('trim')) {
                         var trim = new $.trimLeft(that, options);
                         $(that).data('trim', trim);
-                        $(window).resize(function() {
-                            $(that).each(function() {
+                        $(window).resize(function () {
+                            $(that).each(function () {
                                 trim.reset().init();
                             });
                         });
                     }
                 };
-                var multiple = function() {
-                    $(othat).each(function() {
+                var multiple = function () {
+                    $(othat).each(function () {
                         single(this);
                     });
                 };
@@ -658,35 +787,39 @@
          */
         $('.list-group.select.sortable').sortable({ // включаем jquery-ui sortable
             items: "a:not(:first-child.heading)", // запрещаем передвигать что либо выше первого heading (не может быть картинок вне глав)
-            handle:'.move' // задаем маркер перетягивания
+            handle: '.move' // задаем маркер перетягивания
         });
 
         //admin-affix - мой класс для обозначения общего елемента, который аффиксируется справа от списка .list-group.select
-        $('.admin-affix').each(function() { // используется bootstrap affix
+        $('.admin-affix').each(function () { // используется bootstrap affix
             var parent = $(this).parent();
             $(this).affix({
                 offset: {
-                    top: function() { return parent.offset().top - 10; }, // в открепленнойм стиле у меня стоит отступ 10 пикселов от верхнего края экрана, знасит откреплять мы начинаем за 10 пикселей от позиции родительского елемента
-                    bottom: function() { return $(document).height() - parent.outerHeight(true) - parent.offset().top; } // нижняя граница, конда плагину нужно снова закрепить admin-affix считается по разнице нижней граници родительского елемента и нижнего края экрана
+                    top: function () {
+                        return parent.offset().top - 10;
+                    }, // в открепленнойм стиле у меня стоит отступ 10 пикселов от верхнего края экрана, знасит откреплять мы начинаем за 10 пикселей от позиции родительского елемента
+                    bottom: function () {
+                        return $(document).height() - parent.outerHeight(true) - parent.offset().top;
+                    } // нижняя граница, конда плагину нужно снова закрепить admin-affix считается по разнице нижней граници родительского елемента и нижнего края экрана
                 } // то есть мы аффиксируем admin-affix в пределах его родительского елемента. предпологается что размер родительского елемента растягивается за счет наполнения list-group.select, но нужно где то явно указать min-height что бы в случае если елементов в list-group.select меньше чем высота самого admin-affix, родительский елемень не схлопнулся при откреплении admin-affix
             });
         });
 
-        $(".date-input").datetimepicker({format:"YYYY-MM-DD HH-mm", locale: 'ru', useCurrent: 'hour'}); // инициализация дейтпикера
+        $(".date-input").datetimepicker({format: "YYYY-MM-DD HH-mm", locale: 'ru', useCurrent: 'hour'}); // инициализация дейтпикера
 
         /* ------------------------------------------ PARTISIPANTS START ------------------------------------------ */
 
-        $('#participantselect').on( "sortupdate", function() { // для списка участников перевода задаем обработчик перетягивания
+        $('#participantselect').on("sortupdate", function () { // для списка участников перевода задаем обработчик перетягивания
             var p_order = 0; // поставим для каждого участника порядковый номер
-            $(this).children().each(function(){ // проверяем каждый элемент
-                $($(this).attr('href')+'_order').val(++p_order); // обновляем порядок
+            $(this).children().each(function () { // проверяем каждый элемент
+                $($(this).attr('href') + '_order').val(++p_order); // обновляем порядок
             });
         });
 
-        var i=0; // id каждого элемента в пункте участников перевода
+        var i = 0; // id каждого элемента в пункте участников перевода
 
         // ---------- typeahead start ----------
-        var substringMatcher = function(strs) {
+        var substringMatcher = function (strs) {
             return function findMatches(q, cb) {
                 var matches, substringRegex;
 
@@ -698,7 +831,7 @@
 
                 // iterate through the pool of strings and for any string that
                 // contains the substring `q`, add it to the `matches` array
-                $.each(strs, function(i, str) {
+                $.each(strs, function (i, str) {
                     if (substrRegex.test(str)) {
                         matches.push(str);
                     }
@@ -717,7 +850,7 @@
         var illustrators = ['Andrew Rublev', 'Someone Someoneson', 'Hitomi Akira', 'Test'
         ];
 
-        $('#participantform').children('.panel').each(function(){
+        $('#participantform').children('.panel').each(function () {
             i++;
             $('#participant' + i + '_names_selector .typeahead').typeahead({  // обработчик никнеймов
                         hint: true,
@@ -754,41 +887,41 @@
                 });
         // ---------- typeahead end --------------
 
-        $('#participantselect').on('click', 'a.list-group-item', function() { // баг фикс кнопки удаления
+        $('#participantselect').on('click', 'a.list-group-item', function () { // баг фикс кнопки удаления
             $('.participant-data.in').collapse('hide');
             $($(this).attr('href')).collapse('show');
         });
 
-        $('.typeahead').bind('typeahead:select', function(ev, suggestion) {
+        $('.typeahead').bind('typeahead:select', function (ev, suggestion) {
             var id = $('.participant-data.in').attr('id');
             $('#' + id + '_name').html(suggestion);
         });
 
-        $('#participantform').on('keyup', '.name-input', function(){
+        $('#participantform').on('keyup', '.name-input', function () {
             var elem = $(this);  // засовываем этот объект в переменную (на всякий случай)
             var id = $('.participant-data.in').attr('id'); // получаем id участника
             $('#' + id + '_name').html(elem.val()); // при помощи предыдущего значения вытворяем с именами, что хотим
         });
 
-        $('#participantform').on('change', '.role-input', function(){
+        $('#participantform').on('change', '.role-input', function () {
             var elem = $(this);  // засовываем этот объект в переменную (на всякий случай)
             var id = $('.participant-data.in').attr('id'); // получаем id участника
             $('#' + id + '_role').html(elem.val()); // при помощи предыдущего значения вытворяем с ролями, что хотим
         });
 
         $('#participantform').on('hidden.bs.collapse', '.participant-data', function () { // обработка активности кнопки удаления
-            $('#btn-participant-delete').attr('disabled',true);
-        }).on('shown.bs.collapse', '.participant-data', function() {
-            $('#btn-participant-delete').attr('disabled',false);
+            $('#btn-participant-delete').attr('disabled', true);
+        }).on('shown.bs.collapse', '.participant-data', function () {
+            $('#btn-participant-delete').attr('disabled', false);
         });
 
-        $('#btn-participant-delete').on('click',function(){ // обработка кнопки удаления для участников
+        $('#btn-participant-delete').on('click', function () { // обработка кнопки удаления для участников
             var id = $('.participant-data.in').attr('id');
-            var nextParticipant = $('#participantselect [href="#'+id+'"]').next();
+            var nextParticipant = $('#participantselect [href="#' + id + '"]').next();
             var nextPanel = $(nextParticipant.attr('href'));
             $('.participant-data.in').collapse('hide');
-            $('#'+id+'_detele').val(true);
-            $('#participantselect [href="#'+id+'"]').detach();
+            $('#' + id + '_detele').val(true);
+            $('#participantselect [href="#' + id + '"]').detach();
             if (nextParticipant.attr('class') && nextPanel.attr('class')) {
                 nextParticipant.addClass('active');
                 nextPanel.collapse('show');
@@ -803,21 +936,21 @@
         /* ------------------------------------------ CHAPTERS START ------------------------------------------ */
 
         var OptionsForSelect = '<option>Весь том</option>'; // опции для селекта
-        var u=0; // переменная для select'а
+        var u = 0; // переменная для select'а
 
-        $('#chapterselect').on( "sortupdate", function( event, ui ) { // для списка глав задаем обработчик перетягивания
+        $('#chapterselect').on("sortupdate", function (event, ui) { // для списка глав задаем обработчик перетягивания
             var p_order = 0; // поставим для каждой главы порядковый номер
-            $(this).children().each(function(){ // проверяем каждый элемент
-                $($(this).attr('href')+'_order').val(++p_order); // обновляем порядок
-        //              console.log($(this).attr('href')); // на всякий случай пока оставлю
-        //              console.log(p_order);
+            $(this).children().each(function () { // проверяем каждый элемент
+                $($(this).attr('href') + '_order').val(++p_order); // обновляем порядок
+                //              console.log($(this).attr('href')); // на всякий случай пока оставлю
+                //              console.log(p_order);
             });
             var id = ui.item.attr('href').substring(8); // находим id главы, которую только что перетащили
             var isRightChapter = false; // переменная поиска
             var chapter = []; // массив для картинок с главой
-            chapter.push($('.heading[data-chapter-id='+ id +']').get(0)); // пихаем саму главу в массив
-            $('#imageselect').children().each(function(){ // проверим главу на наличие картинок под ней
-                if(($(this).is('.heading[data-chapter-id]')) && ($(this).attr('data-chapter-id') == id*1)) { // если это нужный нам heading,
+            chapter.push($('.heading[data-chapter-id=' + id + ']').get(0)); // пихаем саму главу в массив
+            $('#imageselect').children().each(function () { // проверим главу на наличие картинок под ней
+                if (($(this).is('.heading[data-chapter-id]')) && ($(this).attr('data-chapter-id') == id * 1)) { // если это нужный нам heading,
                     isRightChapter = true; // то начинаем искать
                 } else if (($(this).attr('data-parent') == '#imageform') && (isRightChapter)) {
                     chapter.push($(this).get(0)); // пихаем последнюю картинку что нашли в массив
@@ -828,68 +961,68 @@
             if (ui.item.next().attr('href')) { // если следующий элемент в списке присутствует,
                 var nextElem = ui.item.next(); // то получаем его
                 id = nextElem.attr('href').substring(8); // находим id следующей главы
-                $('.heading[data-chapter-id='+ id +']').before(chapter); // и вставляем перед ней
+                $('.heading[data-chapter-id=' + id + ']').before(chapter); // и вставляем перед ней
             } else { // иначе
                 $('#imageselect').append(chapter); // вставляем в конце селекта
             }
             OptionsForSelect = '<option>Весь том</option>'; // при любом перетаскивании строим селект снова
             u = 0;
-            $('#chapterselect').children('a').each(function(){
+            $('#chapterselect').children('a').each(function () {
                 u++;
                 OptionsForSelect = OptionsForSelect + '<option id="select_chapter' + u + '">' + $(this).children('span').text() + ' (' + u + ')</option>';
             });
             $('#updateform').children('.panel').find('.update_chapter').html(OptionsForSelect);
         });
 
-        var j=0; // id каждого элемента в пункте "Главы"
-        var k=0; // нужна, чтобы считать непосредственно сами главы (красивости)
+        var j = 0; // id каждого элемента в пункте "Главы"
+        var k = 0; // нужна, чтобы считать непосредственно сами главы (красивости)
 
-        $('#btn-chapter-add').click(function(){ // обработка кнопки добавления новой главы
+        $('#btn-chapter-add').click(function () { // обработка кнопки добавления новой главы
             j++;
             var number = 0;
             var chapterTen = false;
-            $('#chapterselect').children().each(function(){ // обрабатываем количество "Глав"
+            $('#chapterselect').children().each(function () { // обрабатываем количество "Глав"
                 var str1 = $(this).children('span').text();
-                if (str1.substring(0,8) == "Глава 10") chapterTen = true;
+                if (str1.substring(0, 8) == "Глава 10") chapterTen = true;
             });
-            $('#chapterselect').children().each(function(){ // обрабатываем количество "Глав"
+            $('#chapterselect').children().each(function () { // обрабатываем количество "Глав"
                 var str1 = $(this).children('span').text();
-                var str2 = str1.substring(0,5); // вычленяем первые 5 букв
-        //              if (str1.substring(0,8) == "Глава 10") chapterTen = true;
-                if ((str2 == "Глава") && (str1.substring(6,7)*1 > number) && (!chapterTen)) { // если они совпадают с "главой", и глава меньше 10,
-                    number = str1.substring(6,7)*1; // то присваеваем наибольшее число переменной
+                var str2 = str1.substring(0, 5); // вычленяем первые 5 букв
+                //              if (str1.substring(0,8) == "Глава 10") chapterTen = true;
+                if ((str2 == "Глава") && (str1.substring(6, 7) * 1 > number) && (!chapterTen)) { // если они совпадают с "главой", и глава меньше 10,
+                    number = str1.substring(6, 7) * 1; // то присваеваем наибольшее число переменной
                 }
-                if ((str2 == "Глава") && (str1.substring(6,8)*1 > number) && (chapterTen)) { // если они совпадают с "главой", и глава больше 10,
-                    number = str1.substring(6,8)*1; // то присваеваем наибольшее число переменной
+                if ((str2 == "Глава") && (str1.substring(6, 8) * 1 > number) && (chapterTen)) { // если они совпадают с "главой", и глава больше 10,
+                    number = str1.substring(6, 8) * 1; // то присваеваем наибольшее число переменной
                 }
             });
             k = number;
             k++;
-            var newChapter = '<a data-toggle="collapse" data-parent="#chapterform" href="#chapter' + j + '" aria-expanded="true" aria-controls="chapter' + j + '" class="list-group-item" >'+
-                    '<i class="fa fa-ellipsis-v move"></i>'+
-                    '<span class="hidden-sm hidden-xs"  id="chapter' + j + '_name">Глава ' + k + '</span>'+
+            var newChapter = '<a data-toggle="collapse" data-parent="#chapterform" href="#chapter' + j + '" aria-expanded="true" aria-controls="chapter' + j + '" class="list-group-item" >' +
+                    '<i class="fa fa-ellipsis-v move"></i>' +
+                    '<span class="hidden-sm hidden-xs"  id="chapter' + j + '_name">Глава ' + k + '</span>' +
                     '</a>';
-            var newPanel = '<div class="panel">'+
-                    '<div class="row collapse chapter-data" role="tabpanel" id="chapter' + j + '">'+
-                    '<input type="hidden" id="chapter' + j + '_id">'+
-                    '<input type="hidden" id="chapter' + j + '_order">'+
-                    '<input type="hidden" id="chapter' + j + '_delete">'+
-                    '<div class="chapter-data-main">'+
-                    '<h3>Настройка главы</h3>'+
-                    '<div class="form-group checkbox">'+
-                    '<label>'+
-                    '<input type="checkbox" class="form-control is-subchapter" id="chapter' + j + '_is_subchapter" name="chapter' + j + '_is_subchapter">'+
-                    '&emsp;Подглава'+
-                    '</label>'+
-                    '</div>'+
-                    '<div class="form-group">'+
-                    '<label for="chapter' + j + '_url">Ссылка</label>'+
-                    '<input class="form-control url-input" type="text" id="chapter' + j + '_url_input">'+
-                    '<label for="chapter' + j + '_name">Заголовок</label>'+
-                    '<input class="form-control name-input" type="text" id="chapter' + j + '_name_input" value="Глава ' + k + '">'+
-                    '</div>'+
-                    '</div>'+
-                    '</div>'+
+            var newPanel = '<div class="panel">' +
+                    '<div class="row collapse chapter-data" role="tabpanel" id="chapter' + j + '">' +
+                    '<input type="hidden" id="chapter' + j + '_id">' +
+                    '<input type="hidden" id="chapter' + j + '_order">' +
+                    '<input type="hidden" id="chapter' + j + '_delete">' +
+                    '<div class="chapter-data-main">' +
+                    '<h3>Настройка главы</h3>' +
+                    '<div class="form-group checkbox">' +
+                    '<label>' +
+                    '<input type="checkbox" class="form-control is-subchapter" id="chapter' + j + '_is_subchapter" name="chapter' + j + '_is_subchapter">' +
+                    '&emsp;Подглава' +
+                    '</label>' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                    '<label for="chapter' + j + '_url">Ссылка</label>' +
+                    '<input class="form-control url-input" type="text" id="chapter' + j + '_url_input">' +
+                    '<label for="chapter' + j + '_name">Заголовок</label>' +
+                    '<input class="form-control name-input" type="text" id="chapter' + j + '_name_input" value="Глава ' + k + '">' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
                     '</div>';
             var newChapterHeading = '<a class="list-group-item heading" data-chapter-id="' + j + '"><span class="move">Глава ' + k + '</span></a>';
             if (!($('#chapterselect').children('.active').attr('href'))) { // если не выбранно ни одного элемента
@@ -898,15 +1031,15 @@
                 $('#imageselect').append(newChapterHeading); // то вставляем новые главы, панели для глав, heading'и в конец
             } else {                                         // иначе
                 $('#chapterselect').children('.active').after(newChapter);
-                $('#chapterform').children('.panel').each(function(){
+                $('#chapterform').children('.panel').each(function () {
                     if ($(this).children().hasClass('in')) $(this).after(newPanel); // вставляем после выбранного элемента
                 });
                 var isRightChapter = false; // переменная поиска
                 var imageAfterChapter; // переменная для картинки
                 var id = $('.chapter-data.in').attr('id'); // id выбранного элемента
                 id = id.substring(7); // берем оттуда только цифру
-                $('#imageselect').children().each(function(){ // в случае с heading мы будеми проверять его на наличие картинок под ним
-                    if(($(this).is('.heading[data-chapter-id]')) && ($(this).attr('data-chapter-id') == id*1)) {
+                $('#imageselect').children().each(function () { // в случае с heading мы будеми проверять его на наличие картинок под ним
+                    if (($(this).is('.heading[data-chapter-id]')) && ($(this).attr('data-chapter-id') == id * 1)) {
                         isRightChapter = true; // если это нужный нам heading, то начинаем искать
                     } else if (($(this).attr('data-parent') == '#imageform') && (isRightChapter)) {
                         imageAfterChapter = $(this); // пихаем последнюю картинку что нашли в переменную
@@ -922,35 +1055,35 @@
             }
             $('#chapter' + j + '_name').css({'margin': '0px 0px 0px 3px'}); // отступ для вновь созданого элемента, дабы он выглядел как все
             var p_order = 0; // поставим для каждой главы порядковый номер
-            $(this).children().each(function(){ // проверяем каждый элемент
-                $($(this).attr('href')+'_order').val(++p_order); // обновляем порядок
+            $(this).children().each(function () { // проверяем каждый элемент
+                $($(this).attr('href') + '_order').val(++p_order); // обновляем порядок
                 console.log($(this).attr('href')); // на всякий случай пока оставлю
                 console.log(p_order);
             });
             OptionsForSelect = '<option>Весь том</option>'; // Начинаем строить селект
             u = 0;
-            $('#chapterselect').children('a').each(function(){
+            $('#chapterselect').children('a').each(function () {
                 u++;
                 OptionsForSelect = OptionsForSelect + '<option id="select_chapter' + u + '">' + $(this).children('span').text() + ' (' + u + ')</option>';
             });
             $('#updateform').children('.panel').find('.update_chapter').html(OptionsForSelect);
         });
 
-        $('#chapterform').children('.panel').each(function(){
+        $('#chapterform').children('.panel').each(function () {
             j++; // считаем кажую панель
         });
 
-        $('#chapterform').on('keyup', '.name-input', function(){
+        $('#chapterform').on('keyup', '.name-input', function () {
             var elem = $(this);  // засовываем этот объект в переменную (на всякий случай)
             var id = $('.chapter-data.in').attr('id'); // получаем id главы
             $('#' + id + '_name').html(elem.val()); // при помощи предыдущего значения вытворяем с именами, что хотим
             id = id.substring(7);
             $('.heading[data-chapter-id="' + id + '"]').children().html(elem.val());
             $('#select_chapter' + id).html(elem.val());
-        //      console.log($('#select_chapter' + id));
+            //      console.log($('#select_chapter' + id));
         });
 
-        $('#chapterform').on('click', '.is-subchapter', function(){ // обработчик подглав
+        $('#chapterform').on('click', '.is-subchapter', function () { // обработчик подглав
             var id = $('.chapter-data.in').attr('id'); // получаем id главы
             if ($(this).prop("checked")) { // если выделено, то
                 $('#' + id + '_name').css({'margin': '0px 0px 0px 28px'}); // при помощи css делаем подглаву
@@ -959,26 +1092,26 @@
             }
         })
 
-        $('#chapterselect').on('click', 'a.list-group-item', function() { // баг фикс кнопки удаления (line 1185)
+        $('#chapterselect').on('click', 'a.list-group-item', function () { // баг фикс кнопки удаления (line 1185)
             $('.chapter-data.in').collapse('hide');
             $($(this).attr('href')).collapse('show');
         });
 
         $('#chapterform').on('hidden.bs.collapse', '.chapter-data', function () { // обработка активности кнопки удаления
-            $('#btn-chapter-delete').attr('disabled',true);
-        }).on('shown.bs.collapse', '.chapter-data', function() {
-            $('#btn-chapter-delete').attr('disabled',false);
+            $('#btn-chapter-delete').attr('disabled', true);
+        }).on('shown.bs.collapse', '.chapter-data', function () {
+            $('#btn-chapter-delete').attr('disabled', false);
         });
 
-        $('#btn-chapter-delete').on('click',function(){ // обработка кнопки удаления для глав
+        $('#btn-chapter-delete').on('click', function () { // обработка кнопки удаления для глав
             var id = $('.chapter-data.in').attr('id');
-            var nextChapter = $('#chapterselect [href="#'+id+'"]').next();
+            var nextChapter = $('#chapterselect [href="#' + id + '"]').next();
             var nextPanel = $(nextChapter.attr('href'));
             $('.chapter-data.in').collapse('hide');
-            $('#'+id+'_detele').val(true);
-            $('#chapterselect [href="#'+id+'"]').detach();
+            $('#' + id + '_detele').val(true);
+            $('#chapterselect [href="#' + id + '"]').detach();
             id = id.substring(7);
-            $('.heading[data-chapter-id="'+id+'"]').detach();
+            $('.heading[data-chapter-id="' + id + '"]').detach();
             if (nextChapter.attr('class') && nextPanel.attr('class')) {
                 nextChapter.addClass('active');
                 nextPanel.collapse('toggle');
@@ -992,63 +1125,62 @@
 
         /* ------------------------------------------ UPDATES START ----------------------------------------- */
 
-        $('#updateselect').on( "sortupdate", function() { // для списка обновлений задаем обработчик перетягивания
+        $('#updateselect').on("sortupdate", function () { // для списка обновлений задаем обработчик перетягивания
             var up_order = 0; // поставим для каждого обновления порядковый номер
-            $(this).children().each(function(){ // проверяем каждый элемент
-                $($(this).attr('href')+'_order').val(++up_order); // обновляем порядок
+            $(this).children().each(function () { // проверяем каждый элемент
+                $($(this).attr('href') + '_order').val(++up_order); // обновляем порядок
             });
         });
 
-        var v=0; // id каждого элемента в пункте "Обновления"
+        var v = 0; // id каждого элемента в пункте "Обновления"
 
-        $('#chapterselect').children('a').each(function(){
+        $('#chapterselect').children('a').each(function () {
             u++;
             OptionsForSelect = OptionsForSelect + '<option id="select_chapter' + u + '">' + $(this).children('span').text() + ' (' + u + ')</option>';
         });
 
 
-
-        $('#updateform').children('.panel').each(function(){
+        $('#updateform').children('.panel').each(function () {
             v++; // считаем кажую панель (читай кажый объект)
             $(this).find('.update_chapter').append(OptionsForSelect);
         });
 
-        $('#updateform').on('dp.change', '.date-input', function(){
+        $('#updateform').on('dp.change', '.date-input', function () {
             var elem = $(this);  // засовываем этот объект в переменную (на всякий случай)
             var id = $('.update-data.in').attr('id'); // получаем id главы
             $('#' + id + '_date').html(elem.val()); // при помощи предыдущего значения вытворяем с именами, что хотим
         });
 
-        $('#updateform').on('change', '.update_type', function(){
+        $('#updateform').on('change', '.update_type', function () {
             var elem = $(this);  // засовываем этот объект в переменную (на всякий случай)
             var id = $('.update-data.in').attr('id'); // получаем id главы
             $('#' + id + '_description').prop('placeholder', elem.val()); // при помощи предыдущего значения вытворяем с именами, что хотим
         });
 
-        $('#updateform').on('change', '.update_chapter', function(){
+        $('#updateform').on('change', '.update_chapter', function () {
             var elem = $(this);  // засовываем этот объект в переменную (на всякий случай)
             var id = $('.update-data.in').attr('id'); // получаем id главы
             $('#' + id + '_chapter').text(elem.val()); // при помощи предыдущего значения вытворяем с именами, что хотим
         });
 
-        $('#updateselect').on('click', 'a.list-group-item', function() { // баг фикс кнопки удаления
+        $('#updateselect').on('click', 'a.list-group-item', function () { // баг фикс кнопки удаления
             $('.update-data.in').collapse('hide');
             $($(this).attr('href')).collapse('show');
         });
 
         $('#updateform').on('hidden.bs.collapse', '.update-data', function () { // обработка активности кнопки удаления
-            $('#btn-update-delete').attr('disabled',true);
-        }).on('shown.bs.collapse', '.update-data', function() {
-            $('#btn-update-delete').attr('disabled',false);
+            $('#btn-update-delete').attr('disabled', true);
+        }).on('shown.bs.collapse', '.update-data', function () {
+            $('#btn-update-delete').attr('disabled', false);
         });
 
-        $('#btn-update-delete').on('click',function(){ // обработка кнопки удаления для глав
+        $('#btn-update-delete').on('click', function () { // обработка кнопки удаления для глав
             var id = $('.update-data.in').attr('id');
-            var nextUpdate = $('#updateselect [href="#'+id+'"]').next();
+            var nextUpdate = $('#updateselect [href="#' + id + '"]').next();
             var nextPanel = $(nextUpdate.attr('href'));
             $('.update-data.in').collapse('hide');
-            $('#'+id+'_detele').val(true);
-            $('#updateselect [href="#'+id+'"]').detach();
+            $('#' + id + '_detele').val(true);
+            $('#updateselect [href="#' + id + '"]').detach();
             if (nextUpdate.attr('class') && nextPanel.attr('class')) {
                 nextUpdate.addClass('active');
                 nextPanel.collapse('show');
@@ -1062,34 +1194,34 @@
 
         /* ------------------------------------------ IMAGES START ------------------------------------------ */
 
-        var img = $('#imageselect a[href^="#image"]').length+1;
-        $('#imageselect').on( "sortupdate", function( event, ui ) { // для списка изображений задаем обработчик перетягивания
-            if(ui.item.hasClass('heading')) // если мы перетянули главу, мы должны убедится что не нарушили порядок следовани глав
+        var img = $('#imageselect a[href^="#image"]').length + 1;
+        $('#imageselect').on("sortupdate", function (event, ui) { // для списка изображений задаем обработчик перетягивания
+            if (ui.item.hasClass('heading')) // если мы перетянули главу, мы должны убедится что не нарушили порядок следовани глав
             {
                 var start = 0; // jquery-ui sortable не дает информации о том какой у елемента был индекс до перетягивания
-                $(this).children().each(function(i,e) { // поэтому мы находим его линейно
-                    if($(e).position().top <= ui.originalPosition.top) // сравнивая по y координате каждого елемента в пикселах с координатой изначального положения
+                $(this).children().each(function (i, e) { // поэтому мы находим его линейно
+                    if ($(e).position().top <= ui.originalPosition.top) // сравнивая по y координате каждого елемента в пикселах с координатой изначального положения
                         start = i;
                     else return false;
                 });
                 var end = ui.item.index()  // индекс итоговой позиции известен
-                if(start < end) // если мы перетянули вниз
+                if (start < end) // если мы перетянули вниз
                     $(this).children().slice(start, end).filter('.heading').insertAfter(ui.item); // то перемещаем все заголовки (если они есть) между индексами и ставим их в том же порядке после тепущего
                 else
                     $(this).children().slice(end + 1, start + 1).filter('.heading').insertBefore(ui.item);  // в противном случае точно так же ставим перед текущим
             }
             var order = 0, chapter_id = 0; // теперь нам нужно для каждого изображения поставить его порядковый номер и id главы к которой оно принадлежит
-            $(this).children().each(function(){ // вообще делать это линейно для всех елементов при любом изменении не очень хорошо. правельные было бы обновлять только для тех изображений для которых что-то изменилось. но мне было лень
-                if($(this).is('.heading[data-chapter-id]'))
+            $(this).children().each(function () { // вообще делать это линейно для всех елементов при любом изменении не очень хорошо. правельные было бы обновлять только для тех изображений для которых что-то изменилось. но мне было лень
+                if ($(this).is('.heading[data-chapter-id]'))
                     chapter_id = $(this).attr('data-chapter-id'); // если мы попали на елемент заголовка - запомнили номер текущей главы
                 else {
-                    $($(this).attr('href')+'_order').val(++order); // посчитали порядок
-                    $($(this).attr('href')+'_chapter_id').val(chapter_id); // вспомнили последний известный айдишник главы
+                    $($(this).attr('href') + '_order').val(++order); // посчитали порядок
+                    $($(this).attr('href') + '_chapter_id').val(chapter_id); // вспомнили последний известный айдишник главы
                 }
             });
         });
 
-        $('#imageselect').on('click', 'a.list-group-item', function() { // баг фикс кнопки удаления
+        $('#imageselect').on('click', 'a.list-group-item', function () { // баг фикс кнопки удаления
             $('.image-data.in').collapse('hide');
             $($(this).attr('href')).collapse('show');
         });
@@ -1099,13 +1231,13 @@
 
         // активируем и деактивируем кнопку удаления иллюстраций в зависимости от того выбрано что то или нет
         $('.image-data').on('hidden.bs.collapse', function () {
-            $('#btn-image-delete').attr('disabled',true);
-        }).on('shown.bs.collapse', function() {
-            $('#btn-image-delete').attr('disabled',false);
+            $('#btn-image-delete').attr('disabled', true);
+        }).on('shown.bs.collapse', function () {
+            $('#btn-image-delete').attr('disabled', false);
         });
 
         // рисуем дропзоны при затягивании файла на страницу браузера
-        $(document).on('dragover', function(e) {
+        $(document).on('dragover', function (e) {
             if (window.dropZoneTimeout)
                 clearTimeout(window.dropZoneTimeout);
             else $('body').addClass('dragover'); //выставляем класс на body который активирует css отрисовку дропзон
@@ -1115,16 +1247,18 @@
             $(e.target).closest('.image-data-main,.image-data-color,#imageselect').addClass('hover');
 
             // если в течении 400мс событие не повторяется предпологаем что никто уже ничего не перетягивает и выключаем отрисовку дропзон
-            window.dropZoneTimeout = setTimeout(function() {
+            window.dropZoneTimeout = setTimeout(function () {
                 window.dropZoneTimeout = null;
                 $('body').removeClass('dragover');
                 $('.image-data-main,.image-data-color,#imageselect').removeClass('hover');
             }, 400);
-        }).on('drop dragover dragstart', function(e) { e.preventDefault(); }); // выключаем стандортное поведение браузера на drag'n'drop
+        }).on('drop dragover dragstart', function (e) {
+            e.preventDefault();
+        }); // выключаем стандортное поведение браузера на drag'n'drop
 
         // настраиваем jQuery File Upload для кнопки заменить или затягивания файла на существующую ирасту
-        function replaceImage(){
-            $('.btn-image-replace').each(function(){
+        function replaceImage() {
+            $('.btn-image-replace').each(function () {
                 var $this = $(this);
                 $(this).fileupload({
                     url: addImageCallbackUrl,
@@ -1133,7 +1267,7 @@
                     formData: {
                         ctype: $this.closest('.image-data-main').length ? 'main' : 'color',
                         num: $this.closest('.image-data').attr('id').substr(5),
-                        id: $('#'+$this.closest('.image-data').attr('id')+'_id').val()
+                        id: $('#' + $this.closest('.image-data').attr('id') + '_id').val()
                     },
                     acceptFileTypes: /(\.|\/)(jpe?g|png|jpg)$/i,
                     previewMaxHeight: 180,
@@ -1154,13 +1288,13 @@
                 var index = data.index,
                         file = data.files[index];
                 if (file.preview) { // заменяем иконку загрузки за превюшку, как только она становится доступна
-                    $('#imageselect a[href="#image'+file.num+'"] center').empty().append(file.preview);
+                    $('#imageselect a[href="#image' + file.num + '"] center').empty().append(file.preview);
                     var newCanvas = $(file.preview).clone().get(0);
                     newCanvas.getContext('2d').drawImage(file.preview, 0, 0);
-                    $('#image'+file.num+' .image-data-'+file.ctype+' center').empty().append(newCanvas);
+                    $('#image' + file.num + ' .image-data-' + file.ctype + ' center').empty().append(newCanvas);
                 }
                 if (file.error) // или выводим сообщение об ошибке обработки на клиенте
-                    $('#imageform .progress').after('<div class="alert alert-danger alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Ошибка!</strong> '+file.error+'</div>');
+                    $('#imageform .progress').after('<div class="alert alert-danger alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Ошибка!</strong> ' + file.error + '</div>');
             }).on('fileuploadprogressall', function (e, data) { // обновляем прогресбар
                 var progress = parseInt(data.loaded / data.total * 100, 10);
                 $('#imageform .progress-bar').css('width', progress + '%');
@@ -1175,11 +1309,11 @@
                         $button.closest('.image-data-main,.image-data-color').find('input:eq(1)').val(moment(data._time).format('DD.MM.YYYY HH:mm:ss'));
                         $button.closest('.image-data-main,.image-data-color').find('input:eq(2)').val(file.name);
                         $button.closest('.image-data-main,.image-data-color').find('center').empty().append($('<img>').attr('src', file.url).addClass('img-responsive'));
-                        $('#image'+data.files[index].num).find('.image-data-'+data.files[index].ctype).find('center').empty().append($('<img>').attr('src', file.url).addClass('img-responsive')).append($('<input type="file" class="fileupload">'));
-                        $('#image'+data.files[index].num+'_id').val(file.id);
-                        $('#imageselect a[href="#image'+data.files[index].num+'"] center').empty().append($('<img>').attr('src', file.url));
+                        $('#image' + data.files[index].num).find('.image-data-' + data.files[index].ctype).find('center').empty().append($('<img>').attr('src', file.url).addClass('img-responsive')).append($('<input type="file" class="fileupload">'));
+                        $('#image' + data.files[index].num + '_id').val(file.id);
+                        $('#imageselect a[href="#image' + data.files[index].num + '"] center').empty().append($('<img>').attr('src', file.url));
                     } else if (file.error) // выводим ошибку возвращенную с сервера
-                        $('#imageform .progress').after('<div class="alert alert-danger alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Ошибка!</strong> '+file.error+'</div>');
+                        $('#imageform .progress').after('<div class="alert alert-danger alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Ошибка!</strong> ' + file.error + '</div>');
                 });
             }).on('fileuploadfail', function (e, data) { // выводим ошибку аякса
                 $('#imageform .progress').after('<div class="alert alert-danger alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Ошибка!</strong> Загрузка не удалась</div>');
@@ -1199,13 +1333,13 @@
             dropZone: $('#imageselect')
         }).on('fileuploadadd', function (e, data) { // при добавлении файла сразу создаем елемент в #imageselect
             $.each(data.files, function (index, file) {
-                if(!data.last_num) data.last_num = $('#imageselect a[href^="#image"]').length;
-                if(!data.last_num) data.last_num = 0;
+                if (!data.last_num) data.last_num = $('#imageselect a[href^="#image"]').length;
+                if (!data.last_num) data.last_num = 0;
                 img++;
                 file.num = ++data.last_num; // num - внутренний/временный айдишник иллюстраций фронтенда - порядок добавления
                 file.ctype = 'main'; // ctype - color type. основная ираста или покрас
-                $('<a data-toggle="collapse" data-parent="#imageform" href="#image'+file.num+'" aria-expanded="true" aria-controls="image'+file.num+'" class="list-group-item"> <i class="fa fa-ellipsis-v move ui-sortable-handle"></i> <center><i class="fa fa-spinner fa-spin"></i></center> <span class="hidden-sm hidden-xs">'+file.name+'</span> </a>').appendTo('#imageselect');
-                $('<div class="panel"><div class="row collapse image-data" role="tabpanel" id="image'+file.num+'"><input type="hidden" id="image'+file.num+'_id"><input type="hidden" id="image'+file.num+'_order"><input type="hidden" id="image'+file.num+'_chapter_id"><input type="hidden" id="image'+file.num+'_delete"><div class="col-xs-6 image-data-main"><h3>Основа <button type="button" class="btn btn-default btn-image-replace" title="Заменить изображение"><i class="fa fa-retweet"></i><input type="file" class="fileupload"></button></h3><center class="btn-image-replace"><input type="file" class="fileupload"><i class="fa fa-spinner fa-spin"></i></center><div class="form-group"><label for="image'+file.num+'_main_date">Дата загрузки</label><input type="text" class="form-control disable" disabled id="image'+file.num+'_main_date" value="'+moment(data._time).format('DD.MM.YYYY HH:mm:ss')+'"></div><div class="form-group"><label for="image'+file.num+'_main_name">Имя файла</label><input type="text" class="form-control disable" disabled id="image'+file.num+'_main_name" value="'+file.name+'"></div></div><div class="col-xs-6 image-data-color"><h3>Покрас <button type="button" class="btn btn-default btn-image-replace" title="Добавить изображение"><i class="fa fa-plus"></i><input type="file" class="fileupload"></button></h3><center class="btn-image-replace"><input type="file" class="fileupload"></center><div class="form-group"><label for="image'+file.num+'_color_date">Дата загрузки</label><input type="text" class="form-control disable" disabled id="image'+file.num+'_color_date" value=""></div><div class="form-group"><label for="image'+file.num+'_color_name">Имя файла</label><input type="text" class="form-control disable" disabled id="image'+file.num+'_color_name" value=""></div></div></div></div>').appendTo('#imageform');
+                $('<a data-toggle="collapse" data-parent="#imageform" href="#image' + file.num + '" aria-expanded="true" aria-controls="image' + file.num + '" class="list-group-item"> <i class="fa fa-ellipsis-v move ui-sortable-handle"></i> <center><i class="fa fa-spinner fa-spin"></i></center> <span class="hidden-sm hidden-xs">' + file.name + '</span> </a>').appendTo('#imageselect');
+                $('<div class="panel"><div class="row collapse image-data" role="tabpanel" id="image' + file.num + '"><input type="hidden" id="image' + file.num + '_id"><input type="hidden" id="image' + file.num + '_order"><input type="hidden" id="image' + file.num + '_chapter_id"><input type="hidden" id="image' + file.num + '_delete"><div class="col-xs-6 image-data-main"><h3>Основа <button type="button" class="btn btn-default btn-image-replace" title="Заменить изображение"><i class="fa fa-retweet"></i><input type="file" class="fileupload"></button></h3><center class="btn-image-replace"><input type="file" class="fileupload"><i class="fa fa-spinner fa-spin"></i></center><div class="form-group"><label for="image' + file.num + '_main_date">Дата загрузки</label><input type="text" class="form-control disable" disabled id="image' + file.num + '_main_date" value="' + moment(data._time).format('DD.MM.YYYY HH:mm:ss') + '"></div><div class="form-group"><label for="image' + file.num + '_main_name">Имя файла</label><input type="text" class="form-control disable" disabled id="image' + file.num + '_main_name" value="' + file.name + '"></div></div><div class="col-xs-6 image-data-color"><h3>Покрас <button type="button" class="btn btn-default btn-image-replace" title="Добавить изображение"><i class="fa fa-plus"></i><input type="file" class="fileupload"></button></h3><center class="btn-image-replace"><input type="file" class="fileupload"></center><div class="form-group"><label for="image' + file.num + '_color_date">Дата загрузки</label><input type="text" class="form-control disable" disabled id="image' + file.num + '_color_date" value=""></div><div class="form-group"><label for="image' + file.num + '_color_name">Имя файла</label><input type="text" class="form-control disable" disabled id="image' + file.num + '_color_name" value=""></div></div></div></div>').appendTo('#imageform');
             });
             $('#imageform .progress').collapse('show'); // показываем прогресбар
             data.submit(); // начинаем загрузку
@@ -1213,14 +1347,13 @@
         });
 
 
-
-        $('#btn-image-delete').click(function(){ // обработка кнопки удаления
+        $('#btn-image-delete').click(function () { // обработка кнопки удаления
             var id = $('.image-data.in').attr('id');
-            var nextImage = $('#chapterselect [href="#'+id+'"]').next();
+            var nextImage = $('#chapterselect [href="#' + id + '"]').next();
             var nextPanel = $(nextImage.attr('href'));
             $('.image-data.in').collapse('hide');
-            $('#'+id+'_detele').val(true);
-            $('#imageselect [href="#'+id+'"]').detach();
+            $('#' + id + '_detele').val(true);
+            $('#imageselect [href="#' + id + '"]').detach();
             if (nextImage.attr('class') && nextPanel.attr('class')) {
                 nextImage.addClass('active');
                 nextPanel.collapse('show');

@@ -48,27 +48,39 @@ public class WikiTag
         return attributeNameToValue;
     }
 
-    public void setListOrderNumber(int listOrderNumber) {
+    public void setListOrderNumber(int listOrderNumber)
+    {
         this.listOrderNumber = listOrderNumber;
     }
 
-    public void setImageUrl(String imageUrl) {
+    public void setImageUrl(String imageUrl)
+    {
         this.imageUrl = imageUrl;
     }
 
-    public String getImageUrl() {
+    public String getImageUrl()
+    {
         return imageUrl;
     }
 
     @Override
     public boolean equals(Object o)
     {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+        {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass())
+        {
+            return false;
+        }
 
         WikiTag wikiTag = (WikiTag) o;
 
-        if (startPosition != wikiTag.startPosition) return false;
+        if (startPosition != wikiTag.startPosition)
+        {
+            return false;
+        }
         return wikiTagType.equals(wikiTag.wikiTagType);
 
     }

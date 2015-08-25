@@ -43,7 +43,7 @@ public class ProjectBannersList extends Panel
         Collection<Project> projects = projectsMapperCacheable.getAllProjects();
         List<SimpleEntry<Project, ExternalResource>> projectsList = new ArrayList<SimpleEntry<Project, ExternalResource>>();
         ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.
-                getCacheableMapper(session, ExternalResourcesMapper.class);
+                                                                                        getCacheableMapper(session, ExternalResourcesMapper.class);
         for (Project project : projects)
         {
             if (!project.isProjectHidden() && !project.isBannerHidden())

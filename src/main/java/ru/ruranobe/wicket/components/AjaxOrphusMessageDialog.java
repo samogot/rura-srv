@@ -60,21 +60,21 @@ public class AjaxOrphusMessageDialog extends WebComponent
 
 // For development purposes "0". Should be replaced later on.
                 int chapterId = Integer.parseInt(request.getRequestParameters()
-                                                         .getParameterValue(ORPHUS_COMMENT_CHAPTER_ID).toString(""));
+                                                        .getParameterValue(ORPHUS_COMMENT_CHAPTER_ID).toString(""));
                 /*int paragraph = Integer.parseInt(request.getRequestParameters()
                         .getParameterValue(ORPHUS_COMMENT_PARAGRAPH).toString(""));*/
                 int paragraph = Integer.parseInt("0");
                 int startOffset = Integer.parseInt(request.getRequestParameters()
-                                                           .getParameterValue(ORPHUS_COMMENT_START_OFFSET).toString(""));
+                                                          .getParameterValue(ORPHUS_COMMENT_START_OFFSET).toString(""));
                 String originalText = request.getRequestParameters()
-                        .getParameterValue(ORPHUS_COMMENT_ORIGINAL_TEXT).toString("");
+                                             .getParameterValue(ORPHUS_COMMENT_ORIGINAL_TEXT).toString("");
                 String replacementText = request.getRequestParameters()
-                        .getParameterValue(ORPHUS_COMMENT_REPLACEMENT_TEXT).toString("");
+                                                .getParameterValue(ORPHUS_COMMENT_REPLACEMENT_TEXT).toString("");
                 String optionalComment = request.getRequestParameters()
-                        .getParameterValue(ORPHUS_COMMENT_OPTIONAL_COMMENT).toString("");
+                                                .getParameterValue(ORPHUS_COMMENT_OPTIONAL_COMMENT).toString("");
 
                 OrphusComment orphusComment = new OrphusComment(chapterId, paragraph,
-                                                                startOffset, originalText, replacementText, optionalComment, new Date(System.currentTimeMillis()));
+                        startOffset, originalText, replacementText, optionalComment, new Date(System.currentTimeMillis()));
 
                 SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
                 SqlSession session = sessionFactory.openSession();

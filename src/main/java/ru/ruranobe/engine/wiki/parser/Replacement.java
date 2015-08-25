@@ -176,17 +176,18 @@ public class Replacement
         this.replacementText = replacementText;
         this.mainTag = mainTag;
     }
+
     private static final Map<WikiTagType, String> TAG_TO_REPLACEMENT_TEXT =
             new EnumMap<WikiTagType, String>(WikiTagType.class)
-    {
-        {
-            put(NEW_LINE, "</p><p id=\"%s\" %s>");
-            put(FOOTNOTE, "<span id=\"cite_ref-%s\" data-content=\"%s\" class=\"reference\"><a href=\"%s\">*</a></span>");
-            put(IMAGE, "<div class=\"center illustration\"><a class=\"fancybox\" rel=\"group\" href=\"%s\">" +
-                       "<img src=\"%s\" alt=\"\" class=\"img-responsive img-thumbnail\"/>" +
-                       "</a></div>");
-        }
-    };
+            {
+                {
+                    put(NEW_LINE, "</p><p id=\"%s\" %s>");
+                    put(FOOTNOTE, "<span id=\"cite_ref-%s\" data-content=\"%s\" class=\"reference\"><a href=\"%s\">*</a></span>");
+                    put(IMAGE, "<div class=\"center illustration\"><a class=\"fancybox\" rel=\"group\" href=\"%s\">" +
+                               "<img src=\"%s\" alt=\"\" class=\"img-responsive img-thumbnail\"/>" +
+                               "</a></div>");
+                }
+            };
 
     private static final Map<WikiTagPair, String> PAIR_TO_START_REPLACEMENT_TEXT = new ImmutableMap.Builder<WikiTagPair, String>()
             .put(new WikiTagPair(SUBTITLE, DOUBLE_END_BRACKET), "<div class=\"subtitle\">")

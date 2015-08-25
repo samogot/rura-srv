@@ -3,8 +3,6 @@ package ru.ruranobe.engine.files;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
 import org.apache.wicket.util.string.Strings;
-import ru.ruranobe.engine.files.FileStorageService;
-import ru.ruranobe.engine.files.StorageService;
 import ru.ruranobe.engine.image.ImageStorage;
 import ru.ruranobe.engine.image.RuraImage;
 

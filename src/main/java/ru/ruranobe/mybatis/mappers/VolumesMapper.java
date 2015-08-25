@@ -3,7 +3,6 @@ package ru.ruranobe.mybatis.mappers;
 import ru.ruranobe.mybatis.tables.ProjectInfo;
 import ru.ruranobe.mybatis.tables.Volume;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface VolumesMapper

@@ -272,9 +272,16 @@ public class Project extends PageRepresentable implements Serializable
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object o)
+    {
+        if (this == o)
+        {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass())
+        {
+            return false;
+        }
 
         Project project = (Project) o;
 
@@ -283,7 +290,8 @@ public class Project extends PageRepresentable implements Serializable
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return projectId.hashCode();
     }
 }

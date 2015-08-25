@@ -9,15 +9,18 @@ public class ContentItem
         this.title = title;
     }
 
-    public String getTitle() {
+    public String getTitle()
+    {
         return title;
     }
 
-    public String getTagName() {
+    public String getTagName()
+    {
         return tagName;
     }
 
-    public String getTagId() {
+    public String getTagId()
+    {
         return tagId;
     }
 

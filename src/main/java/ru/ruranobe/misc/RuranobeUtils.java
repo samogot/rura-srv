@@ -33,15 +33,17 @@ public class RuranobeUtils
 
     public static String paragraphIdOf(Integer chapterId, Integer textId, int lineNo)
     {
-        String r1 = "-"+(chapterId == null ? "" : chapterId.toString());
-        String r2 = "-"+(textId == null ? "" : textId.toString());
-        String r3 = "-"+lineNo;
-        return "p"+r1+r2+r3;
+        String r1 = "-" + (chapterId == null ? "" : chapterId.toString());
+        String r2 = "-" + (textId == null ? "" : textId.toString());
+        String r3 = "-" + lineNo;
+        return "p" + r1 + r2 + r3;
     }
 
-    public static Url mergeParameters(final Url url, final PageParameters params) {
+    public static Url mergeParameters(final Url url, final PageParameters params)
+    {
 
-        if (params == null) {
+        if (params == null)
+        {
             return url;
         }
 
@@ -53,13 +55,17 @@ public class RuranobeUtils
 
         Set<String> setParameters = new HashSet<String>();
 
-        for (INamedParameters.NamedPair pair : params.getAllNamed()) {
+        for (INamedParameters.NamedPair pair : params.getAllNamed())
+        {
             String key = urlEncoder.encode(pair.getKey(), charset);
             String value = urlEncoder.encode(pair.getValue(), charset);
 
-            if (setParameters.contains(key)) {
+            if (setParameters.contains(key))
+            {
                 mergedUrl.addQueryParameter(key, value);
-            } else {
+            }
+            else
+            {
                 mergedUrl.setQueryParameter(key, value);
                 setParameters.add(key);
             }
