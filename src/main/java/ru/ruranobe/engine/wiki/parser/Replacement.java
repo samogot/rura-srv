@@ -21,7 +21,7 @@ public class Replacement
         {
             Map<String, String> attributeNameToValue = tag.getAttributeNameToValue();
             String hrefTag = "href=\"" + attributeNameToValue.get("href") + "\"";
-            this.replacementText = String.format(replacementText, tag.getUniqueId(), hrefTag, tag.getListOrderNumber());
+            this.replacementText = String.format(replacementText, tag.getUniqueId(), hrefTag);
         }
         else if (tag.getWikiTagType() == IMAGE)
         {
@@ -57,21 +57,28 @@ public class Replacement
         if (startTag.getWikiTagType() == FOOTNOTE)
         {
             String replacementText = TAG_TO_REPLACEMENT_TEXT.get(FOOTNOTE);
-            replacementText = String.format(replacementText, startTag.getUniqueId(), startTag.getUniqueId(), startTag.getListOrderNumber());
+            Map<String, String> attributeNameToValue = startTag.getAttributeNameToValue();
+            String hrefTag = "href=\"" + attributeNameToValue.get("href") + "\"";
+            replacementText = String.format(replacementText, startTag.getUniqueId(), "%s", hrefTag);
             replacements.add(new Replacement(startTag.getStartPosition(), endTag.getStartPosition() + endTag.getWikiTagLength(), replacementText, startTag));
-            return replacements;
         }
-        WikiTagPair tagPair = new WikiTagPair(startTag.getWikiTagType(), endTag.getWikiTagType());
-        String replacementText = PAIR_TO_START_REPLACEMENT_TEXT.get(tagPair);
-        if (startTag.getWikiTagType() == TWO_EQUAL ||
-            startTag.getWikiTagType() == THREE_EQUAL ||
-            startTag.getWikiTagType() == FOUR_EQUAL)
+        else
         {
-            replacementText = String.format(replacementText, startTag.getUniqueId());
+            WikiTagPair tagPair = new WikiTagPair(startTag.getWikiTagType(), endTag.getWikiTagType());
+            String replacementText = PAIR_TO_START_REPLACEMENT_TEXT.get(tagPair);
+            if (startTag.getWikiTagType() == TWO_EQUAL ||
+                startTag.getWikiTagType() == THREE_EQUAL ||
+                startTag.getWikiTagType() == FOUR_EQUAL)
+            {
+                replacementText = String.format(replacementText, startTag.getUniqueId());
+            }
+            else if (startTag.getWikiTagType() == LINK)
+            {
+                replacementText = String.format(replacementText, startTag.getAttributeNameToValue().get("href"));
+            }
+            replacements.add(new Replacement(startTag.getStartPosition(), startTag.getStartPosition()+startTag.getWikiTagLength(), replacementText, startTag));
+            replacements.add(new Replacement(endTag.getStartPosition(), endTag.getStartPosition()+endTag.getWikiTagLength(), PAIR_TO_END_REPLACEMENT_TEXT.get(tagPair), startTag));
         }
-        replacements.add(new Replacement(startTag.getStartPosition(), startTag.getStartPosition()+startTag.getWikiTagLength(), replacementText, startTag));
-        tagPair = new WikiTagPair(startTag.getWikiTagType(), endTag.getWikiTagType());
-        replacements.add(new Replacement(endTag.getStartPosition(), endTag.getStartPosition()+endTag.getWikiTagLength(), PAIR_TO_END_REPLACEMENT_TEXT.get(tagPair), startTag));
         return replacements;
     }
 
@@ -88,6 +95,10 @@ public class Replacement
     public String getReplacementText()
     {
         return replacementText;
+    }
+
+    public void setReplacementText(String replacementText) {
+        this.replacementText = replacementText;
     }
 
     public WikiTag getMainTag()
@@ -158,7 +169,7 @@ public class Replacement
     {
         {
             put(NEW_LINE, "</p><p id=\"%s\" %s>");
-            put(FOOTNOTE, "<sup id=\"cite_ref-%s\" class=\"reference\"><a href=\"%s\">[%d]</a></sup>");
+            put(FOOTNOTE, "<sup id=\"cite_ref-%s\" data_content=\"%s\" class=\"reference\"><a href=\"%s\">*</a></sup>");
             put(IMAGE, "<img src=\'%s\'/>");
         }
     };
@@ -170,6 +181,7 @@ public class Replacement
             .put(new WikiTagPair(FOUR_EQUAL, FOUR_EQUAL), "<h4 id=\"h_id-%s\">")
             .put(new WikiTagPair(TWO_QUOTES, TWO_QUOTES), "<i>")
             .put(new WikiTagPair(THREE_QUOTES, THREE_QUOTES), "<b>")
+            .put(new WikiTagPair(LINK, END_BRACKET), "<a href=\"%s\">")
             .build();
 
     private static final Map<WikiTagPair, String> PAIR_TO_END_REPLACEMENT_TEXT = new ImmutableMap.Builder<WikiTagPair, String>()
@@ -179,10 +191,11 @@ public class Replacement
             .put(new WikiTagPair(FOUR_EQUAL, FOUR_EQUAL), "</h4>")
             .put(new WikiTagPair(TWO_QUOTES, TWO_QUOTES), "</i>")
             .put(new WikiTagPair(THREE_QUOTES, THREE_QUOTES), "</b>")
+            .put(new WikiTagPair(LINK, END_BRACKET), "</a>")
             .build();
 
     private final int startPosition;
     private final int endPosition;
-    private final String replacementText;
+    private String replacementText;
     private final WikiTag mainTag;
 }

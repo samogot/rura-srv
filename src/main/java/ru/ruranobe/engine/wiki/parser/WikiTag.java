@@ -10,6 +10,7 @@ public class WikiTag
         this.startPosition = startPosition;
         this.uniqueId = uniqueId;
         this.attributeNameToValue = attributeNameToValue;
+        this.wikiTagLength = wikiTagType.getWikiTagSize();
     }
 
     public WikiTagType getWikiTagType()
@@ -24,7 +25,12 @@ public class WikiTag
 
     public int getWikiTagLength()
     {
-        return wikiTagType.getWikiTagSize();
+        return wikiTagLength;
+    }
+
+    public void setWikiTagLength(int wikiTagLength)
+    {
+        this.wikiTagLength = wikiTagLength;
     }
 
     public String getUniqueId()
@@ -81,4 +87,5 @@ public class WikiTag
     private final Map<String, String> attributeNameToValue;
     private int listOrderNumber;
     private String imageUrl;
+    private int wikiTagLength;
 }

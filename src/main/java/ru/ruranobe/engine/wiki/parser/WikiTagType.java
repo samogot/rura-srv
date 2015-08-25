@@ -15,7 +15,9 @@ public enum WikiTagType
     IMAGE("{{Иллюстрация}}"),
     DOUBLE_END_BRACKET("}}"),
     NEW_LINE("\n"),
-    FOOTNOTE("{{ref|");
+    FOOTNOTE("{{ref|"),
+    LINK("[http"),
+    END_BRACKET("]");
 
     WikiTagType(String wikiTagCharSequence)
     {
@@ -49,6 +51,8 @@ public enum WikiTagType
                     .put("}}", DOUBLE_END_BRACKET)
                     .put("\n", NEW_LINE)
                     .put("{{ref|", FOOTNOTE)
+                    .put("[http", LINK)
+                    .put("]", END_BRACKET)
                     .build();
     private final String wikiTagCharSequence;
 }

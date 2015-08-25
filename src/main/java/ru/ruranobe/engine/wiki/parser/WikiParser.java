@@ -124,6 +124,16 @@ public class WikiParser
             {
                 continue;
             }
+            tagType = WikiTagType.resolve("]");
+            if (curI != (i = addWikiTagIfMetToMap(wikiText, i, tagType)))
+            {
+                continue;
+            }
+            tagType = WikiTagType.resolve("[http");
+            if (curI != (i = addWikiTagIfMetToMap(wikiText, i, tagType)))
+            {
+                continue;
+            }
             i++;
         }
     }
@@ -131,7 +141,7 @@ public class WikiParser
     // Connect related special tags together. Determine tag's end position in text.
     private void connectWikiTags(Iterator<String> imageUrlsIterator)
     {
-        List<HashMap.SimpleEntry<Integer,Integer>> preParsingBoundaries = new ArrayList<HashMap.SimpleEntry<Integer, Integer>>();
+        List<HashMap.SimpleEntry<Integer,Integer>>  preParsingBoundaries = new ArrayList<HashMap.SimpleEntry<Integer, Integer>>();
 
         int j = 0;
         int k = 0;
@@ -171,15 +181,17 @@ public class WikiParser
                     else if (footnote != null && footnote.getStartPosition() == startPosition)
                     {
                         footnote.setListOrderNumber(k);
-
-                        preParsingBoundaries.add(new AbstractMap.SimpleEntry<Integer, Integer>
-                                (footnote.getStartPosition() + footnote.getWikiTagLength(), doubleEndBracket.getStartPosition()));
+                        AbstractMap.SimpleEntry<Integer, Integer> entry = new AbstractMap.SimpleEntry<Integer, Integer>
+                                (footnote.getStartPosition() + footnote.getWikiTagLength(), doubleEndBracket.getStartPosition());
+                        preParsingBoundaries.add(entry);
 
                         List<Replacement> replacements = Replacement.getReplacementsForPair(footnote, doubleEndBracket);
                         for (Replacement replacement : replacements)
                         {
+                            footnotesPostProcessing.put(entry, replacement);
                             startPositionToReplacement.put(replacement.getStartPosition(), replacement);
                         }
+
                         k++;
                     }
                 }
@@ -201,6 +213,34 @@ public class WikiParser
                 }
                 startPositionToReplacement.put(image.getStartPosition(),
                         new Replacement(image));
+            }
+        }
+
+        j = 0;
+        List<WikiTag> links = wikiTagTypeToWikiTags.get(WikiTagType.LINK);
+        List<WikiTag> endBrackets = wikiTagTypeToWikiTags.get(WikiTagType.END_BRACKET);
+        if (endBrackets != null)
+        {
+            for (WikiTag endBracket : endBrackets)
+            {
+                int startPosition = Integer.MAX_VALUE;
+                WikiTag link = null;
+
+                if (links != null && j < links.size())
+                {
+                    link = links.get(j);
+                    startPosition = Math.min(startPosition, link.getStartPosition());
+                }
+
+                if (endBracket.getStartPosition() > startPosition)
+                {
+                    List<Replacement> replacements = Replacement.getReplacementsForPair(link, endBracket);
+                    for (Replacement replacement : replacements)
+                    {
+                        startPositionToReplacement.put(replacement.getStartPosition(), replacement);
+                    }
+                    j++;
+                }
             }
         }
 
@@ -226,6 +266,10 @@ public class WikiParser
             StringBuilder footnote = new StringBuilder();
             parseWikiTextToHtmlText(entry.getKey(), entry.getValue(), footnote, (new ArrayList<String>()).iterator(), false);
             this.footnotes.add(footnote.toString());
+
+            Replacement footnoteReplacement = footnotesPostProcessing.get(entry);
+            String replacementText = String.format(footnoteReplacement.getReplacementText(), footnote.toString());
+            footnoteReplacement.setReplacementText(replacementText);
         }
     }
 
@@ -286,10 +330,12 @@ public class WikiParser
         if (symbolsTillEnd > tagLength-1 &&
                 s.substring(i, i+tagLength).equals(tagType.getWikiTagCharSequence()))
         {
+            WikiTag tag = null;
+            Map<String, String> attributeNameToValue = null;
+
             String textIdStr = textId == null ? "" : Integer.toString(textId);
             String chapterIdStr = chapterId == null ? "" : Integer.toString(chapterId);
             String orderNumberStr = Integer.toString(orderNumber);
-            Map<String, String> attributeNameToValue = null;
 
             String uniqueId = textIdStr + chapterIdStr + orderNumberStr;
 
@@ -314,8 +360,26 @@ public class WikiParser
                 attributeNameToValue.put("line-no", Integer.toString(paragraphOrderNumber));
                 paragraphOrderNumber++;
             }
+            else if (tagType == WikiTagType.LINK)
+            {
+                int j = i+tagLength;
+                for (; j < s.length() && j < i+tagLength+300 && s.charAt(j) != ' '; ++j);
+                String href = ((s.charAt(j) == ' ') ? ("http" + s.substring(i+tagLength, j)) : null);
+                if (href != null)
+                {
+                    attributeNameToValue = new HashMap<String, String>();
+                    attributeNameToValue.put("href", href);
+                    tag = new WikiTag(tagType, i, uniqueId, attributeNameToValue);
+                    tag.setWikiTagLength(j-i);
+                    i = j-tagLength;
+                }
+            }
 
-            WikiTag tag = new WikiTag(tagType, i, uniqueId, attributeNameToValue);
+            if (tagType != WikiTagType.LINK)
+            {
+                tag = new WikiTag(tagType, i, uniqueId, attributeNameToValue);
+            }
+
             if (wikiTagTypeToWikiTags.get(tagType) == null)
             {
                 ArrayList<WikiTag> tags = new ArrayList<WikiTag>();
@@ -326,7 +390,7 @@ public class WikiParser
             {
                 wikiTagTypeToWikiTags.get(tagType).add(tag);
             }
-            i += tagType.getWikiTagSize();
+            i += tagLength;
             orderNumber++;
         }
         return i;
@@ -375,6 +439,8 @@ public class WikiParser
             EnumMap<WikiTagType, ArrayList<WikiTag>>(WikiTagType.class);
     private final Map<Integer, Replacement> startPositionToReplacement = new
             HashMap<Integer, Replacement>();
+    private final Map<HashMap.SimpleEntry<Integer, Integer>, Replacement> footnotesPostProcessing = new
+            HashMap<AbstractMap.SimpleEntry<Integer, Integer>, Replacement>();
     private final Integer textId;
     private final Integer chapterId;
     private final String wikiText;
