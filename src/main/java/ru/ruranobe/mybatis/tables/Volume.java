@@ -107,11 +107,6 @@ public class Volume extends PageRepresentable implements Serializable
         return new PageParameters().set("project", urlParts[0]).set("volume", urlParts[1]);
     }
 
-    public PageParameters getFullTextUrlParameters()
-    {
-        return makeUrlParameters(url.split("/")).set("chapter", "text");
-    }
-
     public PageParameters getUrlParameters()
     {
         return makeUrlParameters(url.split("/"));

@@ -26,7 +26,6 @@ import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.UpdatesSidebarModule;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
-import ru.ruranobe.mybatis.tables.Project;
 
 import java.io.Serializable;
 import java.util.AbstractMap.SimpleEntry;
@@ -151,7 +150,7 @@ public class VolumePage extends SidebarLayoutPage
         }
         else
         {
-            readAllLink = new BookmarkablePageLink("readAllLink", VolumeTextPage.class, volume.getFullTextUrlParameters());
+            readAllLink = new BookmarkablePageLink("readAllLink", Text.class, volume.getUrlParameters());
         }
         add(readAllLink);
 
@@ -166,7 +165,7 @@ public class VolumePage extends SidebarLayoutPage
                 WebMarkupContainer chapterLink;
                 if (chapter.isPublished())
                 {
-                    chapterLink = new BookmarkablePageLink("chapterLink", VolumeTextPage.class, chapter.getUrlParameters());
+                    chapterLink = chapter.makeBookmarkablePageLink("chapterLink");
                 }
                 else
                 {

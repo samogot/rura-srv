@@ -42,7 +42,7 @@ public class UpdatesSidebarModule extends SidebarModuleBase
                 String iconClass = RuraConstants.UPDATE_TYPE_TO_ICON_CLASS.get(update.getUpdateType());
                 WebMarkupContainer updateContainerWithIcon = new WebMarkupContainer("updateContainerWithIcon");
                 updateContainerWithIcon.add(new AttributeModifier("class", iconClass));
-                BookmarkablePageLink updateLink = new BookmarkablePageLink("updateLink", update.getLinkClass(), update.getUrlParameters());
+                BookmarkablePageLink updateLink = update.makeBookmarkablePageLink("updateLink");
                 updateLink.setBody(new Model<String>(update.getShortTitle()));
                 updateContainerWithIcon.add(updateLink);
                 listItem.add(updateContainerWithIcon);

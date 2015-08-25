@@ -234,7 +234,7 @@ public class ProjectPage extends SidebarLayoutPage
                                 {
                                     listItem3.setVisible(false); //todo show grayed if allowed to user
                                 }
-                                BookmarkablePageLink volumeLink = new BookmarkablePageLink("volumeLink", VolumePage.class, volume.getUrlParameters());
+                                BookmarkablePageLink volumeLink = volume.makeBookmarkablePageLink("volumeLink");
                                 volumeLink.setBody(new Model<String>(volume.getNameTitle()));
                                 listItem3.add(volumeLink);
                             }

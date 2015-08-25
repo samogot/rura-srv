@@ -7,8 +7,8 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import ru.ruranobe.wicket.components.sidebar.SidebarMiniSearch;
 import ru.ruranobe.wicket.components.sidebar.SidebarModuleBase;
+import ru.ruranobe.wicket.webpages.Text;
 import ru.ruranobe.wicket.webpages.VolumePage;
-import ru.ruranobe.wicket.webpages.VolumeTextPage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,12 +49,12 @@ public class SidebarLayoutPage extends BaseLayoutPage
         }
         if (prevTextLink == null)
         {
-            textPageUtils.add(prevTextLink = new BookmarkablePageLink("prevTextLink", VolumeTextPage.class));
+            textPageUtils.add(prevTextLink = new BookmarkablePageLink("prevTextLink", Text.class));
             prevTextLink.add(new AttributeAppender("class", " disable"));
         }
         if (nextTextLink == null)
         {
-            textPageUtils.add(nextTextLink = new BookmarkablePageLink("nextTextLink", VolumeTextPage.class));
+            textPageUtils.add(nextTextLink = new BookmarkablePageLink("nextTextLink", Text.class));
             nextTextLink.add(new AttributeAppender("class", " disable"));
         }
         super.onInitialize();

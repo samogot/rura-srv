@@ -55,7 +55,7 @@ public class UpdatesWideList extends Panel
                 listItem.add(iconDivClass);
                 SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
                 listItem.add(new Label("updateDate", sdf.format(updateDateValue)));
-                BookmarkablePageLink updateLink = new BookmarkablePageLink("updateLink", update.getLinkClass(), update.getUrlParameters());
+                BookmarkablePageLink updateLink = update.makeBookmarkablePageLink("updateLink");
                 updateLink.setBody(new Model<String>(update.getVolumeTitle()));
                 listItem.add(updateLink);
                 listItem.add(new Label("updateTitle", updateTitleValue));
