@@ -181,9 +181,9 @@ public class Replacement
     {
         {
             put(NEW_LINE, "</p><p id=\"%s\" %s>");
-            put(FOOTNOTE, "<sup id=\"cite_ref-%s\" data_content=\"%s\" class=\"reference\"><a href=\"%s\">*</a></sup>");
+            put(FOOTNOTE, "<span id=\"cite_ref-%s\" data-content=\"%s\" class=\"reference\"><a href=\"%s\">*</a></span>");
             put(IMAGE, "<div class=\"center illustration\"><a class=\"fancybox\" rel=\"group\" href=\"%s\">" +
-                       "<img src=\"%s\" alt=\"\" class=\"img-responsive center-block img-thumbnail\"/>" +
+                       "<img src=\"%s\" alt=\"\" class=\"img-responsive img-thumbnail\"/>" +
                        "</a></div>");
         }
     };
