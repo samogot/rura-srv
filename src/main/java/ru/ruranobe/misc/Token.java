@@ -20,7 +20,7 @@ public class Token
     public static Token valueOf(int uniqueId, long expirationTime)
     {
         StringBuilder tokenValue = new StringBuilder(Integer.toHexString(uniqueId));
-        tokenValue.append(generateTokenValue(TOKEN_LENGTH - uniqueId));
+        tokenValue.append(generateTokenValue(TOKEN_LENGTH - tokenValue.length()));
         return new Token(tokenValue.toString(), generateTokenExpirationDate(expirationTime));
     }
 

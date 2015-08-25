@@ -210,6 +210,17 @@ create table texts_history
   insertion_time DATETIME NOT NULL
 );
 
+create table bookmarks
+(
+  bookmark_id INT(11) primary key auto_increment,
+  chapter_id int(11),
+  user_id int(11) NOT NULL,
+  paragraph_id VARCHAR(64) NOT NULL,
+  created_when DATETIME NOT NULL
+);
+
+alter table bookmarks add constraint fk_user_bookmark_id foreign key (user_id) references users(user_id);
+
 alter table texts_history add constraint fk_current_text_id foreign key (current_text_id) references texts (text_id);
 
 alter table texts_history add constraint fk_previous_text_id foreign key (previous_text_id) references texts (text_id);

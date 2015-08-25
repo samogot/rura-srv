@@ -261,13 +261,13 @@ public class Project extends PageRepresentable implements Serializable
 
     public String getAnnotationParsed()
     {
-        WikiParser wikiParser = new WikiParser(0,annotation);
+        WikiParser wikiParser = new WikiParser(null, null, annotation);
         return annotation == null ? null : wikiParser.parseWikiText(new ArrayList<String>(), false);
     }
 
     public String getFranchiseParsed()
     {
-        WikiParser wikiParser = new WikiParser(0,franchise);
+        WikiParser wikiParser = new WikiParser(null, null, franchise);
         return franchise == null ? null : wikiParser.parseWikiText(new ArrayList<String>(), false);
     }
 
