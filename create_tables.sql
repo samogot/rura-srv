@@ -216,7 +216,7 @@ create table bookmarks
   chapter_id int(11),
   user_id int(11) NOT NULL,
   paragraph_id VARCHAR(64) NOT NULL,
-  insertion_time DATETIME NOT NULL
+  created_when DATETIME NOT NULL
 );
 
 alter table bookmarks add constraint fk_user_bookmark_id foreign key (user_id) references users(user_id);

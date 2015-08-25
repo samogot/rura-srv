@@ -41,18 +41,18 @@ public class Bookmark implements Serializable
         this.paragraphId = paragraphId;
     }
 
-    public Date getInsertionTime() {
-        return insertionTime;
+    public Date getCreatedWhen() {
+        return createdWhen;
     }
 
-    public void setInsertionTime(Date insertionTime) {
-        this.insertionTime = insertionTime;
+    public void setCreatedWhen(Date createdWhen) {
+        this.createdWhen = createdWhen;
     }
 
     private Integer bookmarkId;
     private Integer chapterId;
     private Integer userId;
     private String paragraphId;
-    private Date insertionTime;
+    private Date createdWhen;
     private static final long serialVersionUID = 1L;
 }

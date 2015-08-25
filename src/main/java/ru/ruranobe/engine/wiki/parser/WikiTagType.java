@@ -6,7 +6,7 @@ import java.util.Map;
 
 public enum WikiTagType
 {
-    SUBTITLE("{{Подзаголовок|\""),
+    SUBTITLE("{{Подзаголовок|"),
     TWO_EQUAL("=="),
     THREE_EQUAL("==="),
     FOUR_EQUAL("===="),

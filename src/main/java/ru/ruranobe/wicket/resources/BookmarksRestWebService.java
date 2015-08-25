@@ -48,7 +48,7 @@ public class BookmarksRestWebService extends GsonRestResource
             }
 
             BookmarksMapper bookmarksMapperCacheable = CachingFacade.getCacheableMapper(session, BookmarksMapper.class);
-            bookmark.setInsertionTime(new Date());
+            bookmark.setCreatedWhen(new Date());
             bookmarksMapperCacheable.insertBookmark(bookmark);
             session.commit();
         }

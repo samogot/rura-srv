@@ -13,8 +13,8 @@
     </cache-->
 
     <insert id="insertBookmark" parameterType="ru.ruranobe.mybatis.tables.Bookmark" keyProperty="bookmarkId" useGeneratedKeys="true">
-        insert into bookmarks (chapter_id, user_id, paragraph_id, insertion_time)
-        values (#{chapterId}, #{userId}, #{paragraphId}, #{insertionTime})
+        insert into bookmarks (chapter_id, user_id, paragraph_id, created_when)
+        values (#{chapterId}, #{userId}, #{paragraphId}, #{createdWhen})
     </insert>
 
 

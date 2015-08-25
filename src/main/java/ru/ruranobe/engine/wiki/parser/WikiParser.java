@@ -19,16 +19,16 @@ public class WikiParser
         Iterator<String> imageUrlsIterator = imageUrls.iterator();
         connectWikiTags(imageUrlsIterator);
 
-        StringBuilder additionalTags = new StringBuilder("lineNo=\"");
+        StringBuilder additionalTags = new StringBuilder("line-no=\"");
         additionalTags.append(Integer.toString(paragraphOrderNumber));
         additionalTags.append("\" ");
         if (textId != null)
         {
-            additionalTags.append("textId=\"").append(textId.toString()).append("\" ");
+            additionalTags.append("text-id=\"").append(textId.toString()).append("\" ");
         }
         if (chapterId != null)
         {
-            additionalTags.append("chapterId=\"").append(chapterId.toString()).append("\" ");
+            additionalTags.append("chapter-id=\"").append(chapterId.toString()).append("\" ");
         }
         StringBuilder htmlText = new StringBuilder(String.format("<p id=\"%s\" %s>",
                 RuranobeUtils.paragraphIdOf(chapterId, textId, paragraphOrderNumber),
@@ -305,13 +305,13 @@ public class WikiParser
                 attributeNameToValue = new HashMap<String, String>();
                 if (textId != null)
                 {
-                    attributeNameToValue.put("textId", textId.toString());
+                    attributeNameToValue.put("text-id", textId.toString());
                 }
                 if (chapterId != null)
                 {
-                    attributeNameToValue.put("chapterId", chapterId.toString());
+                    attributeNameToValue.put("chapter-id", chapterId.toString());
                 }
-                attributeNameToValue.put("lineNo", Integer.toString(paragraphOrderNumber));
+                attributeNameToValue.put("line-no", Integer.toString(paragraphOrderNumber));
                 paragraphOrderNumber++;
             }
 
