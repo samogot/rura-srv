@@ -67,6 +67,7 @@ public class Text extends TextLayoutPage
             allChapterList = chaptersMapperCacheable.getChaptersByVolumeId(volume.getVolumeId());
 
             String chapterUrl = parameters.get("chapter").toString();
+            boolean preferNested = false;// TODO load from user preferences
             if (Strings.isEmpty(chapterUrl))
             {
                 for (Chapter chapter : allChapterList)
@@ -100,6 +101,10 @@ public class Text extends TextLayoutPage
                         else if (parent != null)
                         {
                             chapter.setPrevChapter(parent.getPrevChapter());
+                            if (preferNested)
+                            {
+                                parent.getPrevChapter().setNextChapter(chapter);
+                            }
                         }
                         prevNested = chapter;
                     }
@@ -112,11 +117,19 @@ public class Text extends TextLayoutPage
                         }
                         if (prevNested != null)
                         {
-                            prevNested.setNextChapter(chapter);
                             if (prevNested.getParentChapter() != parent)
                             {
                                 prevNested = null;
                             }
+                            else
+                            {
+                                prevNested.setNextChapter(chapter);
+                                if (preferNested)
+                                {
+                                    chapter.setPrevChapter(prevNested);
+                                }
+                            }
+
                         }
                         parent = chapter;
                     }
@@ -257,22 +270,19 @@ public class Text extends TextLayoutPage
         List<ContentsHolder> contentsHolders = new ArrayList<ContentsHolder>();
         for (Chapter chapter : allChapterList)
         {
-            if (chapter.getParentChapter() == null)
+            List<ContentsHolder> tempHolderList = contentsHolders;
+            int level = 2;
+            if (chapter.isNested() && !contentsHolders.isEmpty())
             {
-                processChapterContents(chapter, contentsHolders, 2);
-                if (chapter.getChildChapters() != null)
+                ContentsHolder lastContentsHolder = contentsHolders.get(contentsHolders.size() - 1);
+                if (lastContentsHolder.getChildren() == null)
                 {
-                    for (Chapter nestedChapter : chapter.getChildChapters())
-                    {
-                        ContentsHolder lastContentsHolder = contentsHolders.get(contentsHolders.size() - 1);
-                        if (lastContentsHolder.getChildren() == null)
-                        {
-                            lastContentsHolder.setChildren(new ArrayList<ContentsHolder>());
-                        }
-                        processChapterContents(chapter, lastContentsHolder.getChildren(), 3);
-                    }
+                    lastContentsHolder.setChildren(new ArrayList<ContentsHolder>());
                 }
+                tempHolderList = lastContentsHolder.getChildren();
+                level = 3;
             }
+            processChapterContents(chapter, tempHolderList, level);
         }
         if (!Strings.isEmpty(volumeFootnotes))
         {
