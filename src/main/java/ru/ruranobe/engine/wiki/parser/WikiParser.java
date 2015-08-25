@@ -324,9 +324,9 @@ public class WikiParser
             while (imageUrlsIterator.hasNext())
             {
                 String url = imageUrlsIterator.next();
-                htmlText.append(String.format("<a class=\"fancybox\" rel=\"group\" href=\"%s\">" +
+                htmlText.append(String.format("<div class=\"center illustration\"><a class=\"fancybox\" rel=\"group\" href=\"%s\">" +
                                               "<img src=\"%s\" alt=\"\" class=\"img-responsive center-block img-thumbnail\"/>" +
-                                              "</a>", url, url));
+                                              "</a></div>", url, url));
             }
         }
     }

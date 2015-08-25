@@ -18,13 +18,13 @@ public class Replacement
         {
             put(NEW_LINE, "</p><p id=\"p_id-%d\">");
             put(FOOTNOTE, "<sup id=\"cite_ref-%d\" class=\"reference\"><a href=\"#cite_note-%d\">[%d]</a></sup>");
-            put(IMAGE, "<a class=\"fancybox\" rel=\"group\" href=\"%s\">" +
+            put(IMAGE, "<div class=\"center illustration\"><a class=\"fancybox\" rel=\"group\" href=\"%s\">" +
                        "<img src=\"%s\" alt=\"\" class=\"img-responsive center-block img-thumbnail\"/>" +
-                       "</a>");
+                       "</a></div>");
         }
             };
     private static final Map<WikiTagPair, String> PAIR_TO_START_REPLACEMENT_TEXT = new ImmutableMap.Builder<WikiTagPair, String>()
-            .put(new WikiTagPair(SUBTITLE, DOUBLE_END_BRACKET), "<div class=\"subtitle\">")
+            .put(new WikiTagPair(SUBTITLE, DOUBLE_END_BRACKET), "<div class=\"center subtitle\">")
             .put(new WikiTagPair(TWO_EQUAL, TWO_EQUAL), "<h2 id=\"h_id-%d\">")
             .put(new WikiTagPair(THREE_EQUAL, THREE_EQUAL), "<h3 id=\"h_id-%d\">")
             .put(new WikiTagPair(FOUR_EQUAL, FOUR_EQUAL), "<h4 id=\"h_id-%d\">")
