@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS volume_release_activities;
 DROP TABLE IF EXISTS volumes;
 DROP TABLE IF EXISTS projects;
 DROP TABLE IF EXISTS external_resources;
+DROP TABLE IF EXISTS texts_history;
 DROP TABLE IF EXISTS texts;
 DROP TABLE IF EXISTS team_members;
 DROP TABLE IF EXISTS users;
