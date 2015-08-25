@@ -58,7 +58,7 @@ public class Replacement
         {
             String replacementText = TAG_TO_REPLACEMENT_TEXT.get(FOOTNOTE);
             Map<String, String> attributeNameToValue = startTag.getAttributeNameToValue();
-            String hrefTag = "href=\"" + attributeNameToValue.get("href") + "\"";
+            String hrefTag = attributeNameToValue.get("href");
             replacementText = String.format(replacementText, startTag.getUniqueId(), "%s", hrefTag);
             replacements.add(new Replacement(startTag.getStartPosition(), endTag.getStartPosition() + endTag.getWikiTagLength(), replacementText, startTag));
         }

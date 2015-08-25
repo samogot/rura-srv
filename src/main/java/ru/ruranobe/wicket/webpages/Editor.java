@@ -10,6 +10,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
 import ru.ruranobe.engine.wiki.parser.ContentItem;
+import ru.ruranobe.engine.wiki.parser.FootnoteItem;
 import ru.ruranobe.engine.wiki.parser.WikiParser;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
@@ -175,11 +176,13 @@ public class Editor extends TextLayoutPage
                 text.setContents(contents.toString());
 
                 StringBuilder footnotes = new StringBuilder();
-                List<String> footnoteList = wikiParser.getFootnotes();
+                List<FootnoteItem> footnoteList = wikiParser.getFootnotes();
                 for (int i = 0; i < footnoteList.size(); ++i)
                 {
-                    String footnote = footnoteList.get(i);
-                    footnotes.append(footnote).append(i < footnoteList.size()-1 ? DELIMITER : "");
+                    FootnoteItem footnoteItem = footnoteList.get(i);
+                    String s = ((i < footnoteList.size()-1) ? DELIMITER : "");
+                    footnotes.append(footnoteItem.getFootnoteId()).append(DELIMITER)
+                             .append(footnoteItem.getFootnoteText()).append(s);
                 }
                 text.setFootnotes(footnotes.toString());
 

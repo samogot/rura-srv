@@ -18,6 +18,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.resource.CoreLibrariesContributor;
 import org.apache.wicket.util.string.Strings;
 import ru.ruranobe.engine.wiki.parser.ContentItem;
+import ru.ruranobe.engine.wiki.parser.FootnoteItem;
 import ru.ruranobe.engine.wiki.parser.WikiParser;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
@@ -118,11 +119,13 @@ public class Text extends TextLayoutPage
                     chapterText.setContents(contents.toString());
 
                     StringBuilder footnotes = new StringBuilder();
-                    List<String> footnoteList = wikiParser.getFootnotes();
+                    List<FootnoteItem> footnoteList = wikiParser.getFootnotes();
                     for (int i = 0; i < footnoteList.size(); ++i)
                     {
-                        String footnote = footnoteList.get(i);
-                        footnotes.append(footnote).append(i < footnoteList.size()-1 ? DELIMITER : "");
+                        FootnoteItem footnoteItem = footnoteList.get(i);
+                        String s = ((i < footnoteList.size()-1) ? DELIMITER : "");
+                        footnotes.append(footnoteItem.getFootnoteId()).append(DELIMITER)
+                                .append(footnoteItem.getFootnoteText()).append(s);
                     }
                     chapterText.setFootnotes(footnotes.toString());
 
@@ -154,9 +157,12 @@ public class Text extends TextLayoutPage
                 if (!Strings.isEmpty(chapterFootnotes))
                 {
                     String[] footnotes = chapterFootnotes.split(DELIMITER);
-                    for (String footnote : footnotes)
+                    for (int i = 0; i < footnotes.length;)
                     {
-                        volumeFootnotes.append("<li>").append(footnote).append("</li>");
+                        volumeFootnotes.append("<li id=\"cite_note-").append(footnotes[i]).append("\">")
+                                       .append("<a href=\"#cite_ref-").append(footnotes[i]).append("\">↑</a> <span class=\"reference-text\">")
+                                       .append(footnotes[i + 1]).append("</span></li>");
+                        i+=2;
                     }
                 }
 

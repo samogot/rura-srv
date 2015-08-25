@@ -1,9 +1,7 @@
 package ru.ruranobe.engine.wiki.parser;
 
-import org.apache.wicket.util.string.Strings;
 import ru.ruranobe.misc.RuranobeUtils;
 
-import java.nio.charset.Charset;
 import java.util.*;
 
 /**
@@ -41,7 +39,7 @@ public class WikiParser
         return htmlText.toString();
     }
 
-    public List<String> getFootnotes()
+    public List<FootnoteItem> getFootnotes()
     {
         return footnotes;
     }
@@ -188,7 +186,8 @@ public class WikiParser
                         List<Replacement> replacements = Replacement.getReplacementsForPair(footnote, doubleEndBracket);
                         for (Replacement replacement : replacements)
                         {
-                            footnotesPostProcessing.put(entry, replacement);
+                            footnoteParsingBoundariesToFootnoteReplacement.put(entry, replacement);
+                            footnoteParsingBoundariesToFootnoteId.put(entry, footnote.getUniqueId());
                             startPositionToReplacement.put(replacement.getStartPosition(), replacement);
                         }
 
@@ -265,9 +264,9 @@ public class WikiParser
         {
             StringBuilder footnote = new StringBuilder();
             parseWikiTextToHtmlText(entry.getKey(), entry.getValue(), footnote, (new ArrayList<String>()).iterator(), false);
-            this.footnotes.add(footnote.toString());
+            this.footnotes.add(new FootnoteItem(footnoteParsingBoundariesToFootnoteId.get(entry), footnote.toString()));
 
-            Replacement footnoteReplacement = footnotesPostProcessing.get(entry);
+            Replacement footnoteReplacement = footnoteParsingBoundariesToFootnoteReplacement.get(entry);
             String replacementText = String.format(footnoteReplacement.getReplacementText(), footnote.toString());
             footnoteReplacement.setReplacementText(replacementText);
         }
@@ -432,15 +431,17 @@ public class WikiParser
     }
 
     //private StringBuilder footnotes = new StringBuilder();
-    private List<String> footnotes = new ArrayList<String>();
+    private List<FootnoteItem> footnotes = new ArrayList<FootnoteItem>();
     private List<ContentItem> contents = new ArrayList<ContentItem>();
 
     private final Map<WikiTagType, ArrayList<WikiTag>> wikiTagTypeToWikiTags = new
             EnumMap<WikiTagType, ArrayList<WikiTag>>(WikiTagType.class);
     private final Map<Integer, Replacement> startPositionToReplacement = new
             HashMap<Integer, Replacement>();
-    private final Map<HashMap.SimpleEntry<Integer, Integer>, Replacement> footnotesPostProcessing = new
+    private final Map<HashMap.SimpleEntry<Integer, Integer>, Replacement> footnoteParsingBoundariesToFootnoteReplacement = new
             HashMap<AbstractMap.SimpleEntry<Integer, Integer>, Replacement>();
+    private final Map<HashMap.SimpleEntry<Integer, Integer>, String> footnoteParsingBoundariesToFootnoteId = new
+            HashMap<AbstractMap.SimpleEntry<Integer, Integer>, String>();
     private final Integer textId;
     private final Integer chapterId;
     private final String wikiText;
