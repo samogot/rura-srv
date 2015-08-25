@@ -68,7 +68,7 @@ public class WicketApplication extends AuthenticatedWebApplication
         mount(new MountedMapper("/updates", Updates.class));
         mount(new MountedMapper("/r/${project}/${volume}/text", Text.class));
         mount(new MountedMapper("/r/${project}/${volume}/${chapter}", Text.class));
-        mount(new MountedMapper("/user/register", RegistrationPage.class));
+        mount(new MountedMapper("/user/register", Register.class));
         mount(new MountedMapper("/user/login", LoginPage.class));
         mount(new MountedMapper("/user/recover/pass", PasswordRecoveryPage.class));
         mount(new MountedMapper("/user/recover/pass/email", EmailPasswordRecoveryPage.class));
