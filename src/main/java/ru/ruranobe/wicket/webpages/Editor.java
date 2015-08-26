@@ -95,13 +95,13 @@ public class Editor extends SidebarLayoutPage
         String projectUrl = parameters.get("project").toString();
         if (Strings.isEmpty(projectUrl))
         {
-            throw RuranobeUtils.REDIRECT_TO_404;
+            throw RuranobeUtils.getRedirectTo404Exception(this);
         }
 
         String volumeUrl = parameters.get("volume").toString();
         if (Strings.isEmpty(volumeUrl))
         {
-            throw RuranobeUtils.REDIRECT_TO_404;
+            throw RuranobeUtils.getRedirectTo404Exception(this);
         }
 
         String chapterUrl = parameters.get("chapter").toString();
@@ -112,7 +112,7 @@ public class Editor extends SidebarLayoutPage
 
             if (chapter == null)
             {
-                throw RuranobeUtils.REDIRECT_TO_404;
+                throw RuranobeUtils.getRedirectTo404Exception(this);
             }
         }
 

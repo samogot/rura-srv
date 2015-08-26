@@ -17,13 +17,13 @@ public class PasswordRecoveryPage extends WebPage
     {
         if (parameters.getNamedKeys().size() != 1)
         {
-            throw RuranobeUtils.REDIRECT_TO_404;
+            throw RuranobeUtils.getRedirectTo404Exception(this);
         }
 
         String passRecoveryToken = parameters.get("token").toString();
         if (Strings.isEmpty(passRecoveryToken))
         {
-            throw RuranobeUtils.REDIRECT_TO_404;
+            throw RuranobeUtils.getRedirectTo404Exception(this);
         }
 
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
@@ -35,7 +35,7 @@ public class PasswordRecoveryPage extends WebPage
             User user = usersMapper.getUserByPassRecoveryToken(passRecoveryToken);
             if (user == null)
             {
-                throw RuranobeUtils.REDIRECT_TO_404;
+                throw RuranobeUtils.getRedirectTo404Exception(this);
             }
             add(new PasswordRecoveryPanel("passwordRecoveryPanel", user, usersMapper, session));
         }

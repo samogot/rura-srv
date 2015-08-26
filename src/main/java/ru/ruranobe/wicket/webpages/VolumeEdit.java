@@ -50,7 +50,7 @@ public class VolumeEdit extends AdminLayoutPage
         String volumeName = parameters.get("volume").toOptionalString();
         if (Strings.isEmpty(projectName) || Strings.isEmpty(volumeName))
         {
-            throw RuranobeUtils.REDIRECT_TO_404;
+            throw RuranobeUtils.getRedirectTo404Exception(this);
         }
 
         String volumeUrl = projectName + "/" + volumeName;
@@ -71,7 +71,7 @@ public class VolumeEdit extends AdminLayoutPage
 
             if (volume == null)
             {
-                throw RuranobeUtils.REDIRECT_TO_404;
+                throw RuranobeUtils.getRedirectTo404Exception(this);
             }
 
             VolumeReleaseActivitiesMapper volumeReleaseActivitiesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumeReleaseActivitiesMapper.class);

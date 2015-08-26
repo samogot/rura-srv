@@ -13,6 +13,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.ChaptersMapper;
 import ru.ruranobe.mybatis.mappers.ExternalResourcesMapper;
@@ -35,7 +36,6 @@ import java.util.List;
 
 public class VolumePage extends SidebarLayoutPage
 {
-    private static final RedirectToUrlException REDIRECT_TO_404 = new RedirectToUrlException("http://404");
 
     public VolumePage(PageParameters parameters)
     {
@@ -44,7 +44,7 @@ public class VolumePage extends SidebarLayoutPage
         String volumeShortUrl = parameters.get("volume").toString();
         if (volumeShortUrl == null || projectUrlValue == null)
         {
-            throw REDIRECT_TO_404;
+            throw RuranobeUtils.getRedirectTo404Exception(this);
         }
 
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
@@ -57,7 +57,7 @@ public class VolumePage extends SidebarLayoutPage
         if (volume == null)
         {
             session.close();
-            throw REDIRECT_TO_404;
+            throw RuranobeUtils.getRedirectTo404Exception(this);
         }
 
         setDefaultModel(new CompoundPropertyModel<Volume>(volume));

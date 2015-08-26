@@ -61,7 +61,7 @@ public class ProjectEdit extends AdminLayoutPage
 
         if (project == null)
         {
-            throw RuranobeUtils.REDIRECT_TO_404;
+            throw RuranobeUtils.getRedirectTo404Exception(this);
         }
 
         final Form<Project> projectInfoForm = new Form<Project>("projectInfoForm", new CompoundPropertyModel<Project>(project));

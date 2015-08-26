@@ -20,13 +20,13 @@ public class ActivateEmail extends WebPage
 
         if (parameters.getNamedKeys().size() != 1)
         {
-            throw RuranobeUtils.REDIRECT_TO_404;
+            throw RuranobeUtils.getRedirectTo404Exception(this);
         }
 
         String emailToken = parameters.get("token").toString();
         if (Strings.isEmpty(emailToken))
         {
-            throw RuranobeUtils.REDIRECT_TO_404;
+            throw RuranobeUtils.getRedirectTo404Exception(this);
         }
 
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();

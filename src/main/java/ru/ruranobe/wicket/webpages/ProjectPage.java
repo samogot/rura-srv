@@ -13,6 +13,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.ExternalResourcesMapper;
 import ru.ruranobe.mybatis.mappers.ProjectsMapper;
@@ -32,7 +33,6 @@ import java.util.*;
 
 public class ProjectPage extends SidebarLayoutPage
 {
-    private static final RedirectToUrlException REDIRECT_TO_404 = new RedirectToUrlException("http://404");
     private static final ArrayList<String> DISPLAYABLE_NAMES = Lists.newArrayList("Ранобэ", "Побочные истории", "Авторские додзинси", "Другое");
     private static final Map<String, String> VOLUME_STATUS_LABEL_COLOR_CLASS =
             new ImmutableMap.Builder<String, String>()
@@ -56,7 +56,7 @@ public class ProjectPage extends SidebarLayoutPage
         String projectUrl = parameters.get("project").toString();
         if (projectUrl == null)
         {
-            throw REDIRECT_TO_404;
+            throw RuranobeUtils.getRedirectTo404Exception(this);
         }
 
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
@@ -68,7 +68,7 @@ public class ProjectPage extends SidebarLayoutPage
 
         if (mainProject == null)
         {
-            throw REDIRECT_TO_404;
+            throw RuranobeUtils.getRedirectTo404Exception(this);
         }
         Collection<Project> subProjects = projectsMapperCacheable.getSubProjectsByParentProjectId(mainProject.getProjectId());
         final ArrayList<Project> projects = new ArrayList<Project>();

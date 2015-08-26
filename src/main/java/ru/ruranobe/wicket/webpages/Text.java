@@ -53,13 +53,13 @@ public class Text extends SidebarLayoutPage
             String projectUrl = parameters.get("project").toString();
             if (Strings.isEmpty(projectUrl))
             {
-                throw RuranobeUtils.REDIRECT_TO_404;
+                throw RuranobeUtils.getRedirectTo404Exception(this);
             }
 
             String volumeUrl = parameters.get("volume").toString();
             if (Strings.isEmpty(volumeUrl))
             {
-                throw RuranobeUtils.REDIRECT_TO_404;
+                throw RuranobeUtils.getRedirectTo404Exception(this);
             }
 
             ChaptersMapper chaptersMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
@@ -68,7 +68,7 @@ public class Text extends SidebarLayoutPage
 
             if (volume == null)
             {
-                throw RuranobeUtils.REDIRECT_TO_404;
+                throw RuranobeUtils.getRedirectTo404Exception(this);
             }
 
             allChapterList = chaptersMapperCacheable.getChaptersByVolumeId(volume.getVolumeId());
@@ -144,7 +144,7 @@ public class Text extends SidebarLayoutPage
 
                 if (currentChapter == null)
                 {
-                    throw RuranobeUtils.REDIRECT_TO_404;
+                    throw RuranobeUtils.getRedirectTo404Exception(this);
                 }
 
                 currentChapter.setVisibleOnPage(true);

@@ -1,5 +1,6 @@
 package ru.ruranobe.misc;
 
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.INamedParameters;
@@ -8,6 +9,7 @@ import org.apache.wicket.util.encoding.UrlEncoder;
 import ru.ruranobe.config.ApplicationContext;
 import ru.ruranobe.config.ConfigurationManager;
 import ru.ruranobe.wicket.RuraConstants;
+import ru.ruranobe.wicket.webpages.NotFound;
 
 import java.nio.charset.Charset;
 import java.util.HashSet;
@@ -16,13 +18,17 @@ import java.util.regex.Pattern;
 
 public class RuranobeUtils
 {
-    public static final RedirectToUrlException REDIRECT_TO_404 = new RedirectToUrlException("http://404");
     private static final String PASSWORD_REGEXP = "^[A-Za-z0-9]+";
     private static final Pattern PASSWORD_PATTERN = Pattern.compile(PASSWORD_REGEXP);
 
     public static boolean isPasswordSyntaxValid(String password)
     {
         return PASSWORD_PATTERN.matcher(password).matches();
+    }
+
+    public static RedirectToUrlException getRedirectTo404Exception(WebPage sourcePage)
+    {
+        return new RedirectToUrlException(sourcePage.urlFor(NotFound.class, null).toString());
     }
 
     public static ApplicationContext getApplicationContext()

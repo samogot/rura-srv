@@ -70,6 +70,7 @@ public class WicketApplication extends AuthenticatedWebApplication
         mount(new MountedMapper("/updates", Updates.class));
         mount(new MountedMapper("/r/${project}/${volume}/text", Text.class));
         mount(new MountedMapper("/r/${project}/${volume}/${chapter}", Text.class));
+        mount(new MountedMapper("/user/cabinet", Cabinet.class));
         mount(new MountedMapper("/user/register", Register.class));
         mount(new MountedMapper("/user/login", LoginPage.class));
         mount(new MountedMapper("/user/recover/pass", PasswordRecoveryPage.class));
@@ -80,14 +81,13 @@ public class WicketApplication extends AuthenticatedWebApplication
         mount(new MountedMapper("/a/${project}/${volume}", VolumeEdit.class));
         mount(new MountedMapper("/a/${project}", ProjectEdit.class));
         mount(new MountedMapper("/a", GlobalEdit.class));
+        mount(new MountedMapper("/notfound", NotFound.class));
 
-        mountResource("/bookmarks", new ResourceReference("bookmarksResource")
-        {
+        mountResource("/bookmarks", new ResourceReference("bookmarksResource") {
             BookmarksRestWebService bookmarksResource = new BookmarksRestWebService();
 
             @Override
-            public IResource getResource()
-            {
+            public IResource getResource() {
                 return bookmarksResource;
             }
         });
