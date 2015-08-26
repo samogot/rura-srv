@@ -1,3 +1,5 @@
+# to ensure all image migrate correctly, run "hhvm maintenance/refreshLinks.php"
+
 # use ruranobe;
 
 SET NAMES UTF8;
