@@ -26,7 +26,6 @@ $(document).ready(function () {
         });
 });
 
-
 /* AFFIX */
 function reinitAffix() {
     $(window).off('.affix')
@@ -210,14 +209,14 @@ $('.options-button .pagecolor').click(function() {
 $('#daynight').bootstrapSwitch().on('switchChange.bootstrapSwitch', function (event, state) {
     if (state == true) {
         $('body').addClass("night");
-        $('a.navbar-brand img').attr('src', 'img/logo1_night.png');
+        $('a.navbar-brand img').attr('src', '/img/logo1_night.png');
         saveSettings({
             key: 'night',
             item: true
         });
     } else {
         $('body').removeClass("night");
-        $('a.navbar-brand img').attr('src', 'img/logo1.png');
+        $('a.navbar-brand img').attr('src', '/img/logo1.png');
         saveSettings({
             key: 'night',
             item: false
@@ -270,11 +269,11 @@ function loadSettings() {
     }
     if (localStorage.getItem("night") == "true") {
         $('body').addClass("night");
-        $('a.navbar-brand img').attr('src', 'img/logo1_night.png');
+        $('a.navbar-brand img').attr('src', '/img/logo1_night.png');
         $('#daynight').bootstrapSwitch('state', true)
     } else {
         $('#daynight').bootstrapSwitch('state', false)
-        $('a.navbar-brand img').attr('src', 'img/logo1.png');
+        $('a.navbar-brand img').attr('src', '/img/logo1.png');
         $('body').removeClass("night");
     }
     if (localStorage.getItem("fontsize")) {
@@ -495,7 +494,7 @@ function getOrphusParameters() {
         startOffset: offset - range.toString().length,
         paragraph: p.id
     };
-}
+    }
 /* ОШИБКИ */
 
 
