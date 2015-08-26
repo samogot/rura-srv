@@ -1,5 +1,7 @@
 ﻿# use ruranobe;
 
+SET NAMES UTF8;
+
 DROP TABLE IF EXISTS orphus_comments;
 DROP TABLE IF EXISTS chapter_images;
 DROP TABLE IF EXISTS updates;

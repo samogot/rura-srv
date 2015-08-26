@@ -8,7 +8,6 @@
         SELECT
             last_updates.update_id AS updateId,
             last_updates.update_type AS updateType,
-            last_updates.update_type AS updateType,
             last_updates.project_id AS projectId,
             last_updates.volume_id AS volumeId,
             last_updates.chapter_id AS chapterId,
