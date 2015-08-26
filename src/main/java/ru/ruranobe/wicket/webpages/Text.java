@@ -22,6 +22,9 @@ import ru.ruranobe.mybatis.tables.Volume;
 import ru.ruranobe.wicket.components.CommentsPanel;
 import ru.ruranobe.wicket.components.ContentsHolder;
 import ru.ruranobe.wicket.components.sidebar.ContentsModule;
+import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
+import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
+import ru.ruranobe.wicket.components.sidebar.UpdatesSidebarModule;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
 import java.util.ArrayList;
@@ -314,9 +317,9 @@ public class Text extends SidebarLayoutPage
         }
 
         add(new CommentsPanel("comments"));
-//        sidebarModules.add(new UpdatesSidebarModule("sidebarModule", volume.getProjectId()));
-//        sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
-//        sidebarModules.add(new FriendsSidebarModule("sidebarModule"));
+        sidebarModules.add(new UpdatesSidebarModule("sidebarModule", volume.getProjectId()));
+        sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
+        sidebarModules.add(new FriendsSidebarModule("sidebarModule"));
         sidebarModules.add(new ContentsModule("sidebarModule", contentsHolders));
     }
 
