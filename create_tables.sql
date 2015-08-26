@@ -5,6 +5,7 @@ SET NAMES UTF8;
 DROP TABLE IF EXISTS orphus_comments;
 DROP TABLE IF EXISTS chapter_images;
 DROP TABLE IF EXISTS updates;
+DROP TABLE IF EXISTS bookmarks;
 DROP TABLE IF EXISTS chapters;
 DROP TABLE IF EXISTS volume_release_activities;
 DROP TABLE IF EXISTS volumes;
