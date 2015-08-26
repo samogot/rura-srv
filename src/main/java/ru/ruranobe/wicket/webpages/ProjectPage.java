@@ -82,7 +82,7 @@ public class ProjectPage extends SidebarLayoutPage
         add(projectTitle);
 
         final ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.
-                getCacheableMapper(session, ExternalResourcesMapper.class);
+                                                                                              getCacheableMapper(session, ExternalResourcesMapper.class);
 
         Label projectName = new Label("projectName", mainProject.getTitle());
         add(projectName);
@@ -234,7 +234,7 @@ public class ProjectPage extends SidebarLayoutPage
                                 {
                                     listItem3.setVisible(false); //todo show grayed if allowed to user
                                 }
-                                BookmarkablePageLink volumeLink = new BookmarkablePageLink("volumeLink", VolumePage.class, volume.getUrlParameters());
+                                BookmarkablePageLink volumeLink = volume.makeBookmarkablePageLink("volumeLink");
                                 volumeLink.setBody(new Model<String>(volume.getNameTitle()));
                                 listItem3.add(volumeLink);
                             }
@@ -278,7 +278,7 @@ public class ProjectPage extends SidebarLayoutPage
         for (Volume volume : allCovers)
         {
             allCoverIds.add(new SimpleEntry<String, String>(volume.getNameTitle(),
-                                                            externalResourcesMapperCacheable.getExternalResourceById(volume.getImageOne()).getUrl()));
+                    externalResourcesMapperCacheable.getExternalResourceById(volume.getImageOne()).getUrl()));
         }
 
         add(new CoverCarousel("projectCoverCarousel", allCoverIds));

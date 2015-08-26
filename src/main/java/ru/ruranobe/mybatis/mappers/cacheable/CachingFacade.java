@@ -21,6 +21,9 @@ public class CachingFacade
                     .put(ChaptersMapper.class, ChaptersMapperCacheable.class)
                     .put(TeamMembersMapper.class, TeamMembersMapperCacheable.class)
                     .put(ChapterImagesMapper.class, ChapterImagesMapperCacheable.class)
+                    .put(TextsMapper.class, TextsMapperCacheable.class)
+                    .put(TextsHistoryMapper.class, TextsHistoryMapperCacheable.class)
+                    .put(BookmarksMapper.class, BookmarksMapperCacheable.class)
                     .build();
 
     public static <T> T getCacheableMapper(SqlSession session, Class<T> mapperClass)

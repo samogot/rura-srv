@@ -75,7 +75,7 @@ public class ConfigurationManager
         }
         catch (DocumentException ex)
         {
-            throw new RuntimeException("Bad configuration path: "+configurationFilePath, ex);
+            throw new RuntimeException("Bad configuration path: " + configurationFilePath, ex);
         }
     }
 

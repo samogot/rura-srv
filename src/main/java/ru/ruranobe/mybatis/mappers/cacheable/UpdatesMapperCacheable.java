@@ -36,17 +36,20 @@ public class UpdatesMapperCacheable implements UpdatesMapper
     }
 
     @Override
-    public void updateUpdate(Update update) {
+    public void updateUpdate(Update update)
+    {
         mapper.updateUpdate(update);
     }
 
     @Override
-    public void deleteUpdate(int update) {
+    public void deleteUpdate(int update)
+    {
         mapper.deleteUpdate(update);
     }
 
     @Override
-    public void insertUpdate(Update update) {
+    public void insertUpdate(Update update)
+    {
         mapper.insertUpdate(update);
     }
 }

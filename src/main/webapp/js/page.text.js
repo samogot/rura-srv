@@ -1,6 +1,31 @@
- $(document).ready(function() {
-        $(".fancybox").fancybox();
- });
+$(document).ready(function () {
+    $(".fancybox")
+        .attr('rel', 'gallery')
+        .fancybox({
+            mouseWheel: false,
+            padding: 0,
+            margin: 5,
+            scrolling: 'no',
+            autoResize: false,
+            fitToView: true,
+            afterLoad: function () {
+                var fancy = this;
+                this.outer.mousewheel(function (e, a1) {
+                    fancy.wrap.css('width', 'auto');
+                    var d = Math.pow(1.1, a1);
+                    var x = e.pageX - fancy.inner.offset().left;
+                    var y = e.pageY - fancy.inner.offset().top;
+                    fancy.inner.width(fancy.inner.width() * d);
+                    fancy.inner.height(fancy.inner.height() * d);
+                    fancy.wrap.css('left', fancy.wrap.position().left + x * (1 - d));
+                    fancy.wrap.css('top', fancy.wrap.position().top + y * (1 - d));
+                    return false;
+                });
+                this.wrap.draggable();
+            }
+        });
+});
+
 
 /* AFFIX */
 function reinitAffix() {
@@ -27,22 +52,6 @@ $(document).ready(function() {
 /* AFFIX */
 
 /* ИНСТРУМЕНТЫ */
-$('.daynight-button').on('click', function(e) {
-    if ($(this).children('.fa').hasClass('fa-sun-o')){
-        $('body').addClass("night");
-        saveSettings({
-            key: 'night',
-            item: true
-        });
-    } else {
-        $('body').removeClass("night");
-        saveSettings({
-            key: 'night',
-            item: false
-        });
-    }
-    $(this).children('.fa').toggleClass('fa-sun-o fa-moon-o');
-});
 $('.controlText .btn').hover(
     function() {
         $(this).children('.hint').show()
@@ -198,6 +207,23 @@ $('.options-button .pagecolor').click(function() {
         });
     }
 })
+$('#daynight').bootstrapSwitch().on('switchChange.bootstrapSwitch', function (event, state) {
+    if (state == true) {
+        $('body').addClass("night");
+        $('a.navbar-brand img').attr('src', 'img/logo1_night.png');
+        saveSettings({
+            key: 'night',
+            item: true
+        });
+    } else {
+        $('body').removeClass("night");
+        $('a.navbar-brand img').attr('src', 'img/logo1.png');
+        saveSettings({
+            key: 'night',
+            item: false
+        });
+    }
+});
 $("#fontslide").on("change mousemove", function() {
     var font = '';
     switch ($(this).val()) {
@@ -244,8 +270,11 @@ function loadSettings() {
     }
     if (localStorage.getItem("night") == "true") {
         $('body').addClass("night");
-        $('.daynight-button .fa').toggleClass('fa-sun-o fa-moon-o');
+        $('a.navbar-brand img').attr('src', 'img/logo1_night.png');
+        $('#daynight').bootstrapSwitch('state', true)
     } else {
+        $('#daynight').bootstrapSwitch('state', false)
+        $('a.navbar-brand img').attr('src', 'img/logo1.png');
         $('body').removeClass("night");
     }
     if (localStorage.getItem("fontsize")) {
@@ -284,7 +313,21 @@ $('.controlText .btn.bookmark-button').click(function() {
     $('.text p')
         .addClass('show')
         .on('click', function() {
-            alert($(this).attr('id'));
+            $.ajax({
+                type: "POST",
+                url: '/bookmarks/insert',
+                data: '{' +
+                'chapterId:' + $(this).attr('chapter-id') +
+                ',paragraphId:\"' + $(this).attr('id') +
+                '\"}',
+                contentType: 'text/plain',
+                success: function (data, textStatus, jqXHR) {
+                    //data - response from server
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                }
+            });
             saveSettings({
                 key: 'bookmark',
                 item: $(this).attr('id')
@@ -346,16 +389,16 @@ function showOrphusDialog(originalText, callbackUrl, startOffset, paragraph, cha
     bootbox.dialog({
         title: "Предложить правку",
         message: '<form id="orphusForm">' +
-            '  <div class="form-group">' +
-            '    <label for="orphusReplacement">Текст правки</label>' +
-            '    <input type="text" class="form-control" name="replacementText" id="orphusReplacement" value="' + originalText + '">' +
-            '    <p class="help-block" style="display: none"></p>' +
-            '  </div>' +
-            '  <div class="form-group">' +
-            '    <label for="orphusComment">Комментарий <small>(необязательно)</small></label>' +
-            '    <input type="text" class="form-control" name="optionalComment" id="orphusComment">' +
-            '  </div>' +
-            '</form>',
+        '  <div class="form-group">' +
+        '    <label for="orphusReplacement">Текст правки</label>' +
+        '    <input type="text" class="form-control" name="replacementText" id="orphusReplacement" value="' + originalText + '">' +
+        '    <p class="help-block" style="display: none"></p>' +
+        '  </div>' +
+        '  <div class="form-group">' +
+        '    <label for="orphusComment">Комментарий <small>(необязательно)</small></label>' +
+        '    <input type="text" class="form-control" name="optionalComment" id="orphusComment">' +
+        '  </div>' +
+        '</form>',
         buttons: {
             cancel: {
                 label: "Отменить",
@@ -379,8 +422,22 @@ function showOrphusDialog(originalText, callbackUrl, startOffset, paragraph, cha
                         return false;
                     }
                     var data = $('#orphusForm').serialize();
-                    var wcall = Wicket.Ajax.get({
-                        'u': callbackUrl + '&' + data + '&startOffset=' + startOffset + '&paragraph=' + paragraph + '&chapterId=' + chapterId + '&originalText=' + originalText
+                    $.ajax({
+                        type: "POST",
+                        url: '/orphus/insert',
+                        data: '{' +
+                        'chapterId:' + chapterId +
+                        ',paragraph:' + paragraph +
+                        ',startOffset:' + startOffset +
+                        ',originalText:\"' + originalText +
+                        '\"}',
+                        contentType: 'text/plain',
+                        success: function (data, textStatus, jqXHR) {
+                            //data - response from server
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+
+                        }
                     });
                 }
             }
@@ -418,28 +475,28 @@ function getSelectionRange() {
 }
 
 function getOrphusParameters() {
-        var range = getSelectionRange();
-        var p = $(range.startContainer).closest('p').get(0);
-        var offset = 0;
-        if (range.cloneRange) {
-            var preCaretRange = range.cloneRange();
-            preCaretRange.selectNodeContents(p);
-            preCaretRange.setEnd(range.endContainer, range.endOffset);
-            offset = preCaretRange.toString().length;
-        } else {
-            var preCaretTextRange = document.body.createTextRange();
-            preCaretTextRange.moveToElementText(p);
-            preCaretTextRange.setEndPoint("EndToEnd", range);
-            offset = preCaretTextRange.text.length;
-        }
-        /* TODO: add chapterId parameter. Maybe in wicket code */
-        return {
-            originalText: range.toString(),
-            startOffset: offset - range.toString().length,
-            paragraph: p.id
-        };
+    var range = getSelectionRange();
+    var p = $(range.startContainer).closest('p').get(0);
+    var offset = 0;
+    if (range.cloneRange) {
+        var preCaretRange = range.cloneRange();
+        preCaretRange.selectNodeContents(p);
+        preCaretRange.setEnd(range.endContainer, range.endOffset);
+        offset = preCaretRange.toString().length;
+    } else {
+        var preCaretTextRange = document.body.createTextRange();
+        preCaretTextRange.moveToElementText(p);
+        preCaretTextRange.setEndPoint("EndToEnd", range);
+        offset = preCaretTextRange.text.length;
     }
-    /* ОШИБКИ */
+    /* TODO: add chapterId parameter. Maybe in wicket code */
+    return {
+        originalText: range.toString(),
+        startOffset: offset - range.toString().length,
+        paragraph: p.id
+    };
+}
+/* ОШИБКИ */
 
 
 

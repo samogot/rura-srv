@@ -21,7 +21,8 @@ public class TeamsMapperCacheable implements TeamsMapper
     }
 
     @Override
-    public List<Team> getAllTeams() {
+    public List<Team> getAllTeams()
+    {
         return mapper.getAllTeams();
     }
 

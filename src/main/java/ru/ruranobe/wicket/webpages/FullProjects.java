@@ -35,7 +35,7 @@ public class FullProjects extends BaseLayoutPage
         Collection<ru.ruranobe.mybatis.tables.Project> projects = projectsMapperCacheable.getAllProjects();
         List<ProjectExtendedWithInfo> projectsList = new ArrayList<ProjectExtendedWithInfo>();
         ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.
-                getCacheableMapper(session, ExternalResourcesMapper.class);
+                                                                                        getCacheableMapper(session, ExternalResourcesMapper.class);
         VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
 
         for (ru.ruranobe.mybatis.tables.Project project : projects)
@@ -66,7 +66,7 @@ public class FullProjects extends BaseLayoutPage
                 ExternalResource imageResource = projectExtended.getExternalResource();
                 final Project project = projectExtended.getProject();
 
-                BookmarkablePageLink linkOneViewTypeOne = new BookmarkablePageLink("linkOneViewTypeOne", ProjectPage.class, project.getUrlParameters());
+                BookmarkablePageLink linkOneViewTypeOne = project.makeBookmarkablePageLink("linkOneViewTypeOne");
                 WebMarkupContainer imageViewTypeOne = new WebMarkupContainer("imageViewTypeOne");
                 if (imageResource != null)
                 {
@@ -76,7 +76,7 @@ public class FullProjects extends BaseLayoutPage
                 linkOneViewTypeOne.add(imageViewTypeOne);
                 listItem.add(linkOneViewTypeOne);
 
-                BookmarkablePageLink linkTwoViewTypeOne = new BookmarkablePageLink("linkTwoViewTypeOne", ProjectPage.class, project.getUrlParameters());
+                BookmarkablePageLink linkTwoViewTypeOne = project.makeBookmarkablePageLink("linkTwoViewTypeOne");
                 Label titleViewTypeOne = new Label("titleViewTypeOne", project.getTitle());
                 linkTwoViewTypeOne.add(titleViewTypeOne);
                 listItem.add(linkTwoViewTypeOne);
@@ -102,7 +102,7 @@ public class FullProjects extends BaseLayoutPage
                 statusViewTypeOne.add(statusViewTypeOneText);
                 listItem.add(statusViewTypeOne);
 
-                BookmarkablePageLink linkThreeViewTypeOne = new BookmarkablePageLink("linkThreeViewTypeOne", ProjectPage.class, project.getUrlParameters());
+                BookmarkablePageLink linkThreeViewTypeOne = project.makeBookmarkablePageLink("linkThreeViewTypeOne");
                 listItem.add(linkThreeViewTypeOne);
             }
         };
@@ -117,7 +117,7 @@ public class FullProjects extends BaseLayoutPage
                 ExternalResource imageResource = projectExtended.getExternalResource();
                 final Project project = projectExtended.getProject();
 
-                BookmarkablePageLink linkOneViewTypeTwo = new BookmarkablePageLink("linkOneViewTypeTwo", ProjectPage.class, project.getUrlParameters());
+                BookmarkablePageLink linkOneViewTypeTwo = project.makeBookmarkablePageLink("linkOneViewTypeTwo");
                 WebMarkupContainer imageViewTypeTwo = new WebMarkupContainer("imageViewTypeTwo");
                 if (imageResource != null)
                 {
@@ -127,7 +127,7 @@ public class FullProjects extends BaseLayoutPage
                 linkOneViewTypeTwo.add(imageViewTypeTwo);
                 listItem.add(linkOneViewTypeTwo);
 
-                BookmarkablePageLink linkTwoViewTypeTwo = new BookmarkablePageLink("linkTwoViewTypeTwo", ProjectPage.class, project.getUrlParameters());
+                BookmarkablePageLink linkTwoViewTypeTwo = project.makeBookmarkablePageLink("linkTwoViewTypeTwo");
                 Label titleViewTypeTwo = new Label("titleViewTypeTwo", project.getTitle());
                 linkTwoViewTypeTwo.add(titleViewTypeTwo);
                 listItem.add(linkTwoViewTypeTwo);
@@ -142,7 +142,7 @@ public class FullProjects extends BaseLayoutPage
                 Label volumeCountViewTypeTwo = new Label("volumeCountViewTypeTwo", (projectInfo == null) ? "unknown" : projectInfo.getVolumesCount());
                 listItem.add(volumeCountViewTypeTwo);
 
-//                BookmarkablePageLink linkThreeViewTypeTwo = new BookmarkablePageLink("linkThreeViewTypeTwo", ProjectPage.class, project.getUrlParameters());
+//                BookmarkablePageLink linkThreeViewTypeTwo = project.makeBookmarkablePageLink("linkThreeViewTypeTwo");
 //                listItem.add(linkThreeViewTypeTwo);
             }
         };

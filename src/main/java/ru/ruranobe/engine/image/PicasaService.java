@@ -1,6 +1,7 @@
 package ru.ruranobe.engine.image;
 
-import com.google.api.client.auth.oauth2.*;
+import com.google.api.client.auth.oauth2.RefreshTokenRequest;
+import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.BasicAuthentication;
 import com.google.api.client.http.GenericUrl;
@@ -32,8 +33,8 @@ public class PicasaService
     public static void initializeService(FileStorageService fileStorageService)
     {
         if (Strings.isEmpty(fileStorageService.getClientId())
-                || Strings.isEmpty(fileStorageService.getClientSecret())
-                || Strings.isEmpty(fileStorageService.getRefreshToken()))
+            || Strings.isEmpty(fileStorageService.getClientSecret())
+            || Strings.isEmpty(fileStorageService.getRefreshToken()))
         {
             throw new IllegalArgumentException("ClientId, ClientSecret and RefreshToken are mandatory for Picassa. Correct configuration file.");
         }

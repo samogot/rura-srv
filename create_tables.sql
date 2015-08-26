@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS volume_release_activities;
 DROP TABLE IF EXISTS volumes;
 DROP TABLE IF EXISTS projects;
 DROP TABLE IF EXISTS external_resources;
+DROP TABLE IF EXISTS texts_history;
 DROP TABLE IF EXISTS texts;
 DROP TABLE IF EXISTS team_members;
 DROP TABLE IF EXISTS users;
@@ -34,7 +35,9 @@ CREATE TABLE texts
 (
   text_id   INT(11) PRIMARY KEY AUTO_INCREMENT,
   text_wiki MEDIUMTEXT NOT NULL,
-  text_html MEDIUMTEXT NOT NULL
+  text_html MEDIUMTEXT,
+  footnotes MEDIUMTEXT,
+  contents MEDIUMTEXT
 );
 
 CREATE TABLE orphus_comments
@@ -200,6 +203,28 @@ CREATE TABLE updates
   show_time   DATETIME                       NOT NULL,
   description VARCHAR(255)
 );
+
+create table texts_history
+(
+  current_text_id INT(11) PRIMARY KEY AUTO_INCREMENT,
+  previous_text_id INT(11),
+  insertion_time DATETIME NOT NULL
+);
+
+create table bookmarks
+(
+  bookmark_id INT(11) primary key auto_increment,
+  chapter_id int(11),
+  user_id int(11) NOT NULL,
+  paragraph_id VARCHAR(64) NOT NULL,
+  created_when DATETIME NOT NULL
+);
+
+alter table bookmarks add constraint fk_user_bookmark_id foreign key (user_id) references users(user_id);
+
+alter table texts_history add constraint fk_current_text_id foreign key (current_text_id) references texts (text_id);
+
+alter table texts_history add constraint fk_previous_text_id foreign key (previous_text_id) references texts (text_id);
 
 ALTER TABLE chapter_images ADD CONSTRAINT fk_colored_image_id FOREIGN KEY (colored_image_id) REFERENCES external_resources (resource_id);
 

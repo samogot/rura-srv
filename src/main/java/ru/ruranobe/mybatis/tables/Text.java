@@ -9,6 +9,8 @@ public class Text implements Serializable
     private Integer textId;
     private String textWiki;
     private String textHtml;
+    private String contents;
+    private String footnotes;
 
     public Text()
     {
@@ -48,5 +50,25 @@ public class Text implements Serializable
     public void setTextWiki(String textWiki)
     {
         this.textWiki = textWiki;
+    }
+
+    public String getContents()
+    {
+        return contents;
+    }
+
+    public void setContents(String contents)
+    {
+        this.contents = contents;
+    }
+
+    public String getFootnotes()
+    {
+        return footnotes;
+    }
+
+    public void setFootnotes(String footnotes)
+    {
+        this.footnotes = footnotes;
     }
 }

@@ -25,6 +25,52 @@
         WHERE url = #{url}
     </select>
 
+    <select id="getChapterById" parameterType="int" resultMap="ChaptersResult">
+        SELECT *
+        FROM chapters
+        WHERE chapter_id = #{chapterId}
+    </select>
+
+    <select id="getChapterNextPrevByUrl" parameterType="String" resultMap="ChaptersResult">
+        SELECT
+            c.*,
+            prev_c.url        prev_url,
+            next_c.url        next_url,
+            prev_c.chapter_id prev_chapter_id,
+            next_c.chapter_id next_chapter_id,
+            prev_c.nested     prev_chapter_nested
+        FROM
+        (
+            SELECT
+                c.*,
+                (
+                    SELECT max(order_number)
+                    FROM chapters
+                    WHERE chapters.order_number &lt; c.order_number
+                      AND chapters.volume_id = c.volume_id
+                    ORDER BY order_number DESC
+                    LIMIT 1
+                ) AS prev_order_number,
+                (
+                    SELECT min(order_number)
+                    FROM chapters
+                    WHERE chapters.order_number &gt; c.order_number
+                      AND chapters.volume_id = c.volume_id
+                    ORDER BY order_number ASC
+                    LIMIT 1
+                ) AS next_order_number
+            FROM chapters c
+            INNER JOIN volumes USING (volume_id)
+            WHERE c.url = #{url}
+        ) c
+        LEFT JOIN chapters prev_c
+          ON c.prev_order_number = prev_c.order_number
+         AND c.volume_id = prev_c.volume_id
+        LEFT JOIN chapters next_c
+          ON c.next_order_number = next_c.order_number
+         AND c.volume_id = next_c.volume_id
+    </select>
+
     <insert id="insertChapter" parameterType="ru.ruranobe.mybatis.tables.Chapter" keyProperty="chapterId" useGeneratedKeys="true">
         insert into chapters (volume_id, text_id, url, title, order_number, published, nested)
         values (#{volumeId}, #{textId}, #{url}, #{title}, #{orderNumber}, #{published}, #{nested})
@@ -49,6 +95,12 @@
         <result property="orderNumber" column="order_number"/>
         <result property="published" column="published"/>
         <result property="nested" column="nested"/>
+
+        <result property="prevUrl" column="prev_url"/>
+        <result property="nextUrl" column="next_url"/>
+        <result property="prevChapterId" column="prev_chapter_id"/>
+        <result property="nextChapterId" column="next_chapter_id"/>
+        <result property="prevChapterNested" column="prev_chapter_nested"/>
     </resultMap>
 
 </mapper>

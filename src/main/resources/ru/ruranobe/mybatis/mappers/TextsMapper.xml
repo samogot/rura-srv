@@ -16,10 +16,35 @@
         SELECT * FROM texts WHERE text_id = #{textId}
     </select>
 
+    <select id="getHtmlInfoById" resultMap="TextResult">
+        SELECT text_id, text_html, footnotes, contents FROM texts WHERE text_id = #{textId}
+    </select>
+
+    <update id="updateText" parameterType="ru.ruranobe.mybatis.tables.Text">
+        update texts
+        set
+        text_wiki = #{textWiki},
+        text_html = #{textHtml},
+        footnotes = #{footnotes},
+        contents = #{contents}
+        where text_id = #{textId}
+    </update>
+
+    <insert id="insertText" parameterType="ru.ruranobe.mybatis.tables.Text" keyProperty="textId" useGeneratedKeys="true">
+        INSERT INTO texts (text_wiki, text_html, contents, footnotes)
+        values (#{textWiki}, #{textHtml}, #{contents}, #{footnotes})
+    </insert>
+
+    <delete id="deleteText" parameterType="int">
+        delete from texts where text_id = #{textId}
+    </delete>
+
     <resultMap id="TextResult" type="ru.ruranobe.mybatis.tables.Text">
         <id column="text_id" property="textId"/>
         <result column="text_wiki" property="textWiki"/>
         <result column="text_html" property="textHtml"/>
+        <result column="contents" property="contents"/>
+        <result column="footnotes" property="footnotes"/>
     </resultMap>
 
 </mapper>

@@ -15,7 +15,6 @@ import ru.ruranobe.mybatis.mappers.ProjectsMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.mybatis.tables.ExternalResource;
 import ru.ruranobe.mybatis.tables.Project;
-import ru.ruranobe.wicket.webpages.ProjectPage;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.*;
@@ -44,7 +43,7 @@ public class ProjectBannersList extends Panel
         Collection<Project> projects = projectsMapperCacheable.getAllProjects();
         List<SimpleEntry<Project, ExternalResource>> projectsList = new ArrayList<SimpleEntry<Project, ExternalResource>>();
         ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.
-                getCacheableMapper(session, ExternalResourcesMapper.class);
+                                                                                        getCacheableMapper(session, ExternalResourcesMapper.class);
         for (Project project : projects)
         {
             if (!project.isProjectHidden() && !project.isBannerHidden())
@@ -73,7 +72,7 @@ public class ProjectBannersList extends Panel
                 SimpleEntry<Project, ExternalResource> projectExtended = listItem.getModelObject();
                 final ExternalResource imageResource = projectExtended.getValue();
                 final Project project = projectExtended.getKey();
-                BookmarkablePageLink bannerLink = new BookmarkablePageLink("bannerLink", ProjectPage.class, project.getUrlParameters());
+                BookmarkablePageLink bannerLink = project.makeBookmarkablePageLink("bannerLink");
                 WebMarkupContainer bannerImage = new WebMarkupContainer("bannerImage");
                 if (imageResource != null)
                 {

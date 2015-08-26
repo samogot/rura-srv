@@ -51,9 +51,16 @@ public class Team implements Serializable
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object o)
+    {
+        if (this == o)
+        {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass())
+        {
+            return false;
+        }
 
         Team team = (Team) o;
 
@@ -62,7 +69,8 @@ public class Team implements Serializable
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return teamId.hashCode();
     }
 }

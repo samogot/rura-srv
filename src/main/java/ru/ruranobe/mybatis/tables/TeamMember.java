@@ -65,9 +65,16 @@ public class TeamMember implements Serializable
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object o)
+    {
+        if (this == o)
+        {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass())
+        {
+            return false;
+        }
 
         TeamMember that = (TeamMember) o;
 
@@ -76,7 +83,8 @@ public class TeamMember implements Serializable
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return memberId.hashCode();
     }
 }

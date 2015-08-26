@@ -8,6 +8,8 @@ public interface ChapterImagesMapper
 {
     public List<ChapterImage> getChapterImagesByVolumeId(Integer volumeId);
 
+    public List<ChapterImage> getChapterImagesByChapterId(Integer chapterId);
+
     public void insertChapterImage(ChapterImage chapterImage);
 
     public void deleteChapterImage(int chapterImageId);

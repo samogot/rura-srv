@@ -6,7 +6,11 @@ import java.util.List;
 
 public interface ChaptersMapper
 {
+    public Chapter getChapterById(int chapterId);
+
     public Chapter getChapterByUrl(String url);
+
+    public Chapter getChapterNextPrevByUrl(String url);
 
     public List<Chapter> getChaptersByVolumeId(Integer volumeId);
 

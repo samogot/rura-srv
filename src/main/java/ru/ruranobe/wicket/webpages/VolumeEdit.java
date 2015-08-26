@@ -3,9 +3,6 @@ package ru.ruranobe.wicket.webpages;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -37,12 +34,9 @@ import ru.ruranobe.mybatis.mappers.*;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.mybatis.tables.*;
 import ru.ruranobe.wicket.RuraConstants;
-import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
-import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
 import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -256,7 +250,7 @@ public class VolumeEdit extends AdminLayoutPage
                             String generatedImageId = "image" + Integer.toString(orderNumber);
 
                             WebMarkupContainer visibilityController = new WebMarkupContainer("imageVisibilityController");
-                            AttributeAppender addHref = new AttributeAppender("href", "#"+generatedImageId);
+                            AttributeAppender addHref = new AttributeAppender("href", "#" + generatedImageId);
                             visibilityController.add(addHref);
                             AttributeAppender addAriaControls = new AttributeAppender("aria-controls", generatedImageId);
                             visibilityController.add(addAriaControls);
@@ -267,12 +261,12 @@ public class VolumeEdit extends AdminLayoutPage
                             ExternalResource coloredImage = image.getColoredImage();
                             String url = "";
                             Date date = null;
-                            if (nonColoredImage!=null)
+                            if (nonColoredImage != null)
                             {
                                 url = nonColoredImage.getUrl();
                                 date = nonColoredImage.getUploadedWhen();
                             }
-                            if (coloredImage!= null)
+                            if (coloredImage != null)
                             {
                                 if (Strings.isEmpty(url))
                                 {
@@ -382,8 +376,8 @@ public class VolumeEdit extends AdminLayoutPage
                     final ExternalResource nonColoredImage = image.getNonColoredImage();
 
                     WebMarkupContainer imageNonColoredUrl = new WebMarkupContainer("imageNonColoredUrl");
-                    Label imageNonColoredUploadDate = new Label("imageNonColoredUploadDate","");
-                    Label imageNonColoredFileName = new Label("imageNonColoredFileName","");
+                    Label imageNonColoredUploadDate = new Label("imageNonColoredUploadDate", "");
+                    Label imageNonColoredFileName = new Label("imageNonColoredFileName", "");
                     if (nonColoredImage == null)
                     {
                         imageNonColoredUrl.setVisible(false);
@@ -417,8 +411,8 @@ public class VolumeEdit extends AdminLayoutPage
                     final ExternalResource coloredImage = image.getColoredImage();
 
                     WebMarkupContainer imageColoredUrl = new WebMarkupContainer("imageColoredUrl");
-                    Label imageColoredUploadDate = new Label("imageColoredUploadDate","");
-                    Label imageColoredFileName = new Label("imageColoredFileName","");
+                    Label imageColoredUploadDate = new Label("imageColoredUploadDate", "");
+                    Label imageColoredFileName = new Label("imageColoredFileName", "");
                     if (coloredImage == null)
                     {
                         imageColoredUrl.setVisible(false);
@@ -549,11 +543,11 @@ public class VolumeEdit extends AdminLayoutPage
             updates = updatesVar;
             volume = volumeVar;
 
-            for(Chapter chapter : chapters)
+            for (Chapter chapter : chapters)
             {
                 chapterNameToId.put(chapter.getTitle(), chapter.getChapterId());
             }
-            chapterIdToName=chapterNameToId.inverse();
+            chapterIdToName = chapterNameToId.inverse();
 
             AjaxButton addUpdate = new AjaxButton("addUpdate", this)
             {
@@ -579,7 +573,7 @@ public class VolumeEdit extends AdminLayoutPage
                     int orderNumber = item.getIndex();
                     String generatedUpdateId = "update" + Integer.toString(orderNumber);
                     WebMarkupContainer visibilityController = new WebMarkupContainer("updateVisibilityController");
-                    AttributeAppender addHref = new AttributeAppender("href", "#"+generatedUpdateId);
+                    AttributeAppender addHref = new AttributeAppender("href", "#" + generatedUpdateId);
                     visibilityController.add(addHref);
                     AttributeAppender addAriaControls = new AttributeAppender("aria-controls", generatedUpdateId);
                     visibilityController.add(addAriaControls);
@@ -612,7 +606,7 @@ public class VolumeEdit extends AdminLayoutPage
                     updateDiv.setMarkupId(generatedUpdateId);
                     final Update update = item.getModelObject();
 
-                    HiddenField<Integer> updateId = new HiddenField<Integer>("updateId =", new Model<Integer>()
+                    HiddenField<Integer> updateId = new HiddenField<Integer>("updateId", new Model<Integer>()
                     {
                         @Override
                         public Integer getObject()
@@ -693,7 +687,7 @@ public class VolumeEdit extends AdminLayoutPage
                         @Override
                         public String getObject()
                         {
-                            return update.getShowTime()==null ? null : sdf.format(update.getShowTime());
+                            return update.getShowTime() == null ? null : sdf.format(update.getShowTime());
                         }
 
                         @Override
@@ -815,7 +809,7 @@ public class VolumeEdit extends AdminLayoutPage
 
     private static class ChaptersForm extends Form
     {
-        public ChaptersForm(List <Chapter> chaptersVar, Volume volumeVar)
+        public ChaptersForm(List<Chapter> chaptersVar, Volume volumeVar)
         {
             super("chaptersForm");
 
@@ -846,7 +840,7 @@ public class VolumeEdit extends AdminLayoutPage
                     int orderNumber = item.getIndex();
                     String generatedChapterId = "chapter" + Integer.toString(orderNumber);
                     WebMarkupContainer visibilityController = new WebMarkupContainer("chapterVisibilityController");
-                    AttributeAppender addHref = new AttributeAppender("href", "#"+generatedChapterId);
+                    AttributeAppender addHref = new AttributeAppender("href", "#" + generatedChapterId);
                     visibilityController.add(addHref);
                     AttributeAppender addAriaControls = new AttributeAppender("aria-controls", generatedChapterId);
                     visibilityController.add(addAriaControls);
@@ -854,7 +848,7 @@ public class VolumeEdit extends AdminLayoutPage
                     String name = chapter.getTitle();
                     Label chapterName = new Label("chapterName", name);
                     chapterName.setOutputMarkupId(true);
-                    chapterName.setMarkupId(generatedChapterId+"_name");
+                    chapterName.setMarkupId(generatedChapterId + "_name");
                     visibilityController.add(chapterName);
                     item.add(visibilityController);
                 }
@@ -1109,7 +1103,7 @@ public class VolumeEdit extends AdminLayoutPage
                     int orderNumber = item.getIndex();
                     String generatedParticipantId = "participant" + Integer.toString(orderNumber);
                     WebMarkupContainer visibilityController = new WebMarkupContainer("volumeReleaseActivityVisibilityController");
-                    AttributeAppender addHref = new AttributeAppender("href", "#"+generatedParticipantId);
+                    AttributeAppender addHref = new AttributeAppender("href", "#" + generatedParticipantId);
                     visibilityController.add(addHref);
                     AttributeAppender addAriaControls = new AttributeAppender("aria-controls", generatedParticipantId);
                     visibilityController.add(addAriaControls);
@@ -1117,12 +1111,12 @@ public class VolumeEdit extends AdminLayoutPage
                     String memberName = volumeReleaseActivity.getMemberName();
                     Label volumeReleaseActivityMemberName = new Label("volumeReleaseActivityMemberName", memberName);
                     volumeReleaseActivityMemberName.setOutputMarkupId(true);
-                    volumeReleaseActivityMemberName.setMarkupId(generatedParticipantId+"_name");
+                    volumeReleaseActivityMemberName.setMarkupId(generatedParticipantId + "_name");
                     visibilityController.add(volumeReleaseActivityMemberName);
                     String activityName = volumeReleaseActivity.getActivityName();
                     Label volumeReleaseActivityName = new Label("volumeReleaseActivityName", activityName);
                     volumeReleaseActivityName.setOutputMarkupId(true);
-                    volumeReleaseActivityName.setMarkupId(generatedParticipantId+"_role");
+                    volumeReleaseActivityName.setMarkupId(generatedParticipantId + "_role");
                     visibilityController.add(volumeReleaseActivityName);
                     item.add(visibilityController);
                 }
@@ -1307,9 +1301,9 @@ public class VolumeEdit extends AdminLayoutPage
         }
 
         private final Volume volume;
-        private final BiMap <String, Integer> volumeActivityNameToId = HashBiMap.create();
+        private final BiMap<String, Integer> volumeActivityNameToId = HashBiMap.create();
         //private final Map <Integer,String> volumeActivityIdToName;
-        private final BiMap <String, Integer> teamMemberNameToId = HashBiMap.create();
+        private final BiMap<String, Integer> teamMemberNameToId = HashBiMap.create();
         //private final Map <Integer,String> teamMemberIdToName;
         private final Set<Integer> deletedVolumeReleaseActivities = new HashSet<Integer>();
         private final List<VolumeReleaseActivity> volumeReleaseActivities;
@@ -1387,7 +1381,7 @@ public class VolumeEdit extends AdminLayoutPage
                 @Override
                 public String getObject()
                 {
-                    return volume.getReleaseDate()==null ? null : sdf.format(volume.getReleaseDate());
+                    return volume.getReleaseDate() == null ? null : sdf.format(volume.getReleaseDate());
                 }
 
                 @Override

@@ -24,36 +24,7 @@
                 <h4 class="modal-title" id="loginModalLabel">Вход</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label for="inputLoginModal" class="col-sm-2 control-label">Логин</label>
-
-                        <div class="col-sm-10">
-                            <input type="email" class="form-control" id="inputLoginModal" placeholder="Логин">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="inputPasswordModal" class="col-sm-2 control-label">Пароль</label>
-
-                        <div class="col-sm-10">
-                            <input type="password" class="form-control" id="inputPasswordModal" placeholder="Пароль">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox"> Запомнить пароль
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" class="btn btn-primary">Вход</button>
-                        </div>
-                    </div>
-                </form>
+                <span wicket:id="loginPanel"/>
             </div>
         </div>
     </div>
@@ -76,7 +47,7 @@
                 <div class="secondLogo"></div>
             </div>
             <div class="navbar-form navbar-right">
-                <a href="heiobeatch">
+                <a wicket:id="registerPageLink">
                     <button class="btn btn-white">Регистрация</button>
                 </a>
                 <button class="btn btn-outline" data-toggle="modal" data-target="#loginModal">Вход</button>

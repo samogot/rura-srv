@@ -6,9 +6,10 @@ import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.webpages.VolumePage;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 
-public class Volume implements Serializable, PageRepresentable
+public class Volume extends PageRepresentable implements Serializable
 {
 
     private static final long serialVersionUID = 2L;
@@ -48,7 +49,6 @@ public class Volume implements Serializable, PageRepresentable
     public Volume()
     {
     }
-
 
 
     public Volume(Volume toClone, Integer sequenceNumber)
@@ -104,11 +104,6 @@ public class Volume implements Serializable, PageRepresentable
     public static PageParameters makeUrlParameters(String[] urlParts)
     {
         return new PageParameters().set("project", urlParts[0]).set("volume", urlParts[1]);
-    }
-
-    public PageParameters getFullTextUrlParameters()
-    {
-        return makeUrlParameters(url.split("/")).set("chapter", "text");
     }
 
     public PageParameters getUrlParameters()
@@ -433,8 +428,14 @@ public class Volume implements Serializable, PageRepresentable
     @Override
     public boolean equals(Object o)
     {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+        {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass())
+        {
+            return false;
+        }
 
         Volume volume = (Volume) o;
 
@@ -454,6 +455,7 @@ public class Volume implements Serializable, PageRepresentable
 
     public String getAnnotationParsed()
     {
-        return annotation == null ? null : WikiParser.parseText(annotation);
+        WikiParser wikiParser = new WikiParser(null, null, annotation);
+        return annotation == null ? null : wikiParser.parseWikiText(new ArrayList<String>(), false);
     }
 }

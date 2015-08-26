@@ -4,7 +4,6 @@ import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.tables.ProjectInfo;
 import ru.ruranobe.mybatis.tables.Volume;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 

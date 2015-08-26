@@ -2558,7 +2558,7 @@ table.rc-table-resizing thead > th > a {
 
 .text p {
     margin: 0 0 5px;
-    text-indent: 25px;
+    text-indent: 1em;
 }
 
 .text {
@@ -2854,4 +2854,18 @@ thead.header-copy.affix {
 
 thead.header-copy.affix-bottom {
     visibility: visible;
+}
+img.img-responsive.img-thumbnail {
+    max-width: 700px;
+    max-height: 700px;
+    /* margin-top: 1em; */
+    /* margin-bottom: 1em; */
+}
+
+h3, h4 {
+    text-align: center;
+}
+
+.center {
+    text-align: center;
 }

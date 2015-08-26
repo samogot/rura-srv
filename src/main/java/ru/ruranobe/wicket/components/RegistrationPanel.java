@@ -179,7 +179,7 @@ public class RegistrationPanel extends Panel
                             try
                             {
                                 Email.sendEmail(user.getEmail(), ACTIVATE_EMAIL_SUBJECT,
-                                                String.format(ACTIVATE_EMAIL_TEXT, user.getEmailToken()));
+                                        String.format(ACTIVATE_EMAIL_TEXT, user.getEmailToken()));
                                 usersMapper.updateUser(user);
                             }
                             catch (Exception ex)

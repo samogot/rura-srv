@@ -215,6 +215,30 @@
             <version>3.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava-jdk5</artifactId>
+            <version>13.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wicketstuff</groupId>
+            <artifactId>wicketstuff-restannotations</artifactId>
+            <version>6.18.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wicketstuff</groupId>
+            <artifactId>wicketstuff-restannotations-json</artifactId>
+            <version>6.18.0</version>
+        </dependency>
+
     </dependencies>
     <build>
         <resources>
@@ -292,7 +316,7 @@
                     <wtpversion>${wtp.version}</wtpversion>
                 </configuration>
             </plugin>
-            <!-- Dirty hacks. All hail Google Picassa API. -->
+            <!-- Dirty hacks. All hail Google Picassa API. >
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -305,7 +329,7 @@
                         </resource>
                     </webResources>
                 </configuration>
-            </plugin>
+            </plugin-->
 
 
             <!--This stupid idiot decided it is a good idea to include servlet-api-2.5-20081211 in the war file.
@@ -329,7 +353,7 @@
                             <tasks>
                                 <delete>
                                     <fileset dir="C:\Users\Viktor\new.ruranobe.ru\target\Ruranobe-1.1-SNAPSHOT\WEB-INF\lib" includes="servlet-api-2.5-20081211.jar"/>
-                                    <fileset dir="C:\Program Files\Apache Tomcat\7.0.57\webapps\ROOT\WEB-INF\lib" includes="servlet-api-2.5-20081211.jar"/>
+                                    <fileset dir="C:\Program Files\Apache Tomcat\7.0.63\webapps\ROOT\WEB-INF\lib" includes="servlet-api-2.5-20081211.jar"/>
                                 </delete>
 
                                 <unzip src="C:\Users\Viktor\new.ruranobe.ru\target\Ruranobe-1.1-SNAPSHOT.war"

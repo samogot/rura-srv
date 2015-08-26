@@ -26,7 +26,6 @@ import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.UpdatesSidebarModule;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
-import ru.ruranobe.mybatis.tables.Project;
 
 import java.io.Serializable;
 import java.util.AbstractMap.SimpleEntry;
@@ -73,7 +72,7 @@ public class VolumePage extends SidebarLayoutPage
         add(nextUrl);
 
         ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.
-                getCacheableMapper(session, ExternalResourcesMapper.class);
+                                                                                        getCacheableMapper(session, ExternalResourcesMapper.class);
         ExternalResource volumeCover;
         List<SimpleEntry<String, String>> covers = new ArrayList<SimpleEntry<String, String>>();
         volumeCover = externalResourcesMapperCacheable.getExternalResourceById(volume.getImageOne());
@@ -118,7 +117,7 @@ public class VolumePage extends SidebarLayoutPage
         annotationParsed.setEscapeModelStrings(false);
 
         ExternalLink isbn = new ExternalLink("isbn",
-                                             "http://www.amazon.co.jp/s?search-alias=stripbooks&language=en_JP&field-isbn=" + volume.getIsbn(), volume.getIsbn());
+                "http://www.amazon.co.jp/s?search-alias=stripbooks&language=en_JP&field-isbn=" + volume.getIsbn(), volume.getIsbn());
         isbn.setVisible(volume.getIsbn() != null);
         add(isbn);
 
@@ -151,7 +150,7 @@ public class VolumePage extends SidebarLayoutPage
         }
         else
         {
-            readAllLink = new BookmarkablePageLink("readAllLink", VolumeTextPage.class, volume.getFullTextUrlParameters());
+            readAllLink = new BookmarkablePageLink("readAllLink", Text.class, volume.getUrlParameters());
         }
         add(readAllLink);
 
@@ -166,7 +165,7 @@ public class VolumePage extends SidebarLayoutPage
                 WebMarkupContainer chapterLink;
                 if (chapter.isPublished())
                 {
-                    chapterLink = new BookmarkablePageLink("chapterLink", VolumeTextPage.class, chapter.getUrlParameters());
+                    chapterLink = chapter.makeBookmarkablePageLink("chapterLink");
                 }
                 else
                 {

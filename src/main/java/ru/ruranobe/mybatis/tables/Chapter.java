@@ -1,11 +1,13 @@
 package ru.ruranobe.mybatis.tables;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import ru.ruranobe.wicket.webpages.VolumeTextPage;
+import org.apache.wicket.util.string.Strings;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Chapter implements Serializable, PageRepresentable
+public class Chapter extends PageRepresentable implements Serializable
 {
 
     private static final long serialVersionUID = 1L;
@@ -17,6 +19,14 @@ public class Chapter implements Serializable, PageRepresentable
     private Integer orderNumber;
     private boolean published;
     private boolean nested;
+
+    /* Optional */
+    private Chapter prevChapter;
+    private Chapter nextChapter;
+    private Chapter parentChapter;
+    private List<Chapter> childChapters;
+    private boolean visibleOnPage = false;
+    private Text text;
 
     public Chapter()
     {
@@ -40,7 +50,7 @@ public class Chapter implements Serializable, PageRepresentable
 
     public Class getLinkClass()
     {
-        return VolumeTextPage.class;
+        return ru.ruranobe.wicket.webpages.Text.class;
     }
 
     public PageParameters getUrlParameters()
@@ -122,6 +132,18 @@ public class Chapter implements Serializable, PageRepresentable
         this.url = url;
     }
 
+    public String getUrlPart()
+    {
+        return url.split("/")[2];
+    }
+
+    public void setUrlPart(String urlPart)
+    {
+        String[] parts = this.url.split("/");
+        parts[2] = urlPart;
+        this.url = Strings.join("/", parts);
+    }
+
     public Integer getVolumeId()
     {
         return volumeId;
@@ -131,4 +153,79 @@ public class Chapter implements Serializable, PageRepresentable
     {
         this.volumeId = volumeId;
     }
+
+    public Chapter getPrevChapter()
+    {
+        return prevChapter;
+    }
+
+    public void setPrevChapter(Chapter prevChapter)
+    {
+        this.prevChapter = prevChapter;
+    }
+
+    public Chapter getNextChapter()
+    {
+        return nextChapter;
+    }
+
+    public void setNextChapter(Chapter nextChapter)
+    {
+        this.nextChapter = nextChapter;
+    }
+
+    public Chapter getParentChapter()
+    {
+        return parentChapter;
+    }
+
+    public void setParentChapter(Chapter parentChapter)
+    {
+        this.parentChapter = parentChapter;
+    }
+
+    public List<Chapter> getChildChapters()
+    {
+        return childChapters;
+    }
+
+    public void setChildChapters(List<Chapter> childChapters)
+    {
+        this.childChapters = childChapters;
+    }
+
+    public void addChildChapter(Chapter chapter)
+    {
+        if (this.childChapters == null)
+        {
+            this.childChapters = new ArrayList<Chapter>();
+        }
+        this.childChapters.add(chapter);
+    }
+
+    public boolean hasChildChapters()
+    {
+        return this.childChapters != null && !this.childChapters.isEmpty();
+    }
+
+    public boolean isVisibleOnPage()
+    {
+        return visibleOnPage;
+    }
+
+    public void setVisibleOnPage(boolean visibleOnPage)
+    {
+        this.visibleOnPage = visibleOnPage;
+    }
+
+    public Text getText()
+    {
+        return text;
+    }
+
+    public void setText(Text text)
+    {
+        this.text = text;
+    }
+
 }

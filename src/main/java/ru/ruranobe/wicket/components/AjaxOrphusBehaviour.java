@@ -40,7 +40,7 @@ public class AjaxOrphusBehaviour extends AjaxEventBehavior
 
         attributes.getAjaxCallListeners().add(listener);
         attributes.getDynamicExtraParameters()
-                .add("return getOrphusParameters();");
+                  .add("return getOrphusParameters();");
         attributes.setAllowDefault(true);
     }
 
@@ -49,11 +49,11 @@ public class AjaxOrphusBehaviour extends AjaxEventBehavior
     {
         Request request = RequestCycle.get().getRequest();
         String originalText = request.getRequestParameters()
-                .getParameterValue(ORPHUS_COMMENT_ORIGINAL_TEXT).toString("");
+                                     .getParameterValue(ORPHUS_COMMENT_ORIGINAL_TEXT).toString("");
         String startOffset = request.getRequestParameters()
-                .getParameterValue(ORPHUS_COMMENT_START_OFFSET).toString("");
+                                    .getParameterValue(ORPHUS_COMMENT_START_OFFSET).toString("");
         String paragraph = request.getRequestParameters()
-                .getParameterValue(ORPHUS_COMMENT_PARAGRAPH).toString("");
+                                  .getParameterValue(ORPHUS_COMMENT_PARAGRAPH).toString("");
         ajaxOrphusMessageDialog.show(target, originalText, startOffset, paragraph);
     }
 }

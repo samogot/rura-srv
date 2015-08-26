@@ -4,19 +4,9 @@ import com.google.common.collect.ImmutableMap;
 import com.mysql.jdbc.StringUtils;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.wicket.behavior.AbstractAjaxBehavior;
-import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
-import org.apache.wicket.protocol.http.servlet.ServletWebResponse;
-import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
-import org.apache.wicket.request.http.WebResponse;
-import org.apache.wicket.request.resource.ByteArrayResource;
-import org.apache.wicket.request.resource.IResource;
-import org.json.*;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
@@ -32,9 +22,15 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.ByteArrayResource;
+import org.apache.wicket.request.resource.IResource;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import ru.ruranobe.config.ApplicationContext;
-import ru.ruranobe.config.ConfigurationManager;
 import ru.ruranobe.engine.Webpage;
 import ru.ruranobe.engine.image.ImageServices;
 import ru.ruranobe.engine.image.RuraImage;
@@ -48,15 +44,10 @@ import ru.ruranobe.mybatis.tables.Project;
 import ru.ruranobe.mybatis.tables.Volume;
 import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
-import sun.misc.IOUtils;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -321,7 +312,7 @@ public class ProjectEdit extends AdminLayoutPage
                         @Override
                         public String getObject()
                         {
-                            return volume.getReleaseDate()==null ? null : sdf.format(volume.getReleaseDate());
+                            return volume.getReleaseDate() == null ? null : sdf.format(volume.getReleaseDate());
                         }
 
                         @Override
@@ -364,7 +355,7 @@ public class ProjectEdit extends AdminLayoutPage
                         {
                             volume.setVolumeType(value);
                         }
-                    }, Arrays.asList("Ранобэ","Побочные истории","Авторские додзинси","Другое"));
+                    }, Arrays.asList("Ранобэ", "Побочные истории", "Авторские додзинси", "Другое"));
                     DropDownChoice<String> volumeStatus = new DropDownChoice<String>("volumeStatus", new Model<String>()
                     {
                         @Override
@@ -378,7 +369,7 @@ public class ProjectEdit extends AdminLayoutPage
                         {
                             volume.setVolumeStatus(RuraConstants.VOLUME_STATUS_FULL_TEXT_TO_STATUS.get(value));
                         }
-                    }, Arrays.asList("Заброшенный сторонний перевод","Активный сторонний перевод","Завершенный сторонний перевод","Отсутствует анлейт","Заморожен","Приостановлен","Очередь перевода","Перевод в онгоинге","Перевод","Редактура","Не оформлен","Завершен"));
+                    }, Arrays.asList("Заброшенный сторонний перевод", "Активный сторонний перевод", "Завершенный сторонний перевод", "Отсутствует анлейт", "Заморожен", "Приостановлен", "Очередь перевода", "Перевод в онгоинге", "Перевод", "Редактура", "Не оформлен", "Завершен"));
                     TextArea<String> volAnnotation = new TextArea<String>("volAnnotation", new Model<String>()
                     {
                         @Override
@@ -605,7 +596,7 @@ public class ProjectEdit extends AdminLayoutPage
         {
             super("volumesForm");
             this.volumes = volumes;
-            for(Volume volume : volumes)
+            for (Volume volume : volumes)
             {
                 if (volume.getSequenceNumber() != null
                     && volume.getSequenceNumber() > maxSequenceNumber)

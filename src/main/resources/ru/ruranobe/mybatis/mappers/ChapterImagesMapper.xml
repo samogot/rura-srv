@@ -39,6 +39,33 @@
         WHERE volume_id = #{volumeId}
     </select>
 
+    <select id="getChapterImagesByChapterId" parameterType="int" resultMap="chapterImageMap">
+        SELECT
+        chapter_id,
+        volume_id,
+
+        order_number,
+        adult,
+
+        non_colored.user_id       AS userId1,
+        non_colored.mime_type     AS mimeType1,
+        non_colored.url           AS url1,
+        non_colored.title         AS title1,
+        non_colored.uploaded_when AS uploadedWhen1,
+
+        colored.user_id           AS userId2,
+        colored.mime_type         AS mimeType2,
+        colored.url               AS url2,
+        colored.title             AS title2,
+        colored.uploaded_when     AS uploadedWhen2
+        FROM chapter_images
+        LEFT JOIN external_resources non_colored
+        ON non_colored.resource_id = chapter_images.non_colored_image_id
+        LEFT JOIN external_resources colored
+        ON colored.resource_id = chapter_images.colored_image_id
+        WHERE chapter_id = #{chapterId}
+    </select>
+
     <insert id="insertChapterImage" parameterType="ru.ruranobe.mybatis.tables.ChapterImage" keyProperty="chapterImageId" useGeneratedKeys="true">
         insert into chapter_images (volume_id, non_colored_image_id, colored_image_id, order_number, adult)
         values (#{volumeId}, #{nonColoredImageId}, #{coloredImageId}, #{orderNumber}, #{adult})

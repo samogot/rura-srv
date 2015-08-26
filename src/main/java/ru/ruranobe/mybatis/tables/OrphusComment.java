@@ -7,9 +7,9 @@ public class OrphusComment implements Serializable
 {
 
     private static final long serialVersionUID = 2L;
-    private int chapterId;
-    private int paragraph;
-    private int startOffset;
+    private Integer chapterId;
+    private Integer paragraph;
+    private Integer startOffset;
     private String originalText;
     private String replacementText;
     private String optionalComment;
@@ -21,7 +21,7 @@ public class OrphusComment implements Serializable
     {
     }
 
-    public OrphusComment(int chapterId, int parapraph, int startOffset,
+    public OrphusComment(Integer chapterId, Integer parapraph, Integer startOffset,
                          String originalText, String replacementText, String optionalComment, Date createdWhen)
     {
         this.chapterId = chapterId;
@@ -33,12 +33,12 @@ public class OrphusComment implements Serializable
         this.createdWhen = createdWhen;
     }
 
-    public int getChapterId()
+    public Integer getChapterId()
     {
         return chapterId;
     }
 
-    public void setChapterId(int chapterId)
+    public void setChapterId(Integer chapterId)
     {
         this.chapterId = chapterId;
     }
@@ -53,12 +53,12 @@ public class OrphusComment implements Serializable
         this.originalText = originalText;
     }
 
-    public int getParagraph()
+    public Integer getParagraph()
     {
         return paragraph;
     }
 
-    public void setParagraph(int paragraph)
+    public void setParagraph(Integer paragraph)
     {
         this.paragraph = paragraph;
     }
@@ -83,12 +83,12 @@ public class OrphusComment implements Serializable
         this.optionalComment = optionalComment;
     }
 
-    public int getStartOffset()
+    public Integer getStartOffset()
     {
         return startOffset;
     }
 
-    public void setStartOffset(int startOffset)
+    public void setStartOffset(Integer startOffset)
     {
         this.startOffset = startOffset;
     }

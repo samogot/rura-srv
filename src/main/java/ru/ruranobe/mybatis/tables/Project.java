@@ -6,8 +6,9 @@ import ru.ruranobe.wicket.webpages.ProjectPage;
 import ru.ruranobe.wicket.webpages.VolumePage;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
-public class Project implements Serializable, PageRepresentable
+public class Project extends PageRepresentable implements Serializable
 {
 
     private static final long serialVersionUID = 3L;
@@ -260,18 +261,27 @@ public class Project implements Serializable, PageRepresentable
 
     public String getAnnotationParsed()
     {
-        return annotation == null ? null : WikiParser.parseText(annotation);
+        WikiParser wikiParser = new WikiParser(null, null, annotation);
+        return annotation == null ? null : wikiParser.parseWikiText(new ArrayList<String>(), false);
     }
 
     public String getFranchiseParsed()
     {
-        return franchise == null ? null : WikiParser.parseText(franchise);
+        WikiParser wikiParser = new WikiParser(null, null, franchise);
+        return franchise == null ? null : wikiParser.parseWikiText(new ArrayList<String>(), false);
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object o)
+    {
+        if (this == o)
+        {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass())
+        {
+            return false;
+        }
 
         Project project = (Project) o;
 
@@ -280,7 +290,8 @@ public class Project implements Serializable, PageRepresentable
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return projectId.hashCode();
     }
 }

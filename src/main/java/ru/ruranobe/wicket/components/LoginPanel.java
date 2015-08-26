@@ -14,13 +14,6 @@ import ru.ruranobe.wicket.LoginSession;
 
 public class LoginPanel extends Panel
 {
-
-    private static final String LOGIN_FORM = "loginForm";
-    private static final long serialVersionUID = 1L;
-    private boolean rememberMe = true;
-    private String password;
-    private String username;
-
     public LoginPanel(final String id)
     {
         super(id);
@@ -145,7 +138,7 @@ public class LoginPanel extends Panel
         public final void onSubmit()
         {
             IAuthenticationStrategy strategy = getApplication().getSecuritySettings()
-                    .getAuthenticationStrategy();
+                                                               .getAuthenticationStrategy();
 
             if (login(getUsername(), getPassword()))
             {
@@ -167,4 +160,10 @@ public class LoginPanel extends Panel
             }
         }
     }
+
+    private boolean rememberMe = true;
+    private String password;
+    private String username;
+    private static final String LOGIN_FORM = "loginForm";
+    private static final long serialVersionUID = 1L;
 }
