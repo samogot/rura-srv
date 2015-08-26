@@ -22,14 +22,15 @@ import ru.ruranobe.mybatis.tables.Volume;
 import ru.ruranobe.wicket.components.CommentsPanel;
 import ru.ruranobe.wicket.components.ContentsHolder;
 import ru.ruranobe.wicket.components.sidebar.ContentsModule;
-import ru.ruranobe.wicket.webpages.base.TextLayoutPage;
+import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Text extends TextLayoutPage
+public class Text extends SidebarLayoutPage
 {
+    public static final String DELIMITER = ",;,";
 
     public Text(PageParameters parameters)
     {
