@@ -82,7 +82,7 @@ $('#seriesselect').sortable({ // включаем jquery-ui sortable
 
     var j= $('#seriesselect .list-group-item').length; // id каждого элемента в пункте "Главы"
 
-    $('#btn-series-add').click(function(){ // обработка кнопки добавления новой серии
+/*$('#btn-series-add').click(function(){ // обработка кнопки добавления новой серии
         j++;
         var newSeries = '<a data-toggle="collapse" data-parent="#seriesform" href="#series' + j + '" aria-expanded="true" aria-controls="series' + j + '" class="list-group-item" >'+
         '<i class="fa fa-ellipsis-v move"></i>'+
@@ -159,7 +159,7 @@ $('#seriesselect').sortable({ // включаем jquery-ui sortable
                 $('#updateform').children('.panel').find('.update_series').html(OptionsForSelect);
     });
 
-
+ */
     $('#seriesform').on('keyup', '.name-input', function(){
         var elem = $(this);  // засовываем этот объект в переменную (на всякий случай)
         var id = $('.series-data.in').attr('id'); // получаем id серии
@@ -215,7 +215,7 @@ $('#seriesselect').sortable({ // включаем jquery-ui sortable
             }
         });
     }
-    $('.btn_add').click(function(){
+/*$('.btn_add').click(function(){
         var type = $(this).parent().data('type');
         var num;
         switch (type) {
@@ -312,7 +312,7 @@ $('#seriesselect').sortable({ // включаем jquery-ui sortable
         if (type == 'teammembers'){
             updateTeamsSelect()
         }
-    });
+ });*/
     $('[role="tablist"').on('keyup', '.name-input', function(){
         var elem = $(this);  // засовываем этот объект в переменную (на всякий случай)
         var type = elem.closest('[role="tablist"').attr('id').slice(0,-4);
@@ -397,6 +397,25 @@ $('#seriesselect').sortable({ // включаем jquery-ui sortable
         });
     });
     // ---------- typeahead end --------------
+
+
+$('#updateProjects').click(
+    function () {
+        var projects = [];
+        $.map($('#seriesform').find('div.row.collapse.series-data'), function (el) {
+            projects.push(
+                {
+                    projectId: $(el).children('input[type=hidden][id^="series"][id$="id"]').val(),
+                    projectOrderNumber: $(el).children('input[type=hidden][id^="series"][id$="order"]').val(),
+                    projectDeleted: $(el).children('input[type=hidden][id^="series"][id$="delete"]').val(),
+                    projectUrl: $(el).find('input.form-control.url-input').val(),
+                    projectName: $(el).find('input.form-control.name-input').val()
+                }
+            );
+        });
+        Wicket.Ajax.get({"u": projectsCallbackUrl, "ep": {"projects": JSON.stringify(projects)}});
+    }
+);
 
 
 /*  СЕРИИ БАННЕРЫ */

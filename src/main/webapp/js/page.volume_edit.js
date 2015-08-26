@@ -28,7 +28,7 @@ $('#participantselect').on("sortupdate", function () { // для списка у
 
 var i = 0; // id каждого элемента в пункте участников перевода
 
-$('#btn-participant-add').click(function () { // обработка кнопки добавления новых участников
+/*$('#btn-participant-add').click(function () { // обработка кнопки добавления новых участников
     i++;
     var newParticipant = '<a data-toggle="collapse" data-parent="#participantform" href="#participant' + i + '" aria-expanded="true" aria-controls="participant' + i + '" class="list-group-item" >' + '<i class="fa fa-ellipsis-v move"></i>' + '<span class="hidden-sm hidden-xs"  id="participant' + i + '_name">New</span> - <span class="hidden-sm hidden-xs" id="participant' + i + '_role">Role</span>' + '</a>';
     var newPanel = '<div class="panel">' +
@@ -70,7 +70,7 @@ $('#btn-participant-add').click(function () { // обработка кнопки
         var id = $('.participant-data.in').attr('id');
         $('#' + id + '_name').html(suggestion);
     });
-});
+ });*/
 
 // ---------- typeahead start ----------
 var substringMatcher = function (strs) {
@@ -513,7 +513,7 @@ $('#chapterselect').children('a').each(function () {
     OptionsForSelect = OptionsForSelect + '<option id="select_chapter' + u + '">' + $(this).children('span').text() + ' (' + u + ')</option>';
 });
 
-$('#btn-update-add').click(function () { // обработка кнопки добавления нового обновления
+/*$('#btn-update-add').click(function () { // обработка кнопки добавления нового обновления
     v++;
     var nowDate = new Date();
     var nowMonth = ('0' + (nowDate.getMonth() + 1)).slice(-2);
@@ -559,7 +559,7 @@ $('#btn-update-add').click(function () { // обработка кнопки до
         locale: 'ru',
         useCurrent: 'hour'
     });
-});
+ });*/
 
 $('#updateform').children('.panel').each(function () {
     v++; // считаем кажую панель (читай кажый объект)

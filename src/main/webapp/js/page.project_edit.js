@@ -134,7 +134,7 @@ $('#btn-update-delete').click(function () {
 });
 
 
-$('#btn-update-add').click(function () {
+/*$('#btn-update-add').click(function () {
     volumelength++;
     var newVolume = '';
     newVolume += '<tr class="FormAjax FormUpdate" data-parent="#volume" data-type="volume_n' + volumelength + '">';
@@ -198,7 +198,7 @@ $('#btn-update-add').click(function () {
     $('.volumetable tr').removeClass('info');
     $("#" + volumelength + "url").parent().parent().addClass('info');
     checkCheck();
-});
+ });*/
 
 
 $('#banner').fileupload({
@@ -209,13 +209,13 @@ $('#banner').fileupload({
     formData: {
         id: $('#banner_id').val()
     },
-    acceptFileTypes: /(\.|\/)(jpe?g|png)$/i,
+    acceptFileTypes: /(\.|\/)(jpe?g|png|jpg)$/i,
     previewMaxHeight: 73,
     previewMaxWidth: 220,
-    maxNumberOfFiles: 1
+    maxNumberOfFiles: 1,
 }).on('fileuploadadd', function (e, data) {
     $('#imageform .progress').collapse('show');
-    //$('#banner').attr('src','loading.gif');
+    $('#banner').attr('src', 'loading.gif');
     data.submit();
 }).on('fileuploadprocessalways', function (e, data) {
     var index = data.index,
