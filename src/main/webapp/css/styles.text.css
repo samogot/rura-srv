@@ -455,17 +455,17 @@ div.mistake .sendText {
 
 .controlText div.options-button .hint {
     width: 200px;
-    height: 240px;
+    height: 310px;
     background: #F1F1F1;
     border-top: 5px solid #8FD5FE;
     border-bottom: 5px solid #8FD5FE;
     color: #4E4E4E;
-    top: -190px;
+    top: -250px;
 }
 
 .controlText div.options-button .hint .miniicon {
     background: url('../img/actions/textControl3.png') left no-repeat;
-    margin-top: 180px;
+    margin-top: 240px;
 }
 
 .controlText div.options-button .hint .type,
@@ -620,4 +620,8 @@ h3, h4 {
 
 .center {
     text-align: center;
+}
+
+body.night .daynight .bootstrap-switch .bootstrap-switch-label {
+    background: #282828;
 }

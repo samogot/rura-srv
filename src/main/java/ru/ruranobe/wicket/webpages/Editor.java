@@ -23,14 +23,16 @@ import ru.ruranobe.mybatis.tables.Chapter;
 import ru.ruranobe.mybatis.tables.ChapterImage;
 import ru.ruranobe.mybatis.tables.ExternalResource;
 import ru.ruranobe.mybatis.tables.TextHistory;
-import ru.ruranobe.wicket.webpages.base.TextLayoutPage;
+import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Editor extends TextLayoutPage
+public class Editor extends SidebarLayoutPage
 {
+    public static final String DELIMITER = ",;,";
+
     public Editor(PageParameters parameters)
     {
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
