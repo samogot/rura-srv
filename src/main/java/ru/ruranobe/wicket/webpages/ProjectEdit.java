@@ -43,6 +43,8 @@ import ru.ruranobe.mybatis.tables.ExternalResource;
 import ru.ruranobe.mybatis.tables.Project;
 import ru.ruranobe.mybatis.tables.Volume;
 import ru.ruranobe.wicket.RuraConstants;
+import ru.ruranobe.wicket.components.ContentsHolder;
+import ru.ruranobe.wicket.components.sidebar.ContentsModule;
 import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
 
 import javax.servlet.http.HttpServletRequest;
@@ -585,6 +587,14 @@ public class ProjectEdit extends AdminLayoutPage
         add(new SubVolumesEditAjaxBehavior());
         add(new SubProjectsEditAjaxBehavior());
         add(new ImageUploadAjaxBehaviour());
+
+
+        List<ContentsHolder> contentsHolders = new ArrayList<ContentsHolder>();
+        contentsHolders.add(new ContentsHolder("#seriesHead", "Серии"));
+        contentsHolders.add(new ContentsHolder("#typesHead", "Виды"));
+        contentsHolders.add(new ContentsHolder("#teamsHead", "Команды"));
+        contentsHolders.add(new ContentsHolder("#membersHead", "Члены команды"));
+        sidebarModules.add(new ContentsModule("sidebarModule", contentsHolders));
     }
 
     private class VolumesForm extends Form<List<Volume>>

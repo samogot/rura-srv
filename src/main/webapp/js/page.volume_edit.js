@@ -289,7 +289,7 @@ $('#podglavaModalSave').click(function () {
 $('#btn-chapter-add').click(function () {
     addChapter();
     reinitAffix()
-}) // обработка кнопки добавления новой главы
+}); // обработка кнопки добавления новой главы
 function addChapter(name, podglava, num) {
     var name = name ? name : "Глава";
     var podglava = podglava ? 'checked=""' : '';

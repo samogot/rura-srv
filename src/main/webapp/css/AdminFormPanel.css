@@ -1,0 +1,32 @@
+ul.feedbackPanel {
+    position: absolute;
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.feedbackPanel li {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    opacity: .9;
+    cursor: pointer;
+}
+
+.feedbackPanelSUCCESS {
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+    color: #3c763d;
+}
+
+.feedbackPanelERROR {
+    background-color: #f2dede;
+    border-color: #ebccd1;
+    color: #a94442;
+}
+
+.feedbackPanel li:hover {
+    opacity: .3;
+}

@@ -7,12 +7,19 @@ import java.io.Serializable;
  */
 public class TeamMember implements Serializable
 {
-    private static final long serialVersionUID = 1L;
-    private Integer memberId;
-    private Integer userId;
-    private Integer teamId;
-    private String nikname;
-    private boolean active;
+    public Team getTeam()
+    {
+        return team;
+    }
+
+    public void setTeam(Team team)
+    {
+        this.team = team;
+        if (team != null)
+        {
+            this.teamId = team.getTeamId();
+        }
+    }
 
     public Integer getMemberId()
     {
@@ -64,27 +71,35 @@ public class TeamMember implements Serializable
         this.active = active;
     }
 
-    @Override
-    public boolean equals(Object o)
-    {
-        if (this == o)
+    /*    @Override
+        public boolean equals(Object o)
         {
-            return true;
+            if (this == o)
+            {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass())
+            {
+                return false;
+            }
+
+            TeamMember that = (TeamMember) o;
+
+            return memberId.equals(that.memberId);
+
         }
-        if (o == null || getClass() != o.getClass())
+
+        @Override
+        public int hashCode()
         {
-            return false;
-        }
-
-        TeamMember that = (TeamMember) o;
-
-        return memberId.equals(that.memberId);
-
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return memberId.hashCode();
-    }
+            return memberId.hashCode();
+        }*/
+    private static final long serialVersionUID = 1L;
+    private Integer memberId;
+    private Integer userId;
+    private Integer teamId;
+    private String nikname;
+    private boolean active;
+    //Optional
+    private Team team;
 }

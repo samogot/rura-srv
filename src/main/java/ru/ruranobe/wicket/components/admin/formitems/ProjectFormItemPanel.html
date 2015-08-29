@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:panel>
+    <h3>Настройка серии</h3>
+
+    <div class="form-group">
+        <label wicket:for="url">Ссылка</label>
+        <input wicket:id="url" class="form-control url-input" type="text"/>
+
+        <label wicket:for="title">Заголовок</label>
+        <input wicket:id="title" class="form-control name-input" type="text"/>
+
+        <div class="checkbox">
+            <label><input wicket:id="projectHidden" type="checkbox"> Проект скрыт</label>
+        </div>
+
+        <div class="checkbox">
+            <label><input wicket:id="bannerHidden" type="checkbox"> Баннер скрыт</label>
+        </div>
+
+        <div class="form-group banner-upload" style="position: relative;">
+            <label for="banner">Изображение</label>
+            <input type="file" name="banner" class="fileupload" style="height:110px">
+            <input type="hidden" id="series1_banner_url">
+            <img src="http://ruranobe.ru/w/images/6/6b/sidebanner-aw.png" height="73"
+                 width="220" class="banner-upload" id="series1_banner_img">
+        </div>
+    </div>
+</wicket:panel>
+</body>
+</html>

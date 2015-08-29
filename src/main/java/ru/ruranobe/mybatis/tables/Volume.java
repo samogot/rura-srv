@@ -425,7 +425,7 @@ public class Volume extends PageRepresentable implements Serializable
                || volumeStatus.equals(RuraConstants.VOLUME_STATUS_EXTERNAL_DROPPED);
     }
 
-    @Override
+ /*   @Override
     public boolean equals(Object o)
     {
         if (this == o)
@@ -446,7 +446,7 @@ public class Volume extends PageRepresentable implements Serializable
     public int hashCode()
     {
         return volumeId != null ? volumeId.hashCode() : 0;
-    }
+    }*/
 
     public String getFullStatus()
     {

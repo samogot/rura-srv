@@ -24,9 +24,9 @@ public class Project extends PageRepresentable implements Serializable
     private String author;
     private String illustrator;
     private Integer orderNumber;
-    private Boolean bannerHidden;
-    private Boolean projectHidden;
-    private Boolean onevolume;
+    private boolean bannerHidden;
+    private boolean projectHidden;
+    private boolean onevolume;
     private String franchise;
     private String annotation;
 
@@ -271,7 +271,7 @@ public class Project extends PageRepresentable implements Serializable
         return franchise == null ? null : wikiParser.parseWikiText(new ArrayList<String>(), false);
     }
 
-    @Override
+    /*@Override
     public boolean equals(Object o)
     {
         if (this == o)
@@ -293,5 +293,5 @@ public class Project extends PageRepresentable implements Serializable
     public int hashCode()
     {
         return projectId.hashCode();
-    }
+    }*/
 }

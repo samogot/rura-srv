@@ -3,13 +3,20 @@ package ru.ruranobe.wicket;
 import net.ftlines.wicketsource.WicketSource;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
+import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.core.request.mapper.MountedMapper;
 import org.apache.wicket.core.util.file.WebApplicationPath;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebResponse;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.request.mapper.info.PageComponentInfo;
+import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.crypt.CachingSunJceCryptFactory;
@@ -79,7 +86,7 @@ public class WicketApplication extends AuthenticatedWebApplication
         mount(new MountedMapper("/a/${project}/${volume}/${chapter}", Editor.class));
         mount(new MountedMapper("/a/${project}/${volume}", VolumeEdit.class));
         mount(new MountedMapper("/a/${project}", ProjectEdit.class));
-        mount(new MountedMapper("/a", GlobalEdit.class));
+        getRootRequestMapperAsCompound().add(new NoVersionMapper("/a", GlobalEdit.class));
 
         mountResource("/bookmarks", new ResourceReference("bookmarksResource")
         {
@@ -120,5 +127,37 @@ public class WicketApplication extends AuthenticatedWebApplication
     protected Class<? extends WebPage> getSignInPageClass()
     {
         return LoginPage.class;
+    }
+
+    private static class NoVersionMapper extends MountedMapper
+    {
+        public NoVersionMapper(final Class<? extends IRequestablePage> pageClass)
+        {
+            this("/", pageClass);
+        }
+
+        public NoVersionMapper(String mountPath, final Class<? extends IRequestablePage> pageClass)
+        {
+            super(mountPath, pageClass, new PageParametersEncoder());
+        }
+
+        @Override
+        protected void encodePageComponentInfo(Url url, PageComponentInfo info)
+        {
+            //Does nothing
+        }
+
+        @Override
+        public Url mapHandler(IRequestHandler requestHandler)
+        {
+            if (requestHandler instanceof ListenerInterfaceRequestHandler || requestHandler instanceof BookmarkableListenerInterfaceRequestHandler)
+            {
+                return null;
+            }
+            else
+            {
+                return super.mapHandler(requestHandler);
+            }
+        }
     }
 }

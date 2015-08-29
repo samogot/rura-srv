@@ -8,7 +8,7 @@ public class VolumeActivity implements Serializable
     private static final long serialVersionUID = 2L;
     private Integer activityId;
     private String activityName;
-    private String activityType;
+    private String activityType = "text";
 
     public VolumeActivity()
     {
@@ -49,7 +49,7 @@ public class VolumeActivity implements Serializable
         this.activityType = activityType;
     }
 
-    @Override
+  /*  @Override
     public boolean equals(Object o)
     {
         if (this == o)
@@ -71,5 +71,5 @@ public class VolumeActivity implements Serializable
     public int hashCode()
     {
         return activityId.hashCode();
-    }
+    }*/
 }

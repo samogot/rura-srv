@@ -1,12 +1,13 @@
 package ru.ruranobe.wicket.components;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by samogot on 12.05.15.
  */
-public class ContentsHolder
+public class ContentsHolder implements Serializable
 {
     private String url;
     private String title;

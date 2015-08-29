@@ -14,6 +14,13 @@ import java.util.List;
  */
 public class ContentsModule extends SidebarModuleBase
 {
+//    @Override
+//    public void renderHead(IHeaderResponse response)
+//    {
+//        response.render(CssHeaderItem.forReference(new PackageResourceReference(this.getClass(), "ContentsModule.css")));
+//        response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(this.getClass(), "../ReinitAffix.js")));
+//        response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(this.getClass(), "ContentsModule.js")));
+//    }
 
     public ContentsModule(String id, List<ContentsHolder> contents)
     {

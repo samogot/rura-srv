@@ -1,86 +1,81 @@
-
 /* SAVE */
-$('.save').click(function(){
+$('.save').click(function () {
     var type = $(this).parent().data('type');
     var returnInfo;
     var info = [];
-    switch (type){
+    switch (type) {
         case 'series':
-            $.each($('#seriesform .panel > div'), function(indx, el)
-                {
+            $.each($('#seriesform .panel > div'), function (indx, el) {
                     var elID = $(this).attr('id');
                     info.push(
-                            {projectId:$(el).children('#'+elID+"_id").val(),
-                             orderNumber:$(el).children('#'+elID+"_order").val(),
-                             projectTitle:$(el).find('#'+elID+'_name_input').val(),
-                                projectUrl: $(el).find('#' + elID + '_url_input').val(),
-                                projectHideBanner: $(el).find('#' + elID + '_hidebanner').prop('checked'),
-                                projectHideProject: $(el).find('#' + elID + '_hideproject').prop('checked')
-                            }
+                        {
+                            projectId: $(el).children('#' + elID + "_id").val(),
+                            orderNumber: $(el).children('#' + elID + "_order").val(),
+                            projectTitle: $(el).find('#' + elID + '_name_input').val(),
+                            projectUrl: $(el).find('#' + elID + '_url_input').val(),
+                            projectHideBanner: $(el).find('#' + elID + '_hidebanner').prop('checked'),
+                            projectHideProject: $(el).find('#' + elID + '_hideproject').prop('checked')
+                        }
                     );
                 }
             );
             break;
         case 'activities':
-            $.each($('#activitiesform .panel > div'), function(indx, el)
-                {
+            $.each($('#activitiesform .panel > div'), function (indx, el) {
                     var elID = $(this).attr('id');
                     info.push(
-                            {activitiesId:$(el).children('#'+elID+"_id").val(),
-                             orderNumber:$(el).children('#'+elID+"_order").val(),
-                             activitiesTitle:$(el).find('#'+elID+'_name_input').val(),
-                             activitiesType:$(el).find('#'+elID+'_type_input').val()}
+                        {
+                            activitiesId: $(el).children('#' + elID + "_id").val(),
+                            orderNumber: $(el).children('#' + elID + "_order").val(),
+                            activitiesTitle: $(el).find('#' + elID + '_name_input').val(),
+                            activitiesType: $(el).find('#' + elID + '_type_input').val()
+                        }
                     );
                 }
             );
             break;
         case 'teams':
-            $.each($('#teamsform .panel > div'), function(indx, el)
-                {
+            $.each($('#teamsform .panel > div'), function (indx, el) {
                     var elID = $(this).attr('id');
                     info.push(
-                            {teamsId:$(el).children('#'+elID+"_id").val(),
-                             orderNumber:$(el).children('#'+elID+"_order").val(),
-                             teamsTitle:$(el).find('#'+elID+'_name_input').val(),
-                             teamsUrl:$(el).find('#'+elID+'_url_input').val()}
+                        {
+                            teamsId: $(el).children('#' + elID + "_id").val(),
+                            orderNumber: $(el).children('#' + elID + "_order").val(),
+                            teamsTitle: $(el).find('#' + elID + '_name_input').val(),
+                            teamsUrl: $(el).find('#' + elID + '_url_input').val()
+                        }
                     );
                 }
             );
             break;
         case 'teammembers':
-            $.each($('#teammembersform .panel > div'), function(indx, el)
-                {
+            $.each($('#teammembersform .panel > div'), function (indx, el) {
                     var elID = $(this).attr('id');
                     info.push(
-                            {teammemberId:$(el).children('#'+elID+"_id").val(),
-                             orderNumber:$(el).children('#'+elID+"_order").val(),
-                             teammemberName:$(el).find('#'+elID+'_name_input').val(),
-                             teammemberTeam:$(el).find('#'+elID+'_team_input').val(),
-                                teammemberActive: $(el).find('#' + elID + '_checkbox_input').prop('checked')
-                            }
+                        {
+                            teammemberId: $(el).children('#' + elID + "_id").val(),
+                            orderNumber: $(el).children('#' + elID + "_order").val(),
+                            teammemberName: $(el).find('#' + elID + '_name_input').val(),
+                            teammemberTeam: $(el).find('#' + elID + '_team_input').val(),
+                            teammemberActive: $(el).find('#' + elID + '_checkbox_input').prop('checked')
+                        }
                     );
                 }
             );
             break;
-   }
-   returnInfo = {'type': type, 'info': info};
-   alert(JSON.stringify(returnInfo));
+    }
+    returnInfo = {'type': type, 'info': info};
+    alert(JSON.stringify(returnInfo));
 })
 
 
+$('.list-group.select.sortable').sortable({ // включаем jquery-ui sortable
+    items: "a:not(:first-child.heading)", // запрещаем передвигать что либо выше первого heading (не может быть картинок вне глав)
+    handle: '.move' // задаем маркер перетягивания
+});
 
 
-
-
-
-
-$('#seriesselect').sortable({ // включаем jquery-ui sortable
-        items: "a:not(:first-child.heading)", // запрещаем передвигать что либо выше первого heading (не может быть картинок вне глав)
-        handle:'.move' // задаем маркер перетягивания
-    });
-
-
-    var j= $('#seriesselect .list-group-item').length; // id каждого элемента в пункте "Главы"
+var j = $('#seriesselect .list-group-item').length; // id каждого элемента в пункте "Главы"
 
 /*$('#btn-series-add').click(function(){ // обработка кнопки добавления новой серии
         j++;
@@ -160,61 +155,61 @@ $('#seriesselect').sortable({ // включаем jquery-ui sortable
     });
 
  */
-    $('#seriesform').on('keyup', '.name-input', function(){
-        var elem = $(this);  // засовываем этот объект в переменную (на всякий случай)
-        var id = $('.series-data.in').attr('id'); // получаем id серии
-        $('#' + id + '_name').html(elem.val()); // при помощи предыдущего значения вытворяем с именами, что хотим
-        id = id.substring(7);
-        $('.heading[data-series-id="' + id + '"]').children().html(elem.val());
-        $('#select_series' + id).html(elem.val());
+$('#seriesform').on('keyup', '.name-input', function () {
+    var elem = $(this);  // засовываем этот объект в переменную (на всякий случай)
+    var id = $('.series-data.in').attr('id'); // получаем id серии
+    $('#' + id + '_name').html(elem.val()); // при помощи предыдущего значения вытворяем с именами, что хотим
+    id = id.substring(7);
+    $('.heading[data-series-id="' + id + '"]').children().html(elem.val());
+    $('#select_series' + id).html(elem.val());
 //      console.log($('#select_series' + id));
-    });
-    $('#seriesselect').on('click', 'a.list-group-item', function() { // баг фикс кнопки удаления (line 1185)
-            $('.series-data.in').collapse('hide');
-            $($(this).attr('href')).collapse('show');
-        });
+});
+$('#seriesselect').on('click', 'a.list-group-item', function () { // баг фикс кнопки удаления (line 1185)
+    $('.series-data.in').collapse('hide');
+    $($(this).attr('href')).collapse('show');
+});
 
-    $('#seriesform').on('hidden.bs.collapse', '.series-data', function () { // обработка активности кнопки удаления
-        $('#btn-series-delete').attr('disabled',true);
-    }).on('shown.bs.collapse', '.series-data', function() {
-        $('#btn-series-delete').attr('disabled',false);
-    });
+$('#seriesform').on('hidden.bs.collapse', '.series-data', function () { // обработка активности кнопки удаления
+    $('#btn-series-delete').attr('disabled', true);
+}).on('shown.bs.collapse', '.series-data', function () {
+    $('#btn-series-delete').attr('disabled', false);
+});
 
-    $('#btn-series-delete').on('click',function(){ // обработка кнопки удаления для глав
-        var id = $('.series-data.in').attr('id');
-        var nextSeries = $('#seriesselect [href="#'+id+'"]').next();
-        var nextPanel = $(nextSeries.attr('href'));
-        $('.series-data.in').collapse('hide');
-        $('.series-data.in').parent().hide();
-        $('#'+id+'_delete').val(true);
-        $('#seriesselect [href="#'+id+'"]').detach();
-        id = id.substring(7);
-        $('.heading[data-series-id="'+id+'"]').detach();
-        if (nextSeries.attr('class') && nextPanel.attr('class')) {
-                    nextSeries.addClass('active');
-                    nextPanel.collapse('toggle');
-        } else {
-                    $('#seriesselect').children().last().addClass('active');
-                    $($('#seriesselect').children().last().attr('href')).collapse('toggle');
+$('#btn-series-delete').on('click', function () { // обработка кнопки удаления для глав
+    var id = $('.series-data.in').attr('id');
+    var nextSeries = $('#seriesselect [href="#' + id + '"]').next();
+    var nextPanel = $(nextSeries.attr('href'));
+    $('.series-data.in').collapse('hide');
+    $('.series-data.in').parent().hide();
+    $('#' + id + '_delete').val(true);
+    $('#seriesselect [href="#' + id + '"]').detach();
+    id = id.substring(7);
+    $('.heading[data-series-id="' + id + '"]').detach();
+    if (nextSeries.attr('class') && nextPanel.attr('class')) {
+        nextSeries.addClass('active');
+        nextPanel.collapse('toggle');
+    } else {
+        $('#seriesselect').children().last().addClass('active');
+        $($('#seriesselect').children().last().attr('href')).collapse('toggle');
+    }
+});
+var ac = $('#activitiesselect .list-group-item').length;
+var team = $('#teamsselect .list-group-item').length;
+var teamm = $('#teammembersselect .list-group-item').length;
+var teams_names = Array();
+$('#teamsselect .list-group-item span').each(function (indx) {
+    teams_names.push($(this).text());
+})
+
+function updateTeamsSelect() {
+    $(".all_teams").empty();
+    $(".all_teams").each(function (indx) {
+        var self = $(this);
+        for (var i = 0; i < teams_names.length; i++) {
+            self.append("<option name='teams" + (i + 1) + "'>" + teams_names[i] + "</option>");
         }
     });
-    var ac= $('#activitiesselect .list-group-item').length;
-    var team= $('#teamsselect .list-group-item').length;
-    var teamm= $('#teammembersselect .list-group-item').length;
-    var teams_names = Array();
-    $('#teamsselect .list-group-item span').each(function(indx){
-        teams_names.push($(this).text());
-    })
-
-    function updateTeamsSelect(){
-        $(".all_teams").empty();
-        $(".all_teams").each(function(indx){
-            var self = $(this);
-            for (var i=0; i<teams_names.length; i++){
-                self.append("<option name='teams"+(i+1)+"'>"+teams_names[i]+"</option>");
-            }
-        });
-    }
+}
 /*$('.btn_add').click(function(){
         var type = $(this).parent().data('type');
         var num;
@@ -313,79 +308,79 @@ $('#seriesselect').sortable({ // включаем jquery-ui sortable
             updateTeamsSelect()
         }
  });*/
-    $('[role="tablist"').on('keyup', '.name-input', function(){
-        var elem = $(this);  // засовываем этот объект в переменную (на всякий случай)
-        var type = elem.closest('[role="tablist"').attr('id').slice(0,-4);
-        var id1 = $('.'+type+'-data.in').attr('id'); // получаем id серии
-        $('#' + id1 + '_name').html(elem.val()); // при помощи предыдущего значения вытворяем с именами, что хотим
-        $('[name="'+id1+'"').html(elem.val());
-        id = id1.substring(7);
-        $('.heading[data-'+type+'-id="' + id + '"]').children().html(elem.val());
-        $('#select_'+type+'' + id).html(elem.val());
-        if (type == "teams") {
-            id = parseInt(id1.substring(5),10);
-            teams_names[id-1] = elem.val();
-            updateTeamsSelect();
-        }
-    });
-    $('.list-group.select.sortable').on('click', 'a.list-group-item', function() { // баг фикс кнопки удаления (line 1185)
-            $('.'+$(this).closest('.list-group.select.sortable').attr('id').slice(0,-6)+'-data.in').collapse('hide');
-            $($(this).attr('href')).collapse('show');
-            $($(this).attr('href')).find('.name-input').focus();
-    });
-    $('.btn_delete').on('click',function(){ // обработка кнопки удаления для глав
-        var type = $(this).parent().data('type');
-        var id = $('.'+type+'-data.in').attr('id');
-        var nextActivities = $('#'+type+'select [href="#'+id+'"]').next();
-        var nextPanel = $(nextActivities.attr('href'));
-        $('.'+type+'-data.in').collapse('hide');
-        $('.'+type+'-data.in').parent().hide();
-        $('#'+id+'_delete').val(true);
-        $('#'+type+'select [href="#'+id+'"]').detach();
-        id = id.substring(7);
-        $('.heading[data-'+type+'-id="'+id+'"]').detach();
-        if (nextActivities.attr('class') && nextPanel.attr('class')) {
-                    nextActivities.addClass('active');
-                    nextPanel.collapse('toggle');
-        } else {
-                    $('#'+type+'select').children().last().addClass('active');
-                    $($('#'+type+'select').children().last().attr('href')).collapse('toggle');
-        }
-    });
-    $('[role="tablist"]').on('hidden.bs.collapse', '[role="tabpanel"]', function () { // обработка активности кнопки удаления
-        $(this).closest('.col-xs-8').parent().find('.btn_delete').attr('disabled',true);
+$('[role="tablist"').on('keyup', '.name-input', function () {
+    var elem = $(this);  // засовываем этот объект в переменную (на всякий случай)
+    var type = elem.closest('[role="tablist"').attr('id').slice(0, -4);
+    var id1 = $('.' + type + '-data.in').attr('id'); // получаем id серии
+    $('#' + id1 + '_name').html(elem.val()); // при помощи предыдущего значения вытворяем с именами, что хотим
+    $('[name="' + id1 + '"').html(elem.val());
+    id = id1.substring(7);
+    $('.heading[data-' + type + '-id="' + id + '"]').children().html(elem.val());
+    $('#select_' + type + '' + id).html(elem.val());
+    if (type == "teams") {
+        id = parseInt(id1.substring(5), 10);
+        teams_names[id - 1] = elem.val();
+        updateTeamsSelect();
+    }
+});
+$('.list-group.select.sortable').on('click', 'a.list-group-item', function () { // баг фикс кнопки удаления (line 1185)
+    //$('.' + $(this).closest('.list-group.select.sortable').attr('id').slice(0, -6) + '-data.in').collapse('hide');
+    //$($(this).attr('href')).collapse('show');
+    //$($(this).attr('href')).find('.name-input').focus();
+});
+$('.btn_delete').on('click', function () { // обработка кнопки удаления для глав
+    var type = $(this).parent().data('type');
+    var id = $('.' + type + '-data.in').attr('id');
+    var nextActivities = $('#' + type + 'select [href="#' + id + '"]').next();
+    var nextPanel = $(nextActivities.attr('href'));
+    $('.' + type + '-data.in').collapse('hide');
+    $('.' + type + '-data.in').parent().hide();
+    $('#' + id + '_delete').val(true);
+    $('#' + type + 'select [href="#' + id + '"]').detach();
+    id = id.substring(7);
+    $('.heading[data-' + type + '-id="' + id + '"]').detach();
+    if (nextActivities.attr('class') && nextPanel.attr('class')) {
+        nextActivities.addClass('active');
+        nextPanel.collapse('toggle');
+    } else {
+        $('#' + type + 'select').children().last().addClass('active');
+        $($('#' + type + 'select').children().last().attr('href')).collapse('toggle');
+    }
+});
+$('[role="tablist"]').on('hidden.bs.collapse', '[role="tabpanel"]', function () { // обработка активности кнопки удаления
+    $(this).closest('.col-xs-8').parent().find('.btn_delete').attr('disabled', true);
 
-    }).on('shown.bs.collapse', '[role="tabpanel"]', function() {
-        $(this).closest('.col-xs-8').parent().find('.btn_delete').attr('disabled',false);
-    });
+}).on('shown.bs.collapse', '[role="tabpanel"]', function () {
+    $(this).closest('.col-xs-8').parent().find('.btn_delete').attr('disabled', false);
+});
 
 
-    // ---------- typeahead start ----------
-    var substringMatcher = function(strs) {
-        return function findMatches(q, cb) {
-            var matches, substringRegex;
+// ---------- typeahead start ----------
+var substringMatcher = function (strs) {
+    return function findMatches(q, cb) {
+        var matches, substringRegex;
 
-            // an array that will be populated with substring matches
-            matches = [];
+        // an array that will be populated with substring matches
+        matches = [];
 
-            // regex used to determine if a string contains the substring `q`
-            substrRegex = new RegExp(q, 'i');
+        // regex used to determine if a string contains the substring `q`
+        substrRegex = new RegExp(q, 'i');
 
-            // iterate through the pool of strings and for any string that
-            // contains the substring `q`, add it to the `matches` array
-            $.each(strs, function(i, str) {
-                if (substrRegex.test(str)) {
-                    matches.push(str);
-                }
-            });
+        // iterate through the pool of strings and for any string that
+        // contains the substring `q`, add it to the `matches` array
+        $.each(strs, function (i, str) {
+            if (substrRegex.test(str)) {
+                matches.push(str);
+            }
+        });
 
-            cb(matches);
-        };
+        cb(matches);
     };
-    var names = ['Ushwood', 'Danholm', 'Lady Astrel', 'Test'
-    ];
-    $('#teammembersform').children('.panel').each(function(){
-        $('#teammembers' + teamm + '_names_selector .typeahead').typeahead({  // обработчик никнеймов
+};
+var names = ['Ushwood', 'Danholm', 'Lady Astrel', 'Test'
+];
+$('#teammembersform').children('.panel').each(function () {
+    $('#teammembers' + teamm + '_names_selector .typeahead').typeahead({  // обработчик никнеймов
             hint: true,
             limit: 10,
             highlight: true,
@@ -395,8 +390,8 @@ $('#seriesselect').sortable({ // включаем jquery-ui sortable
             name: 'participant_names',
             source: substringMatcher(names)
         });
-    });
-    // ---------- typeahead end --------------
+});
+// ---------- typeahead end --------------
 
 
 $('#updateProjects').click(

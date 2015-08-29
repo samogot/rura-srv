@@ -1,10 +1,10 @@
-(function($) {
-    $.trimLeft = function(element, options) {
+(function ($) {
+    $.trimLeft = function (element, options) {
         var trim = this;
         var $element = $(element), // reference to the jQuery version of DOM element
             element = element; // reference to the actual DOM element
         var initialText = element.innerHTML;
-        trim.init = function() {
+        trim.init = function () {
             overrideNodeMethod("html", function () {
                 return initialText;
             });
@@ -16,10 +16,10 @@
             return trim;
         };
         //Overide .html() to return initialText.
-        var overrideNodeMethod = function(methodName, action) {
+        var overrideNodeMethod = function (methodName, action) {
             var originalVal = $.fn[methodName];
             var thisNode = $element;
-            $.fn[methodName] = function() {
+            $.fn[methodName] = function () {
                 if (this[0] == thisNode[0]) {
                     return action.apply(this, arguments);
                 } else {
@@ -40,7 +40,7 @@
                         node.removeChild(childNode);
                     }
                 }
-            };
+            }
         };
         var trimText = function (row, node, textNode) {
             var value = '\u2026' + textNode.nodeValue;
@@ -70,7 +70,7 @@
             }
         };
         var multiple = function () {
-            $(othat).each(function() {
+            $(othat).each(function () {
                 single(this);
             });
         };
