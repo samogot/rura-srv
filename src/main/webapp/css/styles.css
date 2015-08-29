@@ -1023,7 +1023,7 @@ a.list-group-item center {
 }
 
 .dragover #imageselect::before {
-    content: 'ÃƒÂÃ¢â‚¬ÂÃƒÂÃ‚Â¾ÃƒÂÃ‚Â±ÃƒÂÃ‚Â°ÃƒÂÃ‚Â²ÃƒÂÃ‚Â¸Ãƒâ€˜Ã¢â‚¬Å¡Ãƒâ€˜Ã…â€™ Ãƒâ€˜Ã¢â‚¬Å¾ÃƒÂÃ‚Â°ÃƒÂÃ‚Â¹ÃƒÂÃ‚Â»Ãƒâ€˜Ã¢â‚¬Â¹';
+    content: 'Добавить файлы';
     position: absolute;
     top: 0;
     bottom: 20px;
@@ -1042,7 +1042,7 @@ a.list-group-item center {
 
 .dragover .image-data-main::before,
 .dragover .image-data-color::before {
-    content: 'ÃƒÂÃ¢â‚¬â€ÃƒÂÃ‚Â°ÃƒÂÃ‚Â¼ÃƒÂÃ‚ÂµÃƒÂÃ‚Â½ÃƒÂÃ‚Â¸Ãƒâ€˜Ã¢â‚¬Å¡Ãƒâ€˜Ã…â€™ Ãƒâ€˜Ã¢â‚¬Å¾ÃƒÂÃ‚Â°ÃƒÂÃ‚Â¹ÃƒÂÃ‚Â»';
+    content: 'Заменить файл';
     position: absolute;
     top: 15px;
     height: 305px;
@@ -1082,7 +1082,7 @@ a.list-group-item center {
     overflow: hidden;
 }
 
-.fileupload {
+.file-input {
     position: absolute;
     top: 0;
     right: 0;

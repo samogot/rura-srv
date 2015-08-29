@@ -11,6 +11,20 @@ import java.util.ArrayList;
 public class Project extends PageRepresentable implements Serializable
 {
 
+    public ExternalResource getImage()
+    {
+        return image;
+    }
+
+    public void setImage(ExternalResource image)
+    {
+        this.image = image;
+        if (image != null)
+        {
+            imageId = image.getResourceId();
+        }
+    }
+
     private static final long serialVersionUID = 3L;
     private Integer projectId;
     private Integer parentId;
@@ -29,6 +43,8 @@ public class Project extends PageRepresentable implements Serializable
     private boolean onevolume;
     private String franchise;
     private String annotation;
+    //optional
+    private ExternalResource image;
 
     public Project(Integer parentId, Integer imageId, String url, String title, Integer orderNumber, boolean bannerHidden, boolean projectHidden, String annotation)
     {

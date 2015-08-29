@@ -14,8 +14,8 @@ $(window).on('reinitAffix', function () {
 $(document).on('click', '.feedbackPanel li', function () {
     $(this).detach();
 });
-function updateFeedbackPanelTimeout(panel) {
-    $(panel).find('li').each(function () {
+function updateFeedbackPanelTimeout(panelOrForm) {
+    $(panelOrForm).find('.feedbackPanel').find('li').each(function () {
         var li = $(this);
         setTimeout(function () {
             li.fadeOut('slow', function () {

@@ -20,11 +20,8 @@
         </div>
 
         <div class="form-group banner-upload" style="position: relative;">
-            <label for="banner">Изображение</label>
-            <input type="file" name="banner" class="fileupload" style="height:110px">
-            <input type="hidden" id="series1_banner_url">
-            <img src="http://ruranobe.ru/w/images/6/6b/sidebanner-aw.png" height="73"
-                 width="220" class="banner-upload" id="series1_banner_img">
+            <label wicket:for="image">Изображение</label>
+            <wicket:container wicket:id="image"/>
         </div>
     </div>
 </wicket:panel>
