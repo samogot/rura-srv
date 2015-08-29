@@ -563,7 +563,7 @@ WHERE text_wiki LIKE '%{{Иллюстрация|%';
 
 
 CREATE TEMPORARY TABLE ch_parent_first (
-  parent_new_text_id                   INTEGER PRIMARY KEY,
+  parent_new_text_id                   INTEGER UNIQUE,
   parent_chapter_id                    INTEGER UNIQUE,
   first_chapter_id                     INTEGER UNIQUE,
   first_url                            VARCHAR(32),
@@ -586,7 +586,7 @@ INSERT INTO ch_parent_first
   FROM chapters p, chapters f, texts t, (SELECT @merge_id := max(text_id)
                                          FROM texts) xxx
   WHERE p.text_id IS NULL
-        AND f.text_id IS NOT NULL
+#         AND f.text_id IS NOT NULL
         AND p.volume_id = f.volume_id
         AND !p.nested AND f.nested
         AND f.order_number = (SELECT order_number
@@ -597,6 +597,10 @@ INSERT INTO ch_parent_first
                               LIMIT 1)
         AND f.text_id = t.text_id
         AND text_wiki LIKE '%===%';
+
+UPDATE ch_parent_first
+SET parent_new_text_id = NULL
+WHERE first_text_id IS NULL;
 
 INSERT INTO texts (text_id, text_wiki)
   SELECT
