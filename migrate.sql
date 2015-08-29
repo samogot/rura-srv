@@ -245,11 +245,11 @@ SET order_number = instr((SELECT old_text
                             INNER JOIN ruranobe_db.mw_text ON old_id = rev_text_id
                           WHERE rev_page = 7460
                           ORDER BY rev_timestamp DESC
-                          LIMIT 1), url)
+                          LIMIT 1), concat('|', url, '|'))
 WHERE parent_id IS NULL;
 
 UPDATE projects
-SET order_number = 9999
+SET order_number = 9999, project_hidden = TRUE, banner_hidden = TRUE
 WHERE order_number = 0;
 
 UPDATE projects
