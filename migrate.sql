@@ -164,17 +164,52 @@ INSERT INTO volume_activities (activity_id, activity_name, activity_type)
     if(job_id BETWEEN 3 AND 7, 'image', 'text')
   FROM ruranobe_db.main_jobs;
 
-INSERT IGNORE INTO users (user_id, username, realname, pass, email, email_activated, registration_date, adult)
+INSERT IGNORE INTO users (user_id, username, realname, pass, pass_version, email, email_activated, registration_date, adult)
   SELECT
     user_id,
     user_name,
     user_real_name,
     user_password,
+    0,
     user_email,
     user_email_authenticated,
     user_registration,
     1
-  FROM ruranobe_db.mw_user;
+  FROM ruranobe_db.mw_user
+  WHERE user_password LIKE ":A:%";
+
+UPDATE ruranobe.users usr
+  INNER JOIN
+  ruranobe_db.mw_user mw
+    ON
+      usr.user_id = mw.user_id
+SET
+  usr.pass = SUBSTRING(mw.user_password, 4),
+  usr.pass_version = 1
+WHERE
+  mw.user_password LIKE ":A:%";
+
+UPDATE ruranobe.users usr
+  INNER JOIN
+  ruranobe_db.mw_user mw
+    ON
+      usr.user_id = mw.user_id
+SET
+  usr.pass = SUBSTRING(mw.user_password, 4),
+  usr.pass_version = 2
+WHERE
+  mw.user_password LIKE ":B:%";
+
+UPDATE ruranobe.users usr
+  INNER JOIN
+  ruranobe_db.mw_user mw
+    ON
+      usr.user_id = mw.user_id
+SET
+  usr.pass = SUBSTRING(mw.user_password, 9),
+  usr.pass_version = 3
+WHERE
+  mw.user_password LIKE ":pbkdf2:%";
 
 INSERT INTO team_members (member_id, user_id, team_id, nikname, active)
   SELECT

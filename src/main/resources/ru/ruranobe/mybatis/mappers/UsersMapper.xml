@@ -36,24 +36,6 @@
         WHERE email_token = #{emailToken}
     </select>
 
-    <select id="signInUser" parameterType="map" resultMap="UserResult">
-        SELECT *
-        FROM users
-        WHERE username = #{username}
-        AND pass = #{pass}
-    </select>
-
-    <!--<insert id="registerUser" parameterType="ru.ruranobe.mybatis.tables.User" keyProperty="userId"
-            useGeneratedKeys="true">
-        INSERT INTO users (username, realname, pass, pass_recovery_token, pass_recovery_token_date, email, email_token,
-        email_token_date, email_activated, registration_date, adult)
-        VALUES(#{username}, #{realname}, #{pass}, #{passRecoveryToken}, #{passRecoveryTokenDate}, #{email},
-        #{emailToken}, #{emailTokenDate}, #{emailActivated}, #{registrationDate}, #{adult})
-        <selectKey keyProperty="userId" resultType="int">
-            SELECT LAST_INSERT_ID() AS userId
-        </selectKey>
-    </insert>-->
-
     <insert id="registerUser" parameterType="ru.ruranobe.mybatis.tables.User" keyProperty="userId"
             useGeneratedKeys="true">
         INSERT INTO users
@@ -61,6 +43,7 @@
         username = #{username},
         realname = #{realname},
         pass = #{pass},
+        pass_version = #{passVersion},
         pass_recovery_token = #{passRecoveryToken},
         pass_recovery_token_date = #{passRecoveryTokenDate},
         email = #{email},
@@ -77,6 +60,7 @@
         username = #{username},
         realname = #{realname},
         pass = #{pass},
+        pass_version = #{passVersion},
         pass_recovery_token = #{passRecoveryToken},
         pass_recovery_token_date = #{passRecoveryTokenDate},
         email = #{email},
@@ -93,6 +77,7 @@
         <result property="username" column="username"/>
         <result property="realname" column="realname"/>
         <result property="pass" column="pass"/>
+        <result property="passVersion" column="pass_version"/>
         <result property="passRecoveryToken" column="pass_recovery_token"/>
         <result property="passRecoveryTokenDate" column="pass_recovery_token_date"/>
         <result property="email" column="email"/>

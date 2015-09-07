@@ -48,7 +48,7 @@ public class RuranobeAuthenticationStrategy implements IAuthenticationStrategy
     public String[] load()
     {
         String value = getCookieUtils().load(cookieKey);
-        if (Strings.isEmpty(value) == false)
+        if (!Strings.isEmpty(value))
         {
             try
             {
@@ -67,17 +67,17 @@ public class RuranobeAuthenticationStrategy implements IAuthenticationStrategy
 
     protected String[] decode(String value)
     {
-        if (Strings.isEmpty(value) == false)
+        if (!Strings.isEmpty(value))
         {
             String username = null;
             String password = null;
 
             String[] values = value.split(VALUE_SEPARATOR);
-            if ((values.length > 0) && (Strings.isEmpty(values[0]) == false))
+            if ((values.length > 0) && (!Strings.isEmpty(values[0])))
             {
                 username = values[0];
             }
-            if ((values.length > 1) && (Strings.isEmpty(values[1]) == false))
+            if ((values.length > 1) && (!Strings.isEmpty(values[1])))
             {
                 password = values[1];
             }

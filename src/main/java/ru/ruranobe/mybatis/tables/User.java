@@ -11,6 +11,7 @@ public class User implements Serializable
     private String realname;
     private String pass;
     private String passRecoveryToken;
+		private Integer passVersion;
     private Date passRecoveryTokenDate;
     private String email;
     private String emailToken;
@@ -159,4 +160,12 @@ public class User implements Serializable
     {
         this.adult = adult;
     }
+
+		public Integer getPassVersion() {
+			return passVersion;
+		}
+
+		public void setPassVersion(Integer passVersion) {
+			this.passVersion = passVersion;
+		}
 }

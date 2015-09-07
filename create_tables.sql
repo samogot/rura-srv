@@ -23,7 +23,8 @@ CREATE TABLE users
   user_id                  INT(11) PRIMARY KEY AUTO_INCREMENT,
   username                 VARCHAR(64) UNIQUE NOT NULL,
   realname                 VARCHAR(255),
-  pass                     VARCHAR(32)        NOT NULL,
+  pass                     TINYBLOB           NOT NULL,
+  pass_version             INT(11) UNSIGNED   NOT NULL,
   pass_recovery_token      VARCHAR(255),
   pass_recovery_token_date DATETIME,
   email                    VARCHAR(255),
@@ -103,25 +104,27 @@ CREATE TABLE volumes
   volume_type        ENUM('Ранобэ',
                           'Побочные истории',
                           'Авторские додзинси',
-                          'Другое')      NOT NULL DEFAULT 'Ранобэ',
-  volume_status      ENUM('hidden',
+                          'Другое')      NOT NULL,
+  volume_status      ENUM(
+                          -- не в работе
+                          'on_hold',
+                          'no_eng',
+                          'freeze',
+                          'queue',
+                            -- специальный статус
+                          'hidden',
                           'auto',
                           -- сторонний
                           'external_dropped',
                           'external_active',
                           'external_done',
-                          -- не в работе
-                          'no_eng',
-                          'freeze',
-                          'on_hold',
-                          'queue',
                           -- в работе
                           'ongoing',
                           'translating',
                           'proofread',
                           -- опубликован
                           'decor',
-                          'done')        NOT NULL DEFAULT 'on_hold',
+                          'done')        NOT NULL,
   volume_status_hint VARCHAR(255),
   adult              BOOL                NOT NULL,
   annotation         TEXT
