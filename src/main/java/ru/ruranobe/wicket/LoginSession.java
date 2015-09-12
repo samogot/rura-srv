@@ -27,15 +27,17 @@ public class LoginSession extends AuthenticatedWebSession {
 		try {
 			UsersMapper usersMapper = session.getMapper(UsersMapper.class);
 			User signInUser = usersMapper.getUserByUsername(username);
-			String hash = Authentication.getPassHash(signInUser.getPassVersion(), password, signInUser.getPass());
-			if (hash != null && hash.equals(signInUser.getPass())) {
-				if (signInUser.getPassVersion() < Authentication.ACTUAL_HASH_TYPE) {
-					signInUser.setPass(Authentication.getPassHash(Authentication.ACTUAL_HASH_TYPE, password, ""));
-					signInUser.setPassVersion(Authentication.ACTUAL_HASH_TYPE);
-					usersMapper.updateUser(signInUser);
+			if (signInUser != null) {
+				String hash = Authentication.getPassHash(signInUser.getPassVersion(), password, signInUser.getPass());
+				if (areHashesEqual(hash, signInUser.getPass())) {
+					if (signInUser.getPassVersion() < Authentication.ACTUAL_HASH_TYPE) {
+						signInUser.setPass(Authentication.getPassHash(Authentication.ACTUAL_HASH_TYPE, password, ""));
+						signInUser.setPassVersion(Authentication.ACTUAL_HASH_TYPE);
+						usersMapper.updateUser(signInUser);
+					}
+					this.user = signInUser;
+					authenticationCompleted = true;
 				}
-				this.user = signInUser;
-				authenticationCompleted = true;
 			}
 		} finally {
 			session.close();
@@ -50,5 +52,38 @@ public class LoginSession extends AuthenticatedWebSession {
 
 	public User getUser() {
 		return user;
+	}
+
+	@Override
+	public void signOut()
+	{
+		super.signOut();
+		this.user = null;
+	}
+
+	@Override
+	public void invalidate()
+	{
+		super.invalidate();
+		this.user = null;
+	}
+
+	private boolean areHashesEqual(String hash1, String hash2)
+	{
+		boolean result = false;
+		if (hash2 != null && hash1 != null)
+		{
+			int len = Math.min(hash1.length(), hash2.length());
+			int i = 0;
+			for (; i < len; ++i)
+			{
+				if (hash1.codePointAt(i) != hash2.codePointAt(i))
+				{
+					break;
+				}
+			}
+			result = i==len;
+		}
+		return result;
 	}
 }

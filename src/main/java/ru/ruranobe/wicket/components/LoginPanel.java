@@ -142,7 +142,7 @@ public class LoginPanel extends Panel
 
             if (login(getUsername(), getPassword()))
             {
-                if (rememberMe == true)
+                if (rememberMe)
                 {
                     strategy.save(username, password);
                 }

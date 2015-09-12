@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org" lang="en">
+<body>
+    <wicket:panel>
+        <form wicket:id="userActionsForm" class="navbar-form navbar-right">
+            <a wicket:id="registerPageLink">
+                <button type="button" class="btn btn-white">Регистрация</button>
+            </a>
+            <button wicket:id="signIn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#loginModal">Вход</button>
+            <a wicket:id="cabinetPageLink">
+                <button wicket:id="username" type="button" class="btn btn-white"/>
+            </a>
+            <button wicket:id="signOut" type="submit" class="btn btn-primary" data-toggle="modal">Выход</button>
+        </form>
+    </wicket:panel>
+</body>
+</html>
