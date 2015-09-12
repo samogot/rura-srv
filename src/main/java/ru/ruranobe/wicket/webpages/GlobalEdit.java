@@ -86,11 +86,6 @@ public class GlobalEdit extends AdminLayoutPage
             member.setTeam(teamIdToTeamMap.get(member.getTeamId()));
         }
 
-/*        add(new ProjectsForm(projects));
-        add(new ActivitiesForm(activities));
-        add(new TeamsForm(teams));
-        add(new TeamMembersForm(teamMembers, teams));*/
-
         add(new AdminAffixedListPanel<Project>("projects", "Серии", new ListModel<Project>(projects))
         {
             @Override
@@ -272,7 +267,6 @@ public class GlobalEdit extends AdminLayoutPage
                 }
             }
         });
-
 
         add(new AdminAffixedListPanel<TeamMember>("teamMembers", "Члены команд", new ListModel<TeamMember>(teamMembers))
         {

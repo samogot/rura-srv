@@ -83,9 +83,9 @@ public class WicketApplication extends AuthenticatedWebApplication
         mount(new MountedMapper("/user/recover/pass/email", EmailPasswordRecoveryPage.class));
         mount(new MountedMapper("/user/email/activate", ActivateEmail.class));
         mount(new MountedMapper("/upload/image", UploadImage.class));
-        mount(new MountedMapper("/a/${project}/${volume}/${chapter}", Editor.class));
-        mount(new MountedMapper("/a/${project}/${volume}", VolumeEdit.class));
-        mount(new MountedMapper("/a/${project}", ProjectEdit.class));
+        getRootRequestMapperAsCompound().add(new NoVersionMapper("/a/${project}/${volume}/${chapter}", Editor.class));
+        getRootRequestMapperAsCompound().add(new NoVersionMapper("/a/${project}/${volume}", VolumeEdit.class));
+        getRootRequestMapperAsCompound().add(new NoVersionMapper("/a/${project}", ProjectEdit.class));
         getRootRequestMapperAsCompound().add(new NoVersionMapper("/a", GlobalEdit.class));
 
         mountResource("/bookmarks", new ResourceReference("bookmarksResource")
