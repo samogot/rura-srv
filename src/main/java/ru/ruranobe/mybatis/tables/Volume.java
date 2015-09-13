@@ -12,6 +12,20 @@ import java.util.Date;
 public class Volume extends PageRepresentable implements Serializable
 {
 
+    public Project getProject()
+    {
+        return project;
+    }
+
+    public void setProject(Project project)
+    {
+        this.project = project;
+        if (project != null)
+        {
+            projectId = project.getProjectId();
+        }
+    }
+
     private static final long serialVersionUID = 2L;
     private Integer volumeId;
     private Integer projectId;
@@ -45,6 +59,7 @@ public class Volume extends PageRepresentable implements Serializable
     private String nextNameShort;
     private String nextUrl;
     private String subProjectName;
+    private Project project;
 
     public Volume()
     {

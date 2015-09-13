@@ -2,6 +2,7 @@ package ru.ruranobe.wicket.components.admin.formitems;
 
 import com.google.common.collect.ImmutableMap;
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
@@ -22,7 +23,16 @@ public class ProjectInfoPanel extends Panel
                 .put("project", model.getObject().getUrl())
                 .build()));
         add(new TextField<String>("title").setRequired(true).setLabel(Model.of("Заголовок")));
+        add(new TextField<String>("nameJp"));
+        add(new TextField<String>("nameEn"));
+        add(new TextField<String>("nameRu"));
+        add(new TextField<String>("nameRomaji"));
+        add(new TextField<String>("author"));
+        add(new TextField<String>("illustrator"));
+        add(new CheckBox("onevolume"));
         add(new CheckBox("projectHidden"));
         add(new CheckBox("bannerHidden"));
+        add(new TextArea<String>("franchise"));
+        add(new TextArea<String>("annotation"));
     }
 }

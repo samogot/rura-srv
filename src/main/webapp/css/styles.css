@@ -923,7 +923,7 @@ button.loginClose {
 }*/
 
 .move.fa.fa-ellipsis-v {
-    padding: 0px 5px 0 0px;
+    /* padding: 0px 5px 0 0px; */
     display: block;
     float: left;
     line-height: 21px;

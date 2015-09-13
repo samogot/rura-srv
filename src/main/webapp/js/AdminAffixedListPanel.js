@@ -50,6 +50,12 @@ function removeAdminAffixItem(formId) {
     selected.detach();
     selectNext.click();
 }
+function setMoveHandlerPadding(itemId) {
+    var $item = $('#' + itemId);
+    var $moveHandler = $item.find('.move.fa.fa-ellipsis-v');
+    var padding = ($item.height() - $moveHandler.height()) / 2;
+    $moveHandler.css({'padding-top': padding, 'padding-bottom': padding});
+}
 
 $(document).on('keyup', '.name-input', function () {
     var input = $(this);  // засовываем этот объект в переменную (на всякий случай)

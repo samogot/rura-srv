@@ -53,6 +53,7 @@ public abstract class AdminFormPanel extends Panel
         setDefaultModel(model);
         this.title = title;
         setOutputMarkupId(true);
+        setMarkupId(id);
         add(form = new Form("form")
         {
 

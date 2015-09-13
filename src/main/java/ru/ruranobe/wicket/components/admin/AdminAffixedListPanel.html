@@ -3,14 +3,12 @@
 <body>
 <wicket:extend>
     <div class="row">
-        <div class="col-xs-4">
-            <div class="list-group select" wicket:id="selectorBlock" style="margin-top:10px">
-                <a wicket:id="repeater" data-toggle="collapse" aria-expanded="true" class="list-group-item">
-                    <i class="fa fa-ellipsis-v move" wicket:id="sortableHandler"></i>
+        <div class="col-xs-4 list-group select" wicket:id="selectorBlock" style="margin-top:10px">
+            <a wicket:id="repeater" data-toggle="collapse" aria-expanded="true" class="list-group-item">
+                <i class="fa fa-ellipsis-v move" wicket:id="sortableHandler"></i>
 
-                    <div wicket:id="label" class="name-label"></div>
-                </a>
-            </div>
+                <div wicket:id="label" class="name-label"></div>
+            </a>
         </div>
         <div class="col-xs-8 admin-affix" wicket:id="formBlock" role="tablist" aria-multiselectable="true">
             <div class="progress collapse">

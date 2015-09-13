@@ -6,6 +6,8 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.HiddenField;
@@ -97,6 +99,11 @@ public abstract class AdminAffixedListPanel<T> extends AdminListPanel<T>
         target.add(selectorBlockListItem);
 
         target.appendJavaScript(String.format(";$('#%s').click();", selectorBlockListItem.getMarkupId()));
+        if (sortable)
+        {
+            target.appendJavaScript(String.format(";$('#%s .list-group.select.sortable').trigger('sortupdate');", form.getMarkupId()));
+        }
+
     }
 
     @Override
@@ -129,7 +136,20 @@ public abstract class AdminAffixedListPanel<T> extends AdminListPanel<T>
         String formItemMarkupId = formBlockItemRepeater.get(item.getIndex()).get("item").getMarkupId();
         item.add(new AttributeModifier("href", "#" + formItemMarkupId));
         item.add(new AttributeModifier("aria-controls", formItemMarkupId));
-        item.add(new WebMarkupContainer("sortableHandler").setVisible(sortable));
+        item.add(new WebMarkupContainer("sortableHandler")
+        {
+
+            @Override
+            public void renderHead(IHeaderResponse response)
+            {
+                super.renderHead(response);
+                if (sortable)
+                {
+                    response.render(OnDomReadyHeaderItem.forScript(String.format("setMoveHandlerPadding('%s')", item.getMarkupId())));
+                }
+            }
+
+        }.setVisible(sortable));
         item.add(getSelectorItemLabelComponent("label", item.getModel()));
     }
 
