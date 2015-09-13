@@ -67,6 +67,7 @@ $(document).on('keyup', '.name-input', function () {
     var adminBlock = $(this).closest('.admin-block');
     adminBlock.find('.form-item.in').collapse('hide');
     var formItem = $($(this).attr('href'));
+    $(this).find('.name-input').focus();
     formItem.find('.name-input').focus();
     event.preventDefault();
     $.event.trigger('selectionChange', [$(this).index()], adminBlock.get(0), false);
