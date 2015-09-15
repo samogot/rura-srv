@@ -4,7 +4,7 @@
 
 <mapper namespace="ru.ruranobe.mybatis.mappers.UpdatesMapper">
 
-    <select id="getLastUpdatesBy" parameterType="map" resultType="ru.ruranobe.mybatis.tables.Update">
+    <select id="getLastUpdatesBy" parameterType="map" resultType="ru.ruranobe.mybatis.entities.tables.Update">
         SELECT
             last_updates.update_id AS updateId,
             last_updates.update_type AS updateType,
@@ -46,7 +46,7 @@
               AND (update_type = #{updateType} OR #{updateType} IS NULL)
     </select>
 
-    <select id="getUpdatesByVolumeId" resultType="ru.ruranobe.mybatis.tables.Update">
+    <select id="getUpdatesByVolumeId" resultType="ru.ruranobe.mybatis.entities.tables.Update">
         select
             updates.update_id AS updateId,
             updates.update_type AS updateType,
@@ -60,7 +60,7 @@
         where volume_id=#{volumeId}
     </select>
 
-    <insert id="insertUpdate" parameterType="ru.ruranobe.mybatis.tables.Update" keyProperty="updateId" useGeneratedKeys="true">
+    <insert id="insertUpdate" parameterType="ru.ruranobe.mybatis.entities.tables.Update" keyProperty="updateId" useGeneratedKeys="true">
         insert into updates (project_id, volume_id, chapter_id, update_type, show_time, description)
         values (#{projectId}, #{volumeId}, #{chapterId}, #{updateType}, #{showType}, #{desciption})
     </insert>
@@ -69,7 +69,7 @@
         delete from updates where update_id=#{updateId}
     </delete>
 
-    <update id="updateUpdate" parameterType="ru.ruranobe.mybatis.tables.Update">
+    <update id="updateUpdate" parameterType="ru.ruranobe.mybatis.entities.tables.Update">
         update volume_activities set project_id = #{projectId}, volume_id=#{volumeId}, chapter_id = #{chapterId}, update_type=#{updateType},
         show_time = #{showType}, description=#{description}
         where update_id=#{updateId}

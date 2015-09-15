@@ -15,7 +15,7 @@
         WHERE release_activity_id = #{volumeId}
     </select>
 
-    <resultMap type="ru.ruranobe.mybatis.tables.VolumeReleaseActivity" id="VolumeReleaseActivityResult">
+    <resultMap type="ru.ruranobe.mybatis.entities.tables.VolumeReleaseActivity" id="VolumeReleaseActivityResult">
         <id property="releaseActivityId" column="release_activity_id"/>
         <result property="volumeId" column="volume_id"/>
         <result property="activityId" column="activity_id"/>

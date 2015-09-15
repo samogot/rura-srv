@@ -1,7 +1,9 @@
 package ru.ruranobe.mybatis.mappers.cacheable;
 
 import ru.ruranobe.mybatis.mappers.BookmarksMapper;
-import ru.ruranobe.mybatis.tables.Bookmark;
+import ru.ruranobe.mybatis.entities.tables.Bookmark;
+
+import java.util.List;
 
 public class BookmarksMapperCacheable implements BookmarksMapper
 {
@@ -17,5 +19,15 @@ public class BookmarksMapperCacheable implements BookmarksMapper
     public void insertBookmark(Bookmark bookmark)
     {
         mapper.insertBookmark(bookmark);
+    }
+
+    @Override
+    public List<Bookmark> getBookmarksByUser(Integer userId) {
+        return mapper.getBookmarksByUser(userId);
+    }
+
+    @Override
+    public void deleteBookmark(Integer bookmarkId) {
+        mapper.deleteBookmark(bookmarkId);
     }
 }

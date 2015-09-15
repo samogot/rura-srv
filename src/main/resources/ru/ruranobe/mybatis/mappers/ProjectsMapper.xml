@@ -30,14 +30,14 @@
         ORDER BY order_number;
     </select>
 
-    <insert id="insertProject" parameterType="ru.ruranobe.mybatis.tables.Project" keyProperty="projectId" useGeneratedKeys="true">
+    <insert id="insertProject" parameterType="ru.ruranobe.mybatis.entities.tables.Project" keyProperty="projectId" useGeneratedKeys="true">
         insert into projects (parent_id, image_id, url, name_jp, name_en, name_ru, name_romaji,
         author, illustrator, order_number, banner_hidden, project_hidden, onevolume, franchise, annotation, title)
         values (#{parentId}, #{imageId}, #{url}, #{nameJp}, #{nameEn}, #{nameRu}, #{nameRomaji}, #{author}, #{illustrator},
          #{orderNumber}, #{bannerHidden}, #{projectHidden}, #{onevolume}, #{franchise}, #{annotation}, #{title})
     </insert>
 
-    <update id="updateProject" parameterType="ru.ruranobe.mybatis.tables.Project">
+    <update id="updateProject" parameterType="ru.ruranobe.mybatis.entities.tables.Project">
         UPDATE projects
         SET
           parent_id = #{parentId},
@@ -62,7 +62,7 @@
         DELETE FROM projects WHERE project_id = #{projectId}
     </delete>
 
-    <resultMap type="ru.ruranobe.mybatis.tables.Project" id="ProjectResult">
+    <resultMap type="ru.ruranobe.mybatis.entities.tables.Project" id="ProjectResult">
         <id property="projectId" column="project_id"/>
         <result property="parentId" column="parent_id"/>
         <result property="imageId" column="image_id"/>
@@ -81,7 +81,7 @@
         <result property="annotation" column="annotation"/>
     </resultMap>
 
-    <!--select id="getSeriesById" parameterType="int" resultType="ru.ruranobe.mybatis.tables.Series">
+    <!--select id="getSeriesById" parameterType="int" resultType="ru.ruranobe.mybatis.entities.tables.Series">
         SELECT
             series_id as seriesId,
             name_url as nameUrl,
@@ -91,7 +91,7 @@
         WHERE series_id = #{seriesId}
     </select>
     
-    <select id="getSeriesByUrl" parameterType="String" resultType="ru.ruranobe.mybatis.tables.Series">
+    <select id="getSeriesByUrl" parameterType="String" resultType="ru.ruranobe.mybatis.entities.tables.Series">
         SELECT
             series_id as seriesId,
             name_url as nameUrl,
@@ -101,7 +101,7 @@
         WHERE name_url = #{url}
     </select>
 
-    <resultMap type="ru.ruranobe.mybatis.tables.Series" id="SeriesResult">
+    <resultMap type="ru.ruranobe.mybatis.entities.tables.Series" id="SeriesResult">
         <id property="seriesId" column="series_id"/>
         <result property="nameUrl" column="name_url"/>
         <result property="title" column="title"/>
@@ -112,12 +112,12 @@
         SELECT * FROM main_series
     </select>
 
-    <insert id="insertSeries" parameterType="ru.ruranobe.mybatis.tables.Series" useGeneratedKeys="true" keyProperty="seriesId">
+    <insert id="insertSeries" parameterType="ru.ruranobe.mybatis.entities.tables.Series" useGeneratedKeys="true" keyProperty="seriesId">
         INSERT INTO SERIES(series_id, name_url, title, parent_id)
         VALUES(#{seriesId}, #{nameUrl}, #{title}, #{parentId})
     </insert>
 
-    <update id="updateSeries" parameterType="ru.ruranobe.mybatis.tables.Series">
+    <update id="updateSeries" parameterType="ru.ruranobe.mybatis.entities.tables.Series">
         UPDATE main_series
         SET
             name_url = #{nameUrl},

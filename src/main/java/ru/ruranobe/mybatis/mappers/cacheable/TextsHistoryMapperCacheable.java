@@ -1,7 +1,7 @@
 package ru.ruranobe.mybatis.mappers.cacheable;
 
 import ru.ruranobe.mybatis.mappers.TextsHistoryMapper;
-import ru.ruranobe.mybatis.tables.TextHistory;
+import ru.ruranobe.mybatis.entities.tables.TextHistory;
 
 public class TextsHistoryMapperCacheable implements TextsHistoryMapper
 {

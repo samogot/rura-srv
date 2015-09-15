@@ -11,7 +11,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.UpdatesMapper;
-import ru.ruranobe.mybatis.tables.Update;
+import ru.ruranobe.mybatis.entities.tables.Update;
 import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.webpages.Updates;
 

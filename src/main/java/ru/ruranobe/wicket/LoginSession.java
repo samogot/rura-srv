@@ -9,7 +9,7 @@ import org.apache.wicket.request.Request;
 import ru.ruranobe.misc.Authentication;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.UsersMapper;
-import ru.ruranobe.mybatis.tables.User;
+import ru.ruranobe.mybatis.entities.tables.User;
 
 public class LoginSession extends AuthenticatedWebSession {
 

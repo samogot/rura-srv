@@ -7,19 +7,29 @@ import org.wicketstuff.rest.annotations.parameters.RequestBody;
 import org.wicketstuff.rest.resource.gson.GsonRestResource;
 import org.wicketstuff.rest.utils.http.HttpMethod;
 import ru.ruranobe.mybatis.MybatisUtil;
+import ru.ruranobe.mybatis.entities.tables.User;
 import ru.ruranobe.mybatis.mappers.ChaptersMapper;
 import ru.ruranobe.mybatis.mappers.OrphusCommentsMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
-import ru.ruranobe.mybatis.tables.Chapter;
-import ru.ruranobe.mybatis.tables.OrphusComment;
+import ru.ruranobe.mybatis.entities.tables.Chapter;
+import ru.ruranobe.mybatis.entities.tables.OrphusComment;
+import ru.ruranobe.wicket.LoginSession;
 
 import java.util.Date;
 
 public class OrphusRestWebService extends GsonRestResource
 {
     @MethodMapping(value = "/insert", httpMethod = HttpMethod.POST)
-    public void insertBookmark(@RequestBody OrphusComment orphusComment)
+    public void insertOrphusComment(@RequestBody OrphusComment orphusComment)
     {
+        if (orphusComment.getUserId() == null)
+        {
+            User user = ((LoginSession) LoginSession.get()).getUser();
+            if (user != null)
+            {
+                orphusComment.setUserId(user.getUserId());
+            }
+        }
 
         if (orphusComment.getParagraph() == null)
         {
@@ -44,6 +54,11 @@ public class OrphusRestWebService extends GsonRestResource
         if (orphusComment.getReplacementText() == null)
         {
             throw new IllegalArgumentException("replacementText wasn't specified.");
+        }
+
+        if ("".equals(orphusComment.getOptionalComment()))
+        {
+            orphusComment.setOptionalComment(null);
         }
 
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();

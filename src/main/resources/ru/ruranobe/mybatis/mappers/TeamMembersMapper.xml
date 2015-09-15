@@ -16,7 +16,7 @@
         order by member_id asc
     </select>
 
-    <insert id="insertTeamMember" parameterType="ru.ruranobe.mybatis.tables.TeamMember" keyProperty="memberId" useGeneratedKeys="true">
+    <insert id="insertTeamMember" parameterType="ru.ruranobe.mybatis.entities.tables.TeamMember" keyProperty="memberId" useGeneratedKeys="true">
         insert into team_members (team_id, nikname, active)
         values (#{teamId}, #{nikname}, #{active})
     </insert>
@@ -25,12 +25,12 @@
         delete from team_members where member_id=#{memberId}
     </delete>
 
-    <update id="updateTeamMember" parameterType="ru.ruranobe.mybatis.tables.TeamMember">
+    <update id="updateTeamMember" parameterType="ru.ruranobe.mybatis.entities.tables.TeamMember">
         update team_members set team_id = #{teamId}, nikname=#{nikname}, active=#{active}
         where member_id=#{memberId}
     </update>
 
-    <resultMap type="ru.ruranobe.mybatis.tables.TeamMember" id="TeamMemberResult">
+    <resultMap type="ru.ruranobe.mybatis.entities.tables.TeamMember" id="TeamMemberResult">
         <id property="memberId" column="member_id"/>
         <result property="userId" column="user_id"/>
         <result property="teamId" column="team_id"/>

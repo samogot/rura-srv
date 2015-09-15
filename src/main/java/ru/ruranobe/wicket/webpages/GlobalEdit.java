@@ -19,10 +19,10 @@ import ru.ruranobe.mybatis.mappers.TeamMembersMapper;
 import ru.ruranobe.mybatis.mappers.TeamsMapper;
 import ru.ruranobe.mybatis.mappers.VolumeActivitiesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
-import ru.ruranobe.mybatis.tables.Project;
-import ru.ruranobe.mybatis.tables.Team;
-import ru.ruranobe.mybatis.tables.TeamMember;
-import ru.ruranobe.mybatis.tables.VolumeActivity;
+import ru.ruranobe.mybatis.entities.tables.Project;
+import ru.ruranobe.mybatis.entities.tables.Team;
+import ru.ruranobe.mybatis.entities.tables.TeamMember;
+import ru.ruranobe.mybatis.entities.tables.VolumeActivity;
 import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
 
 import java.util.*;

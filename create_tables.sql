@@ -32,7 +32,16 @@ CREATE TABLE users
   email_token_date         DATETIME,
   email_activated          BOOL               NOT NULL,
   registration_date        DATETIME           NOT NULL,
-  adult                    BOOL               NOT NULL
+  --user_settings
+  converter_type           ENUM('fb2',
+                                'docx',
+								'epub')       NOT NULL,
+  navigation_type          ENUM('Главам',
+                                'Подглавам')  NOT NULL,
+  convert_with_imgs        BOOL               NOT NULL,
+  adult                    BOOL               NOT NULL,
+  prefer_colored_imgs      BOOL               NOT NULL,
+  convert_imgs_size        INT(11)            NOT NULL
 );
 
 CREATE TABLE texts
@@ -47,7 +56,7 @@ CREATE TABLE texts
 CREATE TABLE orphus_comments
 (
   chapter_id       INT(11)      NOT NULL,
-  paragraph        INT(11)      NOT NULL,
+  paragraph        VARCHAR(255) NOT NULL,
   start_offset     INT(11)      NOT NULL,
   original_text    VARCHAR(255) NOT NULL,
   replacement_text VARCHAR(255) NOT NULL,

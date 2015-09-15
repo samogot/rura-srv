@@ -1,4 +1,4 @@
-package ru.ruranobe.mybatis.tables;
+package ru.ruranobe.mybatis.entities.tables;
 
 public class ProjectInfo
 {

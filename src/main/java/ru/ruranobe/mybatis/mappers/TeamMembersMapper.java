@@ -1,6 +1,6 @@
 package ru.ruranobe.mybatis.mappers;
 
-import ru.ruranobe.mybatis.tables.TeamMember;
+import ru.ruranobe.mybatis.entities.tables.TeamMember;
 
 import java.util.List;
 

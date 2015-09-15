@@ -1,6 +1,6 @@
 package ru.ruranobe.mybatis.mappers;
 
-import ru.ruranobe.mybatis.tables.VolumeActivity;
+import ru.ruranobe.mybatis.entities.tables.VolumeActivity;
 
 import java.util.List;
 

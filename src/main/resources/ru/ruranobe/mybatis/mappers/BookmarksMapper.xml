@@ -12,10 +12,27 @@
         <property name="memoryStoreEvictionPolicy" value="LRU"/>
     </cache-->
 
-    <insert id="insertBookmark" parameterType="ru.ruranobe.mybatis.tables.Bookmark" keyProperty="bookmarkId" useGeneratedKeys="true">
+    <insert id="insertBookmark" parameterType="ru.ruranobe.mybatis.entities.tables.Bookmark" keyProperty="bookmarkId" useGeneratedKeys="true">
         insert into bookmarks (chapter_id, user_id, paragraph_id, created_when)
         values (#{chapterId}, #{userId}, #{paragraphId}, #{createdWhen})
     </insert>
 
+    <select id="getBookmarksByUser" parameterType="int" resultMap="BookmarkResult">
+        SELECT *
+        FROM bookmarks
+        WHERE user_id = #{userId}
+    </select>
+
+    <delete id="deleteBookmark" parameterType="int">
+        delete from bookmarks where bookmark_id=#{bookmarkId}
+    </delete>
+
+    <resultMap id="BookmarkResult" type="ru.ruranobe.mybatis.entities.tables.Bookmark">
+        <id property="bookmarkId" column="bookmark_id"/>
+        <result property="chapterId" column="chapter_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="paragraphId" column="paragraph_id"/>
+        <result property="createdWhen" column="created_when"/>
+    </resultMap>
 
 </mapper>

@@ -1,4 +1,4 @@
-package ru.ruranobe.mybatis.tables;
+package ru.ruranobe.mybatis.entities.tables;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -8,7 +8,7 @@ public class OrphusComment implements Serializable
 
     private static final long serialVersionUID = 2L;
     private Integer chapterId;
-    private Integer paragraph;
+    private String paragraph;
     private Integer startOffset;
     private String originalText;
     private String replacementText;
@@ -21,7 +21,7 @@ public class OrphusComment implements Serializable
     {
     }
 
-    public OrphusComment(Integer chapterId, Integer parapraph, Integer startOffset,
+    public OrphusComment(Integer chapterId, String parapraph, Integer startOffset,
                          String originalText, String replacementText, String optionalComment, Date createdWhen)
     {
         this.chapterId = chapterId;
@@ -53,12 +53,12 @@ public class OrphusComment implements Serializable
         this.originalText = originalText;
     }
 
-    public Integer getParagraph()
+    public String getParagraph()
     {
         return paragraph;
     }
 
-    public void setParagraph(Integer paragraph)
+    public void setParagraph(String paragraph)
     {
         this.paragraph = paragraph;
     }

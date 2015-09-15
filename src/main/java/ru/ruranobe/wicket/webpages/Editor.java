@@ -19,10 +19,10 @@ import ru.ruranobe.mybatis.mappers.ChaptersMapper;
 import ru.ruranobe.mybatis.mappers.TextsHistoryMapper;
 import ru.ruranobe.mybatis.mappers.TextsMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
-import ru.ruranobe.mybatis.tables.Chapter;
-import ru.ruranobe.mybatis.tables.ChapterImage;
-import ru.ruranobe.mybatis.tables.ExternalResource;
-import ru.ruranobe.mybatis.tables.TextHistory;
+import ru.ruranobe.mybatis.entities.tables.Chapter;
+import ru.ruranobe.mybatis.entities.tables.ChapterImage;
+import ru.ruranobe.mybatis.entities.tables.ExternalResource;
+import ru.ruranobe.mybatis.entities.tables.TextHistory;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
 import java.util.ArrayList;
@@ -42,8 +42,8 @@ public class Editor extends SidebarLayoutPage
             Chapter chapter = getChapter(parameters, session);
             final Integer textId = chapter.getTextId();
 
-            final ru.ruranobe.mybatis.tables.Text currentText = new ru.ruranobe.mybatis.tables.Text();
-            ru.ruranobe.mybatis.tables.Text prevText = null;
+            final ru.ruranobe.mybatis.entities.tables.Text currentText = new ru.ruranobe.mybatis.entities.tables.Text();
+            ru.ruranobe.mybatis.entities.tables.Text prevText = null;
             TextArea<String> editor = new TextArea<String>("editor", new Model<String>()
             {
                 @Override
@@ -55,7 +55,7 @@ public class Editor extends SidebarLayoutPage
             if (textId != null)
             {
                 TextsMapper textsMapperCacheable = CachingFacade.getCacheableMapper(session, TextsMapper.class);
-                final ru.ruranobe.mybatis.tables.Text previousText = textsMapperCacheable.getTextById(textId);
+                final ru.ruranobe.mybatis.entities.tables.Text previousText = textsMapperCacheable.getTextById(textId);
                 prevText = previousText;
                 editor.setModel(new Model<String>()
                 {
@@ -121,7 +121,7 @@ public class Editor extends SidebarLayoutPage
 
     private class SaveText extends AjaxButton
     {
-        public SaveText(String name, Form form, ru.ruranobe.mybatis.tables.Text text, Chapter chapter, ru.ruranobe.mybatis.tables.Text previousText)
+        public SaveText(String name, Form form, ru.ruranobe.mybatis.entities.tables.Text text, Chapter chapter, ru.ruranobe.mybatis.entities.tables.Text previousText)
         {
             super(name, form);
             this.chapter = chapter;
@@ -213,8 +213,8 @@ public class Editor extends SidebarLayoutPage
             }
         }
 
-        private ru.ruranobe.mybatis.tables.Text previousText;
-        private ru.ruranobe.mybatis.tables.Text text;
+        private ru.ruranobe.mybatis.entities.tables.Text previousText;
+        private ru.ruranobe.mybatis.entities.tables.Text text;
         private Chapter chapter;
     }
 }

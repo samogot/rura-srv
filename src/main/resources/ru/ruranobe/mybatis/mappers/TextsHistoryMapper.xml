@@ -12,7 +12,7 @@
         <property name="memoryStoreEvictionPolicy" value="LRU"/>
     </cache-->
 
-    <insert id="insertTextHistory" parameterType="ru.ruranobe.mybatis.tables.TextHistory">
+    <insert id="insertTextHistory" parameterType="ru.ruranobe.mybatis.entities.tables.TextHistory">
         insert into texts_history (current_text_id, previous_text_id, insertion_time)
         values (#{currentTextId}, #{previousTextId}, #{insertionTime})
     </insert>

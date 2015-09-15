@@ -13,6 +13,7 @@ public class HomePage extends BaseLayoutPage
     @Override
     protected void onInitialize()
     {
+        setStatelessHint(true);
         super.onInitialize();
         add(new ProjectBannersList("bannersList", COUNT_OF_PROJECTS_ON_PAGE));
         add(new BookmarkablePageLink("allProjects", FullProjects.class));

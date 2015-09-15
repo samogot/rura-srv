@@ -1,7 +1,7 @@
 package ru.ruranobe.mybatis.mappers.cacheable;
 
 import ru.ruranobe.mybatis.mappers.VolumeReleaseActivitiesMapper;
-import ru.ruranobe.mybatis.tables.VolumeReleaseActivity;
+import ru.ruranobe.mybatis.entities.tables.VolumeReleaseActivity;
 
 import java.util.Collection;
 

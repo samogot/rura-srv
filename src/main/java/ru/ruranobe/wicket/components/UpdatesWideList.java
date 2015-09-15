@@ -13,7 +13,7 @@ import org.apache.wicket.model.Model;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.UpdatesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
-import ru.ruranobe.mybatis.tables.Update;
+import ru.ruranobe.mybatis.entities.tables.Update;
 import ru.ruranobe.wicket.RuraConstants;
 
 import java.text.SimpleDateFormat;

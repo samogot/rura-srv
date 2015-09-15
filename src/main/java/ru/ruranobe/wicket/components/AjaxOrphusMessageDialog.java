@@ -18,7 +18,7 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.CoreLibrariesContributor;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.OrphusCommentsMapper;
-import ru.ruranobe.mybatis.tables.OrphusComment;
+import ru.ruranobe.mybatis.entities.tables.OrphusComment;
 
 import java.util.Date;
 
@@ -73,7 +73,7 @@ public class AjaxOrphusMessageDialog extends WebComponent
                 String optionalComment = request.getRequestParameters()
                                                 .getParameterValue(ORPHUS_COMMENT_OPTIONAL_COMMENT).toString("");
 
-                OrphusComment orphusComment = new OrphusComment(chapterId, paragraph,
+                OrphusComment orphusComment = new OrphusComment(chapterId, "",
                         startOffset, originalText, replacementText, optionalComment, new Date(System.currentTimeMillis()));
 
                 SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();

@@ -13,8 +13,8 @@ import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.ExternalResourcesMapper;
 import ru.ruranobe.mybatis.mappers.ProjectsMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
-import ru.ruranobe.mybatis.tables.ExternalResource;
-import ru.ruranobe.mybatis.tables.Project;
+import ru.ruranobe.mybatis.entities.tables.ExternalResource;
+import ru.ruranobe.mybatis.entities.tables.Project;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.*;

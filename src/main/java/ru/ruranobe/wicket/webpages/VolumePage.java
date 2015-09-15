@@ -11,7 +11,6 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
@@ -20,7 +19,7 @@ import ru.ruranobe.mybatis.mappers.ExternalResourcesMapper;
 import ru.ruranobe.mybatis.mappers.VolumeReleaseActivitiesMapper;
 import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
-import ru.ruranobe.mybatis.tables.*;
+import ru.ruranobe.mybatis.entities.tables.*;
 import ru.ruranobe.wicket.components.CoverCarousel;
 import ru.ruranobe.wicket.components.LabelHideableOnNull;
 import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
@@ -206,11 +205,11 @@ public class VolumePage extends SidebarLayoutPage
         add(updatesView);
 
         ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
-        Collection<ru.ruranobe.mybatis.tables.Project> projects = projectsMapperCacheable.getAllProjects();
+        Collection<ru.ruranobe.mybatis.entities.tables.Project> projects = projectsMapperCacheable.getAllProjects();
         List<ProjectExtended> projectsList = new ArrayList<ProjectExtended>();
 
         int count = 0;
-        for (ru.ruranobe.mybatis.tables.Project project : projects)
+        for (ru.ruranobe.mybatis.entities.tables.Project project : projects)
         {
             if (!project.isProjectHidden() && !project.isBannerHidden())
             {
@@ -228,7 +227,7 @@ public class VolumePage extends SidebarLayoutPage
             {
                 ProjectExtended projectExtended = listItem.getModelObject();
                 ExternalResource imageResource = projectExtended.getExternalResource();
-                final ru.ruranobe.mybatis.tables.Project project = projectExtended.getProject();
+                final ru.ruranobe.mybatis.entities.tables.Project project = projectExtended.getProject();
 
                 ExternalLink projectLink = new ExternalLink("projectLink", "/" + project.getUrl());
                 Image projectImage = (imageResource == null) ? (new Image("projectImage", new PackageResourceReference(HomePage.class, "undefined.png")))

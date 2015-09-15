@@ -9,7 +9,7 @@ import ru.ruranobe.engine.files.YandexDiskService;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.ExternalResourcesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
-import ru.ruranobe.mybatis.tables.ExternalResource;
+import ru.ruranobe.mybatis.entities.tables.ExternalResource;
 
 import java.util.ArrayList;
 import java.util.Date;

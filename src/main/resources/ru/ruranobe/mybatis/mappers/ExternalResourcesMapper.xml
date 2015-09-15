@@ -12,7 +12,7 @@
         <property name="memoryStoreEvictionPolicy" value="LRU"/>
     </cache-->
 
-    <insert id="insertExternalResource" parameterType="ru.ruranobe.mybatis.tables.ExternalResource"
+    <insert id="insertExternalResource" parameterType="ru.ruranobe.mybatis.entities.tables.ExternalResource"
             keyProperty="resourceId" useGeneratedKeys="true">
         INSERT INTO external_resources (user_id, mime_type, url, title, uploaded_when)
         VALUES (#{userId}, #{mimeType}, #{url}, #{title}, #{uploadedWhen})
@@ -24,7 +24,7 @@
         WHERE resource_id = #{resourceId}
     </select>
 
-    <resultMap type="ru.ruranobe.mybatis.tables.ExternalResource" id="ExternalResourceResult">
+    <resultMap type="ru.ruranobe.mybatis.entities.tables.ExternalResource" id="ExternalResourceResult">
         <id property="resourceId" column="resource_id"/>
         <result property="userId" column="user_id"/>
         <result property="mimeType" column="mime_type"/>

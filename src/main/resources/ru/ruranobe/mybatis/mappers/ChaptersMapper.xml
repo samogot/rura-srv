@@ -71,7 +71,7 @@
          AND c.volume_id = next_c.volume_id
     </select>
 
-    <insert id="insertChapter" parameterType="ru.ruranobe.mybatis.tables.Chapter" keyProperty="chapterId" useGeneratedKeys="true">
+    <insert id="insertChapter" parameterType="ru.ruranobe.mybatis.entities.tables.Chapter" keyProperty="chapterId" useGeneratedKeys="true">
         insert into chapters (volume_id, text_id, url, title, order_number, published, nested)
         values (#{volumeId}, #{textId}, #{url}, #{title}, #{orderNumber}, #{published}, #{nested})
     </insert>
@@ -80,13 +80,13 @@
         delete from chapters where chapter_id=#{chapterId}
     </delete>
 
-    <update id="updateChapter" parameterType="ru.ruranobe.mybatis.tables.Chapter">
+    <update id="updateChapter" parameterType="ru.ruranobe.mybatis.entities.tables.Chapter">
         update chapters set volume_id = #{volumeId}, text_id=#{textId}, url=#{url}, title = #{title}, order_number=#{orderNumber},
         published=#{published}, nested=#{nested}
         where chapter_id=#{chapterId}
     </update>
 
-    <resultMap type="ru.ruranobe.mybatis.tables.Chapter" id="ChaptersResult">
+    <resultMap type="ru.ruranobe.mybatis.entities.tables.Chapter" id="ChaptersResult">
         <id property="chapterId" column="chapter_id"/>
         <result property="volumeId" column="volume_id"/>
         <result property="textId" column="text_id"/>

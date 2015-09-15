@@ -15,7 +15,7 @@ import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.misc.Token;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.UsersMapper;
-import ru.ruranobe.mybatis.tables.User;
+import ru.ruranobe.mybatis.entities.tables.User;
 
 import java.util.Date;
 

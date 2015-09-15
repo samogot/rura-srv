@@ -2,6 +2,8 @@ package ru.ruranobe.wicket.webpages;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
@@ -15,10 +17,10 @@ import ru.ruranobe.mybatis.mappers.ChaptersMapper;
 import ru.ruranobe.mybatis.mappers.TextsMapper;
 import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
-import ru.ruranobe.mybatis.tables.Chapter;
-import ru.ruranobe.mybatis.tables.ChapterImage;
-import ru.ruranobe.mybatis.tables.ExternalResource;
-import ru.ruranobe.mybatis.tables.Volume;
+import ru.ruranobe.mybatis.entities.tables.Chapter;
+import ru.ruranobe.mybatis.entities.tables.ChapterImage;
+import ru.ruranobe.mybatis.entities.tables.ExternalResource;
+import ru.ruranobe.mybatis.entities.tables.Volume;
 import ru.ruranobe.wicket.components.CommentsPanel;
 import ru.ruranobe.wicket.components.ContentsHolder;
 import ru.ruranobe.wicket.components.sidebar.ContentsModule;
@@ -170,7 +172,7 @@ public class Text extends SidebarLayoutPage
                 if (chapter.isVisibleOnPage())
                 {
                     Integer textId = chapter.getTextId();
-                    ru.ruranobe.mybatis.tables.Text chapterText = null;
+                    ru.ruranobe.mybatis.entities.tables.Text chapterText = null;
                     String textHtml = "";
                     String chapterFootnotes = "";
                     if (textId != null)
@@ -276,6 +278,13 @@ public class Text extends SidebarLayoutPage
             volumeText.append(volumeFootnotes);
         }
 
+        final String chapterId = Integer.toString(currentChapter.getChapterId());
+        add(new WebMarkupContainer("chapterId")
+        {
+            {
+                add(new AttributeAppender("chapter-id", chapterId));
+            }
+        });
         add(new Label("htmlText", volumeText.toString()).setEscapeModelStrings(false));
 
         List<ContentsHolder> contentsHolders = new ArrayList<ContentsHolder>();

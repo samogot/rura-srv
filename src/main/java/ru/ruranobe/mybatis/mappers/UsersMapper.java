@@ -1,6 +1,6 @@
 package ru.ruranobe.mybatis.mappers;
 
-import ru.ruranobe.mybatis.tables.User;
+import ru.ruranobe.mybatis.entities.tables.User;
 
 public interface UsersMapper
 {

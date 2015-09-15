@@ -174,7 +174,12 @@ INSERT IGNORE INTO users (user_id, username, realname, pass, pass_version, email
     user_email,
     user_email_authenticated,
     user_registration,
-    1
+	'fb2',
+	'Главам',
+	1,
+    1,
+	1,
+	1080
   FROM ruranobe_db.mw_user
   WHERE user_password LIKE ":A:%";
 

@@ -8,7 +8,7 @@ import org.apache.wicket.util.string.Strings;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.UsersMapper;
-import ru.ruranobe.mybatis.tables.User;
+import ru.ruranobe.mybatis.entities.tables.User;
 import ru.ruranobe.wicket.components.PasswordRecoveryPanel;
 
 public class PasswordRecoveryPage extends WebPage

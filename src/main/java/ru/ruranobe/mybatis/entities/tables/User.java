@@ -1,4 +1,4 @@
-package ru.ruranobe.mybatis.tables;
+package ru.ruranobe.mybatis.entities.tables;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -11,14 +11,19 @@ public class User implements Serializable
     private String realname;
     private String pass;
     private String passRecoveryToken;
-		private Integer passVersion;
+    private Integer passVersion;
     private Date passRecoveryTokenDate;
     private String email;
     private String emailToken;
     private Date emailTokenDate;
     private boolean emailActivated;
     private Date registrationDate;
+    private String converterType;
+    private String navigationType;
+    private boolean convertWithImgs;
     private boolean adult;
+    private boolean preferColoredImgs;
+    private Integer convertImgsSize;
 
     public User()
     {
@@ -161,11 +166,51 @@ public class User implements Serializable
         this.adult = adult;
     }
 
-		public Integer getPassVersion() {
-			return passVersion;
-		}
+    public Integer getPassVersion() {
+        return passVersion;
+    }
 
-		public void setPassVersion(Integer passVersion) {
-			this.passVersion = passVersion;
-		}
+    public void setPassVersion(Integer passVersion) {
+        this.passVersion = passVersion;
+    }
+
+    public String getConverterType() {
+        return converterType;
+    }
+
+    public void setConverterType(String converterType) {
+        this.converterType = converterType;
+    }
+
+    public String getNavigationType() {
+        return navigationType;
+    }
+
+    public void setNavigationType(String navigationType) {
+        this.navigationType = navigationType;
+    }
+
+    public boolean isConvertWithImgs() {
+        return convertWithImgs;
+    }
+
+    public void setConvertWithImgs(boolean convertWithImgs) {
+        this.convertWithImgs = convertWithImgs;
+    }
+
+    public boolean isPreferColoredImgs() {
+        return preferColoredImgs;
+    }
+
+    public void setPreferColoredImgs(boolean preferColoredImgs) {
+        this.preferColoredImgs = preferColoredImgs;
+    }
+
+    public Integer getConvertImgsSize() {
+        return convertImgsSize;
+    }
+
+    public void setConvertImgsSize(Integer convertImgsSize) {
+        this.convertImgsSize = convertImgsSize;
+    }
 }

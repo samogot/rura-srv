@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ru.ruranobe.mybatis.mappers.ChapterUrlDetailsMapper">
+
+    <!--cache type="org.mybatis.caches.ehcache.EhcacheCache">
+        <property name="timeToIdleSeconds" value="3600"/>
+        <property name="timeToLiveSeconds" value="3600"/>
+        <property name="maxEntriesLocalHeap" value="1000"/>
+        <property name="maxEntriesLocalDisk" value="10000000"/>
+        <property name="memoryStoreEvictionPolicy" value="LRU"/>
+    </cache-->
+
+    <select id="getChapterUrlDetailsByChapter" parameterType="int" resultMap="chapterUrlDetailsMap">
+        select c.url as chapter_url
+             , v.url as volume_url
+             , p.url as project_url
+             , c.title as chapter_title
+             , v.name_ru as volume_title
+             , p.title as project_title
+        from chapters c
+        join volumes v
+          on v.volume_id = c.volume_id
+        join projects p
+          on p.project_id = v.project_id
+        where c.chapter_id = #{chapterId}
+    </select>
+
+    <resultMap id="chapterUrlDetailsMap" type="ru.ruranobe.mybatis.entities.additional.ChapterUrlDetails">
+        <result property="chapterUrl" column="chapter_url"/>
+        <result property="volumeUrl" column="volume_url"/>
+        <result property="projectUrl" column="project_url"/>
+        <result property="chapterTitle" column="chapter_title"/>
+        <result property="volumeTitle" column="volume_title"/>
+        <result property="projectTitle" column="project_title"/>
+    </resultMap>
+
+</mapper>

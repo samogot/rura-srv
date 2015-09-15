@@ -1,7 +1,7 @@
 package ru.ruranobe.mybatis.mappers.cacheable;
 
 import ru.ruranobe.mybatis.mappers.ChapterImagesMapper;
-import ru.ruranobe.mybatis.tables.ChapterImage;
+import ru.ruranobe.mybatis.entities.tables.ChapterImage;
 
 import java.util.List;
 

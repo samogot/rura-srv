@@ -32,7 +32,7 @@ import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.*;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
-import ru.ruranobe.mybatis.tables.*;
+import ru.ruranobe.mybatis.entities.tables.*;
 import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
 

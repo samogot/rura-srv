@@ -1,7 +1,7 @@
 package ru.ruranobe.mybatis.mappers;
 
-import ru.ruranobe.mybatis.tables.ProjectInfo;
-import ru.ruranobe.mybatis.tables.Volume;
+import ru.ruranobe.mybatis.entities.tables.ProjectInfo;
+import ru.ruranobe.mybatis.entities.tables.Volume;
 
 import java.util.List;
 

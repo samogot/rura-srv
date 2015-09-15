@@ -1,4 +1,4 @@
-package ru.ruranobe.mybatis.tables;
+package ru.ruranobe.mybatis.entities.tables;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;

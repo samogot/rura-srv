@@ -1,7 +1,7 @@
 package ru.ruranobe.wicket.webpages;
 
-import ru.ruranobe.mybatis.tables.ExternalResource;
-import ru.ruranobe.mybatis.tables.Project;
+import ru.ruranobe.mybatis.entities.tables.ExternalResource;
+import ru.ruranobe.mybatis.entities.tables.Project;
 
 import java.io.Serializable;
 

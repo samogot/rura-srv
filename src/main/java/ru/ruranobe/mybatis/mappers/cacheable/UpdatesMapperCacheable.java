@@ -2,7 +2,7 @@ package ru.ruranobe.mybatis.mappers.cacheable;
 
 import org.apache.ibatis.annotations.Param;
 import ru.ruranobe.mybatis.mappers.UpdatesMapper;
-import ru.ruranobe.mybatis.tables.Update;
+import ru.ruranobe.mybatis.entities.tables.Update;
 
 import java.util.List;
 

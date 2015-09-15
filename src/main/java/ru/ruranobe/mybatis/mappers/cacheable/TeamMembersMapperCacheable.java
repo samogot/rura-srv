@@ -1,7 +1,7 @@
 package ru.ruranobe.mybatis.mappers.cacheable;
 
 import ru.ruranobe.mybatis.mappers.TeamMembersMapper;
-import ru.ruranobe.mybatis.tables.TeamMember;
+import ru.ruranobe.mybatis.entities.tables.TeamMember;
 
 import java.util.List;
 

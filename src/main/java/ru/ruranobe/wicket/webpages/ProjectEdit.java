@@ -39,9 +39,9 @@ import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.ProjectsMapper;
 import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
-import ru.ruranobe.mybatis.tables.ExternalResource;
-import ru.ruranobe.mybatis.tables.Project;
-import ru.ruranobe.mybatis.tables.Volume;
+import ru.ruranobe.mybatis.entities.tables.ExternalResource;
+import ru.ruranobe.mybatis.entities.tables.Project;
+import ru.ruranobe.mybatis.entities.tables.Volume;
 import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
 

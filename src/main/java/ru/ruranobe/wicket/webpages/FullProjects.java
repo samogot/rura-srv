@@ -14,9 +14,9 @@ import ru.ruranobe.mybatis.mappers.ExternalResourcesMapper;
 import ru.ruranobe.mybatis.mappers.ProjectsMapper;
 import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
-import ru.ruranobe.mybatis.tables.ExternalResource;
-import ru.ruranobe.mybatis.tables.Project;
-import ru.ruranobe.mybatis.tables.ProjectInfo;
+import ru.ruranobe.mybatis.entities.tables.ExternalResource;
+import ru.ruranobe.mybatis.entities.tables.Project;
+import ru.ruranobe.mybatis.entities.tables.ProjectInfo;
 import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.webpages.base.BaseLayoutPage;
 
@@ -32,13 +32,13 @@ public class FullProjects extends BaseLayoutPage
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
         SqlSession session = sessionFactory.openSession();
         ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
-        Collection<ru.ruranobe.mybatis.tables.Project> projects = projectsMapperCacheable.getAllProjects();
+        Collection<ru.ruranobe.mybatis.entities.tables.Project> projects = projectsMapperCacheable.getAllProjects();
         List<ProjectExtendedWithInfo> projectsList = new ArrayList<ProjectExtendedWithInfo>();
         ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.
                                                                                         getCacheableMapper(session, ExternalResourcesMapper.class);
         VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
 
-        for (ru.ruranobe.mybatis.tables.Project project : projects)
+        for (ru.ruranobe.mybatis.entities.tables.Project project : projects)
         {
             if (!project.isProjectHidden())
             {

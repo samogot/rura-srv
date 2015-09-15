@@ -1,6 +1,6 @@
 package ru.ruranobe.mybatis.mappers;
 
-import ru.ruranobe.mybatis.tables.ChapterImage;
+import ru.ruranobe.mybatis.entities.tables.ChapterImage;
 
 import java.util.List;
 

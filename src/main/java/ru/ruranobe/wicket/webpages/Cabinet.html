@@ -3,87 +3,218 @@
 <head>
     <wicket:head>
         <link rel="stylesheet" href="css/styles.cabinet.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+        <script src="js/page.cabinet.js"></script>
     </wicket:head>
 </head>
 <body>
 <wicket:extend>
-
     <div class="h3" style="margin-top: 15px !important;">Личный кабинет</div>
     <div class="cabinetpanel">
         <div class="leftcabinet">
             <div class="avatarcabinet">
                 <div class="placeholderavatar">
-                    <p>Нет аватара</p>
+                    <p wicket:id="avatarNoImageText">Нет аватара</p>
                     <a href="#">Загрузить</a>
                 </div>
-                <img src="" alt="">
+                <img wicket:id="avatarImage"/>
             </div>
-            <button type="button" class="btn btn-primary">Отправить E-mail</button>
             <button type="button" class="btn btn-primary">ЛС (0)</button>
         </div>
         <div class="infocabinet">
-            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-cog"></i> Настройки</button>
+            <button type="button" class="btn btn-default btn-sm settings" data-toggle="modal" data-target="#settingsModal"><i class="fa fa-cog"></i> Настройки</button>
             <p>
-                <b>Логин:</b> Kagge
+                <b>Логин:</b> <div wicket:id="username"/>
             </p>
-            <p>
-                <b>Настоящее имя:</b> Саня Латкун
-            </p>
-            <p>
+            <wicket:enclosure>
+                <p>
+                    <b>Настоящее имя:</b> <div wicket:id="realname"/>
+                </p>
+            </wicket:enclosure>
+            <!--p>
                 <b>Группа:</b> Читатели
-            </p>
-            <p style="margin: 0 0 25px;">
-                <b>E-mail:</b> 1234567@gmail.com <span class="grey">(скрыто)</span>
-            </p>
+            </p-->
+            <wicket:enclosure>
+                <p style="margin: 0 0 25px;">
+                    <b>E-mail:</b> <div wicket:id="email"/>
+                </p>
+            </wicket:enclosure>
             <p style="margin: 0 0 25px;">
                 <b>Комментариев:</b> 0 [<a href="">Последние комментарии</a>]
             </p>
             <p>
-                <b>Дата регистрации:</b> 3 октября 2014
+                <b>Дата регистрации:</b> <div wicket:id="registrationDate"/>
             </p>
-            <p>
+            <!--p>
                 <b>Последнее посещение:</b> 17 января 2015
-            </p>
+            </p-->
         </div>
     </div>
-    <h4 style="margin-top: 40px !important;">Закладки</h4>
-    <ul class="userbookmarks">
-        <li>
-            <i class="fa fa-lg fa-bookmark"></i>
-            <div class="userbookmark">
-                <p><a href="">Sword Art Online</a> - <a href="">Том 1</a> - <a href="">Пролог</a>
-                </p>
-                <div class="bookmarktext">
-                    Диаметр самого нижнего уровня составлял километров десять – там мог бы поместиться весь Сэтагая-ку[1]; группе привередливых ремесленников понадобился месяц, чтобы облазить его весь. А дальше возвышалась еще сотня уровней, один над другим; размер сооружения был просто невероятен...
+    <wicket:enclosure child='userBookmarksRepeater'>
+        <h4 style="margin-top: 40px !important;">Закладки</h4>
+        <ul class="userbookmarks">
+            <wicket:container wicket:id="userBookmarksRepeater">
+                <form wicket:id="bookmarkForm">
+                    <li>
+                        <i class="fa fa-lg fa-bookmark"></i>
+                        <div class="userbookmark">
+                            <p><a wicket:id="projectUrl"><span wicket:id="projectUrlText"/></a> - <a wicket:id="volumeUrl"><span wicket:id="volumeUrlText"/></a> - <a wicket:id="chapterUrl"><span wicket:id="chapterUrlText"/></a>
+                            </p>
+                            <div wicket:id="bookmarkText" class="bookmarktext">
+                                Диаметр самого нижнего уровня составлял километров десять – там мог бы поместиться весь Сэтагая-ку[1]; группе привередливых ремесленников понадобился месяц, чтобы облазить его весь. А дальше возвышалась еще сотня уровней, один над другим; размер сооружения был просто невероятен...
+                            </div>
+                            <div class="bookmarkbuttons">
+                                <!--button type="button" class="btn btn-default btn-sm"><i class="fa fa-comment-o"></i> Комментарий</button-->
+                                <a wicket:id="bookmarkUrl"><button type="button" class="btn btn-default btn-sm"><i class="fa fa-reply fa-flip-horizontal"></i> Перейти</button></a>
+                                <button wicket:id="deleteBookmark" type="submit" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i> Удалить</button>
+                            </div>
+                        </div>
+                    </li>
+                </form>
+            </wicket:container>
+            <!--li>
+                <i class="fa fa-lg fa-bookmark"></i>
+                <div class="userbookmark">
+                    <p><a href="">The Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka</a> - <a href="">Том 1</a> - <a href="">Глава 5</a>
+                    </p>
+                    <div class="bookmarktext">
+                        Всё это было нечто постыдное, чтобы задать на эти вопросы и даже отвлечь её от работы. Если наш разговор будет услышан людьми, которых я ни разу не видел и не встречался с ними... Я думал, что надо мной будут смеяться за то, что я не знаю подобных вещей.
+                    </div>
+                    <div class="bookmarkbuttons">
+                        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-comment-o"></i> Комментарий</button>
+                        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-reply fa-flip-horizontal"></i> Перейти</button>
+                        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i> Удалить</button>
+                    </div>
+                    <div class="bookmarkcomments"></div>
                 </div>
-                <div class="bookmarkbuttons">
-                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-comment-o"></i> Комментарий</button>
-                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-reply fa-flip-horizontal"></i> Перейти</button>
-                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i> Удалить</button>
-                </div>
-                <div class="bookmarkcomments">
-                    <div class="bookmarkcomment">Какой-то комментарий</div>
-                </div>
-            </div>
-        </li>
-        <li>
-            <i class="fa fa-lg fa-bookmark"></i>
-            <div class="userbookmark">
-                <p><a href="">The Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka</a> - <a href="">Том 1</a> - <a href="">Глава 5</a>
-                </p>
-                <div class="bookmarktext">
-                    Всё это было нечто постыдное, чтобы задать на эти вопросы и даже отвлечь её от работы. Если наш разговор будет услышан людьми, которых я ни разу не видел и не встречался с ними... Я думал, что надо мной будут смеяться за то, что я не знаю подобных вещей.
-                </div>
-                <div class="bookmarkbuttons">
-                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-comment-o"></i> Комментарий</button>
-                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-reply fa-flip-horizontal"></i> Перейти</button>
-                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i> Удалить</button>
-                </div>
-                <div class="bookmarkcomments"></div>
-            </div>
-        </li>
-    </ul>
+            </li-->
+        </ul>
+    </wicket:enclosure>
 
+    <!-- MODALS -->
+    <div class="modal fade" id="settingsPassModal" tabindex="-1" role="dialog" aria-labelledby="settingsPassLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidtimes;></span></button>
+                    <h4 class="modal-title" id="settingsPassLabel">Сменить пароль</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="settingsPass" class="form-inline" align="center">
+                        <div class="form-group">
+                            <label for="passNow">Введите текущий пароль&nbsp;&nbsp;</label>
+                            <input type="password" class="form-control" name="passNow" id="passNow" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="passNew">Введите новый пароль&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                            <input type="password" class="form-control" name="passNew" id="passNew" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="passNewRepeat">Повторите новый пароль&nbsp;</label>
+                            <input type="password" class="form-control" name="passNewRepeat" id="passNewRepeat" value="">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Отменить</button>
+                    <button type="button" class="btn btn-primary">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="settingsEmailModal" tabindex="-1" role="dialog" aria-labelledby="settingsEmailLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidtimes;></span></button>
+                    <h4 class="modal-title" id="settingsEmailLabel">Сменить Email</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="settingsEmail" class="form-inline" align="center">
+                        <div class="form-group">
+                            <label for="passNow">Введите текущий пароль&nbsp;&nbsp;</label>
+                            <input type="password" class="form-control" name="passNow" id="passNow" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="passNew">Введите новый Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                            <input type="password" class="form-control" name="passNew" id="passNew" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="passNewRepeat">Повторите новый Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                            <input type="password" class="form-control" name="passNewRepeat" id="passNewRepeat" value="">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Отменить</button>
+                    <button type="button" class="btn btn-primary">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form wicket:id="userSettings">
+        <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="settingsLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidtimes;></span></button>
+                        <h4 class="modal-title" id="settingsLabel">Настройки сайта</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form id="settingsForm" class="form-inline">
+                            <div class="form-group">
+                                <label wicket:for="converterType">Предпочитаемый формат скачивания</label>
+                                <select wicket:id="converterType" class="form-control" name="downloadType"/>
+                                    <!--option value="fb2">fb2</option>
+                                    <option value="docx">docx</option>
+                                    <option value="epub">epub</option>
+                                </select-->
+                            </div>
+                            <div class="form-group">
+                                <label wicket:for="navigationType">Приемущественно навигация по</label>
+                                <select wicket:id="navigationType" class="form-control" name="downloadType"/>
+                                    <!--option value="chapter">Главам</option>
+                                    <option value="subchapter">Подлавам</option>
+                                </select-->
+                            </div>
+                            <hr/>
+                            <div class="form-group">
+                                <input wicket:id="convertWithImgs" type="checkbox" checked name="downloadImage">
+                                <label wicket:for="convertWithImgs">Скачивать с иллюстрациями</label>
+                            </div>
+                            <br/>
+                            <div class="form-group">
+                                <input wicket:id="adult" type="checkbox" name="adult18">
+                                <label wicket:for="adult">Отображать материалы для взрослых (18)</label>
+                            </div>
+                            <br/>
+                            <div class="form-group">
+                                <input wicket:id="preferColoredImgs" type="checkbox" checked name="blackImage">
+                                <label wicket:for="preferColoredImgs">Отображать цветные иллюстрации вместо чернобелых при наличии</label>
+                            </div>
+                            <hr/>
+                            <div class="form-group">
+                                <label wicket:for="convertImgsSize">Размер иллюстраций в конвентере</label>
+                                <input wicket:id="convertImgsSize" type="text" class="form-control" name="irastSize" size="4"> px
+                            </div>
+                        </form>
+                        <hr/>
+                        <center>
+                            <button type="button" class="btn btn-default btn-sm settingsPass" data-toggle="modal" data-target="#settingsPassModal"><i class="fa fa-cog"></i> Сменить пароль</button>
+                            <button type="button" class="btn btn-default btn-sm settingsEmail" data-toggle="modal" data-target="#settingsEmailModal"><i class="fa fa-cog"></i> Сменить Email</button>
+                        </center>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Отменить</button>
+                        <button wicket:id="saveUserSettings" type="submit" class="btn btn-primary">Сохранить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- MODALS -->
 </wicket:extend>
 </body>
 </html>

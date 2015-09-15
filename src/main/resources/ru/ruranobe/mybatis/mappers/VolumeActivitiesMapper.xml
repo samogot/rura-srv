@@ -16,7 +16,7 @@
         order by activity_id asc
     </select>
 
-    <insert id="insertVolumeActivity" parameterType="ru.ruranobe.mybatis.tables.VolumeActivity" keyProperty="activityId" useGeneratedKeys="true">
+    <insert id="insertVolumeActivity" parameterType="ru.ruranobe.mybatis.entities.tables.VolumeActivity" keyProperty="activityId" useGeneratedKeys="true">
         insert into volume_activities (activity_name, activity_type)
         values (#{activityName}, #{activityType})
     </insert>
@@ -25,12 +25,12 @@
         delete from volume_activities where activity_id=#{activityId}
     </delete>
 
-    <update id="updateVolumeActivity" parameterType="ru.ruranobe.mybatis.tables.VolumeActivity">
+    <update id="updateVolumeActivity" parameterType="ru.ruranobe.mybatis.entities.tables.VolumeActivity">
         update volume_activities set activity_name = #{activityName}, activity_type=#{activityType}
         where activity_id=#{activityId}
     </update>
 
-    <resultMap type="ru.ruranobe.mybatis.tables.VolumeActivity" id="VolumeActivityResult">
+    <resultMap type="ru.ruranobe.mybatis.entities.tables.VolumeActivity" id="VolumeActivityResult">
         <id property="activityId" column="activity_id"/>
         <result property="activityName" column="activity_name"/>
         <result property="activityType" column="activity_type"/>

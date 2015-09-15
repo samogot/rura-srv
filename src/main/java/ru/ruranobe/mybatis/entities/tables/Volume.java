@@ -1,4 +1,4 @@
-package ru.ruranobe.mybatis.tables;
+package ru.ruranobe.mybatis.entities.tables;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import ru.ruranobe.engine.wiki.parser.WikiParser;

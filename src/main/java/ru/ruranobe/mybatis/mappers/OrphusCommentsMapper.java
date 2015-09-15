@@ -1,6 +1,6 @@
 package ru.ruranobe.mybatis.mappers;
 
-import ru.ruranobe.mybatis.tables.OrphusComment;
+import ru.ruranobe.mybatis.entities.tables.OrphusComment;
 
 public interface OrphusCommentsMapper
 {

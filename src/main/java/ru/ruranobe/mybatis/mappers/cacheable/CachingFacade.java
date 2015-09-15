@@ -2,6 +2,7 @@ package ru.ruranobe.mybatis.mappers.cacheable;
 
 import com.google.common.collect.ImmutableMap;
 import org.apache.ibatis.session.SqlSession;
+import ru.ruranobe.mybatis.entities.tables.OrphusComment;
 import ru.ruranobe.mybatis.mappers.*;
 
 import java.lang.reflect.Constructor;
@@ -24,6 +25,9 @@ public class CachingFacade
                     .put(TextsMapper.class, TextsMapperCacheable.class)
                     .put(TextsHistoryMapper.class, TextsHistoryMapperCacheable.class)
                     .put(BookmarksMapper.class, BookmarksMapperCacheable.class)
+                    .put(ChapterUrlDetailsMapper.class, ChapterUrlDetailsMapperCacheable.class)
+                    .put(UsersMapper.class, UsersMapperCacheable.class)
+                    .put(OrphusCommentsMapper.class, OrphusCommentsMapperCacheable.class)
                     .build();
 
     public static <T> T getCacheableMapper(SqlSession session, Class<T> mapperClass)

@@ -36,14 +36,13 @@
         WHERE email_token = #{emailToken}
     </select>
 
-    <insert id="registerUser" parameterType="ru.ruranobe.mybatis.tables.User" keyProperty="userId"
+    <insert id="registerUser" parameterType="ru.ruranobe.mybatis.entities.tables.User" keyProperty="userId"
             useGeneratedKeys="true">
         INSERT INTO users
         SET
         username = #{username},
         realname = #{realname},
         pass = #{pass},
-        pass_version = #{passVersion},
         pass_recovery_token = #{passRecoveryToken},
         pass_recovery_token_date = #{passRecoveryTokenDate},
         email = #{email},
@@ -51,16 +50,20 @@
         email_token_date = #{emailTokenDate},
         email_activated = #{emailActivated},
         registration_date = #{registrationDate},
-        adult = #{adult}
+        converter_type = #{converterType},
+        navigation_type = #{navigationType},
+        convert_with_imgs = #{convertWithImgs},
+        adult = #{adult},
+        prefer_colored_imgs = #{preferColoredImgs},
+        convert_imgs_size = #{convertImgsSize}
     </insert>
 
-    <update id="updateUser" parameterType="ru.ruranobe.mybatis.tables.User">
+    <update id="updateUser" parameterType="ru.ruranobe.mybatis.entities.tables.User">
         UPDATE users
         SET
         username = #{username},
         realname = #{realname},
         pass = #{pass},
-        pass_version = #{passVersion},
         pass_recovery_token = #{passRecoveryToken},
         pass_recovery_token_date = #{passRecoveryTokenDate},
         email = #{email},
@@ -68,11 +71,16 @@
         email_token_date = #{emailTokenDate},
         email_activated = #{emailActivated},
         registration_date = #{registrationDate},
-        adult = #{adult}
+        converter_type = #{converterType},
+        navigation_type = #{navigationType},
+        convert_with_imgs = #{convertWithImgs},
+        adult = #{adult},
+        prefer_colored_imgs = #{preferColoredImgs},
+        convert_imgs_size = #{convertImgsSize}
         WHERE user_id = #{userId}
     </update>
 
-    <resultMap id="UserResult" type="ru.ruranobe.mybatis.tables.User">
+    <resultMap id="UserResult" type="ru.ruranobe.mybatis.entities.tables.User">
         <id property="userId" column="user_id"/>
         <result property="username" column="username"/>
         <result property="realname" column="realname"/>
@@ -85,7 +93,12 @@
         <result property="emailTokenDate" column="email_token_date"/>
         <result property="emailActivated" column="email_activated"/>
         <result property="registrationDate" column="registration_date"/>
+        <result property="converterType" column="converter_type"/>
+        <result property="navigationType" column="navigation_type"/>
+        <result property="convertWithImgs" column="convert_with_imgs"/>
         <result property="adult" column="adult"/>
+        <result property="preferColoredImgs" column="prefer_colored_imgs"/>
+        <result property="convertImgsSize" column="convert_imgs_size"/>
     </resultMap>
 
 </mapper>

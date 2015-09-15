@@ -4,7 +4,7 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 import ru.ruranobe.mybatis.mappers.ExternalResourcesMapper;
-import ru.ruranobe.mybatis.tables.ExternalResource;
+import ru.ruranobe.mybatis.entities.tables.ExternalResource;
 
 public class ExternalResourcesCacheableMapper implements ExternalResourcesMapper
 {

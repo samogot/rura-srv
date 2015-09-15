@@ -10,7 +10,7 @@ import org.apache.wicket.util.string.Strings;
 import ru.ruranobe.misc.MD5;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.mappers.UsersMapper;
-import ru.ruranobe.mybatis.tables.User;
+import ru.ruranobe.mybatis.entities.tables.User;
 
 public class PasswordRecoveryPanel extends Panel
 {

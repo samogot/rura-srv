@@ -1,6 +1,6 @@
 package ru.ruranobe.mybatis.mappers;
 
-import ru.ruranobe.mybatis.tables.Text;
+import ru.ruranobe.mybatis.entities.tables.Text;
 
 public interface TextsMapper
 {
