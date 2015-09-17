@@ -1,5 +1,6 @@
 package ru.ruranobe.wicket.webpages;
 
+import com.google.common.collect.ImmutableList;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -18,6 +19,7 @@ import ru.ruranobe.mybatis.tables.Project;
 import ru.ruranobe.mybatis.tables.Volume;
 import ru.ruranobe.wicket.components.admin.AdminAffixedListPanel;
 import ru.ruranobe.wicket.components.admin.AdminInfoFormPanel;
+import ru.ruranobe.wicket.components.admin.AdminTableListPanel;
 import ru.ruranobe.wicket.components.admin.formitems.ProjectInfoPanel;
 import ru.ruranobe.wicket.components.admin.formitems.SubProjectSelectorItemPanel;
 import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
@@ -147,8 +149,7 @@ public class ProjectEdit extends AdminLayoutPage
                     ProjectsMapper mapper = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
                     mapper.updateProject(project);
                     session.commit();
-                }
-                finally
+                } finally
                 {
                     session.close();
                 }
@@ -159,6 +160,59 @@ public class ProjectEdit extends AdminLayoutPage
             {
                 return new ProjectInfoPanel(id, model);
             }
+        });
+
+        add(new AdminTableListPanel<Volume>("subprojects", "Подсерии", new ListModel<Volume>(volumes), VOLUMES_TABLE_COLUMNS)
+        {
+            @Override
+            public void onSubmit()
+            {
+                SqlSession session = MybatisUtil.getSessionFactory().openSession();
+                try
+                {
+                    VolumesMapper mapper = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
+                    for (Volume item : model.getObject())
+                    {
+                        if (!removed.contains(item))
+                        {
+                            if (item.getProjectId() != null)
+                            {
+                                mapper.updateVolume(item);
+                            }
+                            else
+                            {
+                                mapper.insertVolume(item);
+                            }
+                        }
+                    }
+                    for (Volume removedItem : removed)
+                    {
+                        if (removedItem.getVolumeId() != null)
+                        {
+                            mapper.deleteVolume(removedItem.getVolumeId());
+                        }
+                    }
+                    session.commit();
+                }
+                finally
+                {
+                    session.close();
+                }
+            }
+
+            @Override
+            protected Volume makeItem()
+            {
+                Volume new_volume = new Volume();
+                return new_volume;
+            }
+
+            @Override
+            protected Component getRowComponent(String id, IModel<Volume> model)
+            {
+                return null;
+            }
+
         });
 
         add(new AdminAffixedListPanel<Project>("subprojects", "Подсерии", new ListModel<Project>(subProjects))
@@ -239,4 +293,26 @@ public class ProjectEdit extends AdminLayoutPage
     private final Map<Integer, Project> projectIdToProject = new HashMap<Integer, Project>();
     private final Project project;
     private final Set<Integer> deletedVolumeIds = new HashSet<Integer>();
+    private final List<String> VOLUMES_TABLE_COLUMNS = new ImmutableList.Builder<String>()
+            .add("#")
+            .add("Ссылка")
+            .add("Имя для файлов")
+            .add("Имя для заголовков")
+            .add("Название (ориг.)")
+            .add("Название (англ.)")
+            .add("Название (рус.)")
+            .add("Название (романдзи)")
+            .add("Короткое название")
+            .add("Серия")
+            .add("Номер в серии")
+            .add("Автор")
+            .add("Иллюстратор")
+            .add("Дата публикации")
+            .add("ISBN")
+            .add("Тип релиза")
+            .add("Cтатус релиза")
+            .add("Внешняя ссылка")
+            .add("Аннотация")
+            .add("18+")
+            .build();
 }
