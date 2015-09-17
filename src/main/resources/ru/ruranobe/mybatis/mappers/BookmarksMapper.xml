@@ -23,6 +23,17 @@
         WHERE user_id = #{userId}
     </select>
 
+    <select id="getBookmarksExtendedByUser" parameterType="int" resultMap="BookmarkResult">
+        SELECT b.*,
+               p.paragraph_id as paragraph_id2,
+               p.paragraph_text,
+               p.text_id
+        FROM bookmarks b
+        join paragraphs p
+          on p.paragraph_id = b.paragraph_id
+        WHERE b.user_id = #{userId}
+    </select>
+
     <delete id="deleteBookmark" parameterType="int">
         delete from bookmarks where bookmark_id=#{bookmarkId}
     </delete>
@@ -33,6 +44,11 @@
         <result property="userId" column="user_id"/>
         <result property="paragraphId" column="paragraph_id"/>
         <result property="createdWhen" column="created_when"/>
+        <association property="paragraph" javaType="ru.ruranobe.mybatis.entities.tables.Paragraph">
+            <id property="paragraphId" column="paragraph_id2"/>
+            <result property="paragraphText" column="paragraph_text"/>
+            <result property="textId" column="text_id"/>
+        </association>
     </resultMap>
 
 </mapper>

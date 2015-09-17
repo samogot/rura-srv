@@ -19,4 +19,47 @@
                 #{createdWhen})
     </insert>
 
+    <select id="getLastOrphusCommentsBy" parameterType="map" resultMap="OrphusCommentResult">
+        select c.*,
+               p.*,
+               u.username,
+               ch.url,
+               ch.title
+        from orphus_comments c
+        join paragraphs p
+          on p.paragraph_id = c.paragraph
+        left join users u
+          on u.user_id = c.user_id
+        join chapters ch
+          on ch.chapter_id = c.chapter_id
+        ORDER BY c.created_when
+        <if test="sortingOrder == 'asc'">
+            ASC
+        </if>
+        <if test="sortingOrder == 'desc'">
+            DESC
+        </if>
+        LIMIT #{limitFrom}, #{limitTo}
+    </select>
+
+    <resultMap type="ru.ruranobe.mybatis.entities.tables.OrphusComment" id="OrphusCommentResult">
+        <result property="chapterId" column="chapter_id"/>
+        <result property="paragraph" column="paragraph"/>
+        <result property="startOffset" column="start_offset"/>
+        <result property="originalText" column="original_text"/>
+        <result property="replacementText" column="replacement_text"/>
+        <result property="optionalComment" column="optional_comment"/>
+        <result property="userId" column="user_id"/>
+        <result property="userIp" column="user_ip"/>
+        <result property="createdWhen" column="created_when"/>
+        <result property="username" column="username"/>
+        <result property="chapterUrl" column="url"/>
+        <result property="chapterName" column="title"/>
+        <association property="paragrap" javaType="ru.ruranobe.mybatis.entities.tables.Paragraph">
+            <id property="paragraphId" column="paragraph_id"/>
+            <result property="paragraphText" column="paragraph_text"/>
+            <result property="textId" column="text_id"/>
+        </association>
+    </resultMap>
+
 </mapper>

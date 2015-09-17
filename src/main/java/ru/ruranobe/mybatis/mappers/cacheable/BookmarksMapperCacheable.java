@@ -27,6 +27,11 @@ public class BookmarksMapperCacheable implements BookmarksMapper
     }
 
     @Override
+    public List<Bookmark> getBookmarksExtendedByUser(Integer userId) {
+        return mapper.getBookmarksExtendedByUser(userId);
+    }
+
+    @Override
     public void deleteBookmark(Integer bookmarkId) {
         mapper.deleteBookmark(bookmarkId);
     }

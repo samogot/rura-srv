@@ -72,22 +72,6 @@
                     </li>
                 </form>
             </wicket:container>
-            <!--li>
-                <i class="fa fa-lg fa-bookmark"></i>
-                <div class="userbookmark">
-                    <p><a href="">The Dungeon ni Deai wo Motomeru no wa Machigatteiru Darou ka</a> - <a href="">Том 1</a> - <a href="">Глава 5</a>
-                    </p>
-                    <div class="bookmarktext">
-                        Всё это было нечто постыдное, чтобы задать на эти вопросы и даже отвлечь её от работы. Если наш разговор будет услышан людьми, которых я ни разу не видел и не встречался с ними... Я думал, что надо мной будут смеяться за то, что я не знаю подобных вещей.
-                    </div>
-                    <div class="bookmarkbuttons">
-                        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-comment-o"></i> Комментарий</button>
-                        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-reply fa-flip-horizontal"></i> Перейти</button>
-                        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i> Удалить</button>
-                    </div>
-                    <div class="bookmarkcomments"></div>
-                </div>
-            </li-->
         </ul>
     </wicket:enclosure>
 
@@ -99,7 +83,8 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidtimes;></span></button>
                     <h4 class="modal-title" id="settingsPassLabel">Сменить пароль</h4>
                 </div>
-                <div class="modal-body">
+                <span wicket:id="emailPasswordRecoveryPanel"/>
+                <!--div class="modal-body">
                     <form id="settingsPass" class="form-inline" align="center">
                         <div class="form-group">
                             <label for="passNow">Введите текущий пароль&nbsp;&nbsp;</label>
@@ -118,7 +103,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Отменить</button>
                     <button type="button" class="btn btn-primary">Сохранить</button>
-                </div>
+                </div-->
             </div>
         </div>
     </div>
@@ -130,26 +115,22 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidtimes;></span></button>
                     <h4 class="modal-title" id="settingsEmailLabel">Сменить Email</h4>
                 </div>
-                <div class="modal-body">
-                    <form id="settingsEmail" class="form-inline" align="center">
+                <form wicket:id="emailForm" class="form-inline" align="center">
+                    <div class="modal-body">
                         <div class="form-group">
-                            <label for="passNow">Введите текущий пароль&nbsp;&nbsp;</label>
-                            <input type="password" class="form-control" name="passNow" id="passNow" value="">
+                            <label wicket:for="currentPassword">Введите текущий пароль&nbsp;&nbsp;</label>
+                            <input wicket:id="currentPassword" type="password" class="form-control" name="passNow">
                         </div>
                         <div class="form-group">
-                            <label for="passNew">Введите новый Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                            <input type="password" class="form-control" name="passNew" id="passNew" value="">
+                            <label wicket:for="newEmail">Введите новый Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                            <input wicket:id="newEmail" type="text" class="form-control" name="passNew">
                         </div>
-                        <div class="form-group">
-                            <label for="passNewRepeat">Повторите новый Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                            <input type="password" class="form-control" name="passNewRepeat" id="passNewRepeat" value="">
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Отменить</button>
-                    <button type="button" class="btn btn-primary">Сохранить</button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Отменить</button>
+                        <button wicket:id="updateEmail" type="submit" class="btn btn-primary">Сохранить</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -167,17 +148,10 @@
                             <div class="form-group">
                                 <label wicket:for="converterType">Предпочитаемый формат скачивания</label>
                                 <select wicket:id="converterType" class="form-control" name="downloadType"/>
-                                    <!--option value="fb2">fb2</option>
-                                    <option value="docx">docx</option>
-                                    <option value="epub">epub</option>
-                                </select-->
                             </div>
                             <div class="form-group">
                                 <label wicket:for="navigationType">Приемущественно навигация по</label>
                                 <select wicket:id="navigationType" class="form-control" name="downloadType"/>
-                                    <!--option value="chapter">Главам</option>
-                                    <option value="subchapter">Подлавам</option>
-                                </select-->
                             </div>
                             <hr/>
                             <div class="form-group">

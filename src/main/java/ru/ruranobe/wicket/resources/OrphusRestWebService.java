@@ -2,14 +2,18 @@ package ru.ruranobe.wicket.resources;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.wicket.util.string.Strings;
 import org.wicketstuff.rest.annotations.MethodMapping;
 import org.wicketstuff.rest.annotations.parameters.RequestBody;
 import org.wicketstuff.rest.resource.gson.GsonRestResource;
 import org.wicketstuff.rest.utils.http.HttpMethod;
+import ru.ruranobe.misc.ParagraphService;
 import ru.ruranobe.mybatis.MybatisUtil;
+import ru.ruranobe.mybatis.entities.tables.Paragraph;
 import ru.ruranobe.mybatis.entities.tables.User;
 import ru.ruranobe.mybatis.mappers.ChaptersMapper;
 import ru.ruranobe.mybatis.mappers.OrphusCommentsMapper;
+import ru.ruranobe.mybatis.mappers.ParagraphsMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.mybatis.entities.tables.Chapter;
 import ru.ruranobe.mybatis.entities.tables.OrphusComment;
@@ -56,9 +60,19 @@ public class OrphusRestWebService extends GsonRestResource
             throw new IllegalArgumentException("replacementText wasn't specified.");
         }
 
-        if ("".equals(orphusComment.getOptionalComment()))
+        if (Strings.isEmpty(orphusComment.getOptionalComment()))
         {
             orphusComment.setOptionalComment(null);
+        }
+
+        if (orphusComment.getTextId() == null)
+        {
+            throw new IllegalArgumentException("textId wasn't specified.");
+        }
+
+        if (Strings.isEmpty(orphusComment.getFullText()))
+        {
+            throw new IllegalArgumentException("fullText wasn't specified.");
         }
 
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
@@ -71,6 +85,14 @@ public class OrphusRestWebService extends GsonRestResource
             {
                 throw new IllegalArgumentException("Chapter with the specified chapterId doesn't exist.");
             }
+
+            ParagraphsMapper paragraphsMapperCacheable = CachingFacade.getCacheableMapper(session, ParagraphsMapper.class);
+            Paragraph paragraph = new Paragraph();
+            paragraph.setParagraphId(orphusComment.getParagraph());
+            paragraph.setParagraphText(orphusComment.getFullText());
+            paragraph.setTextId(orphusComment.getTextId());
+
+            ParagraphService.databaseHandleParagraph(paragraphsMapperCacheable, paragraph, orphusComment.getParagraph());
 
             OrphusCommentsMapper orphusCommentsMapperCacheable = CachingFacade.getCacheableMapper(session, OrphusCommentsMapper.class);
             orphusComment.setCreatedWhen(new Date());

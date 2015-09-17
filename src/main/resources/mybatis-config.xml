@@ -9,8 +9,8 @@
             <dataSource type="POOLED">
                 <property name="driver" value="com.mysql.jdbc.Driver"/>
                 <property name="url" value="jdbc:mysql://localhost:3306/ruranobe?characterEncoding=utf8"/>
-                <property name="username" value="root"/>
-                <property name="password" value="parolyaNet0"/>
+                <property name="username" value="ruranobe"/>
+                <property name="password" value="nut8MfqDZ4RjpqxG"/>
             </dataSource>
         </environment>
     </environments>
@@ -31,5 +31,6 @@
         <mapper resource="ru/ruranobe/mybatis/mappers/TextsHistoryMapper.xml"/>
         <mapper resource="ru/ruranobe/mybatis/mappers/BookmarksMapper.xml"/>
         <mapper resource="ru/ruranobe/mybatis/mappers/ChapterUrlDetailsMapper.xml"/>
+        <mapper resource="ru/ruranobe/mybatis/mappers/ParagraphsMapper.xml"/>
     </mappers>
 </configuration>

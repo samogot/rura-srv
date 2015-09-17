@@ -60,10 +60,38 @@ public class Bookmark implements Serializable
         this.createdWhen = createdWhen;
     }
 
+    public Paragraph getParagraph() {
+        return paragraph;
+    }
+
+    public void setParagraph(Paragraph paragraph) {
+        this.paragraph = paragraph;
+    }
+
+    public String getFullText() {
+        return fullText;
+    }
+
+    public void setFullText(String fullText) {
+        this.fullText = fullText;
+    }
+
+    public Integer getTextId() {
+        return textId;
+    }
+
+    public void setTextId(Integer textId) {
+        this.textId = textId;
+    }
+
     private Integer bookmarkId;
     private Integer chapterId;
     private Integer userId;
     private String paragraphId;
     private Date createdWhen;
+    /* Optional */
+    private Paragraph paragraph;
+    private String fullText;
+    private Integer textId;
     private static final long serialVersionUID = 1L;
 }

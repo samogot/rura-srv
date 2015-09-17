@@ -81,6 +81,7 @@ public class WicketApplication extends AuthenticatedWebApplication
         mount(new MountedMapper("/a/${project}/${volume}", VolumeEdit.class));
         mount(new MountedMapper("/a/${project}", ProjectEdit.class));
         mount(new MountedMapper("/a", GlobalEdit.class));
+        mount(new MountedMapper("/a/orphus", Orphus.class));
         mount(new MountedMapper("/notfound", NotFound.class));
 
         mountResource("/bookmarks", new ResourceReference("bookmarksResource") {

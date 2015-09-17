@@ -68,6 +68,17 @@ public class LoginSession extends AuthenticatedWebSession {
 		this.user = null;
 	}
 
+	public boolean validatePassword(String password)
+	{
+		String hash = Authentication.getPassHash(user.getPassVersion(), password, user.getPass());
+		return (areHashesEqual(hash, user.getPass()));
+	}
+
+	public void updateUser(User user)
+	{
+		this.user = user;
+	}
+
 	private boolean areHashesEqual(String hash1, String hash2)
 	{
 		boolean result = false;

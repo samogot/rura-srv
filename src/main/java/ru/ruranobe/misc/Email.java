@@ -16,6 +16,9 @@ public class Email
                                                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEXP);
     private static final String NOREPLY_RURANOBE_EMAIL = "noreply@ruranobe.ru";
+    public static final String ACTIVATE_EMAIL_SUBJECT = "Активация электронного адреса";
+    public static final String ACTIVATE_EMAIL_TEXT = "Для активации электронного адреса в системе проследуйте по ссылке http://ruranobe.ru/user/email/activate?token=%s";
+    public static final long ETERNITY_EXPIRATION_TIME = 31622400000000L;
 
     public static void sendEmail(String from, String to, String subject, String text) throws MessagingException
     {

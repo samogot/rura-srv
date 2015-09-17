@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS orphus_comments;
 DROP TABLE IF EXISTS chapter_images;
 DROP TABLE IF EXISTS updates;
 DROP TABLE IF EXISTS bookmarks;
+DROP TABLE IF EXISTS paragraphs;
 DROP TABLE IF EXISTS chapters;
 DROP TABLE IF EXISTS volume_release_activities;
 DROP TABLE IF EXISTS volumes;
@@ -231,9 +232,22 @@ create table bookmarks
   bookmark_id INT(11) primary key auto_increment,
   chapter_id int(11),
   user_id int(11) NOT NULL,
-  paragraph_id VARCHAR(64) NOT NULL,
+  paragraph_id VARCHAR(255) NOT NULL,
   created_when DATETIME NOT NULL
 );
+
+create table paragraphs
+(
+  paragraph_id varchar(255) primary key,
+  paragraph_text TEXT NOT NULL,
+  text_id int(11) NOT NULL
+);
+
+alter table paragraphs add constraint fk_paragraph_text_id foreign key (text_id) references texts(text_id);
+
+alter table bookmarks add constraint fk_bookmark_paragraph_id foreign key (paragraph_id) references paragraphs(paragraph_id);
+
+alter table orphus_comments add constraint fk_orphus_paragraph_id foreign key (paragraph) references paragraphs(paragraph_id);
 
 alter table bookmarks add constraint fk_user_bookmark_id foreign key (user_id) references users(user_id);
 

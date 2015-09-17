@@ -172,14 +172,14 @@ public class RegistrationPanel extends Panel
 
                         if (!Strings.isEmpty(email))
                         {
-                            Token token = Token.valueOf(user.getUserId(), ETERNITY_EXPIRATION_TIME);
+                            Token token = Token.valueOf(user.getUserId(), Email.ETERNITY_EXPIRATION_TIME);
                             user.setEmailToken(token.getTokenValue());
                             user.setEmailTokenDate(token.getTokenExpirationDate());
                             user.setEmailActivated(false);
                             try
                             {
-                                Email.sendEmail(user.getEmail(), ACTIVATE_EMAIL_SUBJECT,
-                                        String.format(ACTIVATE_EMAIL_TEXT, user.getEmailToken()));
+                                Email.sendEmail(user.getEmail(), Email.ACTIVATE_EMAIL_SUBJECT,
+                                        String.format(Email.ACTIVATE_EMAIL_TEXT, user.getEmailToken()));
                                 usersMapper.updateUser(user);
                             }
                             catch (Exception ex)

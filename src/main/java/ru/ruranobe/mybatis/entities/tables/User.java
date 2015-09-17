@@ -30,6 +30,28 @@ public class User implements Serializable
 
     }
 
+    public User(User user)
+    {
+        this.userId = user.userId;
+        this.username = user.username;
+        this.realname = user.realname;
+        this.pass = user.pass;
+        this.passRecoveryToken = user.passRecoveryToken;
+        this.passVersion = user.passVersion;
+        this.passRecoveryTokenDate = user.passRecoveryTokenDate;
+        this.email = user.email;
+        this.emailToken = user.emailToken;
+        this.emailTokenDate = user.emailTokenDate;
+        this.emailActivated = user.emailActivated;
+        this.registrationDate = user.registrationDate;
+        this.converterType = user.converterType;
+        this.navigationType = user.navigationType;
+        this.convertWithImgs = user.convertWithImgs;
+        this.adult = user.adult;
+        this.preferColoredImgs = user.preferColoredImgs;
+        this.convertImgsSize = user.convertImgsSize;
+    }
+
     public User(String username, String realname, String pass,
                 String passRecoveryToken, Date passRecoveryTokenDate, String email,
                 String emailToken, Date emailTokenDate, boolean isEmailActivated, Date registrationDate)

@@ -16,6 +16,13 @@ public class OrphusComment implements Serializable
     private String userIP;
     private Integer userId;
     private Date createdWhen;
+    private String fullText;
+    private Integer textId;
+    /* Optional */
+    private Paragraph paragrap;
+    private String username;
+    private String chapterUrl;
+    private String chapterName;
 
     public OrphusComment()
     {
@@ -121,5 +128,53 @@ public class OrphusComment implements Serializable
     public void setUserId(Integer userId)
     {
         this.userId = userId;
+    }
+
+    public String getFullText() {
+        return fullText;
+    }
+
+    public void setFullText(String fullText) {
+        this.fullText = fullText;
+    }
+
+    public Integer getTextId() {
+        return textId;
+    }
+
+    public void setTextId(Integer textId) {
+        this.textId = textId;
+    }
+
+    public Paragraph getParagrap() {
+        return paragrap;
+    }
+
+    public void setParagrap(Paragraph paragrap) {
+        this.paragrap = paragrap;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getChapterUrl() {
+        return chapterUrl;
+    }
+
+    public void setChapterUrl(String chapterUrl) {
+        this.chapterUrl = chapterUrl;
+    }
+
+    public String getChapterName() {
+        return chapterName;
+    }
+
+    public void setChapterName(String chapterName) {
+        this.chapterName = chapterName;
     }
 }
