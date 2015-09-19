@@ -1,6 +1,7 @@
 package ru.ruranobe.mybatis.tables;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.string.Strings;
 import ru.ruranobe.engine.wiki.parser.WikiParser;
 import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.webpages.VolumePage;
@@ -9,7 +10,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Volume extends PageRepresentable implements Serializable
+public class Volume extends PageRepresentable implements Serializable, Cloneable
 {
 
     public Project getProject()
@@ -59,7 +60,7 @@ public class Volume extends PageRepresentable implements Serializable
     private String nextNameShort;
     private String nextUrl;
     private String subProjectName;
-    private Project project;
+    private transient Project project;
 
     public Volume()
     {
@@ -289,6 +290,18 @@ public class Volume extends PageRepresentable implements Serializable
     public void setUrl(String url)
     {
         this.url = url;
+    }
+
+    public String getUrlPart()
+    {
+        return url.split("/", -1)[1];
+    }
+
+    public void setUrlPart(String urlPart)
+    {
+        String[] parts = this.url.split("/", -1);
+        parts[1] = urlPart;
+        this.url = Strings.join("/", parts);
     }
 
     public Integer getVolumeId()

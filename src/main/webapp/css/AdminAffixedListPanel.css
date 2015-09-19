@@ -2,27 +2,3 @@
     min-height: 20px;
     overflow: auto;
 }
-
-.list-group.select .form-control {
-    padding: 6px 6px;
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    -webkit-box-shadow: none;
-    transition: none;
-    -webkit-transition: none;
-}
-
-.list-group.select .form-control:focus, .list-group.select .form-control:focus {
-    background-color: #F2F2F2;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, 0.6);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, 0.6);
-}
-
-.list-group.select .form-control:hover, .list-group.select .form-control:active, .admin-table .form-control:hover, .admin-table .form-control:active {
-    background-color: #F2F2F2;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    border: 1px solid #CCC;
-    padding: 5px 5px;
-}

@@ -1960,7 +1960,6 @@ table.rc-table-resizing thead > th > a {
 .admin-header.affix {
     position: fixed;
     top: 0px;
-    */;
 }
 
 form.admin-block {
@@ -1972,71 +1971,6 @@ form.admin-block {
     margin-bottom: 10px;
     border-bottom: 1px solid #e1e1e1;
     /* width: 100%; */
-}
-
-#scrollbar {
-    position: relative;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    z-index: 5;
-    height: 16px;
-}
-
-#innerScrollbar {
-    height: 1px;
-    line-height: 1px;
-    font-size: 1px;
-    visibility: hidden;
-}
-
-#scrollbar.affix {
-    position: fixed;
-    bottom: 0;
-}
-
-#scrollbar.affix-bottom {
-    position: relative;
-    margin-bottom: -16px;
-}
-
-table .header-copy {
-    position: absolute;
-    visibility: hidden;
-    top: 1px;
-    background-color: white;
-    margin: -1px;
-    z-index: 2;
-}
-
-@media (min-width: 768px) {
-    thead.header-copy.affix,
-    .admin-header.affix {
-        clip: rect(auto, 480px, 900px, auto);
-    }
-}
-
-@media (min-width: 992px) {
-    thead.header-copy.affix,
-    .admin-header.affix {
-        clip: rect(auto, 700px, 900px, auto);
-    }
-}
-
-@media (min-width: 1200px) {
-    thead.header-copy.affix,
-    .admin-header.affix {
-        clip: rect(auto, 900px, 900px, auto);
-    }
-}
-
-thead.header-copy.affix {
-    position: fixed;
-    top: 64px;
-    visibility: visible;
-}
-
-thead.header-copy.affix-bottom {
-    visibility: visible;
 }
 
 .banner-upload .fileupload {

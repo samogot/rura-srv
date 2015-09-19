@@ -94,7 +94,7 @@ public abstract class AdminFormPanel extends Panel
         feedbackPanel.setOutputMarkupId(true);
     }
 
-    private void onAjaxProcess(AjaxRequestTarget target)
+    protected void onAjaxProcess(AjaxRequestTarget target)
     {
         target.add(feedbackPanel);
         target.appendJavaScript(String.format(";updateFeedbackPanelTimeout('#%s');", feedbackPanel.getMarkupId()));

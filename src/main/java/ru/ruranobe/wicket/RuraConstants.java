@@ -1,8 +1,10 @@
 package ru.ruranobe.wicket;
 
 import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
+import java.util.List;
 import java.util.Map;
 
 public class RuraConstants
@@ -23,6 +25,18 @@ public class RuraConstants
                     .put(RuraConstants.UPDATE_TYPE_PROOFREAD, "update-proofread")
                     .put(RuraConstants.UPDATE_TYPE_IMAGES, "update-images")
                     .build();
+
+    public static final String VOLUME_TYPE_RANOBE = "Ранобэ";
+    public static final String VOLUME_TYPE_SIDESTORY = "Побочные истории";
+    public static final String VOLUME_TYPE_DOUJINSHI = "Авторские додзинси";
+    public static final String VOLUME_TYPE_OTHER = "Другое";
+
+    public static final List<String> VOLUME_TYPE_LIST = new ImmutableList.Builder<String>()
+            .add(RuraConstants.VOLUME_TYPE_RANOBE)
+            .add(RuraConstants.VOLUME_TYPE_SIDESTORY)
+            .add(RuraConstants.VOLUME_TYPE_DOUJINSHI)
+            .add(RuraConstants.VOLUME_TYPE_OTHER)
+            .build();
 
     public static final String VOLUME_STATUS_HIDDEN = "hidden";
     @SuppressWarnings("unused")

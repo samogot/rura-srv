@@ -2,7 +2,93 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <body>
 <wicket:panel>
-
+    <td class="column-number-0">
+        <input type="text" class="form-control" placeholder="<пусто>" wicket:id="urlPart">
+    </td>
+    <td class="column-number-1">
+        <input type="text" class="form-control" placeholder="<пусто>" wicket:id="nameFile">
+    </td>
+    <td class="column-number-2">
+        <input type="text" class="form-control" placeholder="<пусто>" wicket:id="nameTitle">
+    </td>
+    <td class="column-number-3">
+        <input type="text" class="form-control" placeholder="<пусто>" wicket:id="nameJp">
+    </td>
+    <td class="column-number-4">
+        <input type="text" class="form-control" placeholder="<пусто>" wicket:id="nameEn">
+    </td>
+    <td class="column-number-5">
+        <input type="text" class="form-control" placeholder="<пусто>" wicket:id="nameRu">
+    </td>
+    <td class="column-number-6">
+        <input type="text" class="form-control" placeholder="<пусто>" wicket:id="nameRomaji">
+    </td>
+    <td class="column-number-7">
+        <input type="text" class="form-control" placeholder="<пусто>" wicket:id="nameShort">
+    </td>
+    <td class="column-number-8">
+        <select class="form-control" wicket:id="project"></select>
+    </td>
+    <td class="column-number-9">
+        <input type="text" class="form-control" placeholder="<пусто>" wicket:id="sequenceNumber">
+    </td>
+    <td class="column-number-10">
+        <input class="form-control typeahead author-name" type="text" placeholder="<пусто>" wicket:id="author">
+    </td>
+    <td class="column-number-11">
+        <input class="form-control typeahead illustrator-name" type="text" placeholder="<пусто>"
+               wicket:id="illustrator">
+    </td>
+    <td class="column-number-12">
+        <input type="text" class="form-control" placeholder="<пусто>" wicket:id="releaseDate">
+    </td>
+    <td class="column-number-13">
+        <input type="text" class="form-control" placeholder="<пусто>" wicket:id="isbn">
+    </td>
+    <td class="column-number-14">
+        <select class="form-control" wicket:id="volumeType">
+            <option>Ранобэ</option>
+            <option>Побочные истории</option>
+            <option>Авторские додзинси</option>
+            <option>Другое</option>
+        </select>
+    </td>
+    <td class="column-number-15">
+        <select class="form-control" wicket:id="volumeStatus">
+            <wicket:container wicket:id="basic">
+                <option wicket:id="option"></option>
+            </wicket:container>
+            <optgroup label="Сторонний перевод">
+                <wicket:container wicket:id="external">
+                    <option wicket:id="option"></option>
+                </wicket:container>
+            </optgroup>
+            <optgroup label="Не в работе">
+                <wicket:container wicket:id="not_in_work">
+                    <option wicket:id="option"></option>
+                </wicket:container>
+            </optgroup>
+            <optgroup label="В работе">
+                <wicket:container wicket:id="in_work">
+                    <option wicket:id="option"></option>
+                </wicket:container>
+            </optgroup>
+            <optgroup label="Опубликован">
+                <wicket:container wicket:id="published">
+                    <option wicket:id="option"></option>
+                </wicket:container>
+            </optgroup>
+        </select>
+    </td>
+    <td class="column-number-16">
+        <input type="text" class="form-control" placeholder="<пусто>" wicket:id="externalUrl">
+    </td>
+    <td class="column-number-17">
+        <textarea class="form-control" placeholder="<пусто>" wicket:id="annotation"></textarea>
+    </td>
+    <td class="column-number-18">
+        <input type="checkbox" wicket:id="adult">
+    </td>
 </wicket:panel>
 </body>
 </html>

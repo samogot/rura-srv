@@ -1,10 +1,15 @@
 package ru.ruranobe.wicket.webpages;
 
 import com.google.common.collect.ImmutableList;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.ListModel;
@@ -17,11 +22,14 @@ import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.mybatis.tables.Project;
 import ru.ruranobe.mybatis.tables.Volume;
+import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.components.admin.AdminAffixedListPanel;
 import ru.ruranobe.wicket.components.admin.AdminInfoFormPanel;
 import ru.ruranobe.wicket.components.admin.AdminTableListPanel;
+import ru.ruranobe.wicket.components.admin.AdminToolboxAjaxButton;
 import ru.ruranobe.wicket.components.admin.formitems.ProjectInfoPanel;
 import ru.ruranobe.wicket.components.admin.formitems.SubProjectSelectorItemPanel;
+import ru.ruranobe.wicket.components.admin.formitems.VolumeTableRowPanel;
 import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
 
 import java.util.*;
@@ -43,6 +51,12 @@ public class ProjectEdit extends AdminLayoutPage
         }
     }
 
+    private void reinitAllProjects()
+    {
+        allProjects.clear();
+        allProjects.add(project);
+        allProjects.addAll(subProjects);
+    }
 
     public ProjectEdit(final PageParameters parameters)
     {
@@ -66,8 +80,7 @@ public class ProjectEdit extends AdminLayoutPage
             subProjects = CachingFacade.getCacheableMapper(session, ProjectsMapper.class).getSubProjectsByParentProjectId(project.getProjectId());
             allProjects = new ArrayList<Project>();
             volumes = new ArrayList<Volume>();
-            allProjects.add(project);
-            allProjects.addAll(subProjects);
+            reinitAllProjects();
             for (Project project : allProjects)
             {
                 List<Volume> volumesByProjectId = volumesMapperCacheable.getVolumesByProjectId(project.getProjectId());
@@ -84,58 +97,9 @@ public class ProjectEdit extends AdminLayoutPage
         }
 
 
-        final Comparator<Project> projectComparator = new Comparator<Project>()
-        {
-            @Override
-            public int compare(Project o1, Project o2)
-            {
-                if (o1.getParentId() == null && o2.getParentId() != null)
-                {
-                    return -1;
-                }
-                else if (o2.getParentId() == null && o1.getParentId() != null)
-                {
-                    return 1;
-                }
-                else
-                {
-                    return o1.getOrderNumber() - o2.getOrderNumber();
-                }
-            }
-        };
         Collections.sort(subProjects, projectComparator);
         Collections.sort(allProjects, projectComparator);
-        Collections.sort(volumes, new Comparator<Volume>()
-        {
-            @Override
-            public int compare(Volume o1, Volume o2)
-            {
-                int compProj = projectComparator.compare(o1.getProject(), o2.getProject());
-                if (compProj == 0)
-                {
-                    if (o1.getSequenceNumber() == null && o2.getSequenceNumber() == null)
-                    {
-                        return 0;
-                    }
-                    else if (o1.getSequenceNumber() == null)
-                    {
-                        return 1;
-                    }
-                    else if (o2.getSequenceNumber() == null)
-                    {
-                        return -1;
-                    }
-                    else
-                    {
-                        return o1.getSequenceNumber() - o2.getSequenceNumber();
-                    }
-                }
-                else
-                {
-                    return compProj;
-                }
-            }
-        });
+        Collections.sort(volumes, volumeComparator);
 
 
         add(new AdminInfoFormPanel<Project>("info", "Информация", new CompoundPropertyModel<Project>(project))
@@ -149,7 +113,8 @@ public class ProjectEdit extends AdminLayoutPage
                     ProjectsMapper mapper = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
                     mapper.updateProject(project);
                     session.commit();
-                } finally
+                }
+                finally
                 {
                     session.close();
                 }
@@ -162,7 +127,7 @@ public class ProjectEdit extends AdminLayoutPage
             }
         });
 
-        add(new AdminTableListPanel<Volume>("subprojects", "Подсерии", new ListModel<Volume>(volumes), VOLUMES_TABLE_COLUMNS)
+        add(new AdminTableListPanel<Volume>("volumes", "Все тома", new ListModel<Volume>(volumes), VOLUMES_TABLE_COLUMNS)
         {
             @Override
             public void onSubmit()
@@ -175,7 +140,7 @@ public class ProjectEdit extends AdminLayoutPage
                     {
                         if (!removed.contains(item))
                         {
-                            if (item.getProjectId() != null)
+                            if (item.getVolumeId() != null)
                             {
                                 mapper.updateVolume(item);
                             }
@@ -201,16 +166,45 @@ public class ProjectEdit extends AdminLayoutPage
             }
 
             @Override
+            protected void onInitialize()
+            {
+                super.onInitialize();
+                toolbarButtons.add(1, new AdminToolboxAjaxButton("button", "Дублировать", "warning", "files-o", form)
+                {
+                    @Override
+                    protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+                    {
+                        if (selectedItem == null)
+                        {
+                            target.appendJavaScript("alert('Ничего не выбрано!');");
+                        }
+                        else
+                        {
+                            Volume new_volume = SerializationUtils.clone(selectedItem);
+                            new_volume.setProject(selectedItem.getProject());
+                            new_volume.setVolumeId(null);
+                            model.getObject().add(new_volume);
+                            onAddItem(new_volume, target, form);
+                        }
+                    }
+                }.setSelectableOnly());
+            }
+
+            @Override
             protected Volume makeItem()
             {
                 Volume new_volume = new Volume();
+                new_volume.setVolumeType(RuraConstants.VOLUME_TYPE_RANOBE);
+                new_volume.setVolumeStatus(RuraConstants.VOLUME_STATUS_QUEUE);
+                new_volume.setProject(project);
+                new_volume.setUrl(project.getUrl() + "/");
                 return new_volume;
             }
 
             @Override
             protected Component getRowComponent(String id, IModel<Volume> model)
             {
-                return null;
+                return new VolumeTableRowPanel(id, model, allProjects);
             }
 
         });
@@ -224,6 +218,7 @@ public class ProjectEdit extends AdminLayoutPage
                 try
                 {
                     ProjectsMapper mapper = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
+                    VolumesMapper volumeMapper = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
                     for (Project item : model.getObject())
                     {
                         if (!removed.contains(item))
@@ -235,6 +230,17 @@ public class ProjectEdit extends AdminLayoutPage
                             else
                             {
                                 mapper.insertProject(item);
+                            }
+                        }
+                    }
+                    for (Volume volume : volumes)
+                    {
+                        if (removed.contains(volume.getProject()))
+                        {
+                            volume.setProject(project);
+                            if (volume.getProjectId() != null)
+                            {
+                                volumeMapper.updateVolume(volume);
                             }
                         }
                     }
@@ -250,6 +256,18 @@ public class ProjectEdit extends AdminLayoutPage
                 finally
                 {
                     session.close();
+                }
+            }
+
+            @Override
+            protected void onAjaxProcess(AjaxRequestTarget target)
+            {
+                super.onAjaxProcess(target);
+                reinitAllProjects();
+                Collections.sort(allProjects, projectComparator);
+                for (Component component : ((AbstractRepeater) ProjectEdit.this.get("volumes:form:rowRepeater")))
+                {
+                    target.add(component.get("item:project"));
                 }
             }
 
@@ -294,10 +312,9 @@ public class ProjectEdit extends AdminLayoutPage
     private final Project project;
     private final Set<Integer> deletedVolumeIds = new HashSet<Integer>();
     private final List<String> VOLUMES_TABLE_COLUMNS = new ImmutableList.Builder<String>()
-            .add("#")
             .add("Ссылка")
             .add("Имя для файлов")
-            .add("Имя для заголовков")
+            .add("Заголовок")
             .add("Название (ориг.)")
             .add("Название (англ.)")
             .add("Название (рус.)")
@@ -315,4 +332,24 @@ public class ProjectEdit extends AdminLayoutPage
             .add("Аннотация")
             .add("18+")
             .build();
+
+    private final Comparator<Project> projectComparator = new Comparator<Project>()
+    {
+        @Override
+        public int compare(Project o1, Project o2)
+        {
+            int parentComp = ObjectUtils.compare(o1.getParentId(), o2.getParentId(), false);
+            return parentComp == 0 ? ObjectUtils.compare(o1.getOrderNumber(), o2.getOrderNumber(), true) : parentComp;
+        }
+    };
+
+    private final Comparator<Volume> volumeComparator = new Comparator<Volume>()
+    {
+        @Override
+        public int compare(Volume o1, Volume o2)
+        {
+            int compProj = projectComparator.compare(o1.getProject(), o2.getProject());
+            return compProj == 0 ? ObjectUtils.compare(o1.getSequenceNumber(), o2.getSequenceNumber(), true) : compProj;
+        }
+    };
 }

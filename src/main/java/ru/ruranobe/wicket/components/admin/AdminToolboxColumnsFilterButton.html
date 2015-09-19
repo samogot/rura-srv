@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:panel>
+    <button data-toggle="dropdown" class="btn btn-info dropdown-toggle" data-placeholder="false"
+            title="Выбрать колонки"><i class="fa fa-columns"></i> <i class="caret"></i>
+    </button>
+    <ul class="dropdown-menu noclose bullet pull-right">
+        <li wicket:id="repeater">
+            <input type="checkbox" class="column-visibility-checkbox" wicket:id="checkbox"/>
+            <label wicket:id="label"></label>
+        </li>
+    </ul>
+</wicket:panel>
+</body>
+</html>
