@@ -57,7 +57,7 @@ public class Cabinet extends SidebarLayoutPage
         add(avatarNoImageText);
 
         WebMarkupContainer avatarImage = new WebMarkupContainer("avatarImage");
-        avatarImage.add(new AttributeAppender("src", "ololo"));
+       // avatarImage.add(new AttributeAppender("src", "ololo"));
         add(avatarImage);
 
         Label username = new Label("username");
@@ -226,6 +226,8 @@ public class Cabinet extends SidebarLayoutPage
 
         StatelessForm<EmailFormModelObject> emailForm = new StatelessForm<EmailFormModelObject>("emailForm",
                 new CompoundPropertyModel<EmailFormModelObject>(new EmailFormModelObject()));
+        emailForm.setOutputMarkupId(true);
+        emailForm.setMarkupId("settingsEmail");
         add(emailForm);
 
         PasswordTextField currentPassword = new PasswordTextField("currentPassword");

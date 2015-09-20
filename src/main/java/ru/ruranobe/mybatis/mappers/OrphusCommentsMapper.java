@@ -10,6 +10,7 @@ public interface OrphusCommentsMapper
     public int insertOrphusComment(OrphusComment orphusComment);
     public List<OrphusComment> getLastOrphusCommentsBy(
             @Param("sortingOrder") String sortingOrder,
-            @Param("limitFrom") Integer limitFrom,
-            @Param("limitTo") Integer limitTo);
+            @Param("limitFrom") long limitFrom,
+            @Param("limitTo") long limitTo);
+    public int getOrphusCommentsSize();
 }

@@ -2,10 +2,13 @@ package ru.ruranobe.wicket.webpages;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.data.DataView;
+import org.apache.wicket.markup.repeater.data.IDataProvider;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.Chapter;
@@ -15,7 +18,7 @@ import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.webpages.base.BaseLayoutPage;
 
 import java.text.SimpleDateFormat;
-import java.util.List;
+import java.util.Iterator;
 
 public class Orphus extends BaseLayoutPage
 {
@@ -23,22 +26,10 @@ public class Orphus extends BaseLayoutPage
     {
         setStatelessHint(true);
 
-        List<OrphusComment> orphusComments;
-        SqlSession session = MybatisUtil.getSessionFactory().openSession();
-        try
-        {
-            OrphusCommentsMapper orphusCommentsMapperCacheable = CachingFacade.getCacheableMapper(session, OrphusCommentsMapper.class);
-            orphusComments = orphusCommentsMapperCacheable.getLastOrphusCommentsBy("desc", 0, 100);
-        }
-        finally
-        {
-            session.close();
-        }
-
-        ListView<OrphusComment> orphusRepeater = new ListView<OrphusComment>("orphusRepeater", orphusComments)
+        DataView<OrphusComment> orphusRepeater = new DataView<OrphusComment>("orphusRepeater", new OrphusCommentsDataProvider())
         {
             @Override
-            protected void populateItem(ListItem<OrphusComment> item)
+            protected void populateItem(Item<OrphusComment> item)
             {
                 final OrphusComment orphusComment = item.getModelObject();
 
@@ -122,6 +113,60 @@ public class Orphus extends BaseLayoutPage
             }
         };
 
+        orphusRepeater.setItemsPerPage(10);
+
+        add(new PagingNavigator("navigator", orphusRepeater));
+
         add(orphusRepeater);
+    }
+
+    private class OrphusCommentsDataProvider implements IDataProvider<OrphusComment>
+    {
+
+        @Override
+        public Iterator<? extends OrphusComment> iterator(long first, long count)
+        {
+            Iterator<? extends OrphusComment> iter;
+            SqlSession session = MybatisUtil.getSessionFactory().openSession();
+            try
+            {
+                OrphusCommentsMapper orphusCommentsMapperCacheable = CachingFacade.getCacheableMapper(session, OrphusCommentsMapper.class);
+                iter = orphusCommentsMapperCacheable.getLastOrphusCommentsBy("desc", first, first+count).iterator();
+            }
+            finally
+            {
+                session.close();
+            }
+            return iter;
+        }
+
+        @Override
+        public long size()
+        {
+            int size;
+            SqlSession session = MybatisUtil.getSessionFactory().openSession();
+            try
+            {
+                OrphusCommentsMapper orphusCommentsMapperCacheable = CachingFacade.getCacheableMapper(session, OrphusCommentsMapper.class);
+                size = orphusCommentsMapperCacheable.getOrphusCommentsSize();
+            }
+            finally
+            {
+                session.close();
+            }
+            return size;
+        }
+
+        @Override
+        public IModel<OrphusComment> model(OrphusComment object)
+        {
+            return Model.of(object);
+        }
+
+        @Override
+        public void detach()
+        {
+
+        }
     }
 }

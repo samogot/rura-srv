@@ -4,7 +4,6 @@
     <wicket:head>
         <link rel="stylesheet" href="css/styles.cabinet.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
-        <script src="js/page.cabinet.js"></script>
     </wicket:head>
 </head>
 <body>
@@ -84,26 +83,6 @@
                     <h4 class="modal-title" id="settingsPassLabel">Сменить пароль</h4>
                 </div>
                 <span wicket:id="emailPasswordRecoveryPanel"/>
-                <!--div class="modal-body">
-                    <form id="settingsPass" class="form-inline" align="center">
-                        <div class="form-group">
-                            <label for="passNow">Введите текущий пароль&nbsp;&nbsp;</label>
-                            <input type="password" class="form-control" name="passNow" id="passNow" value="">
-                        </div>
-                        <div class="form-group">
-                            <label for="passNew">Введите новый пароль&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                            <input type="password" class="form-control" name="passNew" id="passNew" value="">
-                        </div>
-                        <div class="form-group">
-                            <label for="passNewRepeat">Повторите новый пароль&nbsp;</label>
-                            <input type="password" class="form-control" name="passNewRepeat" id="passNewRepeat" value="">
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Отменить</button>
-                    <button type="button" class="btn btn-primary">Сохранить</button>
-                </div-->
             </div>
         </div>
     </div>
@@ -175,10 +154,10 @@
                             </div>
                         </form>
                         <hr/>
-                        <center>
+                        <div style="text-align: center;">
                             <button type="button" class="btn btn-default btn-sm settingsPass" data-toggle="modal" data-target="#settingsPassModal"><i class="fa fa-cog"></i> Сменить пароль</button>
                             <button type="button" class="btn btn-default btn-sm settingsEmail" data-toggle="modal" data-target="#settingsEmailModal"><i class="fa fa-cog"></i> Сменить Email</button>
-                        </center>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Отменить</button>
@@ -189,6 +168,7 @@
         </div>
     </form>
     <!-- MODALS -->
+    <script src="js/page.cabinet.js"></script>
 </wicket:extend>
 </body>
 </html>

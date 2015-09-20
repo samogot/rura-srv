@@ -42,6 +42,15 @@
         LIMIT #{limitFrom}, #{limitTo}
     </select>
 
+    <select id="getOrphusCommentsSize" resultType="int">
+        select count(1)
+        from orphus_comments c
+        join paragraphs p
+          on p.paragraph_id = c.paragraph
+        join chapters ch
+          on ch.chapter_id = c.chapter_id
+    </select>
+
     <resultMap type="ru.ruranobe.mybatis.entities.tables.OrphusComment" id="OrphusCommentResult">
         <result property="chapterId" column="chapter_id"/>
         <result property="paragraph" column="paragraph"/>

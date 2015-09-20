@@ -51,6 +51,8 @@ public class EmailPasswordRecoveryPanel extends Panel
         public EmailPasswordRecoveryForm(String id)
         {
             super(id);
+            this.setOutputMarkupId(true);
+            this.setMarkupId("settingsPass");
             setModel(new CompoundPropertyModel<EmailPasswordRecoveryPanel>(EmailPasswordRecoveryPanel.this));
             add(new TextField<String>("email"));
         }
