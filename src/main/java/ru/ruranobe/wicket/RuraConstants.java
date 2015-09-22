@@ -18,6 +18,13 @@ public class RuraConstants
     public static final String UPDATE_TYPE_TRANSLATE = "Обновлен перевод";
     public static final String UPDATE_TYPE_PROOFREAD = "Глобальная редактура";
     public static final String UPDATE_TYPE_IMAGES = "Обновление иллюстраций";
+    public static final List<String> UPDATE_TYPE_LIST = new ImmutableList.Builder<String>()
+            .add(RuraConstants.UPDATE_TYPE_PUBLISH)
+            .add(RuraConstants.UPDATE_TYPE_TRANSLATE)
+            .add(RuraConstants.UPDATE_TYPE_PROOFREAD)
+            .add(RuraConstants.UPDATE_TYPE_IMAGES)
+            .build();
+
     public static final Map<String, String> UPDATE_TYPE_TO_ICON_CLASS =
             new ImmutableMap.Builder<String, String>()
                     .put(RuraConstants.UPDATE_TYPE_PUBLISH, "update-publish")
@@ -88,6 +95,32 @@ public class RuraConstants
                     .put(RuraConstants.VOLUME_STATUS_DECOR, "не оформлен")
                     .put(RuraConstants.VOLUME_STATUS_DONE, "завершен")
                     .build();
+
+
+    public static final List<String> VOLUME_STATUS_BASIC_LIST = new ImmutableList.Builder<String>()
+            .add(RuraConstants.VOLUME_STATUS_HIDDEN)
+//            .add(RuraConstants.VOLUME_STATUS_AUTO)
+            .build();
+    public static final List<String> VOLUME_STATUS_EXTERNAL_LIST = new ImmutableList.Builder<String>()
+            .add(RuraConstants.VOLUME_STATUS_EXTERNAL_DROPPED)
+            .add(RuraConstants.VOLUME_STATUS_EXTERNAL_ACTIVE)
+            .add(RuraConstants.VOLUME_STATUS_EXTERNAL_DONE)
+            .build();
+    public static final List<String> VOLUME_STATUS_IN_WORK_LIST = new ImmutableList.Builder<String>()
+            .add(RuraConstants.VOLUME_STATUS_NO_ENG)
+            .add(RuraConstants.VOLUME_STATUS_FREEZE)
+            .add(RuraConstants.VOLUME_STATUS_ON_HOLD)
+            .add(RuraConstants.VOLUME_STATUS_QUEUE)
+            .build();
+    public static final List<String> VOLUME_STATUS_NOT_IN_WORK_LIST = new ImmutableList.Builder<String>()
+            .add(RuraConstants.VOLUME_STATUS_ONGOING)
+            .add(RuraConstants.VOLUME_STATUS_TRANSLATING)
+            .add(RuraConstants.VOLUME_STATUS_PROOFREAD)
+            .build();
+    public static final List<String> VOLUME_STATUS_PUBLISHED_LIST = new ImmutableList.Builder<String>()
+            .add(RuraConstants.VOLUME_STATUS_DECOR)
+            .add(RuraConstants.VOLUME_STATUS_DONE)
+            .build();
 
     public static final String NO_COVER_IMAGE = "http://ruranobe.ru/w/images/thumb/a/ad/nopic.png/300px-nopic.png";
 

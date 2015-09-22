@@ -12,10 +12,16 @@
         <property name="memoryStoreEvictionPolicy" value="LRU"/>
     </cache-->
 
-    <select id="getAllProjects" resultMap="ProjectResult">
+    <select id="getRootProjects" resultMap="ProjectResult">
         SELECT *
         FROM projects
         WHERE parent_id IS NULL
+        ORDER BY order_number;
+    </select>
+
+    <select id="getAllProjects" resultMap="ProjectResult">
+        SELECT *
+        FROM projects
         ORDER BY order_number;
     </select>
 

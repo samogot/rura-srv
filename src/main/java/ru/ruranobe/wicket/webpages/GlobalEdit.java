@@ -41,7 +41,7 @@ public class GlobalEdit extends AdminLayoutPage
         try
         {
             ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
-            Collection<Project> projectsCollection = projectsMapperCacheable.getAllProjects();
+            Collection<Project> projectsCollection = projectsMapperCacheable.getRootProjects();
             projects = Lists.newArrayList(projectsCollection);
 
             VolumeActivitiesMapper activitiesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumeActivitiesMapper.class);

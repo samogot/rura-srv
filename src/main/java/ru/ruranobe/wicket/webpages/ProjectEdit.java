@@ -32,7 +32,10 @@ import ru.ruranobe.wicket.components.admin.formitems.SubProjectSelectorItemPanel
 import ru.ruranobe.wicket.components.admin.formitems.VolumeTableRowPanel;
 import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class ProjectEdit extends AdminLayoutPage
 {
@@ -303,14 +306,10 @@ public class ProjectEdit extends AdminLayoutPage
         }.setSortable(true));
     }
 
-    private static final long serialVersionUID = 1L;
     private final List<Project> subProjects;
     private final List<Project> allProjects;
     private final List<Volume> volumes;
-    private final Map<Integer, Volume> volumeTableOrderNumberToVolume = new HashMap<Integer, Volume>();
-    private final Map<Integer, Project> projectIdToProject = new HashMap<Integer, Project>();
     private final Project project;
-    private final Set<Integer> deletedVolumeIds = new HashSet<Integer>();
     private final List<String> VOLUMES_TABLE_COLUMNS = new ImmutableList.Builder<String>()
             .add("Ссылка")
             .add("Имя для файлов")
