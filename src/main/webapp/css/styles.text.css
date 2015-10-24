@@ -213,20 +213,18 @@ body.night .controlText div .hint .miniicon {
 @media screen and (max-width: 767px) {
     .leftMobile,
     .rightMobile {
-        width: 15px;
+        width: 35%;
         bottom: 20px;
         position: absolute;
         top: -40px;
         cursor: pointer;
         z-index: 17;
     }
-
     .leftMobile {
-        right: 100%;
+        right: 65%;
     }
-
     .rightMobile {
-        left: 100%;
+        left: 65%;
     }
 
     .leftColumn.activeLeft .leftMobile,
