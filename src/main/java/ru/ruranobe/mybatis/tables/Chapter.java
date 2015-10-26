@@ -117,6 +117,11 @@ public class Chapter extends PageRepresentable implements Serializable
         return title;
     }
 
+    public String getLeveledTitle()
+    {
+        return (nested ? "　" : "") + title;
+    }
+
     public void setTitle(String title)
     {
         this.title = title;

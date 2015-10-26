@@ -17,6 +17,8 @@ public interface VolumesMapper
 
     public void updateVolume(Volume volume);
 
+    public void updateVolumeCovers(Volume volume);
+
     public int insertVolume(Volume volumre);
 
     public void deleteVolume(Integer volumeId);

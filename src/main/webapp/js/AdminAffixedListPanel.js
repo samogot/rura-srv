@@ -57,12 +57,18 @@ function setMoveHandlerPadding(itemId) {
     $moveHandler.css({'padding-top': padding, 'padding-bottom': padding});
 }
 
+function findNameLabel($formItem) {
+    var itemId = $formItem.attr('id');
+    var $selectItem = $('.list-group-item[href="#' + itemId + '"]');
+    return $selectItem.children('.name-label');
+}
+function setNameLabelText($formItem, text) {
+    findNameLabel($formItem).text(text);
+}
+
 $(document).on('keyup', '.name-input', function () {
-    var input = $(this);  // засовываем этот объект в переменную (на всякий случай)
-    var itemId = input.closest('.form-item').attr('id');
-    var selectItem = $('.list-group-item[href="#' + itemId + '"]');
-    var nameLabel = selectItem.children('.name-label');
-    nameLabel.text(input.val());
+    var $input = $(this);  // засовываем этот объект в переменную (на всякий случай)
+    setNameLabelText($input.closest('.form-item'), $input.val());
 }).on('click', 'a.list-group-item', function (event) {
     var adminBlock = $(this).closest('.admin-block');
     adminBlock.find('.form-item.in').collapse('hide');

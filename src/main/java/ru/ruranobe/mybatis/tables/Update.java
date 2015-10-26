@@ -21,6 +21,7 @@ public class Update extends PageRepresentable implements Serializable, Comparabl
         if (chapter != null)
         {
             this.chapterId = chapter.getChapterId();
+            this.chapterTitle = chapter.getTitle();
         }
     }
 

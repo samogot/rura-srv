@@ -10,6 +10,8 @@ import org.apache.wicket.extensions.markup.html.form.DateTextField;
 import org.apache.wicket.extensions.markup.html.form.select.IOptionRenderer;
 import org.apache.wicket.extensions.markup.html.form.select.Select;
 import org.apache.wicket.extensions.markup.html.form.select.SelectOptions;
+import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.panel.Fragment;
@@ -85,11 +87,45 @@ public class VolumeEdit extends AdminLayoutPage
 
             ChapterImagesMapper chapterImagesMapperCacheable = CachingFacade.getCacheableMapper(session, ChapterImagesMapper.class);
             volumeImages = chapterImagesMapperCacheable.getChapterImagesByVolumeId(volume.getVolumeId());
+
+            ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.getCacheableMapper(session, ExternalResourcesMapper.class);
+            if (volume.getImageOne() != null)
+            {
+                ExternalResource resource = externalResourcesMapperCacheable.getExternalResourceById(volume.getImageOne());
+                volumeImages.add(0, new ChapterImage(null, -1, volume.getVolumeId(), null, resource, 1));
+            }
+            if (volume.getImageTwo() != null)
+            {
+                ExternalResource resource = externalResourcesMapperCacheable.getExternalResourceById(volume.getImageTwo());
+                volumeImages.add(1, new ChapterImage(null, -1, volume.getVolumeId(), null, resource, 2));
+            }
+            if (volume.getImageThree() != null)
+            {
+                ExternalResource resource = externalResourcesMapperCacheable.getExternalResourceById(volume.getImageThree());
+                volumeImages.add(2, new ChapterImage(null, -1, volume.getVolumeId(), null, resource, 3));
+            }
+            if (volume.getImageFour() != null)
+            {
+                ExternalResource resource = externalResourcesMapperCacheable.getExternalResourceById(volume.getImageFour());
+                volumeImages.add(3, new ChapterImage(null, -1, volume.getVolumeId(), null, resource, 4));
+            }
+
         }
         finally
         {
             session.close();
         }
+
+        final Map<Integer, Chapter> chaptertIdToChapter = new HashMap<Integer, Chapter>();
+        for (Chapter chapter : chapters)
+        {
+            chaptertIdToChapter.put(chapter.getChapterId(), chapter);
+        }
+        for (Update update : updates)
+        {
+            update.setChapter(chaptertIdToChapter.get(update.getChapterId()));
+        }
+
 
         final Map<Integer, Project> projectIdToProject = new HashMap<Integer, Project>();
         for (Project project : projects)
@@ -202,6 +238,7 @@ public class VolumeEdit extends AdminLayoutPage
                 };
             }
         });
+
         add(new AdminAffixedListPanel<VolumeReleaseActivity>("staff", "Этапы работы", new ListModel<VolumeReleaseActivity>(volumeReleaseActivities))
         {
             @Override
@@ -330,6 +367,7 @@ public class VolumeEdit extends AdminLayoutPage
                     protected void onInitialize()
                     {
                         super.onInitialize();
+                        add(new HiddenField<Integer>("chapterId"));
                         add(new CheckBox("nested"));
                         add(new TextField<String>("urlPart").setRequired(true).setLabel(Model.of("Ссылка")));
                         add(new TextField<String>("title").setRequired(true).setLabel(Model.of("Заголовок")));
@@ -399,16 +437,152 @@ public class VolumeEdit extends AdminLayoutPage
                         super.onInitialize();
                         add(new DropDownChoice<String>("updateType", RuraConstants.UPDATE_TYPE_LIST));
                         add(new DropDownChoice<Chapter>("chapter", allChapters)
-                                .setChoiceRenderer(new ChoiceRenderer<Chapter>("title", "chapterId")));
+                                .setChoiceRenderer(new ChoiceRenderer<Chapter>("leveledTitle", "chapterId")));
                         add(new DateTextField("showTime", "dd.MM.yyyy HH:mm"));
                         add(new TextField<String>("description"));
                     }
                 };
             }
         });
+
+        add(new AdminAffixedListPanel<ChapterImage>("images", "Изображения", new ListModel<ChapterImage>(volumeImages))
+        {
+            @Override
+            public void onSubmit()
+            {
+                SqlSession session = MybatisUtil.getSessionFactory().openSession();
+                try
+                {
+                    ChapterImagesMapper mapper = CachingFacade.getCacheableMapper(session, ChapterImagesMapper.class);
+                    boolean coversEdit = false;
+                    for (ChapterImage item : model.getObject())
+                    {
+                        if (!removed.contains(item))
+                        {
+                            if (item.getChapterId() == -1)
+                            {
+                                switch (item.getOrderNumber())
+                                {
+                                    case 1:
+                                        coversEdit = true;
+                                        volume.setImageOne(item.getNonColoredImage().getResourceId());
+                                        break;
+                                    case 2:
+                                        coversEdit = true;
+                                        volume.setImageTwo(item.getNonColoredImage().getResourceId());
+                                        break;
+                                    case 3:
+                                        coversEdit = true;
+                                        volume.setImageThree(item.getNonColoredImage().getResourceId());
+                                        break;
+                                    case 4:
+                                        coversEdit = true;
+                                        volume.setImageFour(item.getNonColoredImage().getResourceId());
+                                        break;
+                                    default:
+                                        //todo invalid
+                                }
+                            }
+                            else
+                            {
+                                if (item.getChapterImageId() != null)
+                                {
+                                    mapper.updateChapterImage(item);
+                                }
+                                else
+                                {
+                                    mapper.insertChapterImage(item);
+                                }
+                            }
+                        }
+                    }
+                    if (coversEdit)
+                    {
+                        VolumesMapper volumesMapper = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
+                        volumesMapper.updateVolumeCovers(volume);
+                    }
+                    for (ChapterImage removedItem : removed)
+                    {
+                        if (removedItem.getChapterId() != null)
+                        {
+                            mapper.deleteChapterImage(removedItem.getChapterImageId());
+                        }
+                    }
+                    session.commit();
+                }
+                finally
+                {
+                    session.close();
+                }
+            }
+
+            @Override
+            protected ChapterImage makeItem()
+            {
+                ChapterImage chapterImage = new ChapterImage();
+                chapterImage.setVolumeId(volume.getVolumeId());
+                return chapterImage;
+            }
+
+            @Override
+            protected Component getSelectorItemLabelComponent(String id, final IModel<ChapterImage> model)
+            {
+                return new Fragment(id, "imageSelectorItemFragment", VolumeEdit.this, model)
+                {
+                    @Override
+                    protected void onInitialize()
+                    {
+                        super.onInitialize();
+                        add(new WebMarkupContainer("nonColoredImage.url")
+                        {
+                            @Override
+                            protected void onComponentTag(ComponentTag tag)
+                            {
+                                tag.getAttributes().put("src", getDefaultModelObjectAsString());
+                            }
+                        });
+                        add(new Label("nonColoredImage.title"));
+                    }
+                };
+            }
+
+            @Override
+            protected Component getFormItemLabelComponent(String id, final IModel<ChapterImage> model)
+            {
+                return new Fragment(id, "imageFormItemFragment", VolumeEdit.this, model)
+                {
+                    @Override
+                    protected void onInitialize()
+                    {
+                        super.onInitialize();
+                        add(new HiddenField<Integer>("chapterId"));
+                        add(new WebMarkupContainer("nonColoredImage.url")
+                        {
+                            @Override
+                            protected void onComponentTag(ComponentTag tag)
+                            {
+                                tag.getAttributes().put("src", getDefaultModelObjectAsString());
+                            }
+                        });
+                        add(new TextField<String>("nonColoredImage.title"));
+                        add(new DateTextField("nonColoredImage.uploadedWhen"));
+                        add(new WebMarkupContainer("coloredImage.url")
+                        {
+                            @Override
+                            protected void onComponentTag(ComponentTag tag)
+                            {
+                                tag.getAttributes().put("src", getDefaultModelObjectAsString());
+                            }
+                        });
+                        add(new TextField<String>("coloredImage.title"));
+                        add(new DateTextField("coloredImage.uploadedWhen"));
+                    }
+                };
+            }
+        }.setSortable(true));
     }
 
-    private final IOptionRenderer<String> optionRenderer = new IOptionRenderer<String>()
+    private final static IOptionRenderer<String> optionRenderer = new IOptionRenderer<String>()
     {
         @Override
         public String getDisplayValue(String object)
@@ -422,7 +596,7 @@ public class VolumeEdit extends AdminLayoutPage
             return Model.of(value);
         }
     };
-    private final Comparator<Chapter> chapterComparator = new Comparator<Chapter>()
+    private final static Comparator<Chapter> chapterComparator = new Comparator<Chapter>()
     {
         @Override
         public int compare(Chapter c1, Chapter c2)

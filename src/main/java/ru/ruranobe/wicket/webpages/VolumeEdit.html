@@ -11,7 +11,7 @@
     <div wicket:id="staff"></div>
     <div wicket:id="chapters"></div>
     <div wicket:id="updates"></div>
-    <!--<div wicket:id="images"></div>-->
+    <div wicket:id="images"></div>
 
     <wicket:fragment wicket:id="volumeInfoFragment">
         <div class="form-group">
@@ -128,11 +128,11 @@
 
         <div class="form-group">
             <label wicket:for="memberName">Участник</label>
-            <input wicket:id="memberName" class="form-control name-input" type="text">
+            <input wicket:id="memberName" class="form-control member-input" type="text">
         </div>
         <div class="form-group">
             <label wicket:for="activity">Роль</label>
-            <select wicket:id="activity" class="form-control"></select>
+            <select wicket:id="activity" class="form-control member-input"></select>
         </div>
         <div class="form-group">
             <div class="checkbox">
@@ -144,9 +144,10 @@
     <wicket:fragment wicket:id="chapterFormItemFragment">
         <h3>Настройка главы</h3>
 
+        <input wicket:id="chapterId" type="hidden">
         <div class="form-group">
             <div class="checkbox">
-                <label><input wicket:id="nested" type="checkbox"> Подглава</label>
+                <label><input wicket:id="nested" type="checkbox" class="nested-checkbox"> Подглава</label>
             </div>
         </div>
         <div class="form-group">
@@ -168,15 +169,71 @@
         </div>
         <div class="form-group">
             <label wicket:for="chapter">Глава</label>
-            <select wicket:id="chapter" class="form-control"></select>
+            <select wicket:id="chapter" class="form-control updates-input"></select>
         </div>
         <div class="form-group">
             <label wicket:for="showTime">Дата</label>
-            <input wicket:id="showTime" class="form-control" type="text">
+            <input wicket:id="showTime" class="form-control updates-input" type="text">
         </div>
         <div class="form-group">
             <label wicket:for="description">Описание (опционально)</label>
             <input wicket:id="description" class="form-control" type="text">
+        </div>
+    </wicket:fragment>
+
+    <wicket:fragment wicket:id="imageSelectorItemFragment">
+        <center>
+            <img wicket:id="nonColoredImage.url">
+        </center>
+        <span wicket:id="nonColoredImage.title" class="hidden-sm hidden-xs"></span>
+    </wicket:fragment>
+
+    <wicket:fragment wicket:id="imageFormItemFragment">
+        <input wicket:id="chapterId" type="hidden">
+
+        <div class="row">
+            <div class="col-xs-6 image-data-main">
+                <h3>Основа
+                    <button type="button" class="btn btn-default btn-image-replace"
+                            title="Заменить изображение"><i class="fa fa-retweet"></i><input
+                            type="file" class='fileupload'></button>
+                </h3>
+                <div class="btn-image-replace">
+                    <input type="file" class='fileupload'>
+                    <img wicket:id="nonColoredImage.url" class="img-responsive">
+                </div>
+                <div class="form-group">
+                    <label>Дата загрузки</label>
+                    <input wicket:id="nonColoredImage.uploadedWhen" type="text"
+                           class="form-control disable" disabled/>
+                </div>
+                <div class="form-group">
+                    <label>Имя файла</label>
+                    <input wicket:id="nonColoredImage.title" type="text"
+                           class="form-control disable" disabled/>
+                </div>
+            </div>
+            <div class="col-xs-6 image-data-color">
+                <h3>Покрас
+                    <button type="button" class="btn btn-default btn-image-replace"
+                            title="Добавить изображение"><i class="fa fa-plus"></i><input
+                            type="file" class='fileupload'></button>
+                </h3>
+                <center class="btn-image-replace">
+                    <input type="file" class='fileupload'>
+                    <img wicket:id="coloredImage.url" class="img-responsive">
+                </center>
+                <div class="form-group">
+                    <label>Дата загрузки</label>
+                    <input wicket:id="coloredImage.uploadedWhen" type="text"
+                           class="form-control disable" disabled/>
+                </div>
+                <div class="form-group">
+                    <label>Имя файла</label>
+                    <input wicket:id="coloredImage.title" type="text"
+                           class="form-control disable" disabled/>
+                </div>
+            </div>
         </div>
     </wicket:fragment>
 
