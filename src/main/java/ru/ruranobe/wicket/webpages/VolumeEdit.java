@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.markup.html.form.DateTextField;
@@ -14,6 +15,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
@@ -522,6 +524,15 @@ public class VolumeEdit extends AdminLayoutPage
                 ChapterImage chapterImage = new ChapterImage();
                 chapterImage.setVolumeId(volume.getVolumeId());
                 return chapterImage;
+            }
+
+            @Override
+            protected void initializeSelectorBlockListItem(ListItem<ChapterImage> item)
+            {
+                super.initializeSelectorBlockListItem(item);
+                ChapterImage model = item.getModelObject();
+                item.add(new AttributeModifier("data-chapter-id", model.getChapterId()));
+                item.add(new AttributeModifier("data-order-number", model.getOrderNumber()));
             }
 
             @Override

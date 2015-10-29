@@ -114,7 +114,7 @@ public abstract class AdminAffixedListPanel<T> extends AdminListPanel<T>
         selectorBlockItemRepeater.get(model.getObject().indexOf(removedItem)).setVisible(false);
     }
 
-    private void initializeSelectorBlockListItem(final ListItem<T> item)
+    protected void initializeSelectorBlockListItem(final ListItem<T> item)
     {
         item.setOutputMarkupId(true);
         item.add(new AjaxEventBehavior("click")
