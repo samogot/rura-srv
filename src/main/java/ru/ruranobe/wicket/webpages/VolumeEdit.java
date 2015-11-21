@@ -39,13 +39,39 @@ import java.util.*;
 public class VolumeEdit extends AdminLayoutPage
 {
 
-    private void reinitAllChapters()
+    private final static IOptionRenderer<String> optionRenderer = new IOptionRenderer<String>()
     {
-        allChapters.clear();
-        allChapters.addAll(chapters);
-        allChapters.add(stubСhapter);
-        Collections.sort(allChapters, chapterComparator);
-    }
+        @Override
+        public String getDisplayValue(String object)
+        {
+            return RuraConstants.VOLUME_STATUS_TO_FULL_TEXT.get(object);
+        }
+
+        @Override
+        public IModel<String> getModel(String value)
+        {
+            return Model.of(value);
+        }
+    };
+    private final static Comparator<Chapter> chapterComparator = new Comparator<Chapter>()
+    {
+        @Override
+        public int compare(Chapter c1, Chapter c2)
+        {
+            return ObjectUtils.compare(c1.getOrderNumber(), c2.getOrderNumber());
+        }
+    };
+    private final Chapter stubСhapter;
+    private final Map<String, Integer> memberNickToId = new HashMap<String, Integer>();
+    private Volume volume;
+    private List<Project> projects;
+    private List<VolumeReleaseActivity> volumeReleaseActivities;
+    private List<VolumeActivity> activities;
+    private List<TeamMember> teamMembers;
+    private List<Chapter> chapters;
+    private List<Chapter> allChapters = new ArrayList<Chapter>();
+    private List<Update> updates;
+    private List<ChapterImage> volumeImages;
 
     public VolumeEdit(final PageParameters parameters)
     {
@@ -112,8 +138,7 @@ public class VolumeEdit extends AdminLayoutPage
                 volumeImages.add(3, new ChapterImage(null, -1, volume.getVolumeId(), null, resource, 4));
             }
 
-        }
-        finally
+        } finally
         {
             session.close();
         }
@@ -143,18 +168,15 @@ public class VolumeEdit extends AdminLayoutPage
                 if (p1.getParentId() == null && p2.getParentId() == null)
                 {
                     return ObjectUtils.compare(p1.getOrderNumber(), p2.getOrderNumber(), true);
-                }
-                else if (p1.getParentId() == null)
+                } else if (p1.getParentId() == null)
                 {
                     int parentComp = ObjectUtils.compare(p1.getOrderNumber(), projectIdToProject.get(p2.getParentId()).getOrderNumber(), true);
                     return parentComp == 0 ? -1 : parentComp;
-                }
-                else if (p2.getParentId() == null)
+                } else if (p2.getParentId() == null)
                 {
                     int parentComp = ObjectUtils.compare(projectIdToProject.get(p1.getParentId()).getOrderNumber(), p2.getOrderNumber(), true);
                     return parentComp == 0 ? 1 : parentComp;
-                }
-                else
+                } else
                 {
                     int parentComp = ObjectUtils.compare(projectIdToProject.get(p1.getParentId()).getOrderNumber(),
                             projectIdToProject.get(p2.getParentId()).getOrderNumber(), true);
@@ -194,8 +216,7 @@ public class VolumeEdit extends AdminLayoutPage
                     VolumesMapper mapper = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
                     mapper.updateVolume(volume);
                     session.commit();
-                }
-                finally
+                } finally
                 {
                     session.close();
                 }
@@ -220,7 +241,7 @@ public class VolumeEdit extends AdminLayoutPage
                         add(new TextField<String>("nameRomaji"));
                         add(new TextField<String>("nameShort"));
                         add(new DropDownChoice<Project>("project", projects).setChoiceRenderer(new ChoiceRenderer<Project>("title", "projectId"))
-                                                                            .setOutputMarkupId(true));
+                                .setOutputMarkupId(true));
                         add(new TextField<Float>("sequenceNumber"));
                         add(new TextField<String>("author"));
                         add(new TextField<String>("illustrator"));
@@ -257,8 +278,7 @@ public class VolumeEdit extends AdminLayoutPage
                             if (item.getActivityId() != null)
                             {
                                 mapper.updateVolumeReleaseActivity(item);
-                            }
-                            else
+                            } else
                             {
                                 mapper.insertVolumeReleaseActivity(item);
                             }
@@ -272,8 +292,7 @@ public class VolumeEdit extends AdminLayoutPage
                         }
                     }
                     session.commit();
-                }
-                finally
+                } finally
                 {
                     session.close();
                 }
@@ -325,8 +344,7 @@ public class VolumeEdit extends AdminLayoutPage
                             if (item.getChapterId() != null)
                             {
                                 mapper.updateChapter(item);
-                            }
-                            else
+                            } else
                             {
                                 mapper.insertChapter(item);
                             }
@@ -340,8 +358,7 @@ public class VolumeEdit extends AdminLayoutPage
                         }
                     }
                     session.commit();
-                }
-                finally
+                } finally
                 {
                     session.close();
                 }
@@ -350,7 +367,10 @@ public class VolumeEdit extends AdminLayoutPage
             @Override
             protected Chapter makeItem()
             {
-                return new Chapter();
+                Chapter new_chapter = new Chapter();
+                new_chapter.setVolumeId(volume.getVolumeId());
+                new_chapter.setUrl(volume.getUrl() + "/");
+                return new_chapter;
             }
 
             @Override
@@ -394,8 +414,7 @@ public class VolumeEdit extends AdminLayoutPage
                             if (item.getUpdateId() != null)
                             {
                                 mapper.updateUpdate(item);
-                            }
-                            else
+                            } else
                             {
                                 mapper.insertUpdate(item);
                             }
@@ -409,8 +428,7 @@ public class VolumeEdit extends AdminLayoutPage
                         }
                     }
                     session.commit();
-                }
-                finally
+                } finally
                 {
                     session.close();
                 }
@@ -419,7 +437,10 @@ public class VolumeEdit extends AdminLayoutPage
             @Override
             protected Update makeItem()
             {
-                return new Update();
+                Update new_update = new Update();
+                new_update.setShowTime(new Date());
+                new_update.setUpdateType(RuraConstants.UPDATE_TYPE_PUBLISH);
+                return new_update;
             }
 
             @Override
@@ -484,14 +505,12 @@ public class VolumeEdit extends AdminLayoutPage
                                     default:
                                         //todo invalid
                                 }
-                            }
-                            else
+                            } else
                             {
                                 if (item.getChapterImageId() != null)
                                 {
                                     mapper.updateChapterImage(item);
-                                }
-                                else
+                                } else
                                 {
                                     mapper.insertChapterImage(item);
                                 }
@@ -511,8 +530,7 @@ public class VolumeEdit extends AdminLayoutPage
                         }
                     }
                     session.commit();
-                }
-                finally
+                } finally
                 {
                     session.close();
                 }
@@ -593,37 +611,11 @@ public class VolumeEdit extends AdminLayoutPage
         }.setSortable(true));
     }
 
-    private final static IOptionRenderer<String> optionRenderer = new IOptionRenderer<String>()
+    private void reinitAllChapters()
     {
-        @Override
-        public String getDisplayValue(String object)
-        {
-            return RuraConstants.VOLUME_STATUS_TO_FULL_TEXT.get(object);
-        }
-
-        @Override
-        public IModel<String> getModel(String value)
-        {
-            return Model.of(value);
-        }
-    };
-    private final static Comparator<Chapter> chapterComparator = new Comparator<Chapter>()
-    {
-        @Override
-        public int compare(Chapter c1, Chapter c2)
-        {
-            return ObjectUtils.compare(c1.getOrderNumber(), c2.getOrderNumber());
-        }
-    };
-    private final Chapter stubСhapter;
-    private final Map<String, Integer> memberNickToId = new HashMap<String, Integer>();
-    private Volume volume;
-    private List<Project> projects;
-    private List<VolumeReleaseActivity> volumeReleaseActivities;
-    private List<VolumeActivity> activities;
-    private List<TeamMember> teamMembers;
-    private List<Chapter> chapters;
-    private List<Chapter> allChapters = new ArrayList<Chapter>();
-    private List<Update> updates;
-    private List<ChapterImage> volumeImages;
+        allChapters.clear();
+        allChapters.addAll(chapters);
+        allChapters.add(stubСhapter);
+        Collections.sort(allChapters, chapterComparator);
+    }
 }

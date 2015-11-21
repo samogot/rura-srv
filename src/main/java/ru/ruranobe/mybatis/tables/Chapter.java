@@ -117,14 +117,14 @@ public class Chapter extends PageRepresentable implements Serializable
         return title;
     }
 
-    public String getLeveledTitle()
-    {
-        return (nested ? "　" : "") + title;
-    }
-
     public void setTitle(String title)
     {
         this.title = title;
+    }
+
+    public String getLeveledTitle()
+    {
+        return (nested ? "　" : "") + title;
     }
 
     public String getUrl()
@@ -139,12 +139,12 @@ public class Chapter extends PageRepresentable implements Serializable
 
     public String getUrlPart()
     {
-        return url.split("/")[2];
+        return url.split("/", -1)[2];
     }
 
     public void setUrlPart(String urlPart)
     {
-        String[] parts = this.url.split("/");
+        String[] parts = this.url.split("/", -1);
         parts[2] = urlPart;
         this.url = Strings.join("/", parts);
     }
