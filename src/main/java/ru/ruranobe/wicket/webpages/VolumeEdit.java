@@ -1,17 +1,25 @@
 package ru.ruranobe.wicket.webpages;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.markup.html.form.DateTextField;
 import org.apache.wicket.extensions.markup.html.form.select.IOptionRenderer;
 import org.apache.wicket.extensions.markup.html.form.select.Select;
 import org.apache.wicket.extensions.markup.html.form.select.SelectOptions;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
@@ -22,8 +30,18 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.ByteArrayResource;
+import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.util.string.Strings;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import ru.ruranobe.config.ApplicationContext;
+import ru.ruranobe.engine.Webpage;
+import ru.ruranobe.engine.image.ImageServices;
+import ru.ruranobe.engine.image.RuraImage;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.*;
@@ -34,6 +52,10 @@ import ru.ruranobe.wicket.components.admin.AdminAffixedListPanel;
 import ru.ruranobe.wicket.components.admin.AdminInfoFormPanel;
 import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class VolumeEdit extends AdminLayoutPage
@@ -607,6 +629,96 @@ public class VolumeEdit extends AdminLayoutPage
                         add(new DateTextField("coloredImage.uploadedWhen"));
                     }
                 };
+            }
+
+            @Override
+            protected void onInitialize()
+            {
+                super.onInitialize();
+                toolbarButtons.remove(0);
+                toolbarButtons.add(0, new WebMarkupContainer("button")
+                {
+                    @Override
+                    public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+                    {
+                        replaceComponentTagBody(markupStream, openTag, "<i class=\"fa fa-plus\"></i><input type=\"file\" class=\"fileupload\" multiple=\"\">");
+                    }
+                }.add(new AttributeAppender("class", Model.of("btn-success"), " "))
+                 .add(new AttributeModifier("title", "Загрузить")));
+                add(new AbstractAjaxBehavior()
+                {
+                    @Override
+                    public void onRequest()
+                    {
+                        HttpServletRequest request = (HttpServletRequest) getRequest().getContainerRequest();
+                        if (ServletFileUpload.isMultipartContent(request))
+                        {
+                            File imageTempFile;
+                            try
+                            {
+                                imageTempFile = File.createTempFile("ruranobe-image_temp", ".tmp");
+                            }
+                            catch (IOException ex)
+                            {
+                                throw new RuntimeException("Unable to create temp file during image upload", ex);
+                            }
+
+                            FileItemFactory factory = new DiskFileItemFactory();
+                            ServletFileUpload upload = new ServletFileUpload(factory);
+                            String uploadingFileExtension = null;
+                            String filename = null;
+                            try
+                            {
+                                List<FileItem> items = upload.parseRequest(request);
+                                for (FileItem item : items)
+                                {
+                                    filename = filename == null ? item.getName() : null;
+                                    uploadingFileExtension = FilenameUtils.getExtension(filename);
+                                    item.write(imageTempFile);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new RuntimeException("Unable to write uploading image to temp file", ex);
+                            }
+
+                            ApplicationContext context = RuranobeUtils.getApplicationContext();
+                            Webpage webpage = context.getWebpageByPageClass(this.getClass().getName());
+                            RuraImage image = new RuraImage(imageTempFile, uploadingFileExtension, filename);
+                            List<ExternalResource> externalResources = ImageServices.uploadImage(image, webpage.getImageStorages(), new ImmutableMap.Builder<String, String>()
+                                    .put("project", volume.getUrl().split("/", -1)[0])
+                                    .put("volume", volume.getUrl().split("/", -1)[1])
+                                    .build());
+                            ExternalResource externalResource = externalResources.iterator().next();
+                            setDefaultModelObject(externalResource);
+                            imageTempFile.delete();
+
+                            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.YYYY HH:mm:ss");
+                            JSONObject file = new JSONObject();
+                            file.put("url", externalResource.getUrl());
+                            file.put("name", filename);
+                            file.put("ts", sdf.format(externalResource.getUploadedWhen()));
+                            file.put("id", externalResource.getResourceId());
+
+                            JSONArray files = new JSONArray();
+                            files.put(file);
+
+                            JSONObject responseString = new JSONObject();
+                            responseString.put("files", files);
+
+                            IResource jsonResource = new ByteArrayResource("text/plain", responseString.toString().getBytes());
+                            IRequestHandler requestHandler = new ResourceRequestHandler(jsonResource, null);
+                            requestHandler.respond(getRequestCycle());
+                        }
+                    }
+
+                    @Override
+                    protected void onComponentTag(ComponentTag tag)
+                    {
+                        tag.getAttributes().put("data-upload-url", getCallbackUrl());
+                    }
+                });
+
             }
         }.setSortable(true));
     }
