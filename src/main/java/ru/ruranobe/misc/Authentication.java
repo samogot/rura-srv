@@ -28,7 +28,7 @@ public class Authentication {
 				result = password;
 				break;
 			case HASH_MD5_SALT_MD5:
-				String salt = null;
+				String salt;
 				if (!Strings.isEmpty(currentPassword)) {
 					String[] passwordParts = currentPassword.split(":");
 					if (passwordParts.length == 2) {

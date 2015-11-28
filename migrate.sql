@@ -164,7 +164,7 @@ INSERT INTO volume_activities (activity_id, activity_name, activity_type)
     if(job_id BETWEEN 3 AND 7, 'image', 'text')
   FROM ruranobe_db.main_jobs;
 
-INSERT IGNORE INTO users (user_id, username, realname, pass, pass_version, email, email_activated, registration_date, adult)
+INSERT IGNORE INTO users (user_id, username, realname, pass, pass_version, email, email_activated, registration_date, converter_type, navigation_type, convert_with_imgs, adult, prefer_colored_imgs, convert_imgs_size)
   SELECT
     user_id,
     user_name,
@@ -174,14 +174,13 @@ INSERT IGNORE INTO users (user_id, username, realname, pass, pass_version, email
     user_email,
     user_email_authenticated,
     user_registration,
-	'fb2',
-	'Главам',
-	1,
+    'fb2',
+    'Главам',
     1,
-	1,
-	1080
-  FROM ruranobe_db.mw_user
-  WHERE user_password LIKE ":A:%";
+    1,
+    1,
+    1080
+  FROM ruranobe_db.mw_user;
 
 UPDATE ruranobe.users usr
   INNER JOIN

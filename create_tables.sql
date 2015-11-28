@@ -33,7 +33,7 @@ CREATE TABLE users
   email_token_date         DATETIME,
   email_activated          BOOL               NOT NULL,
   registration_date        DATETIME           NOT NULL,
-  --user_settings
+  #--user_settings
   converter_type           ENUM('fb2',
                                 'docx',
 								'epub')       NOT NULL,
@@ -42,7 +42,8 @@ CREATE TABLE users
   convert_with_imgs        BOOL               NOT NULL,
   adult                    BOOL               NOT NULL,
   prefer_colored_imgs      BOOL               NOT NULL,
-  convert_imgs_size        INT(11)            NOT NULL
+  convert_imgs_size        INT(11)            NOT NULL,
+  forum_user_id            INT(11) UNSIGNED   DEFAULT NULL
 );
 
 CREATE TABLE texts
@@ -85,7 +86,8 @@ CREATE TABLE projects
   project_hidden BOOL          NOT NULL,
   onevolume      BOOL          NOT NULL,
   franchise      TEXT,
-  annotation     TEXT
+  annotation     TEXT,
+  forum_id       INT(11) UNSIGNED DEFAULT NULL
 );
 
 CREATE TABLE volumes
@@ -137,7 +139,8 @@ CREATE TABLE volumes
                           'done')        NOT NULL,
   volume_status_hint VARCHAR(255),
   adult              BOOL                NOT NULL,
-  annotation         TEXT
+  annotation         TEXT,
+  topic_id           INT(11) UNSIGNED DEFAULT NULL
 );
 
 CREATE TABLE chapters
