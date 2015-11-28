@@ -116,22 +116,26 @@ function OpenLeft() {
 }
 $('.leftbg').click(OpenRight);
 $('.rightbg').click(OpenLeft);
-$('.leftMobile').click(OpenLeft);
-$('.rightMobile').click(OpenRight);
 $('.soderj-button').click(function() {
     OpenRight();
     OpenRight();
 });
-if (isMobile() == true) $(".leftColumn").swipe({
-    swipeLeft: function() {
-        OpenRight()
-    },
-    swipeRight: function() {
-        OpenLeft()
-    },
-    threshold: 100,
-    excludedElements: $.fn.swipe.defaults.excludedElements
-});
+if (isMobile() == true){ 
+    $(".rightMobile").swipe({
+        doubleTap: function() {
+            OpenRight()
+        },
+        threshold: 50,
+        excludedElements: $.fn.swipe.defaults.excludedElements
+    });
+    $(".leftMobile").swipe({
+        doubleTap: function() {
+            OpenLeft()
+        },
+        threshold: 50,
+        excludedElements: $.fn.swipe.defaults.excludedElements
+    });
+}
 $('#nav').click(function() {
     $right.removeClass("active");
     $right.children('div').removeClass("active");
