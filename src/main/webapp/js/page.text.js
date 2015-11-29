@@ -377,9 +377,8 @@ $('.btn.mistake-button').click(function() {
         alert('Для начала, выделите ошибку!');
     } else {
         var Parameters = getOrphusParameters();
-        var chapterId = $('#chapterId').attr('chapter-id');
         var callbackUrl = '';
-        showOrphusDialog(chapterId, Parameters.paragraph, Parameters.startOffset, Parameters.originalText, Parameters.fullText, Parameters.textId, callbackUrl);
+        showOrphusDialog(Parameters.chapterId, Parameters.paragraph, Parameters.startOffset, Parameters.originalText, Parameters.fullText, Parameters.textId, callbackUrl);
     }
 });
 /* MODAL */
@@ -497,6 +496,7 @@ function getOrphusParameters() {
     return {
         paragraph: p.id,
         fullText: $(p).text(),
+        chapterId: $(p).attr('chapter-id'),
         textId: $(p).attr('text-id'),
         startOffset: offset - range.toString().length,
         originalText: range.toString()
