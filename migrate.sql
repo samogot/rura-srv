@@ -633,3 +633,107 @@ WHERE text_wiki LIKE '{{Иллюстрация}}%'
       AND order_number < min_first_chapter_image_order_number
                          + round((char_length(text_wiki) - char_length(replace(text_wiki, '{{Иллюстрация}}', ''))) /
                                  char_length('{{Иллюстрация}}'), 0);
+
+
+UPDATE `chapters`
+SET `url` = 'sao/p1/c2'
+WHERE `chapter_id` = '930';
+UPDATE `chapters`
+SET `url` = 'sao/p2/c3'
+WHERE `chapter_id` = '933';
+UPDATE `chapters`
+SET `url` = 'lh/v2/ch3'
+WHERE `chapter_id` = '3290';
+UPDATE `chapters`
+SET `url` = 'lh/v2/ch4'
+WHERE `chapter_id` = '3296';
+UPDATE `chapters`
+SET `url` = 'lh/v2/ch5'
+WHERE `chapter_id` = '3301';
+UPDATE `chapters`
+SET `url` = 'snpnk/v3/ch1'
+WHERE `chapter_id` = '4767';
+UPDATE `chapters`
+SET `url` = 'snpnk/v3/ch2'
+WHERE `chapter_id` = '4768';
+UPDATE `chapters`
+SET `url` = 'snpnk/v3/ch3'
+WHERE `chapter_id` = '4769';
+UPDATE `chapters`
+SET `url` = 'snpnk/v3/ch4'
+WHERE `chapter_id` = '4770';
+UPDATE `chapters`
+SET `url` = 'snpnk/v4/ch1'
+WHERE `chapter_id` = '4839';
+UPDATE `chapters`
+SET `url` = 'snpnk/v4/ch2'
+WHERE `chapter_id` = '4840';
+UPDATE `chapters`
+SET `url` = 'snpnk/v4/ch3'
+WHERE `chapter_id` = '4841';
+UPDATE `chapters`
+SET `url` = 'snpnk/v4/ch4'
+WHERE `chapter_id` = '4842';
+UPDATE `chapters`
+SET `url` = 'tnynn/trans/v2'
+WHERE `chapter_id` = '4893';
+UPDATE `chapters`
+SET `url` = 'tnynn/trans/v3'
+WHERE `chapter_id` = '5376';
+UPDATE `chapters`
+SET `url` = 'smnk/v2/ch3'
+WHERE `chapter_id` = '5781';
+UPDATE `chapters`
+SET `url` = 'smnk/v2/ch4'
+WHERE `chapter_id` = '5790';
+UPDATE `chapters`
+SET `url` = 'smnk/v2/che'
+WHERE `chapter_id` = '5801';
+UPDATE `chapters`
+SET `url` = 'ol/v4/ch3'
+WHERE `chapter_id` = '5918';
+UPDATE `chapters`
+SET `url` = 'ol/v4/ch4'
+WHERE `chapter_id` = '5919';
+UPDATE `chapters`
+SET `url` = 'ol/v4/ch5'
+WHERE `chapter_id` = '5920';
+UPDATE `chapters`
+SET `url` = 'zl/v1/a1'
+WHERE `chapter_id` = '6012';
+UPDATE `chapters`
+SET `url` = 'zl/v1/a2'
+WHERE `chapter_id` = '6013';
+UPDATE `chapters`
+SET `url` = 'zl/v1/a3'
+WHERE `chapter_id` = '6026';
+UPDATE `chapters`
+SET `url` = 'zl/v1/a4'
+WHERE `chapter_id` = '6039';
+UPDATE `chapters`
+SET `url` = 'zl/v1/a5'
+WHERE `chapter_id` = '6040';
+UPDATE `chapters`
+SET `url` = 'zl/v1/a6'
+WHERE `chapter_id` = '6041';
+UPDATE `chapters`
+SET `url` = 'zl/v2/a7'
+WHERE `chapter_id` = '6045';
+UPDATE `chapters`
+SET `url` = 'zl/v2/a8'
+WHERE `chapter_id` = '6046';
+UPDATE `chapters`
+SET `url` = 'zl/v2/a9'
+WHERE `chapter_id` = '6047';
+UPDATE `chapters`
+SET `url` = 'sg/v2/ch1'
+WHERE `chapter_id` = '6048';
+UPDATE `chapters`
+SET `url` = 'sg/v2/ch2'
+WHERE `chapter_id` = '6056';
+UPDATE `chapters`
+SET `url` = 'sg/v2/ch3'
+WHERE `chapter_id` = '6062';
+UPDATE `chapters`
+SET `url` = 'tnynn/trans/v5'
+WHERE `chapter_id` = '6305';
