@@ -116,13 +116,13 @@ INSERT INTO chapters (chapter_id, volume_id, text_id, url, title, order_number, 
     chapter_id,
     release_id,
     NULL,
-    concat(name_url, '/', nullif(url, '')),
+    concat(v.url, '/', nullif(ch.url, '')),
     title,
     `order`,
     0,
     level > 1
-  FROM ruranobe_db.main_chapter
-    INNER JOIN ruranobe_db.main_releases USING (release_id);
+  FROM ruranobe_db.main_chapter ch
+    INNER JOIN ruranobe.volumes v ON (volume_id = release_id);
 
 INSERT INTO updates (project_id, volume_id, chapter_id, update_type, show_time, description)
   SELECT
