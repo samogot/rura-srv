@@ -1,6 +1,7 @@
 package ru.ruranobe.wicket.webpages;
 
 import org.apache.ibatis.session.SqlSession;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.repeater.Item;
@@ -8,7 +9,6 @@ import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.Chapter;
@@ -104,7 +104,14 @@ public class Orphus extends BaseLayoutPage
                 item.add(orphusOptionalComment);
 
                 PageParameters chapterPageParameters = Chapter.makeUrlParameters(orphusComment.getChapterUrl().split("/"));
-                BookmarkablePageLink orphusChapterUrl = new BookmarkablePageLink("orphusChapterUrl", Text.class, chapterPageParameters);
+                BookmarkablePageLink orphusChapterUrl = new BookmarkablePageLink("orphusChapterUrl", Text.class, chapterPageParameters)
+                {
+                    @Override
+                    protected CharSequence getURL()
+                    {
+                        return super.getURL() + "#" + orphusComment.getParagraph();
+                    }
+                };
                 Label orphusChapterName = new Label("orphusChapterName", orphusComment.getChapterName());
                 orphusChapterName.setRenderBodyOnly(true);
                 orphusChapterUrl.add(orphusChapterName);
