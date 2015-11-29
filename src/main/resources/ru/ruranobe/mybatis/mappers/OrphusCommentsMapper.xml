@@ -14,9 +14,9 @@
 
     <insert id="insertOrphusComment" parameterType="ru.ruranobe.mybatis.entities.tables.OrphusComment">
         INSERT INTO orphus_comments (chapter_id, paragraph, start_offset, original_text, replacement_text,
-                                     optional_comment, created_when)
+        optional_comment, created_when, user_id, user_ip)
         VALUES (#{chapterId}, #{paragraph}, #{startOffset}, #{originalText}, #{replacementText}, #{optionalComment},
-                #{createdWhen})
+        #{createdWhen}, #{userId}, #{userIp})
     </insert>
 
     <select id="getLastOrphusCommentsBy" parameterType="map" resultMap="OrphusCommentResult">
