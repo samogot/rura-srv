@@ -64,10 +64,10 @@ $('.controlText .btn').hover(
 $('.btn.top-button').click(function() {
     $(document).scrollTop(0);
 });
-$('.overlayT').click(function() {
-    $('.overlayT').hide();
-    $('div.mistake').hide();
-});
+//$('.overlayT').click(function() {
+//    $('.overlayT').hide();
+//    $('div.mistake').hide();
+//});
 $('.btn').hover(
     function() {
         $(this).children('.hint').show()
@@ -80,86 +80,88 @@ $('.controlText .btn.disable').attr('disabled', 'disabled');
 /* ИНСТРУМЕНТЫ */
 
 /* MOBILE */
-function isMobile() {
-    try {
-        document.createEvent("TouchEvent");
-        return true;
-    } catch (e) {
-        return false;
+$(function () {
+    function isMobile() {
+        try {
+            document.createEvent("TouchEvent");
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
-}
 
-var $right = $('#contents-module');
-var $center = $('.leftColumn');
-var $left = $('.controlText > div');
+    var $right = $('#contents-module');
+    var $center = $('.leftColumn');
+    var $left = $('.controlText > div');
 
-function OpenRight() {
-    if ($left.hasClass("active")) {
-        $left.removeClass("active");
-        $center.removeClass("activeLeft");
-    } else {
-        $right.addClass("active");
-        $right.children('div').addClass("active");
-        $center.addClass("activeRight");
-    }
-}
-
-function OpenLeft() {
-    if ($right.hasClass("active")) {
+//     $center.click(function(){
+//         $left.removeClass("active");
+//         $center.removeClass("activeLeft").removeClass("activeRight");
+//         $right.removeClass("active").children('div').removeClass("active");
+//         $('.controlText .btn.options-button').removeClass('activated');
+//     });
+    function CloseRight() {
         $right.removeClass("active");
         $right.children('div').removeClass("active");
         $center.removeClass("activeRight");
-    } else {
-        $left.addClass("active");
-        $center.addClass("activeLeft");
     }
-}
-$('.leftbg').click(OpenRight);
-$('.rightbg').click(OpenLeft);
-$('.soderj-button').click(function() {
-    OpenRight();
-    OpenRight();
-});
-if (isMobile() == true){ 
-    $(".rightMobile").swipe({
-        doubleTap: function() {
+
+    function CloseLeft() {
+        $left.removeClass("active");
+        $center.removeClass("activeLeft");
+        $('.controlText .btn.options-button').removeClass('activated');
+
+    }
+
+    function OpenRight() {
+        if ($left.hasClass("active")) {
+            CloseLeft();
+        } else {
+            $right.addClass("active");
+            $right.children('div').addClass("active");
+            $center.addClass("activeRight");
+        }
+    }
+
+    function OpenLeft() {
+        if ($right.hasClass("active")) {
+            CloseRight();
+        } else {
+            $left.addClass("active");
+            $center.addClass("activeLeft");
+        }
+    }
+
+    $('.leftbg').click(OpenRight);
+    $('.rightbg').click(OpenLeft);
+    $('.leftMobile').click(OpenLeft);
+    $('.rightMobile').click(OpenRight);
+    $('.soderj-button').click(function () {
+        OpenRight();
+        OpenRight();
+    });
+    if (isMobile() == true) $(".leftColumn").swipe({
+        swipeLeft: function () {
             OpenRight()
         },
-        threshold: 50,
-        excludedElements: $.fn.swipe.defaults.excludedElements
-    });
-    $(".leftMobile").swipe({
-        doubleTap: function() {
+        swipeRight: function () {
             OpenLeft()
         },
-        threshold: 50,
+        threshold: 100,
         excludedElements: $.fn.swipe.defaults.excludedElements
     });
-}
-$('#nav').click(function() {
-    $right.removeClass("active");
-    $right.children('div').removeClass("active");
-    $center.removeClass("activeRight");
-});
-$('.controlText .btn').click(function() {
-    if ($(this).hasClass('options-button')) {
-        return false;
-    }
-    $left.removeClass("active");
-    $center.removeClass("activeLeft");
-});
-$('.controlText .btn.options-button').click(function() {
-    if ($(this).hasClass('activated')) {
-        return false;
-    }
-    $('.controlText .btn.options-button').addClass('activated');
-    if (isMobile() == true) $('.overlayT').show();
-})
-$('.overlayT').click(function() {
-    $('.overlayT').hide();
-    $('.controlText .btn.options-button').removeClass('activated');
-    $left.removeClass("active");
-    $center.removeClass("activeLeft");
+    $('#nav').click(function () {
+        CloseRight();
+    });
+    $('.controlText .btn').click(function () {
+        if ($(this).hasClass('options-button')) {
+            return false;
+        }
+        CloseLeft()
+    });
+    $('.controlText .btn.options-button').click(function () {
+        $(this).toggleClass('activated');
+    });
 });
 /* MOBILE */
 

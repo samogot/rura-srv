@@ -107,7 +107,7 @@ body.night .rightbg {
         width: 1140px;
         bottom: 20px;
         position: absolute;
-        top: -20px;
+        top: -40px;
         -moz-border-image: url("data:image/svg+xml,%3Csvg%20version=%221.1%22%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2216px%22%20height=%2220px%22%3E%3Cpolygon%20points=%2212,4%2016,8%2012,12%2016,16%2012,20%208,16%204,20%200,16%204,12%200,8%204,4%200,0%200,20%2016,20%2016,0%22%20fill=%22#FFFFFF%22/%3E%3Cpolygon%20points=%220,0%208,8%2016,0%22%20fill=%22#60A9D4%22/%3E%3C/svg%3E") 8 4 4 4 / 8px 4px 4px round;
         -webkit-border-image: url("data:image/svg+xml,%3Csvg%20version=%221.1%22%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2216px%22%20height=%2220px%22%3E%3Cpolygon%20points=%2212,4%2016,8%2012,12%2016,16%2012,20%208,16%204,20%200,16%204,12%200,8%204,4%200,0%200,20%2016,20%2016,0%22%20fill=%22#FFFFFF%22/%3E%3Cpolygon%20points=%220,0%208,8%2016,0%22%20fill=%22#60A9D4%22/%3E%3C/svg%3E") 8 4 4 4 / 8px 4px 4px round;
         -o-border-image: url("data:image/svg+xml,%3Csvg%20version=%221.1%22%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2216px%22%20height=%2220px%22%3E%3Cpolygon%20points=%2212,4%2016,8%2012,12%2016,16%2012,20%208,16%204,20%200,16%204,12%200,8%204,4%200,0%200,20%2016,20%2016,0%22%20fill=%22#FFFFFF%22/%3E%3Cpolygon%20points=%220,0%208,8%2016,0%22%20fill=%22#60A9D4%22/%3E%3C/svg%3E") 8 4 4 4 / 8px 4px 4px round;
@@ -116,18 +116,18 @@ body.night .rightbg {
 
     body.night .leftbg,
     body.night .rightbg {
-        -moz-border-image: url("data:image/svg+xml,%3Csvg%20version=%221.1%22%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2216px%22%20height=%2220px%22%3E%3Cpolygon%20points=%2212,4%2016,8%2012,12%2016,16%2012,20%208,16%204,20%200,16%204,12%200,8%204,4%200,0%200,20%2016,20%2016,0%22%20fill=%22#000000%22/%3E%3Cpolygon%20points=%220,0%208,8%2016,0%22%20fill=%22#60A9D4%22/%3E%3C/svg%3E") 8 4 4 4 / 8px 4px 4px round;
-        -webkit-border-image: url("data:image/svg+xml,%3Csvg%20version=%221.1%22%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2216px%22%20height=%2220px%22%3E%3Cpolygon%20points=%2212,4%2016,8%2012,12%2016,16%2012,20%208,16%204,20%200,16%204,12%200,8%204,4%200,0%200,20%2016,20%2016,0%22%20fill=%22#000000%22/%3E%3Cpolygon%20points=%220,0%208,8%2016,0%22%20fill=%22#60A9D4%22/%3E%3C/svg%3E") 8 4 4 4 / 8px 4px 4px round;
-        -o-border-image: url("data:image/svg+xml,%3Csvg%20version=%221.1%22%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2216px%22%20height=%2220px%22%3E%3Cpolygon%20points=%2212,4%2016,8%2012,12%2016,16%2012,20%208,16%204,20%200,16%204,12%200,8%204,4%200,0%200,20%2016,20%2016,0%22%20fill=%22#000000%22/%3E%3Cpolygon%20points=%220,0%208,8%2016,0%22%20fill=%22#60A9D4%22/%3E%3C/svg%3E") 8 4 4 4 / 8px 4px 4px round;
-        border-image: url("data:image/svg+xml,%3Csvg%20version=%221.1%22%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2216px%22%20height=%2220px%22%3E%3Cpolygon%20points=%2212,4%2016,8%2012,12%2016,16%2012,20%208,16%204,20%200,16%204,12%200,8%204,4%200,0%200,20%2016,20%2016,0%22%20fill=%22#000000%22/%3E%3Cpolygon%20points=%220,0%208,8%2016,0%22%20fill=%22#60A9D4%22/%3E%3C/svg%3E") 8 4 4 4 / 8px 4px 4px round;
+        -moz-border-image: url("data:image/svg+xml,%3Csvg%20version=%221.1%22%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2216px%22%20height=%2220px%22%3E%3Cpolygon%20points=%2212,4%2016,8%2012,12%2016,16%2012,20%208,16%204,20%200,16%204,12%200,8%204,4%200,0%200,20%2016,20%2016,0%22%20fill=%22#282828%22/%3E%3Cpolygon%20points=%220,0%208,8%2016,0%22%20fill=%22#242424%22/%3E%3C/svg%3E") 8 4 4 4 / 8px 4px 4px round;
+        -webkit-border-image: url("data:image/svg+xml,%3Csvg%20version=%221.1%22%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2216px%22%20height=%2220px%22%3E%3Cpolygon%20points=%2212,4%2016,8%2012,12%2016,16%2012,20%208,16%204,20%200,16%204,12%200,8%204,4%200,0%200,20%2016,20%2016,0%22%20fill=%22#282828%22/%3E%3Cpolygon%20points=%220,0%208,8%2016,0%22%20fill=%22#242424%22/%3E%3C/svg%3E") 8 4 4 4 / 8px 4px 4px round;
+        -o-border-image: url("data:image/svg+xml,%3Csvg%20version=%221.1%22%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2216px%22%20height=%2220px%22%3E%3Cpolygon%20points=%2212,4%2016,8%2012,12%2016,16%2012,20%208,16%204,20%200,16%204,12%200,8%204,4%200,0%200,20%2016,20%2016,0%22%20fill=%22#282828%22/%3E%3Cpolygon%20points=%220,0%208,8%2016,0%22%20fill=%22#242424%22/%3E%3C/svg%3E") 8 4 4 4 / 8px 4px 4px round;
+        border-image: url("data:image/svg+xml,%3Csvg%20version=%221.1%22%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2216px%22%20height=%2220px%22%3E%3Cpolygon%20points=%2212,4%2016,8%2012,12%2016,16%2012,20%208,16%204,20%200,16%204,12%200,8%204,4%200,0%200,20%2016,20%2016,0%22%20fill=%22#282828%22/%3E%3Cpolygon%20points=%220,0%208,8%2016,0%22%20fill=%22#242424%22/%3E%3C/svg%3E") 8 4 4 4 / 8px 4px 4px round;
     }
-}
+    }
 
 body.night .navbar-top {
-    background-color: #282828;
+    background-color: #242424;
 }
 
-body.night .banners img {
+body.night .banners img, body.night #friends-module img {
     opacity: 0.5;
 }
 
@@ -213,18 +213,20 @@ body.night .controlText div .hint .miniicon {
 @media screen and (max-width: 767px) {
     .leftMobile,
     .rightMobile {
-        width: 35%;
+        width: 30px;
         bottom: 20px;
         position: absolute;
         top: -40px;
         cursor: pointer;
         z-index: 17;
     }
+
     .leftMobile {
-        right: 65%;
+        left: -15px;
     }
+
     .rightMobile {
-        left: 65%;
+        right: -15px;
     }
 
     .leftColumn.activeLeft .leftMobile,
@@ -261,13 +263,17 @@ body.night .controlText div .hint .miniicon {
         left: -36px;
     }
 
+    .controlText div.affix-top, .controlText div.affix-bottom {
+        left: 14px;
+    }
+
     .controlText > div {
         width: 40px !important;
     }
 
-    .controlText div {
+    .controlText .btn {
         width: initial;
-        left: 4px;
+        left: 2px;
     }
 
     .controlText div.active {
@@ -301,7 +307,7 @@ body.night .controlText div .hint .miniicon {
 
     .controlText div.options-button.activated .hint {
         display: block !important;
-        left: 50px;
+        left: 55px;
         margin-top: -8px;
     }
 
@@ -574,7 +580,7 @@ div.mistake .sendText {
     text-indent: 1em;
 }
 
-.text {
+.text p {
     text-align: justify;
 }
 
@@ -606,10 +612,7 @@ div.mistake .sendText {
 /* fancybox END */
 
 img.img-responsive.img-thumbnail {
-    max-width: 700px;
     max-height: 700px;
-    /* margin-top: 1em; */
-    /* margin-bottom: 1em; */
 }
 
 h3, h4 {
@@ -622,4 +625,14 @@ h3, h4 {
 
 body.night .daynight .bootstrap-switch .bootstrap-switch-label {
     background: #282828;
+}
+
+.center.subtitle {
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
+
+.center.illustration {
+    margin-top: 2em;
+    margin-bottom: 2em;
 }

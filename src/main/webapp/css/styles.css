@@ -2,7 +2,8 @@
     font-weight: bold;
 }
 body {
-    min-width: 340px;
+    /* min-width: 340px; */
+    overflow-x: hidden;
     color: rgb(77, 77, 77);
 }
 .clear-both {
@@ -1247,6 +1248,23 @@ div > button.view2.active {
 .viewTypeBlock2 > .moreAboutProject > a {
     color: rgb(133, 133, 133);
 }
+
+.viewType2 div a {
+    text-decoration: underline;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: calc(100% - 360px);
+    display: block;
+    overflow: hidden;
+}
+
+.viewType1 a span {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 220px;
+    display: block;
+    overflow: hidden;
+}
 #project-cover-carousel .carousel-inner {
     width: 240px;
     height: 343px;
@@ -1398,7 +1416,7 @@ ul.ContentNav {
 @media screen and (max-width: 767px) {
     .text {
         margin-left: 5px;
-        margin-right: 15px;
+        margin-right: 5px;
     }
     /* ÃƒÆ’Ã‚ÂÃƒâ€šÃ‚Â¡ÃƒÆ’Ã‚ÂÃƒâ€šÃ‚Â¾ÃƒÆ’Ã‚ÂÃƒâ€šÃ‚Â´ÃƒÆ’Ã‚ÂÃƒâ€šÃ‚ÂµÃƒÆ’Ã¢â‚¬ËœÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚ÂÃƒâ€šÃ‚Â¶ÃƒÆ’Ã‚ÂÃƒâ€šÃ‚Â°ÃƒÆ’Ã‚ÂÃƒâ€šÃ‚Â½ÃƒÆ’Ã‚ÂÃƒâ€šÃ‚Â¸ÃƒÆ’Ã‚ÂÃƒâ€šÃ‚Âµ */
     #contents-module {
