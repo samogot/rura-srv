@@ -610,6 +610,14 @@ div.mistake .sendText {
     right: -10px !important;
 }
 
+.fancybox-nav:hover {
+    background-color: rgba(0, 0, 0, 0.18);
+}
+
+.fancybox-lock .fancybox-overlay {
+    overflow: hidden !important;
+}
+
 /* fancybox END */
 
 img.img-responsive.img-thumbnail {
