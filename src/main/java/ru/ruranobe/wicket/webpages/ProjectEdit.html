@@ -2,346 +2,20 @@
 <html xmlns:wicket="http://wicket.apache.org" lang="en">
 <body>
 <wicket:extend>
-    <div class="container">
-        <div class="leftColumn">
-            <main class="content">
-                <h2>Редактирование проекта (серии)</h2>
-                <form wicket:id="projectInfoForm" class="FormUpdate FormAjax admin-block" data-type="project">
-                    <div class="admin-header">
-                        <span>Информация</span>
-                        <div class="btn-group" role="group" aria-label="Панель">
-                            <button wicket:id="updateProjectAjax" type="button"  class="btn btn-primary" title="Сохранить"><i class="fa fa-floppy-o"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <input type="hidden" id="volume_id" name="volume_id">
-                    <div class="form-group">
-                        <label wicket:for="url">Ссылка</label>
-                        <input type="text" class="form-control" wicket:id="url" name="url">
-                    </div>
-                    <div class="form-group">
-                        <label for="banner">Изображение</label>
-                        <input type="hidden" id="banner_id">
-                        <img src="http://ruranobe.ru/images/6/6b/sidebanner-aw.png" height="73" width="220" id="banner">
-                    </div>
-                    <div class="progress collapse">
-                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-                            <span class="sr-only">0% Complete</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label wicket:for="title">Название для заголовков</label>
-                        <input type="text" class="form-control" wicket:id="title" name="name_title">
-                    </div>
-                    <div class="form-group">
-                        <label wicket:for="nameJp">Название (яп.)</label>
-                        <input type="text" class="form-control" wicket:id="nameJp" name="name_jp">
-                    </div>
-                    <div class="form-group">
-                        <label wicket:for="nameEn">Название (англ.)</label>
-                        <input type="text" class="form-control" wicket:id="nameEn" name="name_en">
-                    </div>
-                    <div class="form-group">
-                        <label wicket:for="nameRu">Название (рус.)</label>
-                        <input type="text" class="form-control" wicket:id="nameRu" name="name_ru">
-                    </div>
-                    <div class="form-group">
-                        <label wicket:for="nameRomaji">Название (романдзи)</label>
-                        <input type="text" class="form-control" wicket:id="nameRomaji" name="name_romaji">
-                    </div>
-                    <div class="form-group">
-                        <label wicket:for="author">Автор</label>
-                        <div id="author-name-typeahead">
-                            <input class="form-control typeahead author-name" type="text" wicket:id="author" name="author">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label wicket:for="illustrator">Иллюстратор</label>
-                        <div id="illustrator-name-typeahead">
-                            <input class="form-control typeahead illustrator-name" type="text" wicket:id="illustrator" name="illustrator">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <input type="checkbox" wicket:id="onevolume" name="onevolume" value="false">
-                        <label wicket:for="onevolume">Однотомник</label>
-                    </div>
-                    <div class="form-group">
-                        <input type="checkbox" wicket:id="bannerHidden" name="banner_hidden" value="false">
-                        <label wicket:for="bannerHidden">Баннер скрыт</label>
-                    </div>
-                    <div class="form-group">
-                        <input type="checkbox" wicket:id="projectHidden" name="project_hidden" value="false">
-                        <label wicket:for="projectHidden">Проект скрыт</label>
-                    </div>
-                    <div class="form-group">
-                        <label wicket:for="franchise">Описание франшизы</label>
-                        <textarea class="form-control" wicket:id="franchise" name="franchise" rows="3"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label wicket:for="annotation">Аннотация</label>
-                        <textarea class="form-control" wicket:id="annotation" name="annotation" rows="3"></textarea>
-                    </div>
-                    <span wicket:id="updateProjectAjaxFeedback"></span>
-                </form>
+    <div wicket:id="info"></div>
+    <div wicket:id="volumes"></div>
+    <div wicket:id="subprojects"></div>
 
-                <form wicket:id="volumesForm" class="admin-block">
-                    <div>
-                        <div class="admin-header">
-                            <span>Редактирование томов</span>
-                            <div class="btn-group col-12-sm" role="group" aria-label="Панель глав">
-                            <button wicket:id="addVolume" type="button" class="btn btn-success" data-type="volume" title="Добавить новый том" id="btn-update-add"><i class="fa fa-plus"></i></button>
-                                <button wicket:id="cloneVolume" type="button" class="btn btn-warning" title="Дублировать том" id="btn-update-clone"><i class="fa fa-files-o"></i>
-                                </button>
-                                <button wicket:id="deleteVolume" type="button" class="btn btn-danger" data-type="volume" title="Удалить том" id="btn-update-delete"><i class="fa fa-trash-o"></i>
-                                </button>
-                                <div class="btn-group">
-                                    <button data-toggle="dropdown" class="btn btn-info dropdown-toggle" data-placeholder="false"><i class="fa fa-columns"></i> <i class="caret"></i></button>
-                                    <ul class="dropdown-menu noclose bullet pull-right">
-                                        <li>
-                                            <input type="checkbox" id="LABELnumber" name="LABEL" value="0">
-                                            <label for="LABELnumber">#</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="LABELurl" name="LABEL" value="1" checked>
-                                            <label for="LABELurl">Ссылка</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="LABELname_file" name="LABEL" value="2" checked>
-                                            <label for="LABELname_file">Имя для файлов</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="LABELname_title" name="LABEL" value="3" checked>
-                                            <label for="LABELname_title">Имя для заголовков</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="LABELname_jp" name="LABEL" value="4" checked>
-                                            <label for="LABELname_jp">Название (яп.)</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="LABELname_en" name="LABEL" value="5" checked>
-                                            <label for="LABELname_en">Название (англ.)</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="LABELname_ru" name="LABEL" value="6" checked>
-                                            <label for="LABELname_ru">Название (рус.)</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="LABELname_romaji" name="LABEL" value="7" checked>
-                                            <label for="LABELname_romaji">Название (романдзи)</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="LABELname_short" name="LABEL" value="8" checked>
-                                            <label for="LABELname_short">Короткое название</label>
-                                        </li>
-                                    <!--li>
-                                            <input type="checkbox" id="LABELproject_id" name="LABEL" value="9">
-                                            <label for="LABELproject_id">Серия</label>
-                                    </li-->
-                                        <li>
-                                            <input type="checkbox" id="LABELsequence_number" name="LABEL" value="10" checked>
-                                            <label for="LABELsequence_number">Номер в серии</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="LABELauthor" name="LABEL" value="11">
-                                            <label for="LABELauthor">Автор</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="LABELillustrator" name="LABEL" value="12">
-                                            <label for="LABELillustrator">Иллюстратор</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="LABELrelease_date" name="LABEL" value="13" checked>
-                                            <label for="LABELrelease_date">Дата публикации</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="LABELISBN" name="LABEL" value="14" checked>
-                                            <label for="LABELISBN">ISBN</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="LABELvolume_type" name="LABEL" value="15">
-                                            <label for="LABELvolume_type">Тип релиза</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="LABELvolume_status" name="LABEL" value="16">
-                                            <label for="LABELvolume_status">Cтатус релиза</label>
-                                        </li>
-                                    <!--li>
-                                            <input type="checkbox" id="LABELexternal_url" name="LABEL" value="17">
-                                            <label for="LABELexternal_url">Внешняя ссылка</label>
-                                    </li-->
-                                        <li>
-                                            <input type="checkbox" id="LABELannotation" name="LABEL" value="18">
-                                            <label for="LABELannotation">Аннотация</label>
-                                        </li>
-                                        <li>
-                                            <input type="checkbox" id="LABELadult" name="LABEL" value="19">
-                                            <label for="LABELadult">18+</label>
-                                        </li>
-                                        <!-- Other items -->
-                                    </ul>
-                                </div>
-                                <button  wicket:id="updateVolumesAjax" type="button" class="btn btn-primary" title="Сохранить"><i class="fa fa-floppy-o"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="volumetable">
-                            <div id="scrollbar"><div id="innerScrollbar"><!--dummy text--></div></div>
-                            <div id="scrollable" class="col-12-sm" style="overflow-x:scroll;margin-top:15px;  overflow-y: hidden;">
-                                <table class="table table-bordered table-condensed table-fixed-header">
-                                    <thead class='header'>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Ссылка</th>
-                                    <th>Имя для файлов</th>
-                                    <th>Имя для заголовков</th>
-                                    <th>Название (яп.)</th>
-                                    <th>Название (англ.)</th>
-                                    <th>Название (рус.)</th>
-                                    <th>Название (романдзи)</th>
-                                    <th>Короткое название</th>
-                                    <!--th>Серия</th-->
-                                    <th>Номер в серии</th>
-                                    <th>Автор</th>
-                                    <th>Иллюстратор</th>
-                                    <th>Дата публикации</th>
-                                    <th>ISBN</th>
-                                    <th>Тип релиза</th>
-                                    <th>Статус релиза</th>
-                                    <!--th>Внешняя ссылка</th-->
-                                    <th>Аннотация</th>
-                                    <th>18+</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                    <wicket:container wicket:id="volumeRepeater">
-                                        <tr class="FormAjax FormUpdate" data-parent="#volume" data-type="volume_n1">
-                                            <input type="hidden" name="volume_id">
-                                            <td>
-                                                <label name="volOrderNumber" wicket:id="volOrderNumber"></label>
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control" placeholder="<пусто>" wicket:id="volUrl" name="url" value="http://ruranobe.ru/r/sao/v1">
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control" placeholder="<пусто>" wicket:id="volNameFile" name="name_file" value="Sword Art Online 1">
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control" placeholder="<пусто>" wicket:id="volTitle" name="name_title" value="Sword Art Online 1">
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control" placeholder="<пусто>" wicket:id="volNameJp" name="name_jp" value="ソードアート・オンライン1 アインクラッド">
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control" placeholder="<пусто>" wicket:id="volNameEn" name="name_en" value="Sword Art Online 1: Aincrad">
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control" placeholder="<пусто>" wicket:id="volNameRu" name="name_ru" value="Sword Art Online 1: Айнкрад">
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control" placeholder="<пусто>" wicket:id="volNameRomaji" name="name_romaji">
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control" placeholder="<пусто>" wicket:id="volNameShort" name="name_short">
-                                            </td>
-                                            <!--td>
-                                                <select class="form-control" wicket:id="1project_id" name="project_id">
-                                                    <option>Sword Art Online</option>
-                                                    <option>2</option>
-                                                    <option>3</option>
-                                                    <option>4</option>
-                                                    <option>5</option>
-                                                </select>
-                                            </td-->
-                                            <td>
-                                                <input type="text" class="form-control" placeholder="<пусто>" wicket:id="volSequenceNumber" name="sequence_number">
-                                            </td>
-                                            <td>
-                                                <input class="form-control typeahead author-name" type="text" placeholder="<пусто>" wicket:id="volAuthor" name="author" value="Рэки Кавахара">
-                                            </td>
-                                            <td>
-                                                <input class="form-control typeahead illustrator-name" type="text" placeholder="<пусто>" wicket:id="volIllustrator" name="illustrator" value="abec">
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control" placeholder="<пусто>" wicket:id="volReleaseDate" name="release_date">
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control" placeholder="<пусто>" wicket:id="volIsbn" name="ISBN" value="978-4048677608">
-                                            </td>
-                                            <td>
-                                                <select class="form-control" wicket:id="volumeType" name="volume_type"></select>
-                                            </td>
-                                            <td>
-                                                <select class="form-control" wicket:id="volumeStatus" name="volume_status">
-                                                    <option value="1">Скрыт</option>
-                                                    <optgroup label="Сторонний перевод">
-                                                        <option value="3">Заброшенный сторонний перевод</option>
-                                                        <option value="4">Активный сторонний перевод</option>
-                                                        <option value="5">Завершенный сторонний перевод</option>
-                                                    </optgroup>
-                                                    <optgroup label="Не в работе">
-                                                        <option value="6">Отсутствует анлейт</option>
-                                                        <option value="7">Заморожен</option>
-                                                        <option value="8">Приостановлен</option>
-                                                        <option value="9">Очередь перевода</option>
-                                                    </optgroup>
-                                                    <optgroup label="В работе">
-                                                        <option value="10">Перевод в онгоинге</option>
-                                                        <option value="11">Перевод</option>
-                                                        <option value="12">Редактура</option>
-                                                    </optgroup>
-                                                    <optgroup label="Опубликован">
-                                                        <option value="13">Не оформлен</option>
-                                                        <option value="14">Завершен</option>
-                                                    </optgroup>
-                                                </select>
-                                            </td>
-                                            <!--td>
-                                                <input type="text" class="form-control" placeholder="<пусто>" wicket:id="1external_url" name="external_url">
-                                            </td-->
-                                            <td>
-                                                <textarea class="form-control" placeholder="<пусто>" wicket:id="volAnnotation" name="annotation" rows="3" style="width: 100%;"></textarea>
-                                            </td>
-                                            <td>
-                                                <input type="checkbox" class="form-control" placeholder="<пусто>" wicket:id="volAdult" name="adult">
-                                            </td>
-                                        </tr>
-                                    </wicket:container>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <span wicket:id="updateVolumesAjaxFeedback"></span>
-                </form>
 
-                <form wicket:id="subProjectForm" class="admin-block">
-                    <div class="admin-header">
-                        <span>Редактирование подсерий</span>
-                        <div class="btn-group col-12-sm">
-                            <button type="button" class="btn btn-success" data-type="subseries" title="Добавить новую подсерию" id="btn-sub-add"><i class="fa fa-plus"></i>
-                            </button>
-                            <button type="button" class="btn btn-danger" data-type="subseries" title="Удалить подсерию" id="btn-sub-delete"><i class="fa fa-trash-o"></i>
-                            </button>
-                            <button  id="updateSubProjects" type="button" class="btn btn-primary" title="Сохранить"><i class="fa fa-floppy-o"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="subseriestable">
-                        <div class="list-group select sortable" id="subseries" style="margin-top:15px;">
-                            <wicket:container wicket:id="subProjectRepeater">
-                                <a data-toggle="collapse" data-parent="#subseries" data-type="subseries_n" aria-expanded="true" class="list-group-item FormAjax FormUpdate" >
-                                    <i class="fa fa-ellipsis-v move"></i>
-                                    <input wicket:id="subProjectId" type="hidden" name="subProjectId">
-                                    <input wicket:id="subProjectName" type="text" class="form-control" placeholder="<пусто>" name="subProjectTitle">
-                                </a>
-                            </wicket:container>
-                        </div>
-                    </div>
-                </form>
-            </main>
-        </div>
-    </div>
-
+    <script src="js/listgroup.js"></script>
+    <script src="https://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js"></script>
+    <!-- Скрипт загрузки -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.5.7/jquery.iframe-transport.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.5.7/jquery.fileupload.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.5.7/jquery.fileupload-process.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.5.7/jquery.fileupload-image.min.js"></script>
+    <script src="http://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js"></script>
+    <script src="http://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>
 
     <!-- Выпадающее окно (dropdown) bootstrap -->
     <link rel="stylesheet"
@@ -354,7 +28,18 @@
     <script src="https://cdn.rawgit.com/dobtco/jquery-resizable-columns/gh-pages/dist/jquery.resizableColumns.min.js"></script>
     <script src="https://cdn.rawgit.com/samogot/colResizable/master/source/colResizable-1.5.source.js"></script>
     <script src="https://cdn.rawgit.com/marcuswestin/store.js/blob/master/store.min.js"></script>
-    <script src="js/page.project_edit.js"></script>
+
+    <script src="js/ContentsModule.js"></script>
+    <script src="js/AdminListPanel.js"></script>
+    <link rel="stylesheet" href="css/AdminListPanel.css">
+    <script src="js/AdminToolboxAjaxButton.js"></script>
+    <script src="js/AdminFormPanel.js"></script>
+    <link rel="stylesheet" href="css/AdminFormPanel.css">
+    <script src="js/AdminAffixedListPanel.js"></script>
+    <link rel="stylesheet" href="css/AdminAffixedListPanel.css">
+    <script src="js/AdminTableListPanel.js"></script>
+    <link rel="stylesheet" href="css/AdminTableListPanel.css">
+    <script src="js/BannerUploaderComponent.js"></script>
 </wicket:extend>
 </body>
 </html>

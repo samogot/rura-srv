@@ -60,6 +60,12 @@ public class VolumesMapperCacheable implements VolumesMapper
     }
 
     @Override
+    public void updateVolumeCovers(Volume volume)
+    {
+        mapper.updateVolumeCovers(volume);
+    }
+
+    @Override
     public int insertVolume(Volume volume)
     {
         return mapper.insertVolume(volume);

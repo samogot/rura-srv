@@ -1,41 +1,22 @@
 package ru.ruranobe.wicket.webpages;
 
-import com.google.common.collect.ImmutableMap;
-import com.mysql.jdbc.StringUtils;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.io.FilenameUtils;
+import com.google.common.collect.ImmutableList;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.ibatis.session.SqlSession;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
-import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.*;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.request.resource.ByteArrayResource;
-import org.apache.wicket.request.resource.IResource;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import ru.ruranobe.config.ApplicationContext;
-import ru.ruranobe.engine.Webpage;
-import ru.ruranobe.engine.image.ImageServices;
-import ru.ruranobe.engine.image.RuraImage;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
+import ru.ruranobe.mybatis.mappers.ExternalResourcesMapper;
 import ru.ruranobe.mybatis.mappers.ProjectsMapper;
 import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
@@ -43,806 +24,22 @@ import ru.ruranobe.mybatis.entities.tables.ExternalResource;
 import ru.ruranobe.mybatis.entities.tables.Project;
 import ru.ruranobe.mybatis.entities.tables.Volume;
 import ru.ruranobe.wicket.RuraConstants;
+import ru.ruranobe.wicket.components.admin.AdminAffixedListPanel;
+import ru.ruranobe.wicket.components.admin.AdminInfoFormPanel;
+import ru.ruranobe.wicket.components.admin.AdminTableListPanel;
+import ru.ruranobe.wicket.components.admin.AdminToolboxAjaxButton;
+import ru.ruranobe.wicket.components.admin.formitems.ProjectInfoPanel;
+import ru.ruranobe.wicket.components.admin.formitems.SubProjectSelectorItemPanel;
+import ru.ruranobe.wicket.components.admin.formitems.VolumeTableRowPanel;
 import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class ProjectEdit extends AdminLayoutPage
 {
-
-    public ProjectEdit(final PageParameters parameters)
-    {
-        project = getProject(parameters);
-
-        if (project == null)
-        {
-            throw RuranobeUtils.getRedirectTo404Exception(this);
-        }
-
-        final Form<Project> projectInfoForm = new Form<Project>("projectInfoForm", new CompoundPropertyModel<Project>(project));
-        projectInfoForm.setOutputMarkupId(true);
-        final TextField<String> url = new TextField<String>("url");
-        final TextField<String> title = new TextField<String>("title");
-        final TextField<String> nameJp = new TextField<String>("nameJp");
-        final TextField<String> nameEn = new TextField<String>("nameEn");
-        final TextField<String> nameRu = new TextField<String>("nameRu");
-        final TextField<String> nameRomaji = new TextField<String>("nameRomaji");
-        final TextField<String> author = new TextField<String>("author");
-        final TextField<String> illustrator = new TextField<String>("illustrator");
-        final CheckBox onevolume = new CheckBox("onevolume");
-        final CheckBox bannerHidden = new CheckBox("bannerHidden");
-        final CheckBox projectHidden = new CheckBox("projectHidden");
-        final TextArea<String> franchise = new TextArea<String>("franchise");
-        final TextArea<String> annotation = new TextArea<String>("annotation");
-        final FeedbackPanel updateProjectAjaxFeedback = new FeedbackPanel("updateProjectAjaxFeedback");
-        updateProjectAjaxFeedback.setOutputMarkupId(true);
-        updateProjectAjaxFeedback.setFilter(new ContainerFeedbackMessageFilter(projectInfoForm));
-        final AjaxButton updateProjectAjax = new AjaxButton("updateProjectAjax", projectInfoForm)
-        {
-            @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> form)
-            {
-                info("Данные были успешно обновлены.");
-                SqlSession session = MybatisUtil.getSessionFactory().openSession();
-                try
-                {
-                    CachingFacade.getCacheableMapper(session, ProjectsMapper.class).updateProject(project);
-                    session.commit();
-                    target.add(updateProjectAjaxFeedback);
-                }
-                finally
-                {
-                    session.close();
-                }
-            }
-
-            @Override
-            protected void onError(AjaxRequestTarget target, Form<?> form)
-            {
-                error("Не удалось обновить данные.");
-                target.add(updateProjectAjaxFeedback);
-            }
-        };
-
-        updateProjectAjax.setOutputMarkupId(true);
-
-        projectInfoForm.add(url);
-        projectInfoForm.add(title);
-        projectInfoForm.add(nameJp);
-        projectInfoForm.add(nameEn);
-        projectInfoForm.add(nameRu);
-        projectInfoForm.add(nameRomaji);
-        projectInfoForm.add(author);
-        projectInfoForm.add(illustrator);
-        projectInfoForm.add(onevolume);
-        projectInfoForm.add(bannerHidden);
-        projectInfoForm.add(projectHidden);
-        projectInfoForm.add(franchise);
-        projectInfoForm.add(annotation);
-        projectInfoForm.add(updateProjectAjaxFeedback);
-        projectInfoForm.add(updateProjectAjax);
-        add(projectInfoForm);
-
-        SqlSession session = MybatisUtil.getSessionFactory().openSession();
-        try
-        {
-            volumes = CachingFacade.getCacheableMapper(session, VolumesMapper.class).getVolumesByProjectId(project.getProjectId());
-            VolumesForm volumesForm = new VolumesForm(volumes);
-
-            final ListView<Volume> volumeRepeater = new ListView<Volume>("volumeRepeater", volumes)
-            {
-
-                @Override
-                protected void populateItem(final ListItem<Volume> listItem)
-                {
-                    final Volume volume = listItem.getModelObject();
-                    volumeTableOrderNumberToVolume.put(listItem.getIndex(), volume);
-
-                    Label volId = new Label("volOrderNumber", new Model<String>()
-                    {
-                        @Override
-                        public String getObject()
-                        {
-                            return Integer.toString(listItem.getIndex());
-                        }
-                    });
-                    TextField<String> volUrl = new TextField<String>("volUrl", new Model<String>()
-                    {
-                        @Override
-                        public String getObject()
-                        {
-                            return volume.getUrl();
-                        }
-
-                        @Override
-                        public void setObject(final String value)
-                        {
-                            volume.setUrl(value);
-                        }
-                    });
-                    TextField<String> volNameFile = new TextField<String>("volNameFile", new Model<String>()
-                    {
-                        @Override
-                        public String getObject()
-                        {
-                            return volume.getNameFile();
-                        }
-
-                        @Override
-                        public void setObject(final String value)
-                        {
-                            volume.setNameFile(value);
-                        }
-                    });
-                    TextField<String> volTitle = new TextField<String>("volTitle", new Model<String>()
-                    {
-                        @Override
-                        public String getObject()
-                        {
-                            return volume.getNameTitle();
-                        }
-
-                        @Override
-                        public void setObject(final String value)
-                        {
-                            volume.setNameTitle(value);
-                        }
-                    });
-                    TextField<String> volNameJp = new TextField<String>("volNameJp", new Model<String>()
-                    {
-                        @Override
-                        public String getObject()
-                        {
-                            return volume.getNameJp();
-                        }
-
-                        @Override
-                        public void setObject(final String value)
-                        {
-                            volume.setNameJp(value);
-                        }
-                    });
-                    TextField<String> volNameEn = new TextField<String>("volNameEn", new Model<String>()
-                    {
-                        @Override
-                        public String getObject()
-                        {
-                            return volume.getNameEn();
-                        }
-
-                        @Override
-                        public void setObject(final String value)
-                        {
-                            volume.setNameEn(value);
-                        }
-                    });
-                    TextField<String> volNameRu = new TextField<String>("volNameRu", new Model<String>()
-                    {
-                        @Override
-                        public String getObject()
-                        {
-                            return volume.getNameRu();
-                        }
-
-                        @Override
-                        public void setObject(final String value)
-                        {
-                            volume.setNameRu(value);
-                        }
-                    });
-                    TextField<String> volNameRomaji = new TextField<String>("volNameRomaji", new Model<String>()
-                    {
-                        @Override
-                        public String getObject()
-                        {
-                            return volume.getNameRomaji();
-                        }
-
-                        @Override
-                        public void setObject(final String value)
-                        {
-                            volume.setNameRomaji(value);
-                        }
-                    });
-                    TextField<String> volNameShort = new TextField<String>("volNameShort", new Model<String>()
-                    {
-                        @Override
-                        public String getObject()
-                        {
-                            return volume.getNameShort();
-                        }
-
-                        @Override
-                        public void setObject(final String value)
-                        {
-                            volume.setNameShort(value);
-                        }
-                    });
-                    TextField<String> volSequenceNumber = new TextField<String>("volSequenceNumber", new Model<String>()
-                    {
-                        @Override
-                        public String getObject()
-                        {
-                            return volume.getSequenceNumber() == null ? null : Integer.toString(volume.getSequenceNumber());
-                        }
-
-                        @Override
-                        public void setObject(final String value)
-                        {
-                            volume.setSequenceNumber(Integer.parseInt(value));
-                        }
-                    });
-                    TextField<String> volAuthor = new TextField<String>("volAuthor", new Model<String>()
-                    {
-                        @Override
-                        public String getObject()
-                        {
-                            return volume.getAuthor();
-                        }
-
-                        @Override
-                        public void setObject(final String value)
-                        {
-                            volume.setAuthor(value);
-                        }
-                    });
-                    TextField<String> volIllustrator = new TextField<String>("volIllustrator", new Model<String>()
-                    {
-                        @Override
-                        public String getObject()
-                        {
-                            return volume.getIllustrator();
-                        }
-
-                        @Override
-                        public void setObject(final String value)
-                        {
-                            volume.setIllustrator(value);
-                        }
-                    });
-                    TextField<String> volReleaseDate = new TextField<String>("volReleaseDate", new Model<String>()
-                    {
-                        private final SimpleDateFormat sdf = new SimpleDateFormat("YYYY:MM:DD");
-
-                        @Override
-                        public String getObject()
-                        {
-                            return volume.getReleaseDate() == null ? null : sdf.format(volume.getReleaseDate());
-                        }
-
-                        @Override
-                        public void setObject(final String value)
-                        {
-                            try
-                            {
-                                volume.setReleaseDate(sdf.parse(value));
-                            }
-                            catch (ParseException ex)
-                            {
-                                throw new RuntimeException(ex);
-                            }
-                        }
-                    });
-                    TextField<String> volIsbn = new TextField<String>("volIsbn", new Model<String>()
-                    {
-                        @Override
-                        public String getObject()
-                        {
-                            return volume.getIsbn();
-                        }
-
-                        @Override
-                        public void setObject(final String value)
-                        {
-                            volume.setIsbn(value);
-                        }
-                    });
-                    DropDownChoice<String> volumeType = new DropDownChoice<String>("volumeType", new Model<String>()
-                    {
-                        @Override
-                        public String getObject()
-                        {
-                            return volume.getVolumeType();
-                        }
-
-                        @Override
-                        public void setObject(final String value)
-                        {
-                            volume.setVolumeType(value);
-                        }
-                    }, Arrays.asList("Ранобэ", "Побочные истории", "Авторские додзинси", "Другое"));
-                    DropDownChoice<String> volumeStatus = new DropDownChoice<String>("volumeStatus", new Model<String>()
-                    {
-                        @Override
-                        public String getObject()
-                        {
-                            return RuraConstants.VOLUME_STATUS_TO_FULL_TEXT.get(volume.getVolumeStatus());
-                        }
-
-                        @Override
-                        public void setObject(final String value)
-                        {
-                            volume.setVolumeStatus(RuraConstants.VOLUME_STATUS_FULL_TEXT_TO_STATUS.get(value));
-                        }
-                    }, Arrays.asList("Заброшенный сторонний перевод", "Активный сторонний перевод", "Завершенный сторонний перевод", "Отсутствует анлейт", "Заморожен", "Приостановлен", "Очередь перевода", "Перевод в онгоинге", "Перевод", "Редактура", "Не оформлен", "Завершен"));
-                    TextArea<String> volAnnotation = new TextArea<String>("volAnnotation", new Model<String>()
-                    {
-                        @Override
-                        public String getObject()
-                        {
-                            return volume.getAnnotation();
-                        }
-
-                        @Override
-                        public void setObject(final String value)
-                        {
-                            volume.setAnnotation(value);
-                        }
-                    });
-                    CheckBox volAdult = new CheckBox("volAdult", new Model<Boolean>()
-                    {
-                        @Override
-                        public Boolean getObject()
-                        {
-                            return volume.isAdult();
-                        }
-
-                        @Override
-                        public void setObject(final Boolean value)
-                        {
-                            volume.setAdult(value);
-                        }
-                    });
-
-                    listItem.add(volId);
-                    listItem.add(volUrl);
-                    listItem.add(volNameFile);
-                    listItem.add(volTitle);
-                    listItem.add(volNameJp);
-                    listItem.add(volNameEn);
-                    listItem.add(volNameRu);
-                    listItem.add(volNameShort);
-                    listItem.add(volNameRomaji);
-                    listItem.add(volSequenceNumber);
-                    listItem.add(volAuthor);
-                    listItem.add(volIllustrator);
-                    listItem.add(volReleaseDate);
-                    listItem.add(volIsbn);
-                    listItem.add(volumeType);
-                    listItem.add(volumeStatus);
-                    listItem.add(volAnnotation);
-                    listItem.add(volAdult);
-                }
-            };
-            volumeRepeater.setOutputMarkupId(true);
-
-            AjaxButton addVolume = new AjaxButton("addVolume", volumesForm)
-            {
-
-                @Override
-                protected void onSubmit(AjaxRequestTarget target, Form<?> form)
-                {
-                    VolumesForm volumeForm = (VolumesForm) form;
-                    volumeForm.addVolume(project.getProjectId());
-                    target.add(volumeForm);
-                }
-            };
-
-            AjaxButton cloneVolume = new AjaxButton("cloneVolume", volumesForm)
-            {
-
-                @Override
-                protected void onSubmit(AjaxRequestTarget target, Form<?> form)
-                {
-                    if (selectedVolume == null)
-                    {
-                        target.appendJavaScript("alert('Сначала выделите том!');");
-                    }
-                    else
-                    {
-                        VolumesForm volumeForm = (VolumesForm) form;
-                        volumeForm.cloneVolume();
-                        target.add(volumeForm);
-                    }
-                }
-            };
-
-            AjaxButton deleteVolume = new AjaxButton("deleteVolume", volumesForm)
-            {
-
-                @Override
-                protected void onSubmit(AjaxRequestTarget target, Form<?> form)
-                {
-                    if (selectedVolume == null)
-                    {
-                        target.appendJavaScript("alert('Сначала выделите том!');");
-                    }
-                    else
-                    {
-                        VolumesForm volumeForm = (VolumesForm) form;
-                        volumeForm.deleteVolume();
-                        target.add(volumeForm);
-                    }
-                }
-            };
-
-            final FeedbackPanel updateVolumesAjaxFeedback = new FeedbackPanel("updateVolumesAjaxFeedback");
-            updateVolumesAjaxFeedback.setOutputMarkupId(true);
-            updateVolumesAjaxFeedback.setFilter(new ContainerFeedbackMessageFilter(volumesForm));
-
-            AjaxButton updateVolumesAjax = new AjaxButton("updateVolumesAjax", volumesForm)
-            {
-                @Override
-                protected void onSubmit(AjaxRequestTarget target, Form<?> form)
-                {
-                    info("Данные были успешно обновлены.");
-                    SqlSession session = MybatisUtil.getSessionFactory().openSession();
-                    try
-                    {
-                        VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
-
-                        for (Volume volume : volumes)
-                        {
-                            if (volume.getVolumeId() != null)
-                            {
-                                // update
-                                volumesMapperCacheable.updateVolume(volume);
-                            }
-                            else
-                            {
-                                // insert
-                                volumesMapperCacheable.insertVolume(volume);
-                            }
-                        }
-
-                        for (Integer volumeId : deletedVolumeIds)
-                        {
-                            // delete
-                            volumesMapperCacheable.deleteVolume(volumeId);
-                        }
-
-                        session.commit();
-
-                        deletedVolumeIds.clear();
-
-                        target.add(updateVolumesAjaxFeedback);
-                    }
-                    finally
-                    {
-                        session.close();
-                    }
-                }
-
-                @Override
-                protected void onError(AjaxRequestTarget target, Form<?> form)
-                {
-                    error("Не удалось обновить данные.");
-                    target.add(updateVolumesAjaxFeedback);
-                }
-
-            };
-
-            volumesForm.add(addVolume);
-            volumesForm.add(deleteVolume);
-            volumesForm.add(cloneVolume);
-            volumesForm.add(volumeRepeater);
-            volumesForm.add(updateVolumesAjax);
-            volumesForm.add(updateVolumesAjaxFeedback);
-
-            add(volumesForm);
-
-            subProjects = CachingFacade.getCacheableMapper(session, ProjectsMapper.class).getSubProjectsByParentProjectId(project.getProjectId());
-            for (Project subProject : subProjects)
-            {
-                projectIdToProject.put(subProject.getProjectId(), subProject);
-            }
-
-            subProjectForm = new Form("subProjectForm");
-            ListView<Project> subProjectRepeater = new ListView<Project>("subProjectRepeater", subProjects)
-            {
-                @Override
-                protected void populateItem(ListItem<Project> listItem)
-                {
-                    final Project subProject = listItem.getModelObject();
-                    TextField<String> subProjectName = new TextField<String>("subProjectName", new Model<String>()
-                    {
-
-                        @Override
-                        public String getObject()
-                        {
-                            return subProject.getTitle();
-                        }
-
-                    });
-                    HiddenField<String> subProjectId = new HiddenField<String>("subProjectId", new Model<String>()
-                    {
-
-                        @Override
-                        public String getObject()
-                        {
-                            return subProject.getProjectId().toString();
-                        }
-
-                    });
-                    listItem.add(subProjectId);
-                    listItem.add(subProjectName);
-                }
-            };
-            subProjectForm.add(subProjectRepeater);
-            subProjectRepeater.setOutputMarkupId(true);
-            add(subProjectForm);
-        }
-        finally
-        {
-            session.close();
-        }
-
-        add(new SubVolumesEditAjaxBehavior());
-        add(new SubProjectsEditAjaxBehavior());
-        add(new ImageUploadAjaxBehaviour());
-    }
-
-    private class VolumesForm extends Form<List<Volume>>
-    {
-        private int maxSequenceNumber = 1;
-        private List<Volume> volumes;
-
-        public VolumesForm(List<Volume> volumes)
-        {
-            super("volumesForm");
-            this.volumes = volumes;
-            for (Volume volume : volumes)
-            {
-                if (volume.getSequenceNumber() != null
-                    && volume.getSequenceNumber() > maxSequenceNumber)
-                {
-                    maxSequenceNumber = volume.getSequenceNumber();
-                }
-            }
-        }
-
-        public void addVolume(int projectId)
-        {
-            Volume volume = new Volume();
-            volume.setProjectId(projectId);
-            maxSequenceNumber++;
-            volume.setSequenceNumber(maxSequenceNumber);
-            volumes.add(volume);
-            selectedVolume = null;
-        }
-
-        public void deleteVolume()
-        {
-            if (selectedVolume != null)
-            {
-                deletedVolumeIds.add(selectedVolume.getVolumeId());
-                volumes.remove(selectedVolume);
-            }
-            selectedVolume = null;
-        }
-
-        public void cloneVolume()
-        {
-            if (selectedVolume != null)
-            {
-                maxSequenceNumber++;
-                Volume cloneVolume = new Volume(selectedVolume, maxSequenceNumber);
-                volumes.add(cloneVolume);
-            }
-            selectedVolume = null;
-        }
-    }
-
-    private class SubVolumesEditAjaxBehavior extends AbstractDefaultAjaxBehavior
-    {
-
-        @Override
-        protected void respond(final AjaxRequestTarget target)
-        {
-            Integer selectedVolumeId = getRequest().getRequestParameters().getParameterValue("tableOrderNumber").toOptionalInteger();
-            selectedVolume = volumeTableOrderNumberToVolume.get(selectedVolumeId);
-        }
-
-        @Override
-        public void renderHead(Component component, IHeaderResponse response)
-        {
-            super.renderHead(component, response);
-            String componentMarkupId = component.getMarkupId();
-            String callbackUrl = getCallbackUrl().toString();
-
-            response.render(JavaScriptHeaderItem.forScript("var componentMarkupId1='" + componentMarkupId + "'; var callbackUrl1='" + callbackUrl + "';", "volumes"));
-        }
-    }
-
-    private class SubProjectsEditAjaxBehavior extends AbstractDefaultAjaxBehavior
-    {
-
-        @Override
-        protected void respond(final AjaxRequestTarget target)
-        {
-            JSONArray jsonSubProjects = new JSONArray(getRequest().getRequestParameters().getParameterValue("subProjects").toOptionalString());
-            SqlSession session = MybatisUtil.getSessionFactory().openSession();
-            try
-            {
-                ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
-                Set<Integer> subProjectIds = new HashSet<Integer>();
-                for (int i = 0; i < jsonSubProjects.length(); ++i)
-                {
-                    JSONObject jsonSubProject = jsonSubProjects.getJSONObject(i);
-                    String projectTitle = jsonSubProject.getString("projectTitle");
-
-                    if (StringUtils.isEmptyOrWhitespaceOnly(projectTitle))
-                    {
-                        throw new RuntimeException("Неправильно задано название подпроекта - оно пустое или состоит только из пробелов.");
-                    }
-
-                    Integer orderNumber = jsonSubProject.getInt("orderNumber");
-                    Integer projectId = null;
-                    try
-                    {
-                        projectId = jsonSubProject.getInt("projectId");
-                    }
-                    catch (JSONException ex)
-                    {
-                        // projectId not found...
-                    }
-
-                    if (projectId != null)
-                    {
-                        subProjectIds.add(projectId);
-                    }
-
-                    Project subProject = projectIdToProject.get(projectId);
-                    if (subProject != null)
-                    {
-                        // update
-                        subProject.setOrderNumber(orderNumber);
-                        subProject.setTitle(projectTitle);
-                        projectsMapperCacheable.updateProject(subProject);
-                    }
-                    else
-                    {
-                        // insert
-                        subProject = Project.subProjectOf(project, orderNumber, projectTitle);
-                        projectsMapperCacheable.insertProject(subProject);
-                        subProjects.add(subProject);
-                    }
-                }
-
-                // delete
-                Set<Integer> deletedSubProjectIds = new HashSet<Integer>(projectIdToProject.keySet());
-                deletedSubProjectIds.removeAll(subProjectIds);
-                for (Integer deletedSubProjectId : deletedSubProjectIds)
-                {
-                    projectsMapperCacheable.deleteProject(deletedSubProjectId);
-                    subProjects.remove(projectIdToProject.get(deletedSubProjectId));
-                    projectIdToProject.remove(deletedSubProjectId);
-                }
-
-                projectIdToProject.clear();
-                for (Project subProject : subProjects)
-                {
-                    projectIdToProject.put(subProject.getProjectId(), subProject);
-                }
-
-                session.commit();
-            }
-            finally
-            {
-                session.close();
-            }
-
-            Collections.sort(subProjects, new Comparator<Project>()
-            {
-                @Override
-                public int compare(Project o1, Project o2)
-                {
-                    return o1.getOrderNumber().compareTo(o2.getOrderNumber());
-                }
-            });
-
-            target.add(subProjectForm);
-            target.appendJavaScript("$('.list-group').listgroup();");
-        }
-
-
-        @Override
-        public void renderHead(Component component, IHeaderResponse response)
-        {
-            super.renderHead(component, response);
-            String componentMarkupId = component.getMarkupId();
-            String callbackUrl = getCallbackUrl().toString();
-
-            response.render(JavaScriptHeaderItem.forScript("var componentMarkupId2='" + componentMarkupId + "'; var callbackUrl2='" + callbackUrl + "';", "subProjects"));
-        }
-    }
-
-    private class ImageUploadAjaxBehaviour extends AbstractDefaultAjaxBehavior
-    {
-        @Override
-        protected void respond(final AjaxRequestTarget target)
-        {
-            HttpServletRequest request = (HttpServletRequest) getRequest().getContainerRequest();
-            if (ServletFileUpload.isMultipartContent(request))
-            {
-                File imageTempFile;
-                try
-                {
-                    imageTempFile = File.createTempFile("ruranobe-image_temp", ".tmp");
-                }
-                catch (IOException ex)
-                {
-                    throw new RuntimeException("Unable to create temp file during image upload", ex);
-                }
-
-                FileItemFactory factory = new DiskFileItemFactory();
-                ServletFileUpload upload = new ServletFileUpload(factory);
-                String uploadingFileExtension = null;
-                String filename = null;
-                try
-                {
-                    List<FileItem> items = upload.parseRequest(request);
-                    for (FileItem item : items)
-                    {
-                        filename = filename == null ? item.getName() : null;
-                        uploadingFileExtension = FilenameUtils.getExtension(filename);
-                        item.write(imageTempFile);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw new RuntimeException("Unable to write uploading image to temp file", ex);
-                }
-
-                ApplicationContext context = RuranobeUtils.getApplicationContext();
-                Webpage webpage = context.getWebpageByPageClass(this.getClass().getName());
-                if (webpage == null)
-                {
-                    webpage = context.getWebpageByPageClass(ProjectEdit.class.getName());
-                }
-                Map<String, String> pageContextVariables = new ImmutableMap.Builder<String, String>()
-                        .put("project", project.getTitle())
-                        .build();
-                RuraImage image = new RuraImage(imageTempFile, uploadingFileExtension, filename);
-                List<ExternalResource> externalResources = ImageServices.uploadImage(image, webpage.getImageStorages(), pageContextVariables);
-                ExternalResource externalResource = externalResources.iterator().next();
-                project.setImageId(externalResource.getResourceId());
-                imageTempFile.delete();
-
-                SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.YYYY HH:mm:ss");
-                JSONObject file = new JSONObject();
-                file.put("url", externalResource.getUrl());
-                file.put("name", filename);
-                file.put("ts", sdf.format(externalResource.getUploadedWhen()));
-                file.put("id", externalResource.getResourceId());
-
-                JSONArray files = new JSONArray();
-                files.put(file);
-
-                JSONObject responseString = new JSONObject();
-                responseString.put("files", files);
-
-                IResource jsonResource = new ByteArrayResource("text/plain", responseString.toString().getBytes());
-                IRequestHandler requestHandler = new ResourceRequestHandler(jsonResource, null);
-                requestHandler.respond(getRequestCycle());
-            }
-        }
-
-        @Override
-        public void renderHead(Component component, IHeaderResponse response)
-        {
-            super.renderHead(component, response);
-            String componentMarkupId = component.getMarkupId();
-            String callbackUrl = getCallbackUrl().toString();
-
-            response.render(JavaScriptHeaderItem.forScript("var componentMarkupId3='" + componentMarkupId + "'; var callbackUrl3='" + callbackUrl + "';", "imageUpload"));
-        }
-    }
 
     private Project getProject(final PageParameters parameters)
     {
@@ -858,13 +55,301 @@ public class ProjectEdit extends AdminLayoutPage
         }
     }
 
+    private void reinitAllProjects()
+    {
+        allProjects.clear();
+        allProjects.add(project);
+        allProjects.addAll(subProjects);
+    }
+
+    public ProjectEdit(final PageParameters parameters)
+    {
+        project = getProject(parameters);
+
+        if (project == null)
+        {
+            throw RuranobeUtils.getRedirectTo404Exception(this);
+        }
+
+        SqlSession session = MybatisUtil.getSessionFactory().openSession();
+        try
+        {
+            ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.getCacheableMapper(session, ExternalResourcesMapper.class);
+            VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
+            if (project.getImageId() != null)
+            {
+                project.setImage(externalResourcesMapperCacheable.getExternalResourceById(project.getImageId()));
+            }
+
+            subProjects = CachingFacade.getCacheableMapper(session, ProjectsMapper.class).getSubProjectsByParentProjectId(project.getProjectId());
+            allProjects = new ArrayList<Project>();
+            volumes = new ArrayList<Volume>();
+            reinitAllProjects();
+            for (Project project : allProjects)
+            {
+                List<Volume> volumesByProjectId = volumesMapperCacheable.getVolumesByProjectId(project.getProjectId());
+                for (Volume volume : volumesByProjectId)
+                {
+                    volume.setProject(project);
+                }
+                volumes.addAll(volumesByProjectId);
+            }
+        }
+        finally
+        {
+            session.close();
+        }
+
+
+        Collections.sort(subProjects, projectComparator);
+        Collections.sort(allProjects, projectComparator);
+        Collections.sort(volumes, volumeComparator);
+
+
+        add(new AdminInfoFormPanel<Project>("info", "Информация", new CompoundPropertyModel<Project>(project))
+        {
+            @Override
+            public void onSubmit()
+            {
+                SqlSession session = MybatisUtil.getSessionFactory().openSession();
+                try
+                {
+                    ProjectsMapper mapper = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
+                    mapper.updateProject(project);
+                    session.commit();
+                }
+                finally
+                {
+                    session.close();
+                }
+            }
+
+            @Override
+            protected Component getContentItemLabelComponent(String id, IModel<Project> model)
+            {
+                return new ProjectInfoPanel(id, model);
+            }
+        });
+
+        add(new AdminTableListPanel<Volume>("volumes", "Все тома", new ListModel<Volume>(volumes), VOLUMES_TABLE_COLUMNS)
+        {
+            @Override
+            public void onSubmit()
+            {
+                SqlSession session = MybatisUtil.getSessionFactory().openSession();
+                try
+                {
+                    VolumesMapper mapper = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
+                    for (Volume item : model.getObject())
+                    {
+                        if (!removed.contains(item))
+                        {
+                            if (item.getVolumeId() != null)
+                            {
+                                mapper.updateVolume(item);
+                            }
+                            else
+                            {
+                                mapper.insertVolume(item);
+                            }
+                        }
+                    }
+                    for (Volume removedItem : removed)
+                    {
+                        if (removedItem.getVolumeId() != null)
+                        {
+                            mapper.deleteVolume(removedItem.getVolumeId());
+                        }
+                    }
+                    session.commit();
+                }
+                finally
+                {
+                    session.close();
+                }
+            }
+
+            @Override
+            protected void onInitialize()
+            {
+                super.onInitialize();
+                toolbarButtons.add(1, new AdminToolboxAjaxButton("button", "Дублировать", "warning", "files-o", form)
+                {
+                    @Override
+                    protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+                    {
+                        if (selectedItem == null)
+                        {
+                            target.appendJavaScript("alert('Ничего не выбрано!');");
+                        }
+                        else
+                        {
+                            Volume new_volume = SerializationUtils.clone(selectedItem);
+                            new_volume.setProject(selectedItem.getProject());
+                            new_volume.setVolumeId(null);
+                            model.getObject().add(new_volume);
+                            onAddItem(new_volume, target, form);
+                        }
+                    }
+                }.setSelectableOnly());
+            }
+
+            @Override
+            protected Volume makeItem()
+            {
+                Volume new_volume = new Volume();
+                new_volume.setVolumeType(RuraConstants.VOLUME_TYPE_RANOBE);
+                new_volume.setVolumeStatus(RuraConstants.VOLUME_STATUS_QUEUE);
+                new_volume.setProject(project);
+                new_volume.setUrl(project.getUrl() + "/");
+                return new_volume;
+            }
+
+            @Override
+            protected Component getRowComponent(String id, IModel<Volume> model)
+            {
+                return new VolumeTableRowPanel(id, model, allProjects);
+            }
+
+        });
+
+        add(new AdminAffixedListPanel<Project>("subprojects", "Подсерии", new ListModel<Project>(subProjects))
+        {
+            @Override
+            public void onSubmit()
+            {
+                SqlSession session = MybatisUtil.getSessionFactory().openSession();
+                try
+                {
+                    ProjectsMapper mapper = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
+                    VolumesMapper volumeMapper = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
+                    for (Project item : model.getObject())
+                    {
+                        if (!removed.contains(item))
+                        {
+                            if (item.getProjectId() != null)
+                            {
+                                mapper.updateProject(item);
+                            }
+                            else
+                            {
+                                mapper.insertProject(item);
+                            }
+                        }
+                    }
+                    for (Volume volume : volumes)
+                    {
+                        if (removed.contains(volume.getProject()))
+                        {
+                            volume.setProject(project);
+                            if (volume.getProjectId() != null)
+                            {
+                                volumeMapper.updateVolume(volume);
+                            }
+                        }
+                    }
+                    for (Project removedItem : removed)
+                    {
+                        if (removedItem.getProjectId() != null)
+                        {
+                            mapper.deleteProject(removedItem.getProjectId());
+                        }
+                    }
+                    session.commit();
+                }
+                finally
+                {
+                    session.close();
+                }
+            }
+
+            @Override
+            protected void onAjaxProcess(AjaxRequestTarget target)
+            {
+                super.onAjaxProcess(target);
+                reinitAllProjects();
+                Collections.sort(allProjects, projectComparator);
+                for (Component component : ((AbstractRepeater) ProjectEdit.this.get("volumes:form:rowRepeater")))
+                {
+                    target.add(component.get("item:project"));
+                }
+            }
+
+            @Override
+            protected Project makeItem()
+            {
+                Project new_project = new Project();
+                new_project.setParentId(project.getProjectId());
+                new_project.setBannerHidden(true);
+                new_project.setProjectHidden(true);
+                return new_project;
+            }
+
+            @Override
+            protected Component getSelectorItemLabelComponent(String id, IModel<Project> model)
+            {
+                return new SubProjectSelectorItemPanel(id, model);
+            }
+
+            @Override
+            protected Component getFormItemLabelComponent(String id, IModel<Project> model)
+            {
+                return new WebMarkupContainer(id, model);
+            }
+
+            @Override
+            protected void onInitialize()
+            {
+                super.onInitialize();
+                form.get("selectorBlock").add(new AttributeModifier("class", "col-xs-12 list-group select sortable"));
+                form.get("formBlock").add(new AttributeModifier("class", "hidden-lg admin-affix"));
+            }
+        }.setSortable(true));
+    }
+
     private final List<Project> subProjects;
+    private final List<Project> allProjects;
     private final List<Volume> volumes;
-    private final Map<Integer, Volume> volumeTableOrderNumberToVolume = new HashMap<Integer, Volume>();
-    private final Map<Integer, Project> projectIdToProject = new HashMap<Integer, Project>();
-    private Volume selectedVolume;
     private final Project project;
-    private final Form subProjectForm;
-    private final Set<Integer> deletedVolumeIds = new HashSet<Integer>();
-    private static final long serialVersionUID = 1L;
+    private final List<String> VOLUMES_TABLE_COLUMNS = new ImmutableList.Builder<String>()
+            .add("Ссылка")
+            .add("Имя для файлов")
+            .add("Заголовок")
+            .add("Название (ориг.)")
+            .add("Название (англ.)")
+            .add("Название (рус.)")
+            .add("Название (романдзи)")
+            .add("Короткое название")
+            .add("Серия")
+            .add("Номер в серии")
+            .add("Автор")
+            .add("Иллюстратор")
+            .add("Дата публикации")
+            .add("ISBN")
+            .add("Тип релиза")
+            .add("Cтатус релиза")
+            .add("Внешняя ссылка")
+            .add("Аннотация")
+            .add("18+")
+            .build();
+
+    private final Comparator<Project> projectComparator = new Comparator<Project>()
+    {
+        @Override
+        public int compare(Project o1, Project o2)
+        {
+            int parentComp = ObjectUtils.compare(o1.getParentId(), o2.getParentId(), false);
+            return parentComp == 0 ? ObjectUtils.compare(o1.getOrderNumber(), o2.getOrderNumber(), true) : parentComp;
+        }
+    };
+
+    private final Comparator<Volume> volumeComparator = new Comparator<Volume>()
+    {
+        @Override
+        public int compare(Volume o1, Volume o2)
+        {
+            int compProj = projectComparator.compare(o1.getProject(), o2.getProject());
+            return compProj == 0 ? ObjectUtils.compare(o1.getSequenceNumber(), o2.getSequenceNumber(), true) : compProj;
+        }
+    };
 }

@@ -11,6 +11,20 @@ import java.util.ArrayList;
 public class Project extends PageRepresentable implements Serializable
 {
 
+    public ExternalResource getImage()
+    {
+        return image;
+    }
+
+    public void setImage(ExternalResource image)
+    {
+        this.image = image;
+        if (image != null)
+        {
+            imageId = image.getResourceId();
+        }
+    }
+
     private static final long serialVersionUID = 3L;
     private Integer projectId;
     private Integer parentId;
@@ -24,12 +38,14 @@ public class Project extends PageRepresentable implements Serializable
     private String author;
     private String illustrator;
     private Integer orderNumber;
-    private Boolean bannerHidden;
-    private Boolean projectHidden;
-    private Boolean onevolume;
+    private boolean bannerHidden;
+    private boolean projectHidden;
+    private boolean onevolume;
     private String franchise;
     private String annotation;
-	  private Integer forumId;
+	private Integer forumId;
+    //optional
+    private ExternalResource image;
 
 	public Project(Integer parentId, Integer imageId, String url, String title, Integer orderNumber, boolean bannerHidden, boolean projectHidden, String annotation)
     {
@@ -280,7 +296,7 @@ public class Project extends PageRepresentable implements Serializable
         return franchise == null ? null : wikiParser.parseWikiText(new ArrayList<String>(), false);
     }
 
-    @Override
+    /*@Override
     public boolean equals(Object o)
     {
         if (this == o)
@@ -302,5 +318,5 @@ public class Project extends PageRepresentable implements Serializable
     public int hashCode()
     {
         return projectId.hashCode();
-    }
+    }*/
 }

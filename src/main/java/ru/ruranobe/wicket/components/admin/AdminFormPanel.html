@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:panel>
+    <form class="admin-block" wicket:id="form">
+        <div class="admin-header">
+            <span wicket:id="heading" class="admin-header-title">Заголовок</span>
+
+            <div class="btn-group" role="group">
+                <wicket:container wicket:id="buttonRepeater">
+                    <button wicket:id="button" type="button" class="btn " title=""></button>
+                </wicket:container>
+            </div>
+            <div wicket:id="feedbackPanel"></div>
+        </div>
+        <div class="admin-header-placeholder"></div>
+        <wicket:child/>
+    </form>
+</wicket:panel>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:panel>
+    <div class="form-group">
+        <label wicket:for="url">Ссылка</label>
+        <input wicket:id="url" class="form-control url-input" type="text"/>
+    </div>
+
+    <div class="form-group">
+        <div class="form-group banner-upload" style="position: relative;">
+            <label wicket:for="image">Изображение</label>
+            <wicket:container wicket:id="image"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label wicket:for="title">Название для заголовков</label>
+        <input type="text" class="form-control name-input" wicket:id="title">
+    </div>
+
+    <div class="form-group">
+        <label wicket:for="nameJp">Название (яп.)</label>
+        <input type="text" class="form-control" wicket:id="nameJp">
+    </div>
+
+    <div class="form-group">
+        <label wicket:for="nameEn">Название (англ.)</label>
+        <input type="text" class="form-control" wicket:id="nameEn">
+    </div>
+
+    <div class="form-group">
+        <label wicket:for="nameRu">Название (рус.)</label>
+        <input type="text" class="form-control" wicket:id="nameRu">
+    </div>
+
+    <div class="form-group">
+        <label wicket:for="nameRomaji">Название (романдзи)</label>
+        <input type="text" class="form-control" wicket:id="nameRomaji">
+    </div>
+
+    <div class="form-group">
+        <label wicket:for="author">Автор</label>
+
+        <div id="author-name-typeahead">
+            <input class="form-control typeahead author-name" type="text" wicket:id="author">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label wicket:for="illustrator">Иллюстратор</label>
+
+        <div id="illustrator-name-typeahead">
+            <input class="form-control typeahead illustrator-name" type="text" wicket:id="illustrator">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="checkbox">
+            <label><input wicket:id="onevolume" type="checkbox"> Однотомник</label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="checkbox">
+            <label><input wicket:id="projectHidden" type="checkbox"> Проект скрыт</label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="checkbox">
+            <label><input wicket:id="bannerHidden" type="checkbox"> Баннер скрыт</label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label wicket:for="franchise">Описание франшизы</label>
+        <textarea class="form-control" wicket:id="franchise" rows="5"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label wicket:for="annotation">Аннотация</label>
+        <textarea class="form-control" wicket:id="annotation" rows="15"></textarea>
+    </div>
+</wicket:panel>
+</body>
+</html>

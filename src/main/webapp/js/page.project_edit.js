@@ -1,11 +1,13 @@
-$(function(){
+$(function () {
     $("table.table").colResizable({
-        fixed:false,
-        liveDrag:false,
-        postbackSafe:true,
-        headerOnly:false,
-        overflow:true,
-        onResize:function(){ $(window).resize(); }
+        fixed: false,
+        liveDrag: false,
+        postbackSafe: true,
+        headerOnly: false,
+        overflow: true,
+        onResize: function () {
+            $(window).resize();
+        }
     });
 });
 
@@ -53,7 +55,7 @@ $('#btn-sub-delete').click(function () {
         $thissub.remove();
         $nextsub.addClass('active');
         $nextsub.children('input').focus();
-            sublength--
+        sublength--
     }
     else {
         alert('Сначала выделите подсерию!')

@@ -1,6 +1,7 @@
 package ru.ruranobe.wicket.components;
 
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Created by Samogot on 11.05.2015.
@@ -15,6 +16,6 @@ public class LabelHideableOnNull extends Label
     @Override
     public boolean isVisible()
     {
-        return getDefaultModelObjectAsString() != null && !getDefaultModelObjectAsString().equals("");
+        return !Strings.isEmpty(getDefaultModelObjectAsString());
     }
 }

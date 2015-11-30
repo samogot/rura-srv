@@ -1,0 +1,107 @@
+
+.list-group.select .form-control, .admin-table .form-control {
+    padding: 6px 6px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    transition: none;
+    -webkit-transition: none;
+}
+
+.list-group.select .form-control:hover, .admin-table .form-control:hover,
+.list-group.select .form-control:active, .admin-table .form-control:active,
+.list-group.select .form-control:focus, .admin-table .form-control:focus {
+    background-color: #F2F2F2;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.list-group.select .form-control:hover, .admin-table .form-control:hover,
+.list-group.select .form-control:active, .admin-table .form-control:active {
+    border: 1px solid #CCC;
+    padding: 5px 5px;
+}
+
+.admin-table .table {
+    margin-bottom: 0;
+}
+
+.admin-table .scrollable {
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+.admin-table .JColResizer td, .admin-table .JColResizer th {
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+}
+
+.scrollbar {
+    position: relative;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    z-index: 5;
+    height: 16px;
+}
+
+.innerScrollbar {
+    height: 1px;
+    line-height: 1px;
+    font-size: 1px;
+    visibility: hidden;
+}
+
+.scrollbar.affix {
+    position: fixed;
+    bottom: 0;
+}
+
+.scrollbar.affix-bottom {
+    position: relative;
+    margin-bottom: -16px;
+}
+
+.admin-block ul.dropdown-menu {
+    z-index: 7;
+}
+
+table .header-copy {
+    position: absolute;
+    visibility: hidden;
+    top: 1px;
+    background-color: white;
+    margin: -1px;
+    z-index: 2;
+}
+
+@media (min-width: 768px) {
+    thead.header-copy.affix,
+    .admin-header.affix {
+        clip: rect(auto, 480px, 900px, auto);
+    }
+}
+
+@media (min-width: 992px) {
+    thead.header-copy.affix,
+    .admin-header.affix {
+        clip: rect(auto, 700px, 900px, auto);
+    }
+}
+
+@media (min-width: 1200px) {
+    thead.header-copy.affix,
+    .admin-header.affix {
+        clip: rect(auto, 900px, 900px, auto);
+    }
+}
+
+thead.header-copy.affix {
+    position: fixed;
+    top: 54px;
+    visibility: visible;
+}
+
+thead.header-copy.affix-bottom {
+    visibility: visible;
+}

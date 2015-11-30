@@ -582,6 +582,7 @@ div.mistake .sendText {
 
 .text p {
     text-align: justify;
+    overflow-x: auto;
 }
 
 /* text END */

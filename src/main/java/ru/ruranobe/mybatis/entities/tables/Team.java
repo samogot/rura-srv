@@ -50,7 +50,7 @@ public class Team implements Serializable
         this.teamWebsiteLink = teamWebsiteLink;
     }
 
-    @Override
+/*    @Override
     public boolean equals(Object o)
     {
         if (this == o)
@@ -72,5 +72,5 @@ public class Team implements Serializable
     public int hashCode()
     {
         return teamId.hashCode();
-    }
+    }*/
 }

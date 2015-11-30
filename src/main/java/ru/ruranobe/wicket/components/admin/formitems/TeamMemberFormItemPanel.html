@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:panel>
+    <h3>Настройка участника</h3>
+
+    <div class="form-group">
+        <label wicket:for="nikname">Никнейм</label>
+        <input wicket:id="nikname" class="form-control name-input typeahead" type="text">
+
+        <label wicket:for="team">Название команды</label>
+        <select wicket:id="team" class="form-control all_teams"></select>
+
+        <div class="checkbox">
+            <label><input wicket:id="active" type="checkbox"> Активен</label>
+        </div>
+    </div>
+</wicket:panel>
+</body>
+</html>

@@ -45,23 +45,23 @@ function reinitAffix() {
         });
 }
 $(window).resize(reinitAffix);
-$(document).ready(function() {
+$(document).ready(function () {
     reinitAffix();
 });
 /* AFFIX */
 
 /* ИНСТРУМЕНТЫ */
 $('.controlText .btn').hover(
-    function() {
+    function () {
         $(this).children('.hint').show()
         if ($(this).hasClass('options')) $(this).addClass('activated');
     },
-    function() {
+    function () {
         $(this).children('.hint').hide()
         if ($(this).hasClass('options')) $(this).removeClass('activated');
     }
 );
-$('.btn.top-button').click(function() {
+$('.btn.top-button').click(function () {
     $(document).scrollTop(0);
 });
 //$('.overlayT').click(function() {
@@ -69,10 +69,10 @@ $('.btn.top-button').click(function() {
 //    $('div.mistake').hide();
 //});
 $('.btn').hover(
-    function() {
+    function () {
         $(this).children('.hint').show()
     },
-    function() {
+    function () {
         $(this).children('.hint').hide()
     }
 );
@@ -188,8 +188,9 @@ $(function () {
 */
 
 /* НАСТРОЙКИ */
-$('.options-button .font').click(function() {
-    if ($(this).hasClass("active")) {} else {
+$('.options-button .font').click(function () {
+    if ($(this).hasClass("active")) {
+    } else {
         $('.options-button .font').removeClass("active");
         $(this).addClass("active");
         $('.text').css('font-family', $(this).data('name'));
@@ -199,8 +200,9 @@ $('.options-button .font').click(function() {
         item: $(this).data('name')
     });
 })
-$('.options-button .pagecolor').click(function() {
-    if ($(this).hasClass("active")) {} else {
+$('.options-button .pagecolor').click(function () {
+    if ($(this).hasClass("active")) {
+    } else {
         $('.options-button .pagecolor').removeClass("active");
         $(this).addClass("active");
         $('body').removeClass($('body').data('color'));
@@ -229,7 +231,7 @@ $('#daynight').bootstrapSwitch().on('switchChange.bootstrapSwitch', function (ev
         });
     }
 });
-$("#fontslide").on("change mousemove", function() {
+$("#fontslide").on("change mousemove", function () {
     var font = '';
     switch ($(this).val()) {
         case '0':
@@ -303,7 +305,7 @@ function loadSettings() {
         $('.text').css('font-family', localStorage.getItem("fontname"));
     }
 }
-$(document).ready(function() {
+$(document).ready(function () {
     loadSettings()
 });
 /* НАСТРОЙКИ */
@@ -314,10 +316,10 @@ function hideP() {
     $('.text p').off('click');
     $('.btn.bookmark-button').attr('data-active', false);
 }
-$('.controlText .btn.bookmark-button').click(function() {
+$('.controlText .btn.bookmark-button').click(function () {
     $('.text p')
         .addClass('show')
-        .on('click', function() {
+        .on('click', function () {
             $.ajax({
                 type: "POST",
                 url: '/bookmarks/insert',
@@ -341,21 +343,21 @@ $('.controlText .btn.bookmark-button').click(function() {
             });
             hideP()
         });
-    setTimeout(function() {
+    setTimeout(function () {
         $('.btn.bookmark-button').attr('data-active', true)
     }, 2000);
 });
-$('body').click(function(eventObject) {
+$('body').click(function (eventObject) {
     if ($(eventObject.target).closest('div.text').length == 0 && $(eventObject.target).closest(".btn.bookmark-button").length == 0) {
         hideP()
     }
 });
-$('.controlText .btn.bookmark-button').click(function() {
+$('.controlText .btn.bookmark-button').click(function () {
     if ($(this).attr('data-active') == "true") {
         hideP()
     }
 });
-$('body').keydown(function(eventObject) {
+$('body').keydown(function (eventObject) {
     if (eventObject.which == 27) {
         hideP()
     }
@@ -374,10 +376,10 @@ function getText() {
     }
     return '';
 }
-$('div.mistake').on('hidden.bs.modal', function(e) {
+$('div.mistake').on('hidden.bs.modal', function (e) {
     $('body').css('padding', 0)
 })
-$('.btn.mistake-button').click(function() {
+$('.btn.mistake-button').click(function () {
     var Mistake = getText();
     if (Mistake == "" || Mistake == ' ') {
         alert('Для начала, выделите ошибку!');
@@ -407,12 +409,13 @@ function showOrphusDialog(chapterId, paragraph, startOffset, originalText, fullT
             cancel: {
                 label: "Отменить",
                 className: "btn-default",
-                callback: function() {}
+                callback: function () {
+                }
             },
             success: {
                 label: "Подтвердить",
                 className: "btn-success",
-                callback: function() {
+                callback: function () {
                     /* TODO: text size check */
                     var replacement = $('#orphusReplacement').val();
                     var optionalComment = $('#orphusComment').val();
@@ -507,7 +510,7 @@ function getOrphusParameters() {
         startOffset: offset - range.toString().length,
         originalText: range.toString()
     };
-    }
+}
 /* ОШИБКИ */
 
 

@@ -99,6 +99,16 @@
         where volume_id = #{volumeId}
     </update>
 
+    <update id="updateVolumeCovers" parameterType="ru.ruranobe.mybatis.entities.tables.Volume">
+        UPDATE volumes
+        SET
+            image_one   = #{imageOne},
+            image_two   = #{imageTwo},
+            image_three = #{imageThree},
+            image_four  = #{imageFour}
+        WHERE volume_id = #{volumeId}
+    </update>
+
     <insert id="insertVolume" parameterType="ru.ruranobe.mybatis.entities.tables.Volume" keyProperty="volumeId" useGeneratedKeys="true">
         INSERT INTO volumes (project_id, image_one, image_two, image_three, image_four, url, name_file, name_title, name_jp,
         name_en, name_ru, name_romaji, name_short, sequence_number, author, illustrator, original_design, release_date,

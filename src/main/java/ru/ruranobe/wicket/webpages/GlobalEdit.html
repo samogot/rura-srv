@@ -2,271 +2,37 @@
 <html xmlns:wicket="http://wicket.apache.org" lang="en">
 <body>
 <wicket:extend>
-    <div class="container">
-        <div class="leftColumn">
-            <main class="content">
-                <form wicket:id="projectsForm">
-                    <div class="divHeader">
-                        <span>Серии</span>
+    <div wicket:id="projects"></div>
+    <div wicket:id="activities"></div>
+    <div wicket:id="teams"></div>
+    <div wicket:id="teamMembers"></div>
 
-                        <div class="btn-group" role="group" aria-label="Панель глав">
-                            <button wicket:id="addProject" type="button" class="btn btn-success"
-                                    title="Добавить новую главу" id="btn-series-add"><i class="fa fa-plus"></i>
-                            </button>
-                            <button type="button" class="btn btn-danger" title="Удалить главу" id="btn-series-delete"><i
-                                    class="fa fa-trash-o"></i>
-                            </button>
-                            <button wicket:id="updateProjectsAjax" type="button" class="btn btn-primary"
-                                    title="Сохранить"><i class="fa fa-floppy-o"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-4">
-                            <div class="list-group select sortable" id="seriesselect" style="margin-top:10px">
-                                <wicket:container wicket:id="projectNameRepeater">
-                                    <a wicket:id="projectVisibilityController" data-toggle="collapse"
-                                       data-parent="#seriesform" aria-expanded="true" class="list-group-item">
-                                        <i class="fa fa-ellipsis-v move"></i>
-                                        <span class="hidden-sm hidden-xs" wicket:id="projectName"/>
-                                    </a>
-                                </wicket:container>
-                            </div>
-                        </div>
-                        <div class="col-xs-8 admin-affix" id="seriesform" role="tablist" aria-multiselectable="true">
-                            <div class="progress collapse">
-                                <div class="progress-bar progress-bar-striped active" role="progressbar"
-                                     aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-                                    <span class="sr-only">0% Complete</span>
-                                </div>
-                            </div>
-
-                            <wicket:container wicket:id="projectRepeater">
-                                <div class="panel">
-                                    <div wicket:id="projectDiv" class="row collapse series-data" role="tabpanel">
-                                        <input wicket:id="projectId" type="hidden">
-                                        <input wicket:id="projectOrder" type="hidden">
-                                        <input wicket:id="projectDeleted" type="hidden">
-
-                                        <div class="series-data-main">
-                                            <h3>Настройка серии</h3>
-
-                                            <div class="form-group">
-                                                <label wicket:for="projectUrl">Ссылка</label>
-                                                <input wicket:id="projectUrl" class="form-control url-input"
-                                                       type="text">
-                                                <label wicket:for="projectTitle">Заголовок</label>
-                                                <input wicket:id="projectTitle" class="form-control name-input"
-                                                       type="text">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </wicket:container>
-                        </div>
-                    </div>
-                </form>
-
-
-                <form wicket:id="activitiesForm">
-                    <div class="divHeader">
-                        <span>Виды работ</span>
-
-                        <div class="btn-group" role="group" aria-label="Виды работ" data-type="activities">
-                            <button wicket:id="addActivity" type="button" class="btn btn-success btn_add"
-                                    title="Добавить новый вид" id="btn-activities-add"><i class="fa fa-plus"></i>
-                            </button>
-                            <button type="button" class="btn btn-danger btn_delete" title="Удалить главу"
-                                    id="btn-activities-delete"><i class="fa fa-trash-o"></i>
-                            </button>
-                            <button wicket:id="updateActivitiesAjax" type="button" class="btn btn-primary"
-                                    title="Сохранить"><i class="fa fa-floppy-o"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-4">
-                            <div class="list-group select sortable" id="activitiesselect" style="margin-top:10px">
-                                <wicket:container wicket:id="activityNameRepeater">
-                                    <a wicket:id="activityVisibilityController" data-toggle="collapse"
-                                       data-parent="#activitiesform" aria-expanded="true" class="list-group-item">
-                                        <span wicket:id="activityName" class="hidden-sm hidden-xs"/>
-                                    </a>
-                                </wicket:container>
-                            </div>
-                        </div>
-                        <div class="col-xs-8 admin-affix" id="activitiesform" role="tablist"
-                             aria-multiselectable="true">
-                            <div class="progress collapse">
-                                <div class="progress-bar progress-bar-striped active" role="progressbar"
-                                     aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-                                    <span class="sr-only">0% Complete</span>
-                                </div>
-                            </div>
-                            <wicket:container wicket:id="activityRepeater">
-                                <div class="panel">
-                                    <div wicket:id="activityDiv" class="row collapse activities-data" role="tabpanel">
-                                        <input wicket:id="activityId" type="hidden" id="activities1_id">
-                                        <!--input wicket:id="activityOrder" type="hidden" id="activities1_order"-->
-                                        <input wicket:id="activityDeleted" type="hidden" id="activities1_delete">
-
-                                        <div class="activities-data-main">
-                                            <h3>Настройка вида</h3>
-
-                                            <div class="form-group">
-                                                <label wicket:for="activityTitle">Название</label>
-                                                <input wicket:id="activityTitle" class="form-control name-input"
-                                                       type="text">
-                                                <label wicket:for="activityType">Тип</label>
-                                                <select wicket:id="activityType" class="form-control">
-                                                    <option>Текст</option>
-                                                    <option>Изображение</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </wicket:container>
-                        </div>
-                    </div>
-                </form>
-
-                <form wicket:id="teamsForm">
-                    <div class="divHeader">
-                        <span>Команды</span>
-
-                        <div class="btn-group" role="group" aria-label="Виды работ" data-type="teams">
-                            <button wicket:id="addTeam" type="button" class="btn btn-success btn_add"
-                                    title="Добавить новый вид" id="btn-teams-add"><i class="fa fa-plus"></i>
-                            </button>
-                            <button type="button" class="btn btn-danger btn_delete" title="Удалить главу"
-                                    id="btn-teams-delete"><i class="fa fa-trash-o"></i>
-                            </button>
-                            <button wicket:id="updateTeamsAjax" type="button" class="btn btn-primary" title="Сохранить">
-                                <i class="fa fa-floppy-o"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-4">
-                            <div class="list-group select sortable" id="teamsselect" style="margin-top:10px">
-                                <wicket:container wicket:id="teamNameRepeater">
-                                    <a wicket:id="teamVisibilityController" data-toggle="collapse"
-                                       data-parent="#teamsform" aria-expanded="true" class="list-group-item">
-                                        <span wicket:id="teamName" class="hidden-sm hidden-xs"/>
-                                    </a>
-                                </wicket:container>
-                            </div>
-                        </div>
-                        <div class="col-xs-8 admin-affix" id="teamsform" role="tablist" aria-multiselectable="true">
-                            <div class="progress collapse">
-                                <div class="progress-bar progress-bar-striped active" role="progressbar"
-                                     aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-                                    <span class="sr-only">0% Complete</span>
-                                </div>
-                            </div>
-                            <wicket:container wicket:id="teamRepeater">
-                                <div class="panel">
-                                    <div wicket:id="teamDiv" class="row collapse teams-data" role="tabpanel">
-                                        <input wicket:id="teamId" type="hidden">
-                                        <!--input type="hidden" id="teams1_order"-->
-                                        <input wicket:id="teamDeleted" type="hidden">
-
-                                        <div class="teams-data-main">
-                                            <h3>Настройка команды</h3>
-
-                                            <div class="form-group">
-                                                <label wicket:for="teamName">Название</label>
-                                                <input wicket:id="teamName" class="form-control name-input" type="text">
-                                                <label wicket:for="teamUrl">Ссылка</label>
-                                                <input wicket:id="teamUrl" class="form-control url-input" type="text">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </wicket:container>
-                        </div>
-                    </div>
-                </form>
-
-                <form wicket:id="teamMembersForm">
-                    <div class="divHeader">
-                        <span>Члены команды</span>
-
-                        <div class="btn-group" role="group" aria-label="Виды работ" data-type="teammembers">
-                            <button wicket:id="addTeamMember" type="button" class="btn btn-success btn_add"
-                                    title="Добавить новый вид" id="btn-teammembers-add"><i class="fa fa-plus"></i>
-                            </button>
-                            <button type="button" class="btn btn-danger btn_delete" title="Удалить главу"
-                                    id="btn-teammembers-delete"><i class="fa fa-trash-o"></i>
-                            </button>
-                            <button wicket:id="updateTeamMembersAjax" type="button" class="btn btn-primary"
-                                    title="Сохранить"><i class="fa fa-floppy-o"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-4">
-                            <div class="list-group select sortable" id="teammembersselect" style="margin-top:10px">
-                                <wicket:container wicket:id="teamMemberNameRepeater">
-                                    <a wicket:id="teamMemberVisibilityController" data-toggle="collapse"
-                                       data-parent="#teammembersform" aria-expanded="true" class="list-group-item">
-                                        <span wicket:id="teamMemberName" class="hidden-sm hidden-xs"/>
-                                    </a>
-                                </wicket:container>
-                            </div>
-                        </div>
-                        <div class="col-xs-8 admin-affix" id="teammembersform" role="tablist"
-                             aria-multiselectable="true">
-                            <div class="progress collapse">
-                                <div class="progress-bar progress-bar-striped active" role="progressbar"
-                                     aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-                                    <span class="sr-only">0% Complete</span>
-                                </div>
-                            </div>
-                            <wicket:container wicket:id="teamMemberRepeater">
-                                <div class="panel">
-                                    <div wicket:id="teamMemberDiv" class="row collapse teammembers-data"
-                                         role="tabpanel">
-                                        <input wicket:id="teamMemberId" type="hidden">
-                                        <!--input type="hidden" id="teammembers1_order"-->
-                                        <input wicket:id="teamMemberDeleted" type="hidden">
-
-                                        <div class="teammembers-data-main">
-                                            <h3>Настройка участника</h3>
-
-                                            <div class="form-group">
-                                                <label wicket:for="teamMemberNickname">Никнейм</label>
-
-                                                <div wicket:id="teamMemberNicknameDiv">
-                                                    <input wicket:id="teamMemberNickname"
-                                                           class="form-control name-input typeahead" type="text">
-                                                </div>
-                                                <label wicket:for="teamMemberTeam">Название команды</label>
-                                                <select wicket:id="teamMemberTeam" class="form-control all_teams">
-                                                    <option name="teams1">Команда 1</option>
-                                                </select>
-                                                <input wicket:id="teamMemberActive" type="checkbox">
-                                                <label wicket:for="teamMemberActive">Активен</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </wicket:container>
-                        </div>
-                    </div>
-                </form>
-            </main>
-        </div>
-    </div>
+    <script src="js/listgroup.js"></script>
+    <script src="https://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js"></script>
+    <!-- Скрипт загрузки -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.5.7/jquery.iframe-transport.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.5.7/jquery.fileupload.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.5.7/jquery.fileupload-process.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/9.5.7/jquery.fileupload-image.min.js"></script>
+    <script src="http://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js"></script>
+    <script src="http://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>
 
     <!-- Выпадающее окно (dropdown) bootstrap -->
     <link rel="stylesheet"
           href="https://cdn.rawgit.com/behigh/bootstrap_dropdowns_enhancement/master/dist/css/dropdowns-enhancement.min.css">
     <script src="https://cdn.rawgit.com/behigh/bootstrap_dropdowns_enhancement/master/js/dropdowns-enhancement.js"></script>
 
-    <script src="js/page.admin.js"></script>
-    <script src="js/page.global_edit.js"></script>
+    <script src="js/ContentsModule.js"></script>
+    <script src="js/AdminListPanel.js"></script>
+    <link rel="stylesheet" href="css/AdminListPanel.css">
+    <script src="js/AdminToolboxAjaxButton.js"></script>
+    <script src="js/AdminFormPanel.js"></script>
+    <link rel="stylesheet" href="css/AdminFormPanel.css">
+    <script src="js/AdminAffixedListPanel.js"></script>
+    <link rel="stylesheet" href="css/AdminAffixedListPanel.css">
+    <script src="js/BannerUploaderComponent.js"></script>
+    <!--<script src="js/page.admin.js"></script>-->
+    <!--<script src="js/page.global_edit.js"></script>-->
 </wicket:extend>
 </body>
 </html>

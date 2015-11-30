@@ -14,18 +14,21 @@
 
     <select id="getChapterImagesByVolumeId" parameterType="int" resultMap="chapterImageMap">
         SELECT
+            chapter_image_id,
             chapter_id,
             volume_id,
 
             order_number,
             adult,
 
+            non_colored.resource_id   AS resourceId1,
             non_colored.user_id       AS userId1,
             non_colored.mime_type     AS mimeType1,
             non_colored.url           AS url1,
             non_colored.title         AS title1,
             non_colored.uploaded_when AS uploadedWhen1,
 
+            colored.resource_id       AS resourceId2,
             colored.user_id           AS userId2,
             colored.mime_type         AS mimeType2,
             colored.url               AS url2,
@@ -41,44 +44,59 @@
 
     <select id="getChapterImagesByChapterId" parameterType="int" resultMap="chapterImageMap">
         SELECT
-        chapter_id,
-        volume_id,
+            chapter_image_id,
+            chapter_id,
+            volume_id,
 
-        order_number,
-        adult,
+            order_number,
+            adult,
 
-        non_colored.user_id       AS userId1,
-        non_colored.mime_type     AS mimeType1,
-        non_colored.url           AS url1,
-        non_colored.title         AS title1,
-        non_colored.uploaded_when AS uploadedWhen1,
+            non_colored.resource_id   AS resourceId1,
+            non_colored.user_id       AS userId1,
+            non_colored.mime_type     AS mimeType1,
+            non_colored.url           AS url1,
+            non_colored.title         AS title1,
+            non_colored.uploaded_when AS uploadedWhen1,
 
-        colored.user_id           AS userId2,
-        colored.mime_type         AS mimeType2,
-        colored.url               AS url2,
-        colored.title             AS title2,
-        colored.uploaded_when     AS uploadedWhen2
+            colored.resource_id       AS resourceId2,
+            colored.user_id           AS userId2,
+            colored.mime_type         AS mimeType2,
+            colored.url               AS url2,
+            colored.title             AS title2,
+            colored.uploaded_when     AS uploadedWhen2
         FROM chapter_images
-        LEFT JOIN external_resources non_colored
-        ON non_colored.resource_id = chapter_images.non_colored_image_id
-        LEFT JOIN external_resources colored
-        ON colored.resource_id = chapter_images.colored_image_id
+            LEFT JOIN external_resources non_colored
+                ON non_colored.resource_id = chapter_images.non_colored_image_id
+            LEFT JOIN external_resources colored
+                ON colored.resource_id = chapter_images.colored_image_id
         WHERE chapter_id = #{chapterId}
     </select>
 
-    <insert id="insertChapterImage" parameterType="ru.ruranobe.mybatis.entities.tables.ChapterImage" keyProperty="chapterImageId" useGeneratedKeys="true">
-        insert into chapter_images (volume_id, non_colored_image_id, colored_image_id, order_number, adult)
-        values (#{volumeId}, #{nonColoredImageId}, #{coloredImageId}, #{orderNumber}, #{adult})
+    <insert id="insertChapterImage" parameterType="ru.ruranobe.mybatis.entities.tables.ChapterImage" keyProperty="chapterImageId"
+            useGeneratedKeys="true">
+        INSERT INTO chapter_images
+        SET volume_id            = #{volumeId},
+            chapter_id           = #{chapterId},
+            non_colored_image_id = #{nonColoredImage.resourceId},
+            colored_image_id     = #{coloredImage.resourceId},
+            order_number         = #{orderNumber},
+            adult                = #{adult}
     </insert>
 
     <delete id="deleteChapterImage" parameterType="int">
-        delete from chapter_images where chapter_image_id=#{chapterImageId}
+        DELETE FROM chapter_images
+        WHERE chapter_image_id = #{chapterImageId}
     </delete>
 
     <update id="updateChapterImage" parameterType="ru.ruranobe.mybatis.entities.tables.ChapterImage">
-        update chapter_images set volume_id = #{volumeId}, non_colored_image_id=#{nonColoredImageId},
-        colored_image_id=#{coloredImageId}, order_number=#{orderNumber}, adult=#{adult}
-        where activity_id=#{activityId}
+        UPDATE chapter_images
+        SET volume_id            = #{volumeId},
+            chapter_id           = #{chapterId},
+            non_colored_image_id = #{nonColoredImage.resourceId},
+            colored_image_id     = #{coloredImage.resourceId},
+            order_number         = #{orderNumber},
+            adult                = #{adult}
+        WHERE chapter_image_id = #{chapterImageId}
     </update>
 
     <resultMap id="chapterImageMap" type="ru.ruranobe.mybatis.entities.tables.ChapterImage">
@@ -96,7 +114,8 @@
         <result property="adult" column="adult"/>
 
         <association property="nonColoredImage" javaType="ru.ruranobe.mybatis.entities.tables.ExternalResource">
-            <id property="userId" column="userId1"/>
+            <id property="resourceId" column="resourceId1"/>
+            <result property="userId" column="userId1"/>
             <result property="mimeType" column="mimeType1"/>
             <result property="url" column="url1"/>
             <result property="title" column="title1"/>
@@ -104,7 +123,8 @@
         </association>
 
         <association property="coloredImage" javaType="ru.ruranobe.mybatis.entities.tables.ExternalResource">
-            <id property="userId" column="userId2"/>
+            <id property="resourceId" column="resourceId2"/>
+            <result property="userId" column="userId2"/>
             <result property="mimeType" column="mimeType2"/>
             <result property="url" column="url2"/>
             <result property="title" column="title2"/>

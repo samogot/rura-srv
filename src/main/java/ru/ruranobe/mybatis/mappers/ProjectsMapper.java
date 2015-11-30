@@ -15,6 +15,8 @@ public interface ProjectsMapper
 
     public Collection<Project> getAllProjects();
 
+    public Collection<Project> getRootProjects();
+
     public void updateProject(Project Project);
 
     public void deleteProject(Integer projectId);

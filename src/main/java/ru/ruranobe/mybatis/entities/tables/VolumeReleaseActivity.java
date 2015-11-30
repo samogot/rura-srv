@@ -5,24 +5,42 @@ import java.io.Serializable;
 public class VolumeReleaseActivity implements Serializable
 {
 
-    private static final long serialVersionUID = 2L;
-    private Integer releaseActivityId;
-    private Integer volumeId;
-    private Integer activityId;
-    private Integer memberId;
-    private boolean teamHidden;
-    /* Optional. Doesn't exist in table, used only in mybatis selects and corresponding code. */
-    private String activityName;
-    private String memberName;
-
-    public VolumeReleaseActivity()
+    public Integer getOrderNumber()
     {
+        return orderNumber;
     }
 
-    public VolumeReleaseActivity(Integer volumeId, Integer activityId)
+    public void setOrderNumber(Integer orderNumber)
     {
-        this.volumeId = volumeId;
-        this.activityId = activityId;
+        this.orderNumber = orderNumber;
+    }
+
+    public VolumeActivity getActivity()
+    {
+        return activity;
+    }
+
+    public void setActivity(VolumeActivity activity)
+    {
+        this.activity = activity;
+        if (activity != null)
+        {
+            this.activityId = activity.getActivityId();
+        }
+    }
+
+    public TeamMember getMember()
+    {
+        return member;
+    }
+
+    public void setMember(TeamMember member)
+    {
+        this.member = member;
+        if (member != null)
+        {
+            this.memberId = member.getMemberId();
+        }
     }
 
     public Integer getActivityId()
@@ -80,18 +98,46 @@ public class VolumeReleaseActivity implements Serializable
         return activityName;
     }
 
-    public String getMemberName()
-    {
-        return memberName;
-    }
-
     public void setActivityName(String activityName)
     {
         this.activityName = activityName;
+    }
+
+    public String getMemberName()
+    {
+        return memberName;
     }
 
     public void setMemberName(String memberName)
     {
         this.memberName = memberName;
     }
+
+    public String getTitle()
+    {
+        return memberName + " - " + activityName;
+    }
+
+    public VolumeReleaseActivity()
+    {
+    }
+
+    public VolumeReleaseActivity(Integer volumeId, Integer activityId)
+    {
+        this.volumeId = volumeId;
+        this.activityId = activityId;
+    }
+
+    private static final long serialVersionUID = 2L;
+    private Integer releaseActivityId;
+    private Integer volumeId;
+    private Integer activityId;
+    private Integer memberId;
+    private Integer orderNumber;
+    private boolean teamHidden;
+    /* Optional. Doesn't exist in table, used only in mybatis selects and corresponding code. */
+    private String activityName;
+    private String memberName;
+    private VolumeActivity activity;
+    private TeamMember member;
 }

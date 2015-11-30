@@ -1,0 +1,79 @@
+.sub-chapter {
+    padding-left: 15px;
+}
+
+#images .form-item img {
+    max-height: 180px;
+    margin: 0 auto;
+}
+
+.fileupload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    opacity: 0;
+    -ms-filter: 'alpha(opacity=0)';
+    font-size: 200px;
+    direction: ltr;
+    cursor: pointer;
+}
+
+#images a.list-group-item .center {
+    display: inline-block;
+    height: 32px;
+    width: 50px;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+
+.dragover #images .list-group.select::before {
+    content: 'Добавить файлы';
+    position: absolute;
+    top: 0;
+    bottom: 20px;
+    left: 15px;
+    right: 15px;
+    opacity: 0.9;
+    padding-top: 50px;
+    background: white;
+    border: 5px dashed #777;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 500;
+    color: #777;
+    z-index: 3;
+}
+
+.dragover .image-data-main::before,
+.dragover .image-data-color::before {
+    content: 'Заменить файл';
+    position: absolute;
+    top: 15px;
+    height: 305px;
+    left: 5px;
+    right: 5px;
+    padding-top: 129px;
+    opacity: 0.9;
+    background: white;
+    border: 5px dashed #777;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 500;
+    color: #777;
+    z-index: 3;
+}
+
+.dragover .image-data-main.hover::before,
+.dragover .image-data-color.hover::before,
+.dragover #images .list-group.select.hover::before {
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+    -ms-transition: all 0.3s ease-out;
+    -o-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+    opacity: 1;
+    border-color: #60A9D4;
+    color: #60A9D4;
+}
