@@ -10,8 +10,8 @@ public class RuraConstants
     public static final String PATH_TO_P12_API_KEY = "C:/Users/Viktor/test/API Project-4143964bc63e.p12";
     public static final String GOOGLE_APPLICATION_NAME = "ruranobe";
     public static final String GOOGLE_TOKEN_SERVER_URL = "https://accounts.google.com/o/oauth2/token";
-    public static final String PATH_TO_CONFIGURATION_FILE = "C:/Users/Viktor/test/RuraConfig.xml";
-    public static final String PATH_TO_CONFIGURATION_FILE_SCHEMA = "C:/Users/Viktor/test/RuraConfig.xsd";
+    public static final String PATH_TO_CONFIGURATION_FILE = "/etc/webapps/ruranobe/RuraConfig.xml";
+    public static final String PATH_TO_CONFIGURATION_FILE_SCHEMA = "/etc/webapps/ruranobe/RuraConfig.xsd";
     public static final String UPDATE_TYPE_PUBLISH = "Опубликован";
     public static final String UPDATE_TYPE_TRANSLATE = "Обновлен перевод";
     public static final String UPDATE_TYPE_PROOFREAD = "Глобальная редактура";
@@ -75,7 +75,7 @@ public class RuraConstants
                     .put(RuraConstants.VOLUME_STATUS_DONE, "завершен")
                     .build();
 
-    public static final String NO_COVER_IMAGE = "http://ruranobe.ru/w/images/thumb/a/ad/nopic.png/300px-nopic.png";
+    public static final String NO_COVER_IMAGE = "http://ruranobe.ru/images/thumb/a/ad/nopic.png/300px-nopic.png";
 
     private RuraConstants()
     {

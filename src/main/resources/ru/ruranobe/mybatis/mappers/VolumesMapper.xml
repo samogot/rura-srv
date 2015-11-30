@@ -95,6 +95,7 @@
           volume_status_hint = #{volumeStatusHint},
           adult = #{adult},
           annotation = #{annotation}
+          topic_id = #{topicId}
         where volume_id = #{volumeId}
     </update>
 
@@ -143,6 +144,7 @@
         <result property="prevNameShort" column="prev_name_short"/>
         <result property="nextUrl" column="next_url"/>
         <result property="nextNameShort" column="next_name_short"/>
+        <result property="topicId" column="topic_id"/>
     </resultMap>
 
 </mapper>

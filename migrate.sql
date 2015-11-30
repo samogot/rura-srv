@@ -436,7 +436,7 @@ INSERT INTO external_resources (user_id, mime_type, url, title, uploaded_when)
   SELECT
     img_user,
     concat(img_major_mime, '/', img_minor_mime),
-    concat('http://ruranobe.ru/w/images/', substr(md5(img_name), 1, 1), '/', substr(md5(img_name), 1, 2), '/',
+    concat('http://ruranobe.ru/images/', substr(md5(img_name), 1, 1), '/', substr(md5(img_name), 1, 2), '/',
            img_name),
     img_name,
     img_timestamp
@@ -451,7 +451,7 @@ INSERT INTO external_resources (user_id, mime_type, url, title, uploaded_when)
   SELECT DISTINCT
     img_user,
     concat(img_major_mime, '/', img_minor_mime),
-    concat('http://ruranobe.ru/w/images/', substr(md5(img_name), 1, 1), '/', substr(md5(img_name), 1, 2), '/',
+    concat('http://ruranobe.ru/images/', substr(md5(img_name), 1, 1), '/', substr(md5(img_name), 1, 2), '/',
            img_name),
     img_name,
     img_timestamp
@@ -477,7 +477,7 @@ INSERT IGNORE INTO external_resources (user_id, mime_type, url, title, uploaded_
   SELECT DISTINCT
     img_user,
     concat(img_major_mime, '/', img_minor_mime),
-    concat('http://ruranobe.ru/w/images/', substr(md5(img_name), 1, 1), '/', substr(md5(img_name), 1, 2), '/',
+    concat('http://ruranobe.ru/images/', substr(md5(img_name), 1, 1), '/', substr(md5(img_name), 1, 2), '/',
            img_name),
     img_name,
     img_timestamp

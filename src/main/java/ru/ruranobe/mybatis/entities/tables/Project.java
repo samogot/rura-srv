@@ -29,8 +29,9 @@ public class Project extends PageRepresentable implements Serializable
     private Boolean onevolume;
     private String franchise;
     private String annotation;
+	  private Integer forumId;
 
-    public Project(Integer parentId, Integer imageId, String url, String title, Integer orderNumber, boolean bannerHidden, boolean projectHidden, String annotation)
+	public Project(Integer parentId, Integer imageId, String url, String title, Integer orderNumber, boolean bannerHidden, boolean projectHidden, String annotation)
     {
         this.parentId = parentId;
         this.imageId = imageId;
@@ -253,7 +254,15 @@ public class Project extends PageRepresentable implements Serializable
         this.onevolume = onevolume;
     }
 
-    @Override
+	public Integer getForumId() {
+		return forumId;
+	}
+
+	public void setForumId(Integer forumId) {
+		this.forumId = forumId;
+	}
+
+	@Override
     public String toString()
     {
         return "Project{" + "projectId=" + projectId + ", parentId=" + parentId + ", imageId=" + imageId + ", url=" + url + ", title=" + title + ", orderNumber=" + orderNumber + ", bannerHidden=" + bannerHidden + ", projectHidden=" + projectHidden + ", annotation=" + annotation + '}';

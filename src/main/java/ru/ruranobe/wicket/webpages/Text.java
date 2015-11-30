@@ -278,14 +278,20 @@ public class Text extends SidebarLayoutPage
             volumeText.append(volumeFootnotes);
         }
 
-        final String chapterId = Integer.toString(currentChapter.getChapterId());
-        add(new WebMarkupContainer("chapterId")
-        {
-            {
-                add(new AttributeAppender("chapter-id", chapterId));
-            }
-        });
-        add(new Label("htmlText", volumeText.toString()).setEscapeModelStrings(false));
+	    final String chapterId = currentChapter != null && currentChapter.getChapterId() != null
+	                             ? Integer.toString(currentChapter.getChapterId()) : "";
+	    final String volumeId = volume.getTopicId() != null ? Integer.toString(volume.getTopicId()) : "";
+	    add(new WebMarkupContainer("chapterId") {
+		        {
+			        add(new AttributeAppender("chapter-id", chapterId));
+		        }
+	        },
+	        new WebMarkupContainer("topicId") {
+		        {
+			        add(new AttributeAppender("topic-id", volumeId));
+		        }
+	        },
+	        new Label("htmlText", volumeText.toString()).setEscapeModelStrings(false));
 
         List<ContentsHolder> contentsHolders = new ArrayList<ContentsHolder>();
         for (Chapter chapter : allChapterList)

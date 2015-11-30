@@ -46,6 +46,8 @@ public class Volume extends PageRepresentable implements Serializable
     private String nextUrl;
     private String subProjectName;
 
+	  private Integer topicId;
+
     public Volume()
     {
     }
@@ -406,8 +408,15 @@ public class Volume extends PageRepresentable implements Serializable
         return prevUrl;
     }
 
+	public Integer getTopicId() {
+		return topicId;
+	}
 
-    @Override
+	public void setTopicId(Integer topicId) {
+		this.topicId = topicId;
+	}
+
+	@Override
     public String toString()
     {
         return "Volume{" + "volumeId=" + volumeId + ", projectId=" + projectId + ", url=" + url + ", nameFile=" + nameFile + ", nameTitle=" + nameTitle + ", nameJp=" + nameJp + ", nameEn=" + nameEn + ", nameRu=" + nameRu + ", nameShort=" + nameShort + ", sequenceNumber=" + sequenceNumber + ", author=" + author + ", illustrator=" + illustrator + ", releaseDate=" + releaseDate + ", isbn=" + isbn + ", externalUrl=" + externalUrl + ", annotation=" + annotation + ", volumeStatus=" + volumeStatus + ", volumeType=" + volumeType + ", adult=" + adult + '}';

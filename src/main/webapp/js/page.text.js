@@ -518,3 +518,22 @@ $(".reference").popover({
     title: 'Примечание',
     placement: 'bottom'
 });
+
+/* КОММЕНТАРИИ */
+$(document).ready(function () {
+    moment.locale('ru');
+    $('.comments').empty();
+    var topicId = $('#topicId').attr('topic-id');
+    if (topicId) {
+        $.getJSON('/f/api/topic/' + topicId + '/posts', function (data) {
+
+            $.each(data.posts, function (i, item) {
+                var comment = '<div class="comment"><div class="avatar"><div class=""><img src="#" width="80" height="80"></div></div>';
+                comment += '<div style="margin-left: 90px;"><div class="name pull-left bold">' + item.author_username + '</div>';
+                comment += '<div class="timeAgo">' + moment.unix(item.timestamp).fromNow() + '</div>';
+                comment += '<div class="commentText"><div>' + item.post_text + '</div></div></div></div>';
+                $(".comments").append(comment);
+            });
+        });
+    }
+});
