@@ -23,7 +23,7 @@ public class RegistrationPanel extends Panel
 {
     private static final String REGISTRATION_FORM = "registrationForm";
     private static final String ACTIVATE_EMAIL_SUBJECT = "Активация электронного адреса";
-    private static final String ACTIVATE_EMAIL_TEXT = "Для активации электронного адреса в системе проследуйте по ссылке http://ruranobe.ru/user/email/activate?token=%s";
+    private static final String ACTIVATE_EMAIL_TEXT = "Для активации электронного адреса в системе проследуйте по ссылке https://ruranobe.ru/user/email/activate?token=%s";
     private static final long ETERNITY_EXPIRATION_TIME = 31622400000000L;
     private static final long serialVersionUID = 1L;
     private String password;

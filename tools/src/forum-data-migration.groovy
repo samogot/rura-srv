@@ -20,7 +20,7 @@ class forumDataMigration {
     static void main(args) {
         def forumRootId = 242;
         def forumUserSecret = '342950507aede02cf327383dc6652cd99f40cf0f9b2649da';
-        def forumApi = new RESTClient('http://ruranobe.ru/f/api/', ContentType.JSON)
+        def forumApi = new RESTClient('https://beta.ruranobe.ru/f/api/', ContentType.JSON)
         def mw = connect('localhost', 'ruranobe_db', 'root', 'SankaReaz3');
         def site = connect('localhost', 'ruranobe', 'root', 'SankaReaz3');
         def forum = connect('localhost', 'ruranobe_forum', 'root', 'SankaReaz3');

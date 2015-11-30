@@ -117,7 +117,7 @@ public class VolumePage extends SidebarLayoutPage
         annotationParsed.setEscapeModelStrings(false);
 
         ExternalLink isbn = new ExternalLink("isbn",
-                "http://www.amazon.co.jp/s?search-alias=stripbooks&language=en_JP&field-isbn=" + volume.getIsbn(), volume.getIsbn());
+                "https://www.amazon.co.jp/s?search-alias=stripbooks&language=en_JP&field-isbn=" + volume.getIsbn(), volume.getIsbn());
         isbn.setVisible(volume.getIsbn() != null);
         add(isbn);
 

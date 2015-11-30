@@ -21,7 +21,7 @@ public class EmailPasswordRecoveryPanel extends Panel
 
     private static final String EMAIL_PASSWORD_RECOVERY_FORM = "emailPasswordRecoveryForm";
     private static final String EMAIL_PASSWORD_RECOVERY_SUBJECT = "Восстановление пароля";
-    private static final String EMAIL_PASSWORD_RECOVERY_TEXT = "Для восстановления пароля проследуйте по ссылке http://ruranobe.ru/user/recover/pass?token=%s";
+    private static final String EMAIL_PASSWORD_RECOVERY_TEXT = "Для восстановления пароля проследуйте по ссылке https://ruranobe.ru/user/recover/pass?token=%s";
     private static final long EXPIRATION_TIME_6_HOURS = 21600000L;
     private static final long serialVersionUID = 1L;
     private String email;

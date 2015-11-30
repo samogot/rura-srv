@@ -122,7 +122,7 @@ public class RuraConstants
             .add(RuraConstants.VOLUME_STATUS_DONE)
             .build();
 
-    public static final String NO_COVER_IMAGE = "http://ruranobe.ru/images/thumb/a/ad/nopic.png/300px-nopic.png";
+    public static final String NO_COVER_IMAGE = "https://ruranobe.ru/images/thumb/a/ad/nopic.png/300px-nopic.png";
 
     private RuraConstants()
     {
