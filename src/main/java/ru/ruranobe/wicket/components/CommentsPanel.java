@@ -1,5 +1,7 @@
 package ru.ruranobe.wicket.components;
 
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 
 /**
@@ -7,8 +9,9 @@ import org.apache.wicket.markup.html.panel.Panel;
  */
 public class CommentsPanel extends Panel
 {
-    public CommentsPanel(String id)
+    public CommentsPanel(String id, Integer topicId)
     {
         super(id);
+        add(new WebMarkupContainer("comments").add(new AttributeModifier("data-topic-id", topicId)));
     }
 }

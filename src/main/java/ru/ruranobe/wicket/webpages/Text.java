@@ -2,8 +2,6 @@ package ru.ruranobe.wicket.webpages;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.wicket.behavior.AttributeAppender;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
@@ -278,13 +276,6 @@ public class Text extends SidebarLayoutPage
             volumeText.append(volumeFootnotes);
         }
 
-	    final String volumeId = volume.getTopicId() != null ? Integer.toString(volume.getTopicId()) : "";
-	    add(new WebMarkupContainer("topicId") {
-		        {
-			        add(new AttributeAppender("topic-id", volumeId));
-		        }
-	        });
-
         add(new Label("htmlText", volumeText.toString()).setEscapeModelStrings(false));
 
         List<ContentsHolder> contentsHolders = new ArrayList<ContentsHolder>();
@@ -325,7 +316,7 @@ public class Text extends SidebarLayoutPage
             textPageUtils.add(prevTextLink = currentChapter.getPrevChapter().makeBookmarkablePageLink("prevTextLink"));
         }
 
-        add(new CommentsPanel("comments"));
+        add(new CommentsPanel("comments", volume.getTopicId()));
         sidebarModules.add(new UpdatesSidebarModule("sidebarModule", volume.getProjectId()));
         sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
         sidebarModules.add(new FriendsSidebarModule("sidebarModule"));

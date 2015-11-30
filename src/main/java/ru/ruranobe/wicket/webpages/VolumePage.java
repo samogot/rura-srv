@@ -14,12 +14,13 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
+import ru.ruranobe.mybatis.entities.tables.*;
 import ru.ruranobe.mybatis.mappers.ChaptersMapper;
 import ru.ruranobe.mybatis.mappers.ExternalResourcesMapper;
 import ru.ruranobe.mybatis.mappers.VolumeReleaseActivitiesMapper;
 import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
-import ru.ruranobe.mybatis.entities.tables.*;
+import ru.ruranobe.wicket.components.CommentsPanel;
 import ru.ruranobe.wicket.components.CoverCarousel;
 import ru.ruranobe.wicket.components.LabelHideableOnNull;
 import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
@@ -265,6 +266,7 @@ public class VolumePage extends SidebarLayoutPage
 
 //        add(new CommentsPanel("comments"));
 
+        add(new CommentsPanel("comments", volume.getTopicId()));
         sidebarModules.add(new UpdatesSidebarModule("sidebarModule", volume.getProjectId()));
         sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
         sidebarModules.add(new FriendsSidebarModule("sidebarModule"));

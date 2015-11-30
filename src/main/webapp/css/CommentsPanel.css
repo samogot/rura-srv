@@ -1,0 +1,76 @@
+.comment-form {
+    margin-bottom: 40px;
+}
+
+textarea.form-control {
+    width: 100% !important;
+    background-color: #F2F2F2;
+}
+
+.comment-form textarea.form-control {
+    font-size: 16px;
+    padding: 11px;
+    height: 87px;
+}
+
+.comment-form .input-group-btn .btn {
+    height: calc(100% + 12px);
+}
+
+.timeAgo {
+    color: rgb(138, 138, 138);
+}
+
+.name {
+    color: rgb(77, 77, 77);
+    margin-right: 10px;
+}
+
+.commentAnswer {
+    color: rgb(77, 77, 77);
+}
+
+.comment {
+    min-width: 80px;
+    margin-top: 20px;
+    min-height: 80px;
+}
+
+.avatar {
+    height: 100%;
+    width: 80px;
+    background: rgb(77, 77, 77);
+    margin-right: 10px;
+}
+
+.commentText {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    overflow: auto;
+    word-wrap: break-word;
+}
+
+@media screen and (max-width: 767px) {
+    .comment {
+        min-width: 25px;
+        min-height: 25px;
+    }
+
+    .avatar {
+        width: 25px;
+        margin-right: 5px;
+    }
+
+    .avatar img {
+        height: 25px;
+        width: 25px;
+    }
+
+    .timeAgo {
+        padding-top: 2px;
+    }
+
+    .name {
+        margin-top: 2px;
+    }
+}
