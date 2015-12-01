@@ -1,7 +1,6 @@
 package ru.ruranobe.wicket.webpages;
 
 import org.apache.ibatis.session.SqlSession;
-import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
@@ -113,7 +112,7 @@ public class Cabinet extends SidebarLayoutPage
                     projectUrl.add(projectUrlText);
                     bookmarkForm.add(projectUrl);
 
-                    PageParameters volumePageParameters = Volume.makeUrlParameters(chapterUrlDetails.getVolumeUrl().split("/"));
+                    PageParameters volumePageParameters = Volume.makeUrlParameters(chapterUrlDetails.getVolumeUrl().split("/", -1));
                     BookmarkablePageLink volumeUrl = new BookmarkablePageLink("volumeUrl", VolumePage.class,
                             volumePageParameters);
                     Label volumeUrlText = new Label("volumeUrlText", chapterUrlDetails.getVolumeTitle());
@@ -121,7 +120,7 @@ public class Cabinet extends SidebarLayoutPage
                     volumeUrl.add(volumeUrlText);
                     bookmarkForm.add(volumeUrl);
 
-                    PageParameters chapterPageParameters = Chapter.makeUrlParameters(chapterUrlDetails.getChapterUrl().split("/"));
+                    PageParameters chapterPageParameters = Chapter.makeUrlParameters(chapterUrlDetails.getChapterUrl().split("/", -1));
                     BookmarkablePageLink chapterUrl = new BookmarkablePageLink("chapterUrl", Text.class,
                             chapterPageParameters);
                     Label chapterUrlText = new Label("chapterUrlText", chapterUrlDetails.getChapterTitle());
@@ -134,7 +133,7 @@ public class Cabinet extends SidebarLayoutPage
 
                     final String paragraphId = bookmark.getParagraphId();
                     BookmarkablePageLink bookmarkUrl = new BookmarkablePageLink("bookmarkUrl", Text.class,
-                            Chapter.makeUrlParameters(chapterUrlDetails.getChapterUrl().split("/")))
+                            Chapter.makeUrlParameters(chapterUrlDetails.getChapterUrl().split("/", -1)))
                     {
                         @Override
                         protected CharSequence getURL()

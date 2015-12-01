@@ -59,7 +59,7 @@ public class Chapter extends PageRepresentable implements Serializable
         {
             return null;
         }
-        return makeUrlParameters(url.split("/"));
+        return makeUrlParameters(url.split("/", -1));
     }
 
     public Integer getChapterId()

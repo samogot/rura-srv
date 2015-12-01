@@ -103,7 +103,7 @@ public class Orphus extends BaseLayoutPage
 
                 item.add(orphusOptionalComment);
 
-                PageParameters chapterPageParameters = Chapter.makeUrlParameters(orphusComment.getChapterUrl().split("/"));
+                PageParameters chapterPageParameters = Chapter.makeUrlParameters(orphusComment.getChapterUrl().split("/", -1));
                 BookmarkablePageLink orphusChapterUrl = new BookmarkablePageLink("orphusChapterUrl", Text.class, chapterPageParameters)
                 {
                     @Override

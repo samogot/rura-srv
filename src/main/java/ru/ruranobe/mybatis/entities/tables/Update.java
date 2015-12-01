@@ -27,7 +27,7 @@ public class Update extends PageRepresentable implements Serializable, Comparabl
 
     public PageParameters getUrlParameters()
     {
-        return chapterUrl != null ? Chapter.makeUrlParameters(chapterUrl.split("/")) : Volume.makeUrlParameters(volumeUrl.split("/"));
+        return chapterUrl != null ? Chapter.makeUrlParameters(chapterUrl.split("/", -1)) : Volume.makeUrlParameters(volumeUrl.split("/", -1));
     }
 
     public Class getLinkClass()

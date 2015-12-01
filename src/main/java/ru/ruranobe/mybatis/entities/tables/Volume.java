@@ -126,17 +126,17 @@ public class Volume extends PageRepresentable implements Serializable, Cloneable
 
     public PageParameters getUrlParameters()
     {
-        return makeUrlParameters(url.split("/"));
+        return makeUrlParameters(url.split("/", -1));
     }
 
     public PageParameters getPrevUrlParameters()
     {
-        return prevUrl == null ? null : makeUrlParameters(prevUrl.split("/"));
+        return prevUrl == null ? null : makeUrlParameters(prevUrl.split("/", -1));
     }
 
     public PageParameters getNextUrlParameters()
     {
-        return nextUrl == null ? null : makeUrlParameters(nextUrl.split("/"));
+        return nextUrl == null ? null : makeUrlParameters(nextUrl.split("/", -1));
     }
 
     public Class getLinkClass()
