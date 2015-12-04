@@ -14,6 +14,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.extensions.markup.html.form.DateTextField;
 import org.apache.wicket.extensions.markup.html.form.select.IOptionRenderer;
 import org.apache.wicket.extensions.markup.html.form.select.Select;
@@ -44,9 +45,9 @@ import ru.ruranobe.engine.image.ImageServices;
 import ru.ruranobe.engine.image.RuraImage;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
+import ru.ruranobe.mybatis.entities.tables.*;
 import ru.ruranobe.mybatis.mappers.*;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
-import ru.ruranobe.mybatis.entities.tables.*;
 import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.components.admin.AdminAffixedListPanel;
 import ru.ruranobe.wicket.components.admin.AdminInfoFormPanel;
@@ -635,7 +636,6 @@ public class VolumeEdit extends AdminLayoutPage
             protected void onInitialize()
             {
                 super.onInitialize();
-                toolbarButtons.remove(0);
                 toolbarButtons.add(0, new WebMarkupContainer("button")
                 {
                     @Override
@@ -643,7 +643,7 @@ public class VolumeEdit extends AdminLayoutPage
                     {
                         replaceComponentTagBody(markupStream, openTag, "<i class=\"fa fa-plus\"></i><input type=\"file\" class=\"fileupload\" multiple=\"\">");
                     }
-                }.add(new AttributeAppender("class", Model.of("btn-success"), " "))
+                }.add(new AttributeAppender("class", Model.of("btn-success"), " "), new AttributeModifier("title", "Загрузить")));
                  .add(new AttributeModifier("title", "Загрузить")));
                 add(new AbstractAjaxBehavior()
                 {
