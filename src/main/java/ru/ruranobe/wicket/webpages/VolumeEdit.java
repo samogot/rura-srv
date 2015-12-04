@@ -644,7 +644,17 @@ public class VolumeEdit extends AdminLayoutPage
                         replaceComponentTagBody(markupStream, openTag, "<i class=\"fa fa-plus\"></i><input type=\"file\" class=\"fileupload\" multiple=\"\">");
                     }
                 }.add(new AttributeAppender("class", Model.of("btn-success"), " "), new AttributeModifier("title", "Загрузить")));
-                 .add(new AttributeModifier("title", "Загрузить")));
+
+                toolbarButtons.get(1).add(new Behavior()
+                {
+                    @Override
+                    public void onComponentTag(Component component, ComponentTag tag)
+                    {
+                        tag.getAttributes().put("style", "display:none;");
+                        tag.getAttributes().put("data-add-url", toolbarButtons.get(1).getBehaviors(AbstractAjaxBehavior.class).get(0).getCallbackUrl());
+                    }
+                });
+
                 add(new AbstractAjaxBehavior()
                 {
                     @Override
