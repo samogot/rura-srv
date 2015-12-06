@@ -47,6 +47,21 @@ public class FileStorageService implements Serializable
         return accessToken;
     }
 
+    public String getUploadDir()
+    {
+        return uploadDir;
+    }
+
+    public String getPublicFolder()
+    {
+        return publicFolder;
+    }
+
+    public void setPublicFolder(String publicFolder)
+    {
+        this.publicFolder = publicFolder;
+    }
+
     protected FileStorageService()
     {
 
@@ -55,6 +70,11 @@ public class FileStorageService implements Serializable
     protected void setAccessToken(String accessToken)
     {
         this.accessToken = accessToken;
+    }
+
+    protected void setUploadDir(String uploadDir)
+    {
+        this.uploadDir = uploadDir;
     }
 
     protected void setClientSecret(String clientSecret)
@@ -160,6 +180,18 @@ public class FileStorageService implements Serializable
             return this;
         }
 
+        public Builder setUploadDir(String uploadDir)
+        {
+            fileStorageService.setUploadDir(uploadDir);
+            return this;
+        }
+
+        public Builder setPublicFolder(String publicFolder)
+        {
+            fileStorageService.setPublicFolder(publicFolder);
+            return this;
+        }
+
         private final FileStorageService fileStorageService;
     }
 
@@ -170,5 +202,7 @@ public class FileStorageService implements Serializable
     private String clientId;
     private String clientSecret;
     private String accessToken;
+    private String uploadDir;
+    private String publicFolder;
 //    private List<String> fileExtensions;
 }

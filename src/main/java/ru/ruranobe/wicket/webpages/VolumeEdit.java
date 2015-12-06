@@ -12,6 +12,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.markup.html.form.DateTextField;
@@ -36,7 +38,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ByteArrayResource;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.util.string.Strings;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import ru.ruranobe.config.ApplicationContext;
 import ru.ruranobe.engine.Webpage;
@@ -44,9 +45,9 @@ import ru.ruranobe.engine.image.ImageServices;
 import ru.ruranobe.engine.image.RuraImage;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
+import ru.ruranobe.mybatis.entities.tables.*;
 import ru.ruranobe.mybatis.mappers.*;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
-import ru.ruranobe.mybatis.entities.tables.*;
 import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.components.admin.AdminAffixedListPanel;
 import ru.ruranobe.wicket.components.admin.AdminInfoFormPanel;
@@ -55,7 +56,6 @@ import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class VolumeEdit extends AdminLayoutPage
@@ -160,7 +160,8 @@ public class VolumeEdit extends AdminLayoutPage
                 volumeImages.add(3, new ChapterImage(null, -1, volume.getVolumeId(), null, resource, 4));
             }
 
-        } finally
+        }
+        finally
         {
             session.close();
         }
@@ -190,15 +191,18 @@ public class VolumeEdit extends AdminLayoutPage
                 if (p1.getParentId() == null && p2.getParentId() == null)
                 {
                     return ObjectUtils.compare(p1.getOrderNumber(), p2.getOrderNumber(), true);
-                } else if (p1.getParentId() == null)
+                }
+                else if (p1.getParentId() == null)
                 {
                     int parentComp = ObjectUtils.compare(p1.getOrderNumber(), projectIdToProject.get(p2.getParentId()).getOrderNumber(), true);
                     return parentComp == 0 ? -1 : parentComp;
-                } else if (p2.getParentId() == null)
+                }
+                else if (p2.getParentId() == null)
                 {
                     int parentComp = ObjectUtils.compare(projectIdToProject.get(p1.getParentId()).getOrderNumber(), p2.getOrderNumber(), true);
                     return parentComp == 0 ? 1 : parentComp;
-                } else
+                }
+                else
                 {
                     int parentComp = ObjectUtils.compare(projectIdToProject.get(p1.getParentId()).getOrderNumber(),
                             projectIdToProject.get(p2.getParentId()).getOrderNumber(), true);
@@ -238,7 +242,8 @@ public class VolumeEdit extends AdminLayoutPage
                     VolumesMapper mapper = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
                     mapper.updateVolume(volume);
                     session.commit();
-                } finally
+                }
+                finally
                 {
                     session.close();
                 }
@@ -263,7 +268,7 @@ public class VolumeEdit extends AdminLayoutPage
                         add(new TextField<String>("nameRomaji"));
                         add(new TextField<String>("nameShort"));
                         add(new DropDownChoice<Project>("project", projects).setChoiceRenderer(new ChoiceRenderer<Project>("title", "projectId"))
-                                .setOutputMarkupId(true));
+                                                                            .setOutputMarkupId(true));
                         add(new TextField<Float>("sequenceNumber"));
                         add(new TextField<String>("author"));
                         add(new TextField<String>("illustrator"));
@@ -300,7 +305,8 @@ public class VolumeEdit extends AdminLayoutPage
                             if (item.getActivityId() != null)
                             {
                                 mapper.updateVolumeReleaseActivity(item);
-                            } else
+                            }
+                            else
                             {
                                 mapper.insertVolumeReleaseActivity(item);
                             }
@@ -314,7 +320,8 @@ public class VolumeEdit extends AdminLayoutPage
                         }
                     }
                     session.commit();
-                } finally
+                }
+                finally
                 {
                     session.close();
                 }
@@ -366,7 +373,8 @@ public class VolumeEdit extends AdminLayoutPage
                             if (item.getChapterId() != null)
                             {
                                 mapper.updateChapter(item);
-                            } else
+                            }
+                            else
                             {
                                 mapper.insertChapter(item);
                             }
@@ -380,7 +388,8 @@ public class VolumeEdit extends AdminLayoutPage
                         }
                     }
                     session.commit();
-                } finally
+                }
+                finally
                 {
                     session.close();
                 }
@@ -436,7 +445,8 @@ public class VolumeEdit extends AdminLayoutPage
                             if (item.getUpdateId() != null)
                             {
                                 mapper.updateUpdate(item);
-                            } else
+                            }
+                            else
                             {
                                 mapper.insertUpdate(item);
                             }
@@ -450,7 +460,8 @@ public class VolumeEdit extends AdminLayoutPage
                         }
                     }
                     session.commit();
-                } finally
+                }
+                finally
                 {
                     session.close();
                 }
@@ -527,12 +538,14 @@ public class VolumeEdit extends AdminLayoutPage
                                     default:
                                         //todo invalid
                                 }
-                            } else
+                            }
+                            else
                             {
                                 if (item.getChapterImageId() != null)
                                 {
                                     mapper.updateChapterImage(item);
-                                } else
+                                }
+                                else
                                 {
                                     mapper.insertChapterImage(item);
                                 }
@@ -546,13 +559,14 @@ public class VolumeEdit extends AdminLayoutPage
                     }
                     for (ChapterImage removedItem : removed)
                     {
-                        if (removedItem.getChapterId() != null)
+                        if (removedItem.getChapterImageId() != null)
                         {
                             mapper.deleteChapterImage(removedItem.getChapterImageId());
                         }
                     }
                     session.commit();
-                } finally
+                }
+                finally
                 {
                     session.close();
                 }
@@ -573,6 +587,7 @@ public class VolumeEdit extends AdminLayoutPage
                 ChapterImage model = item.getModelObject();
                 item.add(new AttributeModifier("data-chapter-id", model.getChapterId()));
                 item.add(new AttributeModifier("data-order-number", model.getOrderNumber()));
+                item.add(new AttributeModifier("data-internal-index", item.getIndex()));
             }
 
             @Override
@@ -597,6 +612,7 @@ public class VolumeEdit extends AdminLayoutPage
                 };
             }
 
+
             @Override
             protected Component getFormItemLabelComponent(String id, final IModel<ChapterImage> model)
             {
@@ -606,6 +622,7 @@ public class VolumeEdit extends AdminLayoutPage
                     protected void onInitialize()
                     {
                         super.onInitialize();
+                        WebMarkupContainer coloredImageTrigger, coloredImageAddButton;
                         add(new HiddenField<Integer>("chapterId"));
                         add(new WebMarkupContainer("nonColoredImage.url")
                         {
@@ -617,7 +634,40 @@ public class VolumeEdit extends AdminLayoutPage
                         });
                         add(new TextField<String>("nonColoredImage.title"));
                         add(new DateTextField("nonColoredImage.uploadedWhen"));
-                        add(new WebMarkupContainer("coloredImage.url")
+                        add(coloredImageTrigger = new WebMarkupContainer("coloredImageTrigger")
+                        {
+                            @Override
+                            protected void onComponentTag(ComponentTag tag)
+                            {
+                                if (model.getObject().getColoredImage() == null)
+                                {
+                                    tag.getAttributes().put("style", "display:none");
+                                }
+                            }
+                        });
+                        add(coloredImageAddButton = new WebMarkupContainer("coloredImageAddButton")
+                        {
+                            @Override
+                            protected void onComponentTag(ComponentTag tag)
+                            {
+                                if (model.getObject().getColoredImage() == null)
+                                {
+                                    tag.getAttributes().put("title", "Добавить изображение");
+                                }
+                            }
+                        });
+                        coloredImageAddButton.add(new WebMarkupContainer("coloredImageAddButtonIcon")
+                        {
+                            @Override
+                            protected void onComponentTag(ComponentTag tag)
+                            {
+                                if (model.getObject().getColoredImage() == null)
+                                {
+                                    tag.getAttributes().put("class", "fa fa-plus");
+                                }
+                            }
+                        });
+                        coloredImageTrigger.add(new WebMarkupContainer("coloredImage.url")
                         {
                             @Override
                             protected void onComponentTag(ComponentTag tag)
@@ -625,8 +675,8 @@ public class VolumeEdit extends AdminLayoutPage
                                 tag.getAttributes().put("src", getDefaultModelObjectAsString());
                             }
                         });
-                        add(new TextField<String>("coloredImage.title"));
-                        add(new DateTextField("coloredImage.uploadedWhen"));
+                        coloredImageTrigger.add(new TextField<String>("coloredImage.title"));
+                        coloredImageTrigger.add(new DateTextField("coloredImage.uploadedWhen"));
                     }
                 };
             }
@@ -635,7 +685,6 @@ public class VolumeEdit extends AdminLayoutPage
             protected void onInitialize()
             {
                 super.onInitialize();
-                toolbarButtons.remove(0);
                 toolbarButtons.add(0, new WebMarkupContainer("button")
                 {
                     @Override
@@ -643,84 +692,151 @@ public class VolumeEdit extends AdminLayoutPage
                     {
                         replaceComponentTagBody(markupStream, openTag, "<i class=\"fa fa-plus\"></i><input type=\"file\" class=\"fileupload\" multiple=\"\">");
                     }
-                }.add(new AttributeAppender("class", Model.of("btn-success"), " "))
-                 .add(new AttributeModifier("title", "Загрузить")));
+                }.add(new AttributeAppender("class", Model.of("btn-success"), " "), new AttributeModifier("title", "Загрузить"))
+                 .setMarkupId("btn-image-add"));
+
+                toolbarButtons.get(1).add(new AttributeModifier("style", "display:none"));
+
                 add(new AbstractAjaxBehavior()
                 {
                     @Override
                     public void onRequest()
                     {
                         HttpServletRequest request = (HttpServletRequest) getRequest().getContainerRequest();
-                        if (ServletFileUpload.isMultipartContent(request))
+                        processUpload(request);
+                    }
+
+
+                    @Override
+                    protected void onComponentTag(ComponentTag tag)
+                    {
+                        tag.getAttributes().put("data-add-url", toolbarButtons.get(1).getBehaviors(AbstractAjaxBehavior.class).get(0).getCallbackUrl());
+                        tag.getAttributes().put("data-upload-url", getCallbackUrl());
+                    }
+                });
+                add(new AbstractDefaultAjaxBehavior()
+                {
+                    @Override
+                    protected void respond(AjaxRequestTarget target)
+                    {
+                        String index = getRequest().getPostParameters().getParameterValue("index").toString();
+                        if (!Strings.isEmpty(index))
                         {
-                            File imageTempFile;
-                            try
-                            {
-                                imageTempFile = File.createTempFile("ruranobe-image_temp", ".tmp");
-                            }
-                            catch (IOException ex)
-                            {
-                                throw new RuntimeException("Unable to create temp file during image upload", ex);
-                            }
-
-                            FileItemFactory factory = new DiskFileItemFactory();
-                            ServletFileUpload upload = new ServletFileUpload(factory);
-                            String uploadingFileExtension = null;
-                            String filename = null;
-                            try
-                            {
-                                List<FileItem> items = upload.parseRequest(request);
-                                for (FileItem item : items)
-                                {
-                                    filename = filename == null ? item.getName() : null;
-                                    uploadingFileExtension = FilenameUtils.getExtension(filename);
-                                    item.write(imageTempFile);
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                throw new RuntimeException("Unable to write uploading image to temp file", ex);
-                            }
-
-                            ApplicationContext context = RuranobeUtils.getApplicationContext();
-                            Webpage webpage = context.getWebpageByPageClass(this.getClass().getName());
-                            RuraImage image = new RuraImage(imageTempFile, uploadingFileExtension, filename);
-                            List<ExternalResource> externalResources = ImageServices.uploadImage(image, webpage.getImageStorages(), new ImmutableMap.Builder<String, String>()
-                                    .put("project", volume.getUrl().split("/", -1)[0])
-                                    .put("volume", volume.getUrl().split("/", -1)[1])
-                                    .build());
-                            ExternalResource externalResource = externalResources.iterator().next();
-                            setDefaultModelObject(externalResource);
-                            imageTempFile.delete();
-
-                            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.YYYY HH:mm:ss");
-                            JSONObject file = new JSONObject();
-                            file.put("url", externalResource.getUrl());
-                            file.put("name", filename);
-                            file.put("ts", sdf.format(externalResource.getUploadedWhen()));
-                            file.put("id", externalResource.getResourceId());
-
-                            JSONArray files = new JSONArray();
-                            files.put(file);
-
-                            JSONObject responseString = new JSONObject();
-                            responseString.put("files", files);
-
-                            IResource jsonResource = new ByteArrayResource("text/plain", responseString.toString().getBytes());
-                            IRequestHandler requestHandler = new ResourceRequestHandler(jsonResource, null);
-                            requestHandler.respond(getRequestCycle());
+                            Component formBlockItem = formBlockItemRepeater.get(index);
+                            Component selectorBlockItem = selectorBlockItemRepeater.get(index);
+                            target.add(formBlockItem);
+                            target.add(selectorBlockItem);
+                            target.appendJavaScript(String.format(
+                                    "$('#%s .list-group.select.sortable').trigger('sortupdate');" +
+                                    "$('#%s').click();" +
+                                    "initFormItemFileUpload('#%s .image-data-main');" +
+                                    "initFormItemFileUpload('#%s .image-data-color');",
+                                    form.getMarkupId(), selectorBlockItem.getMarkupId(),
+                                    formBlockItem.getMarkupId(), formBlockItem.getMarkupId()));
                         }
                     }
 
                     @Override
                     protected void onComponentTag(ComponentTag tag)
                     {
-                        tag.getAttributes().put("data-upload-url", getCallbackUrl());
+                        tag.getAttributes().put("data-reload-url", getCallbackUrl());
                     }
                 });
 
             }
         }.setSortable(true));
+    }
+
+    private void processUpload(HttpServletRequest request)
+    {
+        if (ServletFileUpload.isMultipartContent(request))
+        {
+            JSONObject responseString = new JSONObject();
+            try
+            {
+                File imageTempFile;
+                try
+                {
+                    imageTempFile = File.createTempFile("ruranobe-image_temp", ".tmp");
+                }
+                catch (IOException ex)
+                {
+                    throw new RuntimeException("Unable to create temp file during image upload", ex);
+                }
+
+                FileItemFactory factory = new DiskFileItemFactory();
+                ServletFileUpload upload = new ServletFileUpload(factory);
+                String uploadingFileExtension = null;
+                String filename = null;
+                HashMap<String, String> multipartParameters = new HashMap<String, String>();
+                try
+                {
+                    List<FileItem> items = upload.parseRequest(request);
+                    for (FileItem item : items)
+                    {
+                        if (item.getName() == null)
+                        {
+                            multipartParameters.put(item.getFieldName(), item.getString());
+                        }
+                        else
+                        {
+                            filename = item.getName();
+                            uploadingFileExtension = FilenameUtils.getExtension(filename);
+                            item.write(imageTempFile);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new RuntimeException("Unable to write uploading image to temp file", ex);
+                }
+                ChapterImage chapterImage = volumeImages.get(Integer.parseInt(multipartParameters.get("index")));
+                if (chapterImage == null)
+                {
+                    throw new IllegalArgumentException("Bad index " + multipartParameters.get("index"));
+                }
+
+                ExternalResourceHistory externalResourceHistory = new ExternalResourceHistory();
+                externalResourceHistory.setChapterImage(chapterImage);
+                externalResourceHistory.setVolumeId(volume.getVolumeId());
+                externalResourceHistory.setProjectId(volume.getProjectId());
+                externalResourceHistory.setColoredType(multipartParameters.get("ctype"));
+
+                ApplicationContext context = RuranobeUtils.getApplicationContext();
+                Webpage webpage = context.getWebpageByPageClass(this.getPage().getClass().getName());
+                RuraImage image = new RuraImage(imageTempFile, uploadingFileExtension, filename);
+                List<ExternalResource> externalResources = ImageServices.uploadImage(image, webpage.getImageStorages(),
+                        externalResourceHistory, new ImmutableMap.Builder<String, String>()
+                                .put("project", volume.getUrl().split("/", -1)[0])
+                                .put("volume", volume.getUrl().split("/", -1)[1])
+                                .build());
+                ExternalResource externalResource = externalResources.iterator().next();
+                if (Strings.isEqual(multipartParameters.get("ctype"), "main"))
+                {
+                    chapterImage.setNonColoredImage(externalResource);
+                }
+                else if (Strings.isEqual(multipartParameters.get("ctype"), "color"))
+                {
+                    chapterImage.setColoredImage(externalResource);
+                }
+                else
+                {
+                    throw new IllegalArgumentException(
+                            String.format("Unknown value %s of ctype parameter", multipartParameters.get("ctype")));
+                }
+                imageTempFile.delete();
+
+                responseString.put("index", multipartParameters.get("index"));
+            }
+            catch (Exception ex)
+            {
+                responseString.put("error", ex.toString());
+            }
+
+            IResource jsonResource = new ByteArrayResource("text/plain", responseString.toString().getBytes());
+            IRequestHandler requestHandler = new ResourceRequestHandler(jsonResource, null);
+            requestHandler.respond(getRequestCycle());
+        }
     }
 
     private void reinitAllChapters()

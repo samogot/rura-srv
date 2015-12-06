@@ -12,7 +12,7 @@ public class ChapterImage implements Serializable
     private ExternalResource coloredImage;
     private ExternalResource nonColoredImage;
     private Integer orderNumber;
-    private Boolean adult;
+    private boolean adult = false;
 
     public ChapterImage()
     {
@@ -83,12 +83,12 @@ public class ChapterImage implements Serializable
         this.nonColoredImage = nonColoredImage;
     }
 
-    public Boolean getAdult()
+    public boolean getAdult()
     {
         return adult;
     }
 
-    public void setAdult(Boolean adult)
+    public void setAdult(boolean adult)
     {
         this.adult = adult;
     }

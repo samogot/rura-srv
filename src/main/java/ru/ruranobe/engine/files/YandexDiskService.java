@@ -9,6 +9,10 @@ import ru.ruranobe.engine.image.RuraImage;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class YandexDiskService
 {
@@ -19,7 +23,24 @@ public class YandexDiskService
         {
             throw new IllegalArgumentException("AccessToken is required for YandexDisk. Correct configuration file.");
         }
+        if (Strings.isEmpty(fileStorageService.getUploadDir()))
+        {
+            throw new IllegalArgumentException("UploadDir is required for YandexDisk. Correct configuration file.");
+        }
+        if (Strings.isEmpty(fileStorageService.getPublicFolder()))
+        {
+            throw new IllegalArgumentException("PublicFolder is required for YandexDisk. Correct configuration file.");
+        }
         YANDEX_DISK_ACCESS_TOKEN = fileStorageService.getAccessToken();
+        YANDEX_DISK_UPLOAD_DIR = fileStorageService.getUploadDir();
+        try
+        {
+            YANDEX_DISK_PUBLIC_FOLDER = URLEncoder.encode(fileStorageService.getPublicFolder(), "UTF-8");
+        }
+        catch (UnsupportedEncodingException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     public static RuraImage uploadFile(RuraImage image, ImageStorage storage)
@@ -27,7 +48,7 @@ public class YandexDiskService
         DataOutputStream out = null;
         try
         {
-            String uploadLink = requestLinkForUpload(image.getPath() + "/" + image.getTitle());
+            String uploadLink = requestLinkForUpload(YANDEX_DISK_UPLOAD_DIR + image.getPath() + "/" + image.getFilename());
             URL url = new URL(uploadLink);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
@@ -48,9 +69,19 @@ public class YandexDiskService
             {
                 throw new RuntimeException("Uploading failed. Received response code " + responseCode);
             }
+            try
+            {
 
-            image.setPathOnImageServiceSystem(StorageService.YANDEX_DISK,
-                    image.getPath() + "/" + image.getTitle() + "." + image.getExtension());
+                String previewUrl = URLDecoder.decode(getPreviewUrl(image.getPath() + "/" + image.getFilename()), "UTF-8");
+                image.setPathOnImageServiceSystem(StorageService.YANDEX_DISK,
+                        previewUrl.replace("/preview/", "/disk/"));
+                image.setThumbnailPathOnImageServiceSystem(StorageService.YANDEX_DISK,
+                        previewUrl.replaceAll("%", "%%").replace("&size=S&", "&size=%sx99999&"));
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                throw new RuntimeException(e);
+            }
             return image;
         }
         catch (Exception ex)
@@ -73,10 +104,79 @@ public class YandexDiskService
         }
     }
 
+    private static void checkAndCreateFolder(Path path)
+            throws IOException, JSONException
+    {
+        URL url = new URL("https://cloud-api.yandex.net/v1/disk/resources/?path=" + URLEncoder.encode(path.toString(), "UTF-8"));
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Authorization", YANDEX_DISK_ACCESS_TOKEN);
+        if (connection.getResponseCode() != 200)
+        {
+            checkAndCreateFolder(path.getParent());
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("PUT");
+            connection.setRequestProperty("Authorization", YANDEX_DISK_ACCESS_TOKEN);
+            connection.getResponseCode();
+        }
+    }
+
+    private static String getPreviewUrl(String path)
+            throws IOException, JSONException
+    {
+        return getPreviewUrl(path, 2);
+    }
+
+    private static String getPreviewUrl(String path, int count)
+            throws IOException, JSONException
+    {
+        URL url = new URL("https://cloud-api.yandex.net/v1/disk/public/resources/?public_key=" + YANDEX_DISK_PUBLIC_FOLDER
+                          + "&fields=preview&path=" + URLEncoder.encode(path, "UTF-8"));
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Authorization", YANDEX_DISK_ACCESS_TOKEN);
+        int responseCode = connection.getResponseCode();
+
+        if (responseCode == 200)
+        {
+            BufferedReader input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+            while ((inputLine = input.readLine()) != null)
+            {
+                response.append(inputLine);
+            }
+            input.close();
+
+
+            JSONObject jsonResponse = new JSONObject(response.toString());
+            if (jsonResponse.has("preview"))
+            {
+                return jsonResponse.getString("preview");
+            }
+            else if (count > 0)
+            {
+                return getPreviewUrl(path, --count);
+            }
+            else
+            {
+                return YANDEX_DISK_PUBLIC_FOLDER + path;
+            }
+        }
+        else
+        {
+            throw new RuntimeException("Irregular response code " + responseCode + " received while sending GET to " + url);
+        }
+    }
+
     private static String requestLinkForUpload(String path)
             throws IOException, JSONException
     {
-        URL url = new URL("https://cloud-api.yandex.net/v1/disk/resources/upload/?overwrite=true&path=" + path);
+        checkAndCreateFolder(Paths.get(path).getParent());
+
+
+        URL url = new URL("https://cloud-api.yandex.net/v1/disk/resources/upload/?overwrite=true&path=" + URLEncoder.encode(path, "UTF-8"));
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
         connection.setRequestMethod("GET");
@@ -104,5 +204,7 @@ public class YandexDiskService
         }
     }
 
+    public static String YANDEX_DISK_UPLOAD_DIR;
+    public static String YANDEX_DISK_PUBLIC_FOLDER;
     public static String YANDEX_DISK_ACCESS_TOKEN;
 }

@@ -20,6 +20,8 @@ import ru.ruranobe.engine.image.ImageServices;
 import ru.ruranobe.engine.image.RuraImage;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.entities.tables.ExternalResource;
+import ru.ruranobe.mybatis.entities.tables.ExternalResourceHistory;
+import ru.ruranobe.mybatis.entities.tables.Project;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -43,9 +45,9 @@ public class BannerUploadComponent extends ImageUploaderComponent
     }
 
     @Override
-    protected void pocessUpload(HttpServletRequest request)
+    protected void processUpload(HttpServletRequest request)
     {
-        super.pocessUpload(request);
+        super.processUpload(request);
         if (ServletFileUpload.isMultipartContent(request))
         {
             File imageTempFile;
@@ -77,10 +79,14 @@ public class BannerUploadComponent extends ImageUploaderComponent
                 throw new RuntimeException("Unable to write uploading image to temp file", ex);
             }
 
+            ExternalResourceHistory externalResourceHistory = new ExternalResourceHistory();
+            externalResourceHistory.setProjectId(((Project) getDefaultModelObject()).getProjectId());
+
             ApplicationContext context = RuranobeUtils.getApplicationContext();
             Webpage webpage = context.getWebpageByPageClass(this.getPage().getClass().getName());
             RuraImage image = new RuraImage(imageTempFile, uploadingFileExtension, filename);
-            List<ExternalResource> externalResources = ImageServices.uploadImage(image, webpage.getImageStorages(), getContextVariables());
+            List<ExternalResource> externalResources = ImageServices.uploadImage(image, webpage.getImageStorages(),
+                    externalResourceHistory, getContextVariables());
             ExternalResource externalResource = externalResources.iterator().next();
             setDefaultModelObject(externalResource);
             imageTempFile.delete();
@@ -104,12 +110,13 @@ public class BannerUploadComponent extends ImageUploaderComponent
         }
     }
 
+
     public BannerUploadComponent(String id)
     {
         super(id);
     }
 
-    public BannerUploadComponent(String id, IModel<?> model)
+    public BannerUploadComponent(String id, IModel<Project> model)
     {
         super(id, model);
     }

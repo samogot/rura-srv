@@ -22,7 +22,7 @@ public class ProjectFormItemPanel extends Panel
         add(new TextField<String>("title").setRequired(true).setLabel(Model.of("Заголовок")));
         add(new CheckBox("projectHidden"));
         add(new CheckBox("bannerHidden"));
-        add(new BannerUploadComponent("image").setContextVariables(new ImmutableMap.Builder<String, String>()
+        add(new BannerUploadComponent("image", model).setContextVariables(new ImmutableMap.Builder<String, String>()
                 .put("project", model.getObject().getUrl())
                 .build()));
     }

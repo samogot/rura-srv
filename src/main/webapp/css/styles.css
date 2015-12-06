@@ -960,7 +960,7 @@ button.loginClose {
 
 .list-group-item img,
 .list-group-item canvas {
-    height: 32px;
+    max-height: 32px;
     margin: 0 auto;
     max-width: 50px;
 }
@@ -1872,6 +1872,24 @@ table.rc-table-resizing thead > th > a {
 .admin-header.affix {
     position: fixed;
     top: 0px;
+}
+
+@media (min-width: 768px) {
+    .admin-header {
+        width: 480px;
+    }
+}
+
+@media (min-width: 992px) {
+    .admin-header {
+        width: 700px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .admin-header {
+        width: 900px;
+    }
 }
 
 form.admin-block {

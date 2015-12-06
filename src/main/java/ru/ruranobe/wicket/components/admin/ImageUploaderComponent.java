@@ -80,7 +80,7 @@ public class ImageUploaderComponent extends Panel implements ILabelProvider
             @Override
             public void onRequest()
             {
-                pocessUpload((HttpServletRequest) getRequest().getContainerRequest());
+                processUpload((HttpServletRequest) getRequest().getContainerRequest());
             }
 
             @Override
@@ -92,7 +92,7 @@ public class ImageUploaderComponent extends Panel implements ILabelProvider
         input.setOutputMarkupId(true);
     }
 
-    protected void pocessUpload(HttpServletRequest request)
+    protected void processUpload(HttpServletRequest request)
     {
     }
 

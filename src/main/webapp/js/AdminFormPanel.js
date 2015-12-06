@@ -14,13 +14,25 @@ $(window).on('reinitAffix', function () {
 $(document).on('click', '.feedbackPanel li', function () {
     $(this).detach();
 });
+
+function setFeedbackLiFadeOut() {
+    var $li = $(this);
+    setTimeout(function () {
+        $li.fadeOut('slow', function () {
+            $li.detach();
+        });
+    }, 5000);
+}
+
 function updateFeedbackPanelTimeout(panelOrForm) {
-    $(panelOrForm).find('.feedbackPanel').find('li').each(function () {
-        var li = $(this);
-        setTimeout(function () {
-            li.fadeOut('slow', function () {
-                li.detach();
-            });
-        }, 5000);
-    });
+    $(panelOrForm).find('.feedbackPanel').find('li').each(setFeedbackLiFadeOut);
+}
+
+function addAlert(form, style, text) {
+    $li = $('<li class="feedbackPanel' + style + '"><span class="feedbackPanel' + style + '">' + text + '</span></li>');
+    $feedbackPanel = $(form).find('.feedbackPanel');
+    if (!$feedbackPanel.length)
+        $feedbackPanel = $('<ul class="feedbackPanel">').appendTo($(form).find('.admin-header div:last-child'));
+    $feedbackPanel.append($li);
+    setFeedbackLiFadeOut.call($li);
 }

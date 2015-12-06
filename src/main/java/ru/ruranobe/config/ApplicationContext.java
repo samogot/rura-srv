@@ -37,7 +37,8 @@ public class ApplicationContext
                 {
                     String serviceName = imageStorage.elementText(IMAGE_STORAGE_SERVICE_NAME);
                     String storagePath = imageStorage.elementText(IMAGE_STORAGE_STORAGE_PATH);
-                    webpageBuilder.addImageStorage(new ImageStorage(serviceName, storagePath));
+                    String storageFileName = imageStorage.elementText(IMAGE_STORAGE_STORAGE_FILE_NAME);
+                    webpageBuilder.addImageStorage(new ImageStorage(serviceName, storagePath, storageFileName));
                 }
                 pageClassToWebpage.put(pageClass, webpageBuilder.build());
             }
@@ -59,6 +60,8 @@ public class ApplicationContext
                 String clientId = fileStorageService.elementText(FILE_STORAGE_CLIENTID);
                 String clientSecret = fileStorageService.elementText(FILE_STORAGE_CLIENT_SECRET);
                 String accessToken = fileStorageService.elementText(FILE_STORAGE_ACCESS_TOKEN);
+                String uploadDir = fileStorageService.elementText(FILE_STORAGE_UPLOAD_DIR);
+                String publicFolder = fileStorageService.elementText(FILE_STORAGE_PUBLIC_FOLDER);
                 /*List<String> fileExtensions = new ArrayList<String>();
                 List<Element> fileExtensionsDom = fileStorageService.selectNodes(FILE_STORAGE_FILE_EXTENSION);
                 for (Element fileExtensionDom : fileExtensionsDom)
@@ -75,6 +78,8 @@ public class ApplicationContext
                         .setClientId(clientId)
                         .setClientSecret(clientSecret)
                         .setAccessToken(accessToken)
+                        .setUploadDir(uploadDir)
+                        .setPublicFolder(publicFolder)
                         .build());
             }
         }
@@ -91,11 +96,14 @@ public class ApplicationContext
     private static final String WEBPAGE_IMAGE_STORAGE = "ImageStorage";
     private static final String IMAGE_STORAGE_SERVICE_NAME = "ServiceName";
     private static final String IMAGE_STORAGE_STORAGE_PATH = "StoragePath";
+    private static final String IMAGE_STORAGE_STORAGE_FILE_NAME = "StorageFileName";
     private static final String FILE_STORAGE_CLIENTID = "ClientId";
     private static final String FILE_STORAGE_CLIENT_SECRET = "ClientSecret";
     private static final String FILE_STORAGE_SERVICE_NAME = "ServiceName";
     private static final String FILE_STORAGE_REFRESH_TOKEN = "RefreshToken";
     private static final String FILE_STORAGE_ACCESS_TOKEN = "AccessToken";
+    private static final String FILE_STORAGE_UPLOAD_DIR = "UploadDir";
+    private static final String FILE_STORAGE_PUBLIC_FOLDER = "PublicFolder";
     /*private static final String FILE_STORAGE_LOGIN = "Login";
     private static final String FILE_STORAGE_PASSWORD = "Password";
     private static final String FILE_STORAGE_FILE_EXTENSION = "FileExtension";*/
