@@ -14,6 +14,17 @@ import java.util.Map;
 
 public class RuraImage
 {
+
+    public String getFilename()
+    {
+        return filename;
+    }
+
+    public void setFilename(String filename)
+    {
+        this.filename = filename;
+    }
+
     public RuraImage(File imageFile, String extension, String title)
     {
         this.imageFile = imageFile;
@@ -81,6 +92,16 @@ public class RuraImage
         imageServiceSystemToUrl.put(storageService, pathOnImageServiceSystem);
     }
 
+    public String getThumbnailPathOnImageServiceSystem(StorageService storageService)
+    {
+        return imageServiceSystemToThumbnailUrl.get(storageService);
+    }
+
+    public void setThumbnailPathOnImageServiceSystem(StorageService storageService, String pathOnImageServiceSystem)
+    {
+        imageServiceSystemToThumbnailUrl.put(storageService, pathOnImageServiceSystem);
+    }
+
     public void rewind()
     {
         loadInputStream();
@@ -125,9 +146,12 @@ public class RuraImage
     private InputStream imageStream;
     private final File imageFile;
     private String path;
+    private String filename;
     private final String mimeType;
     private final String extension;
     private final String title;
     private final Map<StorageService, String> imageServiceSystemToUrl =
+            new EnumMap<StorageService, String>(StorageService.class);
+    private final Map<StorageService, String> imageServiceSystemToThumbnailUrl =
             new EnumMap<StorageService, String>(StorageService.class);
 }

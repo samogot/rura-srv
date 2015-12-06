@@ -87,21 +87,21 @@ public abstract class AdminAffixedListPanel<T> extends AdminListPanel<T>
     protected void onAddItem(T newItem, AjaxRequestTarget target, Form form)
     {
         ListItem<T> formBlockListItem = new ListItem<T>(formBlockItemRepeater.size(), new CompoundPropertyModel<T>(newItem));
-        initializeFormBlockListItem(formBlockListItem);
         formBlockItemRepeater.add(formBlockListItem);
-        target.prependJavaScript(String.format(";addFormItemStub('%s', '%s');", formBlockListItem.getMarkupId(), form.getMarkupId()));
+        initializeFormBlockListItem(formBlockListItem);
+        target.prependJavaScript(String.format("addFormItemStub('%s', '%s')", formBlockListItem.getMarkupId(), form.getMarkupId()));
         target.add(formBlockListItem);
 
         ListItem<T> selectorBlockListItem = new ListItem<T>(selectorBlockItemRepeater.size(), new CompoundPropertyModel<T>(newItem));
-        initializeSelectorBlockListItem(selectorBlockListItem);
         selectorBlockItemRepeater.add(selectorBlockListItem);
-        target.prependJavaScript(String.format(";addSelectorItemStub('%s', '%s');", selectorBlockListItem.getMarkupId(), form.getMarkupId()));
+        initializeSelectorBlockListItem(selectorBlockListItem);
+        target.prependJavaScript(String.format("addSelectorItemStub('%s', '%s')", selectorBlockListItem.getMarkupId(), form.getMarkupId()));
         target.add(selectorBlockListItem);
 
-        target.appendJavaScript(String.format(";$('#%s').click();", selectorBlockListItem.getMarkupId()));
+        target.appendJavaScript(String.format("$('#%s').click()", selectorBlockListItem.getMarkupId()));
         if (sortable)
         {
-            target.appendJavaScript(String.format(";$('#%s .list-group.select.sortable').trigger('sortupdate');", form.getMarkupId()));
+            target.appendJavaScript(String.format("$('#%s .list-group.select.sortable').trigger('sortupdate')", form.getMarkupId()));
         }
 
     }
@@ -169,6 +169,6 @@ public abstract class AdminAffixedListPanel<T> extends AdminListPanel<T>
     }
 
     private boolean sortable;
-    private PropertyListView<T> formBlockItemRepeater;
-    private PropertyListView<T> selectorBlockItemRepeater;
+    protected PropertyListView<T> formBlockItemRepeater;
+    protected PropertyListView<T> selectorBlockItemRepeater;
 }

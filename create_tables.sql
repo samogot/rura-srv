@@ -12,6 +12,7 @@ DROP TABLE IF EXISTS volume_release_activities;
 DROP TABLE IF EXISTS volumes;
 DROP TABLE IF EXISTS projects;
 DROP TABLE IF EXISTS external_resources;
+DROP TABLE IF EXISTS external_resources_history;
 DROP TABLE IF EXISTS texts_history;
 DROP TABLE IF EXISTS texts;
 DROP TABLE IF EXISTS team_members;
@@ -36,14 +37,14 @@ CREATE TABLE users
   #--user_settings
   converter_type           ENUM('fb2',
                                 'docx',
-								'epub')       NOT NULL,
+                                'epub') NOT NULL,
   navigation_type          ENUM('Главам',
                                 'Подглавам')  NOT NULL,
   convert_with_imgs        BOOL               NOT NULL,
   adult                    BOOL               NOT NULL,
   prefer_colored_imgs      BOOL               NOT NULL,
   convert_imgs_size        INT(11)            NOT NULL,
-  forum_user_id            INT(11) UNSIGNED   DEFAULT NULL
+  forum_user_id            INT(11) UNSIGNED DEFAULT NULL
 );
 
 CREATE TABLE texts
@@ -87,7 +88,7 @@ CREATE TABLE projects
   onevolume      BOOL          NOT NULL,
   franchise      TEXT,
   annotation     TEXT,
-  forum_id       INT(11) UNSIGNED DEFAULT NULL
+  forum_id INT(11) UNSIGNED DEFAULT NULL
 );
 
 CREATE TABLE volumes
@@ -118,25 +119,25 @@ CREATE TABLE volumes
                           'Авторские додзинси',
                           'Другое')      NOT NULL,
   volume_status      ENUM(
-                          -- не в работе
-                          'on_hold',
-                          'no_eng',
-                          'freeze',
-                          'queue',
-                            -- специальный статус
-                          'hidden',
-                          'auto',
-                          -- сторонний
-                          'external_dropped',
-                          'external_active',
-                          'external_done',
-                          -- в работе
-                          'ongoing',
-                          'translating',
-                          'proofread',
-                          -- опубликован
-                          'decor',
-                          'done')        NOT NULL,
+    -- не в работе
+    'on_hold',
+    'no_eng',
+    'freeze',
+    'queue',
+    -- специальный статус
+    'hidden',
+    'auto',
+    -- сторонний
+    'external_dropped',
+    'external_active',
+    'external_done',
+    -- в работе
+    'ongoing',
+    'translating',
+    'proofread',
+    -- опубликован
+    'decor',
+    'done')                       NOT NULL,
   volume_status_hint VARCHAR(255),
   adult              BOOL                NOT NULL,
   annotation         TEXT,
@@ -170,11 +171,23 @@ CREATE TABLE chapter_images
 CREATE TABLE external_resources
 (
   resource_id   INT(11) PRIMARY KEY AUTO_INCREMENT,
-  user_id       INT(11)             NOT NULL,
-  mime_type     VARCHAR(255)        NOT NULL,
-  url           VARCHAR(255) UNIQUE NOT NULL,
+  user_id       INT(11)      NOT NULL,
+  mime_type     VARCHAR(255) NOT NULL,
+  url           VARCHAR(511) NOT NULL,
+  thumbnail     VARCHAR(511) NOT NULL,
   title         VARCHAR(255),
-  uploaded_when DATETIME            NOT NULL
+  uploaded_when DATETIME     NOT NULL,
+  history_id    INT(11)
+);
+
+CREATE TABLE external_resources_history
+(
+  history_id       INT(11) PRIMARY KEY AUTO_INCREMENT,
+  uploaded_when    DATETIME              NOT NULL,
+  colored_type     ENUM('main', 'color') NOT NULL,
+  project_id       INT(11)               NOT NULL,
+  volume_id        INT(11),
+  chapter_image_id INT(11)
 );
 
 CREATE TABLE volume_activities
@@ -223,54 +236,61 @@ CREATE TABLE updates
   description VARCHAR(255)
 );
 
-create table texts_history
+CREATE TABLE texts_history
 (
   current_text_id INT(11) PRIMARY KEY AUTO_INCREMENT,
   previous_text_id INT(11),
-  insertion_time DATETIME NOT NULL
+  insertion_time  DATETIME NOT NULL
 );
 
-create table bookmarks
+CREATE TABLE bookmarks
 (
-  bookmark_id INT(11) primary key auto_increment,
-  chapter_id int(11),
-  user_id int(11) NOT NULL,
+  bookmark_id  INT(11) PRIMARY KEY AUTO_INCREMENT,
+  chapter_id   INT(11),
+  user_id      INT(11)  NOT NULL,
   paragraph_id VARCHAR(255) NOT NULL,
   created_when DATETIME NOT NULL
 );
 
-create table paragraphs
+CREATE TABLE paragraphs
 (
-  paragraph_id varchar(255) primary key,
-  paragraph_text TEXT NOT NULL,
-  text_id int(11) NOT NULL
+  paragraph_id   VARCHAR(255) PRIMARY KEY,
+  paragraph_text TEXT    NOT NULL,
+  text_id        INT(11) NOT NULL
 );
 
-alter table paragraphs add constraint fk_paragraph_text_id foreign key (text_id) references texts(text_id);
+ALTER TABLE paragraphs ADD CONSTRAINT fk_paragraph_text_id FOREIGN KEY (text_id) REFERENCES texts (text_id);
 
-alter table bookmarks add constraint fk_bookmark_paragraph_id foreign key (paragraph_id) references paragraphs(paragraph_id);
+ALTER TABLE bookmarks ADD CONSTRAINT fk_bookmark_paragraph_id FOREIGN KEY (paragraph_id) REFERENCES paragraphs (paragraph_id);
 
-alter table orphus_comments add constraint fk_orphus_paragraph_id foreign key (paragraph) references paragraphs(paragraph_id);
+ALTER TABLE orphus_comments ADD CONSTRAINT fk_orphus_paragraph_id FOREIGN KEY (paragraph) REFERENCES paragraphs (paragraph_id);
 
-alter table bookmarks add constraint fk_user_bookmark_id foreign key (user_id) references users(user_id);
+ALTER TABLE bookmarks ADD CONSTRAINT fk_user_bookmark_id FOREIGN KEY (user_id) REFERENCES users (user_id);
 
-alter table texts_history add constraint fk_current_text_id foreign key (current_text_id) references texts (text_id);
+ALTER TABLE texts_history ADD CONSTRAINT fk_current_text_id FOREIGN KEY (current_text_id) REFERENCES texts (text_id);
 
-alter table texts_history add constraint fk_previous_text_id foreign key (previous_text_id) references texts (text_id);
+ALTER TABLE texts_history ADD CONSTRAINT fk_previous_text_id FOREIGN KEY (previous_text_id) REFERENCES texts (text_id);
 
 ALTER TABLE chapter_images ADD CONSTRAINT fk_colored_image_id FOREIGN KEY (colored_image_id) REFERENCES external_resources (resource_id);
 
 ALTER TABLE chapter_images ADD CONSTRAINT fk_non_colored_image_id FOREIGN KEY (non_colored_image_id) REFERENCES external_resources (resource_id);
 
-ALTER TABLE chapter_images ADD CONSTRAINT fk_volume_id FOREIGN KEY (volume_id) REFERENCES volumes (volume_id) ON DELETE CASCADE;
+ALTER TABLE chapter_images ADD CONSTRAINT fk_volume_id FOREIGN KEY (volume_id) REFERENCES volumes (volume_id)
+  ON DELETE CASCADE;
 
 ALTER TABLE chapter_images ADD CONSTRAINT fk_chapter_id FOREIGN KEY (chapter_id) REFERENCES chapters (chapter_id);
 
 
 ALTER TABLE external_resources ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (user_id);
 
+ALTER TABLE external_resources ADD CONSTRAINT fk_history_id FOREIGN KEY (history_id) REFERENCES external_resources_history (history_id);
 
-ALTER TABLE chapters ADD CONSTRAINT fk_volume_id2 FOREIGN KEY (volume_id) REFERENCES volumes (volume_id) ON DELETE CASCADE;
+ALTER TABLE external_resources_history ADD CONSTRAINT fk_history_project_id FOREIGN KEY (project_id) REFERENCES projects (project_id);
+ALTER TABLE external_resources_history ADD CONSTRAINT fk_history_volume_id FOREIGN KEY (volume_id) REFERENCES volumes (volume_id);
+ALTER TABLE external_resources_history ADD CONSTRAINT fk_history_chapter_image_id FOREIGN KEY (chapter_image_id) REFERENCES chapter_images (chapter_image_id);
+
+ALTER TABLE chapters ADD CONSTRAINT fk_volume_id2 FOREIGN KEY (volume_id) REFERENCES volumes (volume_id)
+  ON DELETE CASCADE;
 
 ALTER TABLE chapters ADD CONSTRAINT fk_text_id FOREIGN KEY (text_id) REFERENCES texts (text_id);
 
@@ -307,7 +327,8 @@ ALTER TABLE team_members ADD CONSTRAINT fk_team_id FOREIGN KEY (team_id) REFEREN
 ALTER TABLE team_members ADD CONSTRAINT fk_user_id3 FOREIGN KEY (user_id) REFERENCES users (user_id);
 
 
-ALTER TABLE volume_release_activities ADD CONSTRAINT fk_ra_volume_id FOREIGN KEY (volume_id) REFERENCES volumes (volume_id) ON DELETE CASCADE;
+ALTER TABLE volume_release_activities ADD CONSTRAINT fk_ra_volume_id FOREIGN KEY (volume_id) REFERENCES volumes (volume_id)
+  ON DELETE CASCADE;
 
 ALTER TABLE volume_release_activities ADD CONSTRAINT fk_member_id FOREIGN KEY (member_id) REFERENCES team_members (member_id);
 

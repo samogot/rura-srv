@@ -6,11 +6,33 @@ import java.util.Date;
 public class ExternalResource implements Serializable
 {
 
+    public int getHistoryId()
+    {
+        return historyId;
+    }
+
+    public void setHistoryId(int historyId)
+    {
+        this.historyId = historyId;
+    }
+
+    public String getThumbnail()
+    {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail)
+    {
+        this.thumbnail = thumbnail;
+    }
+
     private static final long serialVersionUID = 1L;
     private int resourceId;
     private int userId;
+    private int historyId;
     private String mimeType;
     private String url;
+    private String thumbnail;
     private String title;
     private Date uploadedWhen;
 

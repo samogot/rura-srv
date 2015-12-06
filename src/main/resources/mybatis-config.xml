@@ -18,6 +18,7 @@
         <mapper resource="ru/ruranobe/mybatis/mappers/UsersMapper.xml"/>
         <mapper resource="ru/ruranobe/mybatis/mappers/OrphusCommentsMapper.xml"/>
         <mapper resource="ru/ruranobe/mybatis/mappers/ExternalResourcesMapper.xml"/>
+        <mapper resource="ru/ruranobe/mybatis/mappers/ExternalResourcesHistoryMapper.xml"/>
         <mapper resource="ru/ruranobe/mybatis/mappers/ChapterImagesMapper.xml"/>
         <mapper resource="ru/ruranobe/mybatis/mappers/ChaptersMapper.xml"/>
         <mapper resource="ru/ruranobe/mybatis/mappers/ProjectsMapper.xml"/>

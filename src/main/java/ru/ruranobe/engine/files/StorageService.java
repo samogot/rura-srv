@@ -27,6 +27,7 @@ public enum StorageService
                 YandexDiskService.initializeService(fileStorageService);
                 break;
             case LOCAL_STORAGE:
+                LocalStorageService.initializeService(fileStorageService);
                 break;
         }
     }

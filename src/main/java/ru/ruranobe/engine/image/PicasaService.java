@@ -24,7 +24,9 @@ import ru.ruranobe.engine.files.StorageService;
 import ru.ruranobe.wicket.RuraConstants;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.*;
 
 public class PicasaService
@@ -116,7 +118,7 @@ public class PicasaService
             }
         }
         PhotoEntry photoEntry = new PhotoEntry();
-        photoEntry.setTitle(new PlainTextConstruct(toUpload.getTitle()));
+        photoEntry.setTitle(new PlainTextConstruct(toUpload.getFilename()));
         BaseMediaSource imageMediaSource =
                 new MediaStreamSource(toUpload.getInputStream(), toUpload.getMimeType());
         photoEntry.setMediaSource(imageMediaSource);
@@ -141,8 +143,16 @@ public class PicasaService
                 throw new RuntimeException(ex2);
             }
         }
-        toUpload.setPathOnImageServiceSystem(StorageService.PICASA,
-                photoEntry.getMediaThumbnails().get(0).getUrl());
+        try
+        {
+            String origUrl = URLDecoder.decode(photoEntry.getMediaThumbnails().get(0).getUrl(), "UTF-8");
+            toUpload.setPathOnImageServiceSystem(StorageService.PICASA, origUrl.replace("/s72/", "/"));
+            toUpload.setThumbnailPathOnImageServiceSystem(StorageService.PICASA, origUrl.replaceAll("%", "%%").replace("/s72/", "/w%d/"));
+        }
+        catch (UnsupportedEncodingException e)
+        {
+            throw new RuntimeException(e);
+        }
         return toUpload;
     }
 
