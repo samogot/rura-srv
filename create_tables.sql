@@ -144,6 +144,15 @@ CREATE TABLE volumes
   topic_id           INT(11) UNSIGNED DEFAULT NULL
 );
 
+CREATE TABLE volume_statuses
+(
+  status_id    INT(11) PRIMARY KEY AUTO_INCREMENT,
+  full_text    VARCHAR(32),
+  label_text   VARCHAR(32),
+  label_class  ENUM('default', 'primary', 'success', 'info', 'warning', 'danger'),
+  option_group ENUM('basic', 'external', 'not_in_work', 'in_work', 'published', 'licensed')
+);
+
 CREATE TABLE chapters
 (
   chapter_id   INT(11) PRIMARY KEY AUTO_INCREMENT,
@@ -152,7 +161,7 @@ CREATE TABLE chapters
   url          VARCHAR(32) UNIQUE,
   title        VARCHAR(1023) NOT NULL,
   order_number INT(11)       NOT NULL,
-  published    BOOL          NOT NULL,
+  publish_date DATETIME,
   nested       BOOL          NOT NULL
 );
 
