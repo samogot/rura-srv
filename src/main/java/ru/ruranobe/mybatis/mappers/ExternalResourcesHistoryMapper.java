@@ -4,8 +4,7 @@ import ru.ruranobe.mybatis.entities.tables.ExternalResourceHistory;
 
 public interface ExternalResourcesHistoryMapper
 {
+    int insertExternalResourceHistory(ExternalResourceHistory externalResourceHistory);
 
-    public int insertExternalResourceHistory(ExternalResourceHistory externalResourceHistory);
-
-    public void updateExternalResourceHistory(ExternalResourceHistory externalResourceHistory);
+    void updateExternalResourceHistory(ExternalResourceHistory externalResourceHistory);
 }

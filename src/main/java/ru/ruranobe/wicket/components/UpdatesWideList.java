@@ -20,9 +20,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by Samogot on 04.05.2015.
- */
 public class UpdatesWideList extends Panel
 {
 
@@ -32,35 +29,42 @@ public class UpdatesWideList extends Panel
 
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
         SqlSession session = sessionFactory.openSession();
-        UpdatesMapper updatesMapperCacheable = CachingFacade.getCacheableMapper(session, UpdatesMapper.class);
-        List<Update> updates = updatesMapperCacheable.getLastUpdatesBy(projectId, volumeId, updateType, limitFrom, limitTo);
-        ListView<Update> updatesView = new ListView<Update>("updatesView", updates)
+        try
         {
-
-            @Override
-            protected void populateItem(ListItem<Update> listItem)
+            UpdatesMapper updatesMapperCacheable = CachingFacade.getCacheableMapper(session, UpdatesMapper.class);
+            List<Update> updates = updatesMapperCacheable.getLastUpdatesBy(projectId, volumeId, updateType, limitFrom, limitTo);
+            ListView<Update> updatesView = new ListView<Update>("updatesView", updates)
             {
-                Update update = listItem.getModelObject();
 
-                String iconDivClassValue = RuraConstants.UPDATE_TYPE_TO_ICON_CLASS.get(update.getUpdateType());
-                Date updateDateValue = update.getShowTime();
-                String updateTitleValue = update.getChapterShortTitle();
-                if (updateTitleValue == null)
+                @Override
+                protected void populateItem(ListItem<Update> listItem)
                 {
-                    updateTitleValue = "Весь том";
-                }
+                    Update update = listItem.getModelObject();
 
-                WebMarkupContainer iconDivClass = new WebMarkupContainer("iconDivClass");
-                iconDivClass.add(new AttributeAppender("class", " " + iconDivClassValue));
-                listItem.add(iconDivClass);
-                SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-                listItem.add(new Label("updateDate", sdf.format(updateDateValue)));
-                BookmarkablePageLink updateLink = update.makeBookmarkablePageLink("updateLink");
-                updateLink.setBody(new Model<String>(update.getVolumeTitle()));
-                listItem.add(updateLink);
-                listItem.add(new Label("updateTitle", updateTitleValue));
-            }
-        };
-        add(updatesView);
+                    String iconDivClassValue = RuraConstants.UPDATE_TYPE_TO_ICON_CLASS.get(update.getUpdateType());
+                    Date updateDateValue = update.getShowTime();
+                    String updateTitleValue = update.getChapterShortTitle();
+                    if (updateTitleValue == null)
+                    {
+                        updateTitleValue = "Весь том";
+                    }
+
+                    WebMarkupContainer iconDivClass = new WebMarkupContainer("iconDivClass");
+                    iconDivClass.add(new AttributeAppender("class", " " + iconDivClassValue));
+                    listItem.add(iconDivClass);
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+                    listItem.add(new Label("updateDate", sdf.format(updateDateValue)));
+                    BookmarkablePageLink updateLink = update.makeBookmarkablePageLink("updateLink");
+                    updateLink.setBody(new Model<String>(update.getVolumeTitle()));
+                    listItem.add(updateLink);
+                    listItem.add(new Label("updateTitle", updateTitleValue));
+                }
+            };
+            add(updatesView);
+        }
+        finally
+        {
+            session.close();
+        }
     }
 }

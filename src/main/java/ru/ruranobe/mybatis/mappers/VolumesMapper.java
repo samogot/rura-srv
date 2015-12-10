@@ -7,19 +7,19 @@ import java.util.List;
 
 public interface VolumesMapper
 {
-    public Volume getVolumeByUrl(String url);
+    Volume getVolumeByUrl(String url);
 
-    public Volume getVolumeNextPrevByUrl(String url);
+    Volume getVolumeNextPrevByUrl(String url);
 
-    public ProjectInfo getInfoByProjectId(int projectId);
+    ProjectInfo getInfoByProjectId(int projectId);
 
-    public List<Volume> getVolumesByProjectId(int projectId);
+    List<Volume> getVolumesByProjectId(int projectId);
 
-    public void updateVolume(Volume volume);
+    void updateVolume(Volume volume);
 
-    public void updateVolumeCovers(Volume volume);
+    void updateVolumeCovers(Volume volume);
 
-    public int insertVolume(Volume volumre);
+    int insertVolume(Volume volumre);
 
-    public void deleteVolume(Integer volumeId);
+    void deleteVolume(Integer volumeId);
 }

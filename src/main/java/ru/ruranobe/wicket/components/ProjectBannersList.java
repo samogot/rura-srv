@@ -39,51 +39,50 @@ public class ProjectBannersList extends Panel
 
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
         SqlSession session = sessionFactory.openSession();
-        ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
-        Collection<Project> projects = projectsMapperCacheable.getAllProjects();
-        List<SimpleEntry<Project, ExternalResource>> projectsList = new ArrayList<SimpleEntry<Project, ExternalResource>>();
-        ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.getCacheableMapper(session, ExternalResourcesMapper.class);
-        for (Project project : projects)
+        try
         {
-            if (!project.isProjectHidden() && !project.isBannerHidden())
-            {
-                ExternalResource image = externalResourcesMapperCacheable.getExternalResourceById(project.getImageId());
-                projectsList.add(new SimpleEntry<Project, ExternalResource>(project, image));
-            }
-        }
-        Collections.sort(projectsList, new Comparator<SimpleEntry<Project, ExternalResource>>()
-        {
-            @Override
-            public int compare(SimpleEntry<Project, ExternalResource> o1, SimpleEntry<Project, ExternalResource> o2)
-            {
-                return o1.getKey().getOrderNumber() - o2.getKey().getOrderNumber();
-            }
-        });
-        if (limit != null)
-        {
-            projectsList.subList(limit, projectsList.size()).clear();
-        }
-        ListView<SimpleEntry<Project, ExternalResource>> bannersList = new ListView<SimpleEntry<Project, ExternalResource>>("bannersList", projectsList)
-        {
-            @Override
-            protected void populateItem(final ListItem<SimpleEntry<Project, ExternalResource>> listItem)
-            {
-                SimpleEntry<Project, ExternalResource> projectExtended = listItem.getModelObject();
-                final ExternalResource imageResource = projectExtended.getValue();
-                final Project project = projectExtended.getKey();
-                BookmarkablePageLink bannerLink = project.makeBookmarkablePageLink("bannerLink");
-                WebMarkupContainer bannerImage = new WebMarkupContainer("bannerImage");
-                if (imageResource != null)
-                {
-                    bannerImage.add(new AttributeModifier("src", imageResource.getUrl()));
+            ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
+            Collection<Project> projects = projectsMapperCacheable.getAllProjects();
+            List<SimpleEntry<Project, ExternalResource>> projectsList = new ArrayList<SimpleEntry<Project, ExternalResource>>();
+            ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.getCacheableMapper(session, ExternalResourcesMapper.class);
+            for (Project project : projects) {
+                if (!project.isProjectHidden() && !project.isBannerHidden()) {
+                    ExternalResource image = externalResourcesMapperCacheable.getExternalResourceById(project.getImageId());
+                    projectsList.add(new SimpleEntry<Project, ExternalResource>(project, image));
                 }
-                bannerImage.add(new AttributeModifier("alt", project.getTitle()));
-                bannerLink.add(new AttributeModifier("title", project.getTitle()));
-                bannerLink.add(bannerImage);
-                listItem.add(bannerLink);
             }
-        };
-        add(bannersList);
-        add(new AttributeAppender("class", " banners"));
+            Collections.sort(projectsList, new Comparator<SimpleEntry<Project, ExternalResource>>() {
+                @Override
+                public int compare(SimpleEntry<Project, ExternalResource> o1, SimpleEntry<Project, ExternalResource> o2) {
+                    return o1.getKey().getOrderNumber() - o2.getKey().getOrderNumber();
+                }
+            });
+            if (limit != null) {
+                projectsList.subList(limit, projectsList.size()).clear();
+            }
+            ListView<SimpleEntry<Project, ExternalResource>> bannersList = new ListView<SimpleEntry<Project, ExternalResource>>("bannersList", projectsList) {
+                @Override
+                protected void populateItem(final ListItem<SimpleEntry<Project, ExternalResource>> listItem) {
+                    SimpleEntry<Project, ExternalResource> projectExtended = listItem.getModelObject();
+                    final ExternalResource imageResource = projectExtended.getValue();
+                    final Project project = projectExtended.getKey();
+                    BookmarkablePageLink bannerLink = project.makeBookmarkablePageLink("bannerLink");
+                    WebMarkupContainer bannerImage = new WebMarkupContainer("bannerImage");
+                    if (imageResource != null) {
+                        bannerImage.add(new AttributeModifier("src", imageResource.getUrl()));
+                    }
+                    bannerImage.add(new AttributeModifier("alt", project.getTitle()));
+                    bannerLink.add(new AttributeModifier("title", project.getTitle()));
+                    bannerLink.add(bannerImage);
+                    listItem.add(bannerLink);
+                }
+            };
+            add(bannersList);
+            add(new AttributeAppender("class", " banners"));
+        }
+        finally
+        {
+            session.close();
+        }
     }
 }

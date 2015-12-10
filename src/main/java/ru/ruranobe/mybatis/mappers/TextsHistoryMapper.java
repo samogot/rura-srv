@@ -4,5 +4,5 @@ import ru.ruranobe.mybatis.entities.tables.TextHistory;
 
 public interface TextsHistoryMapper
 {
-    public void insertTextHistory(TextHistory textHistory);
+    void insertTextHistory(TextHistory textHistory);
 }

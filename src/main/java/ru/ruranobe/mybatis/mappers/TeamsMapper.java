@@ -6,13 +6,13 @@ import java.util.List;
 
 public interface TeamsMapper
 {
-    public Team getTeamById(int teamId);
+    Team getTeamById(int teamId);
 
-    public List<Team> getAllTeams();
+    List<Team> getAllTeams();
 
-    public void insertTeam(Team team);
+    void insertTeam(Team team);
 
-    public void deleteTeam(int teamId);
+    void deleteTeam(int teamId);
 
-    public void updateTeam(Team team);
+    void updateTeam(Team team);
 }

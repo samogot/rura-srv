@@ -13,6 +13,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Bytes;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.ExternalResourcesMapper;
+import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 
 import java.io.File;
 import java.io.IOException;
@@ -76,7 +77,7 @@ public class UploadImage extends WebPage
                 SqlSession session = sessionFactory.openSession();
                 try
                 {
-                    ExternalResourcesMapper externalResourcesMapper = session.getMapper(ExternalResourcesMapper.class);
+                    ExternalResourcesMapper externalResourcesMapper = CachingFacade.getCacheableMapper(session, ExternalResourcesMapper.class);
                     Date uploadedWhen = new Date(System.currentTimeMillis());
                     //TODO: replace 0
                     //       ExternalResource externalResource = new ExternalResource(0, mimeType, externalLink, title, uploadedWhen);

@@ -4,13 +4,13 @@ import ru.ruranobe.mybatis.entities.tables.Text;
 
 public interface TextsMapper
 {
-    public Text getTextById(Integer textId);
+    Text getTextById(Integer textId);
 
-    public Text getHtmlInfoById(Integer textId);
+    Text getHtmlInfoById(Integer textId);
 
-    public void updateText(Text text);
+    void updateText(Text text);
 
-    public int insertText(Text text);
+    int insertText(Text text);
 
-    public void deleteText(Integer textId);
+    void deleteText(Integer textId);
 }

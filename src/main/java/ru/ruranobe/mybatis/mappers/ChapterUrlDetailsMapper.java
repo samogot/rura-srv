@@ -4,5 +4,5 @@ import ru.ruranobe.mybatis.entities.additional.ChapterUrlDetails;
 
 public interface ChapterUrlDetailsMapper
 {
-    public ChapterUrlDetails getChapterUrlDetailsByChapter(Integer chapterId);
+    ChapterUrlDetails getChapterUrlDetailsByChapter(Integer chapterId);
 }

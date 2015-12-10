@@ -13,6 +13,7 @@ import ru.ruranobe.misc.Token;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.UsersMapper;
 import ru.ruranobe.mybatis.entities.tables.User;
+import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 
 import javax.mail.MessagingException;
 
@@ -79,7 +80,7 @@ public class EmailPasswordRecoveryPanel extends Panel
 
                 try
                 {
-                    UsersMapper usersMapper = session.getMapper(UsersMapper.class);
+                    UsersMapper usersMapper = CachingFacade.getCacheableMapper(session, UsersMapper.class);
                     User user = usersMapper.getUserByEmail(email);
                     if (user == null)
                     {

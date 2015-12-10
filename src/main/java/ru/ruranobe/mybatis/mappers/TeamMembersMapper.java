@@ -9,13 +9,13 @@ import java.util.List;
  */
 public interface TeamMembersMapper
 {
-    public TeamMember getTeamMemberById(int memberId);
+    TeamMember getTeamMemberById(int memberId);
 
-    public List<TeamMember> getAllTeamMembers();
+    List<TeamMember> getAllTeamMembers();
 
-    public void insertTeamMember(TeamMember teamMember);
+    void insertTeamMember(TeamMember teamMember);
 
-    public void deleteTeamMember(int teamMemberId);
+    void deleteTeamMember(int teamMemberId);
 
-    public void updateTeamMember(TeamMember teamMember);
+    void updateTeamMember(TeamMember teamMember);
 }

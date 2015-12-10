@@ -6,13 +6,13 @@ import java.util.List;
 
 public interface VolumeActivitiesMapper
 {
-    public VolumeActivity getVolumeActivityById(int activityId);
+    VolumeActivity getVolumeActivityById(int activityId);
 
-    public List<VolumeActivity> getAllVolumeActivities();
+    List<VolumeActivity> getAllVolumeActivities();
 
-    public void insertVolumeActivity(VolumeActivity volumeActivity);
+    void insertVolumeActivity(VolumeActivity volumeActivity);
 
-    public void deleteVolumeActivity(int activityId);
+    void deleteVolumeActivity(int activityId);
 
-    public void updateVolumeActivity(VolumeActivity volumeActivity);
+    void updateVolumeActivity(VolumeActivity volumeActivity);
 }

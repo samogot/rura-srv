@@ -16,6 +16,7 @@ import ru.ruranobe.misc.Token;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.UsersMapper;
 import ru.ruranobe.mybatis.entities.tables.User;
+import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 
 import java.util.Date;
 
@@ -149,7 +150,7 @@ public class RegistrationPanel extends Panel
 
                 try
                 {
-                    UsersMapper usersMapper = session.getMapper(UsersMapper.class);
+                    UsersMapper usersMapper = CachingFacade.getCacheableMapper(session, UsersMapper.class);
                     if (usersMapper.getUserByUsername(username) != null)
                     {
                         error("Пользователь с такой учетной записью уже зарегистрирован в системе.");

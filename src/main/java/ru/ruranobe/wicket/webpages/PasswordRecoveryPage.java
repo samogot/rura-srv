@@ -9,6 +9,7 @@ import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.UsersMapper;
 import ru.ruranobe.mybatis.entities.tables.User;
+import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.components.PasswordRecoveryPanel;
 
 public class PasswordRecoveryPage extends WebPage
@@ -31,7 +32,7 @@ public class PasswordRecoveryPage extends WebPage
 
         try
         {
-            UsersMapper usersMapper = session.getMapper(UsersMapper.class);
+            UsersMapper usersMapper = CachingFacade.getCacheableMapper(session, UsersMapper.class);
             User user = usersMapper.getUserByPassRecoveryToken(passRecoveryToken);
             if (user == null)
             {

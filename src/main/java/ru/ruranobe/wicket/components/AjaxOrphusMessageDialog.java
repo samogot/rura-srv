@@ -19,6 +19,7 @@ import org.apache.wicket.resource.CoreLibrariesContributor;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.OrphusCommentsMapper;
 import ru.ruranobe.mybatis.entities.tables.OrphusComment;
+import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 
 import java.util.Date;
 
@@ -80,7 +81,7 @@ public class AjaxOrphusMessageDialog extends WebComponent
                 SqlSession session = sessionFactory.openSession();
                 try
                 {
-                    OrphusCommentsMapper orphusCommentsMapper = session.getMapper(OrphusCommentsMapper.class);
+                    OrphusCommentsMapper orphusCommentsMapper = CachingFacade.getCacheableMapper(session, OrphusCommentsMapper.class);
                     orphusCommentsMapper.insertOrphusComment(orphusComment);
                 }
                 finally

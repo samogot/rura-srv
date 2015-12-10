@@ -4,7 +4,9 @@ import ru.ruranobe.mybatis.entities.tables.Paragraph;
 
 public interface ParagraphsMapper
 {
-    public void insertParagraph(Paragraph paragraph);
-    public void updateParagraph(Paragraph paragraph);
-    public Paragraph getParagraph(String paragraphId);
+    void insertParagraph(Paragraph paragraph);
+
+    void updateParagraph(Paragraph paragraph);
+
+    Paragraph getParagraph(String paragraphId);
 }

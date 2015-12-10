@@ -6,11 +6,11 @@ import java.util.Collection;
 
 public interface VolumeReleaseActivitiesMapper
 {
-    public Collection<VolumeReleaseActivity> getVolumeReleaseActivitiesByVolumeId(int volumeId);
+    Collection<VolumeReleaseActivity> getVolumeReleaseActivitiesByVolumeId(int volumeId);
 
-    public void insertVolumeReleaseActivity(VolumeReleaseActivity volumeReleaseActivity);
+    void insertVolumeReleaseActivity(VolumeReleaseActivity volumeReleaseActivity);
 
-    public void deleteVolumeReleaseActivity(int releaseActivityId);
+    void deleteVolumeReleaseActivity(int releaseActivityId);
 
-    public void updateVolumeReleaseActivity(VolumeReleaseActivity volumeReleaseActivity);
+    void updateVolumeReleaseActivity(VolumeReleaseActivity volumeReleaseActivity);
 }

@@ -6,8 +6,11 @@ import java.util.List;
 
 public interface BookmarksMapper
 {
-    public void insertBookmark(Bookmark bookmark);
-    public List<Bookmark> getBookmarksByUser(Integer userId);
-    public List<Bookmark> getBookmarksExtendedByUser(Integer userId);
-    public void deleteBookmark(Integer bookmarkId);
+    void insertBookmark(Bookmark bookmark);
+
+    List<Bookmark> getBookmarksByUser(Integer userId);
+
+    List<Bookmark> getBookmarksExtendedByUser(Integer userId);
+
+    void deleteBookmark(Integer bookmarkId);
 }

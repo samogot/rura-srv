@@ -6,13 +6,13 @@ import java.util.List;
 
 public interface ChapterImagesMapper
 {
-    public List<ChapterImage> getChapterImagesByVolumeId(Integer volumeId);
+    List<ChapterImage> getChapterImagesByVolumeId(Integer volumeId);
 
-    public List<ChapterImage> getChapterImagesByChapterId(Integer chapterId);
+    List<ChapterImage> getChapterImagesByChapterId(Integer chapterId);
 
-    public void insertChapterImage(ChapterImage chapterImage);
+    void insertChapterImage(ChapterImage chapterImage);
 
-    public void deleteChapterImage(int chapterImageId);
+    void deleteChapterImage(int chapterImageId);
 
-    public void updateChapterImage(ChapterImage chapterImage);
+    void updateChapterImage(ChapterImage chapterImage);
 }

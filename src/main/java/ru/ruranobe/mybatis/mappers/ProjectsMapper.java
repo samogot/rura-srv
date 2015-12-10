@@ -7,17 +7,17 @@ import java.util.List;
 
 public interface ProjectsMapper
 {
-    public void insertProject(Project project);
+    void insertProject(Project project);
 
-    public Project getProjectByUrl(String url);
+    Project getProjectByUrl(String url);
 
-    public List<Project> getSubProjectsByParentProjectId(Integer parentId);
+    List<Project> getSubProjectsByParentProjectId(Integer parentId);
 
-    public Collection<Project> getAllProjects();
+    Collection<Project> getAllProjects();
 
-    public Collection<Project> getRootProjects();
+    Collection<Project> getRootProjects();
 
-    public void updateProject(Project Project);
+    void updateProject(Project Project);
 
-    public void deleteProject(Integer projectId);
+    void deleteProject(Integer projectId);
 }

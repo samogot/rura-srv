@@ -20,6 +20,7 @@ import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.crypt.CachingSunJceCryptFactory;
+import org.wicketstuff.pageserializer.kryo.KryoSerializer;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.wicket.resources.BookmarksRestWebService;
 import ru.ruranobe.wicket.resources.OrphusRestWebService;
@@ -40,6 +41,7 @@ public class WicketApplication extends AuthenticatedWebApplication
     public void init()
     {
         super.init();
+        getFrameworkSettings().setSerializer(new KryoSerializer());
         WicketSource.configure(this);
 
         // preload rura configuration

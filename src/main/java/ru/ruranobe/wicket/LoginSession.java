@@ -10,6 +10,7 @@ import ru.ruranobe.misc.Authentication;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.UsersMapper;
 import ru.ruranobe.mybatis.entities.tables.User;
+import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 
 public class LoginSession extends AuthenticatedWebSession {
 
@@ -25,7 +26,7 @@ public class LoginSession extends AuthenticatedWebSession {
 		SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
 		SqlSession session = sessionFactory.openSession();
 		try {
-			UsersMapper usersMapper = session.getMapper(UsersMapper.class);
+			UsersMapper usersMapper = CachingFacade.getCacheableMapper(session, UsersMapper.class);
 			User signInUser = usersMapper.getUserByUsername(username);
 			if (signInUser != null) {
 				String hash = Authentication.getPassHash(signInUser.getPassVersion(), password, signInUser.getPass());

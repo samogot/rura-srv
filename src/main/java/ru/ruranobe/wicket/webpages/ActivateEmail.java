@@ -10,6 +10,7 @@ import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.UsersMapper;
 import ru.ruranobe.mybatis.entities.tables.User;
+import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 
 public class ActivateEmail extends WebPage
 {
@@ -33,7 +34,7 @@ public class ActivateEmail extends WebPage
         SqlSession session = sessionFactory.openSession();
         try
         {
-            UsersMapper usersMapper = session.getMapper(UsersMapper.class);
+            UsersMapper usersMapper = CachingFacade.getCacheableMapper(session, UsersMapper.class);
             User user = usersMapper.getUserByEmailToken(emailToken);
             if (user.getEmailTokenDate().getTime() > System.currentTimeMillis())
             {

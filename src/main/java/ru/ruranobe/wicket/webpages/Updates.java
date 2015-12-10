@@ -172,164 +172,170 @@ public class Updates extends SidebarLayoutPage
 
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
         SqlSession session = sessionFactory.openSession();
-        UpdatesMapper updatesMapperCacheable = CachingFacade.getCacheableMapper(session, UpdatesMapper.class);
-
-        int updatesCount = updatesMapperCacheable.getUpdatesCountBy(projectId, volumeId, searchType);
-
-        WebMarkupContainer firstPage = new WebMarkupContainer("firstPage");
-        WebMarkupContainer lastPage = new WebMarkupContainer("lastPage");
-        final int numberOfPages = (updatesCount / UPDATES_COUNT_ON_PAGE) + (((updatesCount % UPDATES_COUNT_ON_PAGE) == 0) ? 0 : 1);
-        StatelessLink firstPageLink = new StatelessLink("firstPageLink")
+        try
         {
-            @Override
-            public void onClick()
-            {
-                PageParameters p = new PageParameters();
-                p.add("page", 1);
-                if (searchType != null)
-                {
-                    p.add("type", searchType);
-                }
-                if (projectId != null)
-                {
-                    p.add("project", projectId);
-                }
-                if (volumeId != null)
-                {
-                    p.add("volume", volumeId);
-                }
-                setResponsePage(Updates.class, p);
-            }
-        };
+            UpdatesMapper updatesMapperCacheable = CachingFacade.getCacheableMapper(session, UpdatesMapper.class);
 
-        StatelessLink lastPageLink = new StatelessLink("lastPageLink")
-        {
-            @Override
-            public void onClick()
-            {
-                PageParameters p = new PageParameters();
-                p.add("page", numberOfPages);
-                if (searchType != null)
-                {
-                    p.add("type", searchType);
-                }
-                if (projectId != null)
-                {
-                    p.add("project", projectId);
-                }
-                if (volumeId != null)
-                {
-                    p.add("volume", volumeId);
-                }
-                setResponsePage(Updates.class, p);
-            }
-        };
+            int updatesCount = updatesMapperCacheable.getUpdatesCountBy(projectId, volumeId, searchType);
 
-        if (page == 1)
-        {
-            AttributeAppender appender = new AttributeAppender("class", "disabled");
-            firstPage.add(appender);
-            firstPageLink = new StatelessLink("firstPageLink")
+            WebMarkupContainer firstPage = new WebMarkupContainer("firstPage");
+            WebMarkupContainer lastPage = new WebMarkupContainer("lastPage");
+            final int numberOfPages = (updatesCount / UPDATES_COUNT_ON_PAGE) + (((updatesCount % UPDATES_COUNT_ON_PAGE) == 0) ? 0 : 1);
+            StatelessLink firstPageLink = new StatelessLink("firstPageLink")
             {
                 @Override
                 public void onClick()
                 {
+                    PageParameters p = new PageParameters();
+                    p.add("page", 1);
+                    if (searchType != null)
+                    {
+                        p.add("type", searchType);
+                    }
+                    if (projectId != null)
+                    {
+                        p.add("project", projectId);
+                    }
+                    if (volumeId != null)
+                    {
+                        p.add("volume", volumeId);
+                    }
+                    setResponsePage(Updates.class, p);
                 }
             };
-            firstPageLink.setVisible(false);
-        }
-        if (page == numberOfPages)
-        {
-            AttributeAppender appender = new AttributeAppender("class", "disabled");
-            lastPage.add(appender);
-            lastPageLink = new StatelessLink("lastPageLink")
+
+            StatelessLink lastPageLink = new StatelessLink("lastPageLink")
             {
                 @Override
                 public void onClick()
                 {
+                    PageParameters p = new PageParameters();
+                    p.add("page", numberOfPages);
+                    if (searchType != null)
+                    {
+                        p.add("type", searchType);
+                    }
+                    if (projectId != null)
+                    {
+                        p.add("project", projectId);
+                    }
+                    if (volumeId != null)
+                    {
+                        p.add("volume", volumeId);
+                    }
+                    setResponsePage(Updates.class, p);
                 }
             };
-            lastPageLink.setVisible(false);
-        }
 
-        firstPage.add(firstPageLink);
-        lastPage.add(lastPageLink);
-        add(firstPage);
-        add(lastPage);
-
-        List<StatelessLink> references = new ArrayList<StatelessLink>();
-        AttributeAppender activeAppender = new AttributeAppender("class", "active");
-        if (page <= NUMBER_OF_PAGES_ON_UPDATE_LIST)
-        {
-            int endLoop = Math.min(NUMBER_OF_PAGES_ON_UPDATE_LIST, numberOfPages);
-            for (int i = 1; i <= endLoop; ++i)
+            if (page == 1)
             {
-                StatelessLink link = new StatelessLinkToPage("updatesPageLink", Integer.toString(i), searchType, "updatesPageText", Integer.toString(i));
-                if (i == page)
+                AttributeAppender appender = new AttributeAppender("class", "disabled");
+                firstPage.add(appender);
+                firstPageLink = new StatelessLink("firstPageLink")
                 {
-                    link.add(activeAppender);
-                }
-                references.add(link);
+                    @Override
+                    public void onClick()
+                    {
+                    }
+                };
+                firstPageLink.setVisible(false);
             }
-            if (numberOfPages > NUMBER_OF_PAGES_ON_UPDATE_LIST)
+            if (page == numberOfPages)
             {
-                StatelessLink linkToNextPage = new StatelessLinkToPage("updatesPageLink", Integer.toString(NUMBER_OF_PAGES_ON_UPDATE_LIST + 1), searchType, "updatesPageText", "...");
+                AttributeAppender appender = new AttributeAppender("class", "disabled");
+                lastPage.add(appender);
+                lastPageLink = new StatelessLink("lastPageLink")
+                {
+                    @Override
+                    public void onClick()
+                    {
+                    }
+                };
+                lastPageLink.setVisible(false);
+            }
+
+            firstPage.add(firstPageLink);
+            lastPage.add(lastPageLink);
+            add(firstPage);
+            add(lastPage);
+
+            List<StatelessLink> references = new ArrayList<StatelessLink>();
+            AttributeAppender activeAppender = new AttributeAppender("class", "active");
+            if (page <= NUMBER_OF_PAGES_ON_UPDATE_LIST)
+            {
+                int endLoop = Math.min(NUMBER_OF_PAGES_ON_UPDATE_LIST, numberOfPages);
+                for (int i = 1; i <= endLoop; ++i)
+                {
+                    StatelessLink link = new StatelessLinkToPage("updatesPageLink", Integer.toString(i), searchType, "updatesPageText", Integer.toString(i));
+                    if (i == page)
+                    {
+                        link.add(activeAppender);
+                    }
+                    references.add(link);
+                }
+                if (numberOfPages > NUMBER_OF_PAGES_ON_UPDATE_LIST)
+                {
+                    StatelessLink linkToNextPage = new StatelessLinkToPage("updatesPageLink", Integer.toString(NUMBER_OF_PAGES_ON_UPDATE_LIST + 1), searchType, "updatesPageText", "...");
+                    references.add(linkToNextPage);
+                    StatelessLink linkToLastPage = new StatelessLinkToPage("updatesPageLink", Integer.toString(numberOfPages), searchType, "updatesPageText", Integer.toString(numberOfPages));
+                    references.add(linkToLastPage);
+                }
+            }
+            else if (page < numberOfPages - NUMBER_OF_PAGES_ON_UPDATE_LIST)
+            {
+                StatelessLink linkToFirstPage = new StatelessLinkToPage("updatesPageLink", "1", searchType, "updatesPageText", "1");
+                references.add(linkToFirstPage);
+                StatelessLink linkToPrevPage = new StatelessLinkToPage("updatesPageLink", Integer.toString(page - NUMBER_OF_PAGES_ON_UPDATE_LIST), searchType, "updatesPageText", "...");
+                references.add(linkToPrevPage);
+                for (int i = page; i <= page + NUMBER_OF_PAGES_ON_UPDATE_LIST - 1; ++i)
+                {
+                    StatelessLink link = new StatelessLinkToPage("updatesPageLink", Integer.toString(i), searchType, "updatesPageText", Integer.toString(i));
+                    if (i == page)
+                    {
+                        link.add(activeAppender);
+                    }
+                    references.add(link);
+                }
+                StatelessLink linkToNextPage = new StatelessLinkToPage("updatesPageLink", Integer.toString(page + NUMBER_OF_PAGES_ON_UPDATE_LIST), searchType, "updatesPageText", "...");
                 references.add(linkToNextPage);
                 StatelessLink linkToLastPage = new StatelessLinkToPage("updatesPageLink", Integer.toString(numberOfPages), searchType, "updatesPageText", Integer.toString(numberOfPages));
                 references.add(linkToLastPage);
             }
-        }
-        else if (page < numberOfPages - NUMBER_OF_PAGES_ON_UPDATE_LIST)
-        {
-            StatelessLink linkToFirstPage = new StatelessLinkToPage("updatesPageLink", "1", searchType, "updatesPageText", "1");
-            references.add(linkToFirstPage);
-            StatelessLink linkToPrevPage = new StatelessLinkToPage("updatesPageLink", Integer.toString(page - NUMBER_OF_PAGES_ON_UPDATE_LIST), searchType, "updatesPageText", "...");
-            references.add(linkToPrevPage);
-            for (int i = page; i <= page + NUMBER_OF_PAGES_ON_UPDATE_LIST - 1; ++i)
+            else
             {
-                StatelessLink link = new StatelessLinkToPage("updatesPageLink", Integer.toString(i), searchType, "updatesPageText", Integer.toString(i));
-                if (i == page)
+                StatelessLink linkToFirstPage = new StatelessLinkToPage("updatesPageLink", "1", searchType, "updatesPageText", "1");
+                references.add(linkToFirstPage);
+                StatelessLink linkToPrevPage = new StatelessLinkToPage("updatesPageLink", Integer.toString(page - NUMBER_OF_PAGES_ON_UPDATE_LIST), searchType, "updatesPageText", "...");
+                references.add(linkToPrevPage);
+                for (int i = page; i <= numberOfPages; ++i)
                 {
-                    link.add(activeAppender);
+                    StatelessLink link = new StatelessLinkToPage("updatesPageLink", Integer.toString(i), searchType, "updatesPageText", Integer.toString(i));
+                    if (i == page)
+                    {
+                        link.add(activeAppender);
+                    }
+                    references.add(link);
                 }
-                references.add(link);
             }
-            StatelessLink linkToNextPage = new StatelessLinkToPage("updatesPageLink", Integer.toString(page + NUMBER_OF_PAGES_ON_UPDATE_LIST), searchType, "updatesPageText", "...");
-            references.add(linkToNextPage);
-            StatelessLink linkToLastPage = new StatelessLinkToPage("updatesPageLink", Integer.toString(numberOfPages), searchType, "updatesPageText", Integer.toString(numberOfPages));
-            references.add(linkToLastPage);
-        }
-        else
-        {
-            StatelessLink linkToFirstPage = new StatelessLinkToPage("updatesPageLink", "1", searchType, "updatesPageText", "1");
-            references.add(linkToFirstPage);
-            StatelessLink linkToPrevPage = new StatelessLinkToPage("updatesPageLink", Integer.toString(page - NUMBER_OF_PAGES_ON_UPDATE_LIST), searchType, "updatesPageText", "...");
-            references.add(linkToPrevPage);
-            for (int i = page; i <= numberOfPages; ++i)
+
+            ListView<StatelessLink> updatesPaginator = new ListView<StatelessLink>("updatesPaginator", references)
             {
-                StatelessLink link = new StatelessLinkToPage("updatesPageLink", Integer.toString(i), searchType, "updatesPageText", Integer.toString(i));
-                if (i == page)
+                @Override
+                protected void populateItem(final ListItem<StatelessLink> listItem)
                 {
-                    link.add(activeAppender);
+                    listItem.add(listItem.getModelObject());
                 }
-                references.add(link);
-            }
+            };
+            add(updatesPaginator);
+            add(new UpdatesWideList("updatesList", projectId, volumeId, searchType, (page - 1) * UPDATES_COUNT_ON_PAGE, UPDATES_COUNT_ON_PAGE));
+
+            sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
+            sidebarModules.add(new FriendsSidebarModule("sidebarModule"));
         }
-
-        ListView<StatelessLink> updatesPaginator = new ListView<StatelessLink>("updatesPaginator", references)
+        finally
         {
-            @Override
-            protected void populateItem(final ListItem<StatelessLink> listItem)
-            {
-                listItem.add(listItem.getModelObject());
-            }
-        };
-        add(updatesPaginator);
-        add(new UpdatesWideList("updatesList", projectId, volumeId, searchType, (page - 1) * UPDATES_COUNT_ON_PAGE, UPDATES_COUNT_ON_PAGE));
-
-        sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
-        sidebarModules.add(new FriendsSidebarModule("sidebarModule"));
-        session.close();
+            session.close();
+        }
     }
 
     private static class StatelessLinkToPage extends StatelessLink
