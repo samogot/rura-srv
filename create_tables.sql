@@ -1,7 +1,9 @@
 ﻿# use ruranobe;
 
 SET NAMES UTF8;
-
+ALTER TABLE external_resources_history DROP FOREIGN KEY fk_history_project_id;
+ALTER TABLE external_resources_history DROP FOREIGN KEY fk_history_volume_id;
+ALTER TABLE external_resources_history DROP FOREIGN KEY fk_history_chapter_image_id;
 DROP TABLE IF EXISTS orphus_comments;
 DROP TABLE IF EXISTS chapter_images;
 DROP TABLE IF EXISTS updates;
@@ -9,6 +11,7 @@ DROP TABLE IF EXISTS bookmarks;
 DROP TABLE IF EXISTS paragraphs;
 DROP TABLE IF EXISTS chapters;
 DROP TABLE IF EXISTS volume_release_activities;
+DROP TABLE IF EXISTS volume_statuses;
 DROP TABLE IF EXISTS volumes;
 DROP TABLE IF EXISTS projects;
 DROP TABLE IF EXISTS external_resources;
@@ -71,24 +74,27 @@ CREATE TABLE orphus_comments
 
 CREATE TABLE projects
 (
-  project_id     INT(11) PRIMARY KEY AUTO_INCREMENT,
-  parent_id      INT(11),
-  image_id       INT(11),
-  url            VARCHAR(32) UNIQUE,
-  title          VARCHAR(1023) NOT NULL,
-  name_jp        VARCHAR(255),
-  name_en        VARCHAR(255),
-  name_ru        VARCHAR(255),
-  name_romaji    VARCHAR(255),
-  author         VARCHAR(255),
-  illustrator    VARCHAR(255),
-  order_number   INT(11)       NOT NULL,
-  banner_hidden  BOOL          NOT NULL,
-  project_hidden BOOL          NOT NULL,
-  onevolume      BOOL          NOT NULL,
-  franchise      TEXT,
-  annotation     TEXT,
-  forum_id INT(11) UNSIGNED DEFAULT NULL
+  project_id         INT(11) PRIMARY KEY AUTO_INCREMENT,
+  parent_id          INT(11),
+  image_id           INT(11),
+  url                VARCHAR(32) UNIQUE,
+  title              VARCHAR(1023) NOT NULL,
+  name_jp            VARCHAR(255),
+  name_en            VARCHAR(255),
+  name_ru            VARCHAR(255),
+  name_romaji        VARCHAR(255),
+  author             VARCHAR(255),
+  illustrator        VARCHAR(255),
+  order_number       INT(11)       NOT NULL,
+  banner_hidden      BOOL          NOT NULL,
+  project_hidden     BOOL          NOT NULL,
+  onevolume          BOOL          NOT NULL,
+  franchise          TEXT,
+  annotation         TEXT,
+  forum_id           INT(11) UNSIGNED    DEFAULT NULL,
+  issue_status       VARCHAR(255),
+  translation_status VARCHAR(255),
+  status             ENUM('Выпускается', 'Окончен', 'Переведен')
 );
 
 CREATE TABLE volumes
@@ -144,6 +150,15 @@ CREATE TABLE volumes
   topic_id           INT(11) UNSIGNED DEFAULT NULL
 );
 
+CREATE TABLE volume_statuses
+(
+  status_id    INT(11) PRIMARY KEY AUTO_INCREMENT,
+  full_text    VARCHAR(32),
+  label_text   VARCHAR(32),
+  label_class  ENUM('default', 'primary', 'success', 'info', 'warning', 'danger'),
+  option_group ENUM('basic', 'external', 'not_in_work', 'in_work', 'published', 'licensed')
+);
+
 CREATE TABLE chapters
 (
   chapter_id   INT(11) PRIMARY KEY AUTO_INCREMENT,
@@ -152,7 +167,7 @@ CREATE TABLE chapters
   url          VARCHAR(32) UNIQUE,
   title        VARCHAR(1023) NOT NULL,
   order_number INT(11)       NOT NULL,
-  published    BOOL          NOT NULL,
+  publish_date DATETIME,
   nested       BOOL          NOT NULL
 );
 
@@ -177,7 +192,7 @@ CREATE TABLE external_resources
   thumbnail     VARCHAR(511) NOT NULL,
   title         VARCHAR(255),
   uploaded_when DATETIME     NOT NULL,
-  history_id    INT(11)
+  history_id INT(11) NOT NULL
 );
 
 CREATE TABLE external_resources_history
@@ -343,66 +358,3 @@ ALTER TABLE updates ADD INDEX (show_time);
 ALTER TABLE updates ADD INDEX (update_type);
 
 ALTER TABLE updates ADD INDEX (update_type, show_time);
-
-
-/* Insert data for testing. Only for development purposes. */
-/*
-insert into projects (project_id, parent_id, url, title, order_number, banner_hidden, project_hidden, annotation)
-values (1, null, 'mknr', 'mahouka', 1, 0, 0, 'Какая-то глупая аннотация');
-
-insert into volumes (volume_id, project_id, url, name_file, name_title, name_jp, name_en, name_ru, name_short, order_number, author, illustrator, release_date, ISBN, external_url, annotation)
-values(1, 1, 'mknr/v1', 'name_file', 'name_title', '魔法科高校の劣等生', 'mahouka bla bla', 'Махока', 'name_short', 1, 'Keiko', 'Keiko', sysdate(), '978-4048705974', null, 'еще одна глупая аннотация');
-
-insert into texts(text_id, text_wiki, text_html)
-values(1,'==Глава 0==
-
-Магия.
-
-Это не выдумка и не сказка, а реальная технология, долгое время незнакомая людям.
-
-Первый зафиксированный случай применения магии произошел в 1999 году.
-
-Инцидент, в котором офицеры полиции с помощью специальных сил остановили теракт, спланированный группой фанатиков, которая пыталась использовать ядерное оружие для исполнения пророчества об уничтожении человечества, стал первым зафиксированным случаем использования магии в современной истории.
-
-Первоначально эти необычные способности назывались «Сверхъестественной силой». Наличие этой силы у человека объяснялось наследственностью или внезапной мутацией, которую невозможно вызвать искусственно и в дальнейшем сделать массовой.
-
-Но это было ошибкой.
-
-Исследования «Сверхъестественной силы» как восточными, так и западными влиятельными странами,  выявили существование людей, наделенных «Магией». Поэтому стало возможным воспроизвести «Сверхъестественную силу» посредством «Магии».
-
-Конечно, для этого нужен талант. Только те, кто имеет хорошие способности с самого рождения, могут достичь мастерства, которое поставит их на один уровень с теми, кто обладает способностями в искусстве или науках.
-
-Сверхъестественная сила была систематизирована посредством магии, а магия стала техническим навыком. «Пользователи сверхъестественных сил» стали называться «Операторами магии».
-
-Опытные Операторы магии, способные подавить даже ядерное вооружение, — это мощнейшее оружие страны.
-
-В конце 21-го столетия — в 2095 году, различные страны мира, далекие от объединения, были втянуты в гонку по обучению Операторов магии (Волшебников).
-
-
-
-Отделение Национального университета магии, Первая старшая школа.
-
-Высшее магическое учреждение, известное тем, что из него ежегодно выпускается наибольшее количество учеников поступающих в Государственный университет магии.
-
-В тоже время это элитная школа, которая выпускает множество первоклассных Операторов магии (Волшебников).
-
-Что касается магического образования, нет официальной позиции по обеспечению равных возможностей по обучению.
-
-Страна не может позволить себе такой роскоши.
-
-Более того, детские идеалистические обсуждения явного неравенства между одаренными и бесталанными не допускаются.
-
-Обучаются лишь одаренные.
-
-И только самые перспективные ученики.
-
-Таков мир магии.
-
-В этой элитной школе, ученики с самого зачисления разделены на преуспевающих и неуспевающих.
-
-Даже если это всего лишь двое только что поступивших, они не обязательно равны.
-
-Даже если они родные брат и сестра.', null);
-
-insert into chapters (chapter_id, volume_id, text_id, url, title, order_number, published, nested)
-values (1,1,1,'ch1', 'Неожиданная глава', 1, 1, 1);*/

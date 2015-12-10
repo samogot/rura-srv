@@ -93,7 +93,7 @@
         <result property="url" column="url"/>
         <result property="title" column="title"/>
         <result property="orderNumber" column="order_number"/>
-        <result property="published" column="published"/>
+        <result property="publishDate" column="publish_date"/>
         <result property="nested" column="nested"/>
 
         <result property="prevUrl" column="prev_url"/>
