@@ -5,10 +5,16 @@ import org.apache.wicket.util.string.Strings;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Chapter extends PageRepresentable implements Serializable
 {
+
+    public Date getPublishDate()
+    {
+        return publishDate;
+    }
 
     private static final long serialVersionUID = 1L;
     private Integer chapterId;
@@ -17,7 +23,7 @@ public class Chapter extends PageRepresentable implements Serializable
     private String url;
     private String title;
     private Integer orderNumber;
-    private boolean published;
+    private Date publishDate;
     private boolean nested;
 
     /* Optional */
@@ -32,14 +38,13 @@ public class Chapter extends PageRepresentable implements Serializable
     {
     }
 
-    public Chapter(Integer volumeId, Integer textId, String url, String title, Integer orderNumber, boolean published, boolean nested)
+    public Chapter(Integer volumeId, Integer textId, String url, String title, Integer orderNumber, boolean nested)
     {
         this.volumeId = volumeId;
         this.textId = textId;
         this.url = url;
         this.title = title;
         this.orderNumber = orderNumber;
-        this.published = published;
         this.nested = nested;
     }
 
@@ -94,12 +99,12 @@ public class Chapter extends PageRepresentable implements Serializable
 
     public boolean isPublished()
     {
-        return published;
+        return new Date().after(publishDate);
     }
 
     public void setPublished(boolean published)
     {
-        this.published = published;
+        this.publishDate = published ? new Date() : null;
     }
 
     public Integer getTextId()
