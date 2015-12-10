@@ -570,11 +570,11 @@ UPDATE volumes
   INNER JOIN external_resources r ON r.title LIKE concat(replace(cover, ' ', '_'), '.%')
 SET image_one = resource_id;
 
+DROP TEMPORARY TABLE ch_text;
+
 
 UPDATE texts
 SET text_wiki = replace(text_wiki, '\n\n', '\n');
-
-DROP TEMPORARY TABLE ch_text;
 
 # повторить для замены всех иллюстраций
 
@@ -691,7 +691,7 @@ CREATE TEMPORARY TABLE ch_parent_first (
 
 INSERT INTO ch_parent_first
   SELECT
-    @merge_id := @merge_id + 1,
+    if(text_wiki LIKE '%===%', @merge_id := @merge_id + 1, NULL),
     p.chapter_id,
     f.chapter_id,
     f.url,
@@ -701,121 +701,31 @@ INSERT INTO ch_parent_first
      WHERE f.chapter_id = chapter_id
      ORDER BY order_number
      LIMIT 1)
-  FROM chapters p, chapters f, texts t, (SELECT @merge_id := max(text_id)
-                                         FROM texts) xxx
+  FROM chapters p
+    INNER JOIN chapters f USING (volume_id)
+    LEFT JOIN texts t ON (f.text_id = t.text_id)
+    , (SELECT @merge_id := max(text_id)
+       FROM texts) xxx
   WHERE p.text_id IS NULL
-        #         AND f.text_id IS NOT NULL
-        AND p.volume_id = f.volume_id
         AND !p.nested AND f.nested
         AND f.order_number = (SELECT order_number
                               FROM chapters n
                               WHERE p.volume_id = n.volume_id
                                     AND n.order_number > p.order_number
                               ORDER BY order_number
-                              LIMIT 1)
-        AND f.text_id = t.text_id
-        AND text_wiki LIKE '%===%';
-
-UPDATE ch_parent_first
-SET parent_new_text_id = NULL
-WHERE first_text_id IS NULL;
+                              LIMIT 1);
 
 INSERT INTO texts (text_id, text_wiki)
   SELECT
     parent_new_text_id,
     left(text_wiki, locate('===', text_wiki) - 1)
-  FROM ch_parent_first, texts
-  WHERE text_id = first_text_id;
-
-UPDATE chapters
-  INNER JOIN ch_parent_first ON chapter_id = parent_chapter_id
-SET text_id = parent_new_text_id, publish_date = now(), url = if(right(first_url, 1) = 'p',
-                                                                 left(first_url, length(first_url) - 1),
-                                                                 if(right(first_url, 3) LIKE 'ch%',
-                                                                    left(first_url, length(first_url) - 3),
-                                                                    left(first_url, length(first_url) - 2)));
-
-UPDATE texts
-  INNER JOIN ch_parent_first ON text_id = first_text_id
-SET text_wiki = substr(text_wiki, locate('===', text_wiki));
-
-UPDATE texts
-SET text_wiki = substr(text_wiki, locate('\n', text_wiki, locate('==', text_wiki)) + 1)
-WHERE text_wiki LIKE '==%' OR text_wiki LIKE '\n==%';
-
-UPDATE chapter_images
-  INNER JOIN ch_parent_first ON first_chapter_id = chapter_id
-  INNER JOIN texts ON parent_new_text_id = text_id
-SET chapter_images.chapter_id = parent_chapter_id
-WHERE text_wiki LIKE '{{Иллюстрация}}%'
-      AND order_number < min_first_chapter_image_order_number
-                         + round((char_length(text_wiki) - char_length(replace(text_wiki, '{{Иллюстрация}}', ''))) /
-                                 char_length('{{Иллюстрация}}'), 0);
-
+  FROM ch_parent_first
+    INNER JOIN texts ON text_id = first_text_id
+  WHERE parent_new_text_id IS NOT NULL;
 
 UPDATE `chapters`
 SET `url` = 'sao/p1/c2'
 WHERE `chapter_id` = '930';
-UPDATE `chapters`
-SET `url` = 'sao/p2/c3'
-WHERE `chapter_id` = '933';
-UPDATE `chapters`
-SET `url` = 'lh/v2/ch3'
-WHERE `chapter_id` = '3290';
-UPDATE `chapters`
-SET `url` = 'lh/v2/ch4'
-WHERE `chapter_id` = '3296';
-UPDATE `chapters`
-SET `url` = 'lh/v2/ch5'
-WHERE `chapter_id` = '3301';
-UPDATE `chapters`
-SET `url` = 'snpnk/v3/ch1'
-WHERE `chapter_id` = '4767';
-UPDATE `chapters`
-SET `url` = 'snpnk/v3/ch2'
-WHERE `chapter_id` = '4768';
-UPDATE `chapters`
-SET `url` = 'snpnk/v3/ch3'
-WHERE `chapter_id` = '4769';
-UPDATE `chapters`
-SET `url` = 'snpnk/v3/ch4'
-WHERE `chapter_id` = '4770';
-UPDATE `chapters`
-SET `url` = 'snpnk/v4/ch1'
-WHERE `chapter_id` = '4839';
-UPDATE `chapters`
-SET `url` = 'snpnk/v4/ch2'
-WHERE `chapter_id` = '4840';
-UPDATE `chapters`
-SET `url` = 'snpnk/v4/ch3'
-WHERE `chapter_id` = '4841';
-UPDATE `chapters`
-SET `url` = 'snpnk/v4/ch4'
-WHERE `chapter_id` = '4842';
-UPDATE `chapters`
-SET `url` = 'tnynn/trans/v2'
-WHERE `chapter_id` = '4893';
-UPDATE `chapters`
-SET `url` = 'tnynn/trans/v3'
-WHERE `chapter_id` = '5376';
-UPDATE `chapters`
-SET `url` = 'smnk/v2/ch3'
-WHERE `chapter_id` = '5781';
-UPDATE `chapters`
-SET `url` = 'smnk/v2/ch4'
-WHERE `chapter_id` = '5790';
-UPDATE `chapters`
-SET `url` = 'smnk/v2/che'
-WHERE `chapter_id` = '5801';
-UPDATE `chapters`
-SET `url` = 'ol/v4/ch3'
-WHERE `chapter_id` = '5918';
-UPDATE `chapters`
-SET `url` = 'ol/v4/ch4'
-WHERE `chapter_id` = '5919';
-UPDATE `chapters`
-SET `url` = 'ol/v4/ch5'
-WHERE `chapter_id` = '5920';
 UPDATE `chapters`
 SET `url` = 'zl/v1/a1'
 WHERE `chapter_id` = '6012';
@@ -844,14 +754,44 @@ UPDATE `chapters`
 SET `url` = 'zl/v2/a9'
 WHERE `chapter_id` = '6047';
 UPDATE `chapters`
-SET `url` = 'sg/v2/ch1'
-WHERE `chapter_id` = '6048';
-UPDATE `chapters`
-SET `url` = 'sg/v2/ch2'
-WHERE `chapter_id` = '6056';
-UPDATE `chapters`
-SET `url` = 'sg/v2/ch3'
-WHERE `chapter_id` = '6062';
-UPDATE `chapters`
 SET `url` = 'tnynn/trans/v5'
 WHERE `chapter_id` = '6305';
+UPDATE `chapters`
+SET `url` = 'drrr/v4/e'
+WHERE `chapter_id` = '4891';
+
+UPDATE chapters
+  INNER JOIN ch_parent_first ON chapter_id = parent_chapter_id
+SET text_id    = parent_new_text_id,
+  publish_date = now(),
+  url          = coalesce(url, if(right(first_url, 1) = 'p',
+                                  left(first_url, length(first_url) - 1),
+                                  if(right(first_url, 3) LIKE 'ch%',
+                                     left(first_url,
+                                          length(first_url) - 3),
+                                     left(first_url,
+                                          length(first_url) - 2))));
+
+DELETE FROM ch_parent_first
+WHERE parent_new_text_id IS NULL;
+
+
+UPDATE texts
+  INNER JOIN ch_parent_first ON text_id = first_text_id
+SET text_wiki = substr(text_wiki, locate('===', text_wiki));
+
+UPDATE texts
+SET text_wiki = substr(text_wiki, locate('\n', text_wiki, locate('==', text_wiki)) + 1)
+WHERE text_wiki LIKE '==%' OR text_wiki LIKE '\n==%';
+
+UPDATE chapter_images
+  INNER JOIN ch_parent_first ON first_chapter_id = chapter_id
+  INNER JOIN texts ON parent_new_text_id = text_id
+SET chapter_images.chapter_id = parent_chapter_id
+WHERE text_wiki LIKE '{{Иллюстрация}}%'
+      AND order_number < min_first_chapter_image_order_number
+                         + round((char_length(text_wiki) - char_length(replace(text_wiki, '{{Иллюстрация}}', ''))) /
+                                 char_length('{{Иллюстрация}}'), 0);
+
+
+DROP TEMPORARY TABLE ch_parent_first;
