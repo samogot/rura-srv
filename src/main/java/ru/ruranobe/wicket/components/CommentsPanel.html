@@ -4,12 +4,29 @@
 <wicket:panel>
     <h2 id="comments">Комментарии</h2>
 
-    <div class="input-group input-group-lg sharp comment-form">
-        <textarea type="text" class="form-control" placeholder="Введите комментарии" rows="3"></textarea>
-                    <span class="input-group-btn">
-                        <button class="btn btn-primary" type="button">Отправить</button>
-                    </span>
-    </div>
+    <form id="newPost" class="input-group input-group-lg sharp comment-form" action="javascript:void(0);">
+        <textarea class="form-control new-comment" placeholder="Введите комментарии" rows="3" required></textarea>
+        <span class="input-group-btn">
+            <button class="btn btn-primary reply" type="submit" disabled>Отправить</button>
+        </span>
+    </form>
+    <script id="commentTemplate" type="text/x-jsrender">
+    {{for posts}}
+        <div class="comment">
+            <div class="avatar pull-left">
+                {{if author_avatar.src}}
+                    <img class="center-block" src="{{:author_avatar.src}}">
+                {{else}}
+                    <img src="/img/no_avatar.png">
+                {{/if}}
+            </div>
+            <div class="name pull-left bold">{{:author_username}}</div>
+            <div class="timeAgo pull-left">{{*: moment.unix(data.timestamp).fromNow()}}</div>
+            <div class="threadLink"><a href="/f/viewtopic.php?f={{:~root.forum_id}}&t={{:~root.topic_id}}&p={{:post_id}}#p{{:post_id}}" target="_blank">#</a></div>
+            <div class="commentText">{{:post_text}}</div>
+        </div>
+    {{/for}}
+    </script>
     <div class="comments" wicket:id="comments">
     </div>
 </wicket:panel>
