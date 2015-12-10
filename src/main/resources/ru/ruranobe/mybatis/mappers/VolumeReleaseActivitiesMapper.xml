@@ -12,7 +12,7 @@
         FROM volume_release_activities vra
             INNER JOIN volume_activities USING (activity_id)
             INNER JOIN team_members USING (member_id)
-        WHERE release_activity_id = #{volumeId}
+        WHERE volume_id = #{volumeId}
     </select>
 
     <resultMap type="ru.ruranobe.mybatis.entities.tables.VolumeReleaseActivity" id="VolumeReleaseActivityResult">
