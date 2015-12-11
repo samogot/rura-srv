@@ -37,7 +37,7 @@ $(document).ready(function () {
                     matches = [];
                     substrRegex = new RegExp(query, 'i');
                     $.each(data, function (i, str) {
-                        if (str == null) return;
+                        if (str == null || !str.url) return;
                         var match = {
                             match: '',
                             title: str.title,
