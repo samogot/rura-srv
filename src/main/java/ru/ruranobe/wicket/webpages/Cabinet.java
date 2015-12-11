@@ -186,7 +186,7 @@ public class Cabinet extends SidebarLayoutPage
         DropDownChoice<String> converterType = new DropDownChoice<String>("converterType", Arrays.asList("fb2", "docx", "epub"));
         userSettings.add(converterType);
 
-        DropDownChoice<String> navigationType = new DropDownChoice<String>("navigationType", Arrays.asList("Главам", "Подлавам"));
+        DropDownChoice<String> navigationType = new DropDownChoice<String>("navigationType", Arrays.asList("Главам", "Подглавам"));
         userSettings.add(navigationType);
 
         CheckBox convertWithImgs = new CheckBox("convertWithImgs");

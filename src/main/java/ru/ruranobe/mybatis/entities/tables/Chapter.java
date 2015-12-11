@@ -5,6 +5,7 @@ import org.apache.wicket.util.string.Strings;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Chapter extends PageRepresentable implements Serializable
@@ -17,9 +18,8 @@ public class Chapter extends PageRepresentable implements Serializable
     private String url;
     private String title;
     private Integer orderNumber;
-    private boolean published;
+    private Date publishDate;
     private boolean nested;
-
     /* Optional */
     private Chapter prevChapter;
     private Chapter nextChapter;
@@ -27,25 +27,28 @@ public class Chapter extends PageRepresentable implements Serializable
     private List<Chapter> childChapters;
     private boolean visibleOnPage = false;
     private Text text;
-
     public Chapter()
     {
     }
 
-    public Chapter(Integer volumeId, Integer textId, String url, String title, Integer orderNumber, boolean published, boolean nested)
+    public Chapter(Integer volumeId, Integer textId, String url, String title, Integer orderNumber, boolean nested)
     {
         this.volumeId = volumeId;
         this.textId = textId;
         this.url = url;
         this.title = title;
         this.orderNumber = orderNumber;
-        this.published = published;
         this.nested = nested;
     }
 
     public static PageParameters makeUrlParameters(String[] urlParts)
     {
         return new PageParameters().set("project", urlParts[0]).set("volume", urlParts[1]).set("chapter", urlParts[2]);
+    }
+
+    public Date getPublishDate()
+    {
+        return publishDate;
     }
 
     public Class getLinkClass()
@@ -94,12 +97,12 @@ public class Chapter extends PageRepresentable implements Serializable
 
     public boolean isPublished()
     {
-        return published;
+        return publishDate == null ? false : new Date().after(publishDate);
     }
 
     public void setPublished(boolean published)
     {
-        this.published = published;
+        this.publishDate = published ? new Date() : null;
     }
 
     public Integer getTextId()

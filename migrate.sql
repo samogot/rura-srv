@@ -82,21 +82,21 @@ INSERT INTO volumes (volume_id, project_id, url, name_file, name_title, name_jp,
     END,
     CASE status
     WHEN 'hidden'
-      THEN 1
+      THEN 5
     WHEN 'announced'
-      THEN 6
+      THEN 1
     WHEN 'not_translating'
-      THEN 7
+      THEN 2
     WHEN 'external'
-      THEN 4
+      THEN 8
     WHEN 'wait_translator'
-      THEN 9
+      THEN 4
     WHEN 'wait_eng'
-      THEN 6
+      THEN 2
     WHEN 'freezed_translator'
-      THEN 7
+      THEN 3
     WHEN 'freezed_eng'
-      THEN 6
+      THEN 2
     WHEN 'ongoing'
       THEN 10
     WHEN 'translating'
@@ -111,7 +111,7 @@ INSERT INTO volumes (volume_id, project_id, url, name_file, name_title, name_jp,
     0
   FROM ruranobe_db.main_releases;
 
-INSERT INTO chapters (chapter_id, volume_id, text_id, url, title, order_number, published, nested)
+INSERT INTO chapters (chapter_id, volume_id, text_id, url, title, order_number, nested)
   SELECT
     chapter_id,
     release_id,
@@ -119,10 +119,27 @@ INSERT INTO chapters (chapter_id, volume_id, text_id, url, title, order_number, 
     concat(v.url, '/', nullif(ch.url, '')),
     title,
     `order`,
-    0,
     level > 1
   FROM ruranobe_db.main_chapter ch
-    INNER JOIN ruranobe.volumes v ON (volume_id = release_id);
+    INNER JOIN volumes v ON (volume_id = release_id);
+
+INSERT INTO chapters (volume_id, text_id, url, title, order_number, nested)
+  SELECT DISTINCT
+    v.volume_id,
+    NULL,
+    page_title,
+    'Текст',
+    1,
+    0
+  FROM ruranobe_db.mw_page p
+    INNER JOIN ruranobe_db.mw_revision rv ON rev_page = page_id
+    INNER JOIN ruranobe_db.mw_text t ON old_id = rev_text_id
+    INNER JOIN volumes v ON (substr(page_title, 1, length(page_title) - 5) = url)
+  WHERE rev_timestamp = (SELECT max(rev_timestamp)
+                         FROM ruranobe_db.mw_revision
+                         WHERE rev_page = p.page_id)
+        AND trim(old_text) != '{{Полный текст}}'
+        AND page_title LIKE '%/text';
 
 INSERT INTO updates (project_id, volume_id, chapter_id, update_type, show_time, description)
   SELECT
@@ -182,18 +199,13 @@ INSERT IGNORE INTO users (user_id, username, realname, pass, pass_version, email
     1080
   FROM ruranobe_db.mw_user;
 
-UPDATE ruranobe.users usr
-  INNER JOIN
-  ruranobe_db.mw_user mw
-    ON
-      usr.user_id = mw.user_id
+UPDATE users usr INNER JOIN ruranobe_db.mw_user mw ON usr.user_id = mw.user_id
 SET
   usr.pass = SUBSTRING(mw.user_password, 4),
   usr.pass_version = 1
-WHERE
-  mw.user_password LIKE ":A:%";
+WHERE mw.user_password LIKE ":A:%";
 
-UPDATE ruranobe.users usr
+UPDATE users usr
   INNER JOIN
   ruranobe_db.mw_user mw
     ON
@@ -204,7 +216,7 @@ SET
 WHERE
   mw.user_password LIKE ":B:%";
 
-UPDATE ruranobe.users usr
+UPDATE users usr
   INNER JOIN
   ruranobe_db.mw_user mw
     ON
@@ -274,6 +286,18 @@ WHERE old_text LIKE '%Иллюстратор: ''''''%';
 UPDATE projects
   INNER JOIN prj_text ON prj = project_id
   INNER JOIN ruranobe_db.mw_text ON txt = old_id
+SET issue_status = trim(substring_index(substring_index(old_text, 'Статус: ''''''Выпуск ', -1), ', перевод', 1))
+WHERE old_text LIKE '%Статус: ''''''Выпуск %';
+
+UPDATE projects
+  INNER JOIN prj_text ON prj = project_id
+  INNER JOIN ruranobe_db.mw_text ON txt = old_id
+SET translation_status = trim(substring_index(substring_index(old_text, ', перевод ', -1), '''''''', 1))
+WHERE old_text LIKE '%Статус:%, перевод %';
+
+UPDATE projects
+  INNER JOIN prj_text ON prj = project_id
+  INNER JOIN ruranobe_db.mw_text ON txt = old_id
 SET franchise = trim('\n' FROM substring_index(
     substring_index(trim(LEADING '''' FROM trim(substring_index(old_text, 'Франшиза:', -1))), '==', 1), '{{', 1))
 WHERE old_text LIKE '%Франшиза:%';
@@ -290,6 +314,8 @@ WHERE parent_id IS NULL;
 UPDATE projects
 SET order_number = 9999, project_hidden = TRUE, banner_hidden = TRUE
 WHERE order_number = 0;
+
+DROP TEMPORARY TABLE prj_text;
 
 UPDATE projects
 SET name_jp = 'ソードアート・オンライン', name_en = 'Sword Art Online', name_ru = NULL
@@ -409,9 +435,8 @@ INSERT INTO ch_text
     chapter_id,
     page_id,
     old_id
-  FROM ruranobe_db.main_releases r
-    INNER JOIN ruranobe_db.main_chapter c USING (release_id)
-    INNER JOIN ruranobe_db.mw_page p ON page_title = concat(r.name_url, '/', c.url)
+  FROM chapters c
+    INNER JOIN ruranobe_db.mw_page p ON page_title = c.url
     INNER JOIN ruranobe_db.mw_revision rv ON rev_page = page_id
     INNER JOIN ruranobe_db.mw_text t ON old_id = rev_text_id
   WHERE rev_timestamp = (SELECT max(rev_timestamp)
@@ -429,35 +454,64 @@ INSERT IGNORE INTO texts (text_id, text_wiki, text_html)
 
 UPDATE chapters
   INNER JOIN ch_text ON ch = chapter_id
-SET text_id = txt, published = 1;
+SET text_id = txt, publish_date = now();
 
+INSERT INTO external_resources_history (history_id, uploaded_when, project_id)
+  SELECT
+    page_id,
+    img_timestamp,
+    project_id
+  FROM ruranobe_db.mw_image
+    INNER JOIN projects ON concat('sidebanner-', url, '.png') = img_name
+    INNER JOIN ruranobe_db.mw_page ON (img_name = page_title AND page_namespace = 6);
 
-INSERT INTO external_resources (user_id, mime_type, url, title, uploaded_when)
+INSERT INTO external_resources (user_id, mime_type, url, thumbnail, title, uploaded_when, history_id)
   SELECT
     img_user,
     concat(img_major_mime, '/', img_minor_mime),
     concat('https://ruranobe.ru/images/', substr(md5(img_name), 1, 1), '/', substr(md5(img_name), 1, 2), '/',
            img_name),
+    concat('https://ruranobe.ru/images/thumb/', substr(md5(img_name), 1, 1), '/', substr(md5(img_name), 1, 2), '/',
+           replace(img_name, '%', '%%'), '/%dpx-', replace(img_name, '%', '%%')),
     img_name,
-    img_timestamp
+    img_timestamp,
+    page_id
   FROM ruranobe_db.mw_image
-    INNER JOIN projects ON concat('sidebanner-', url, '.png') = img_name;
+    INNER JOIN projects ON concat('sidebanner-', url, '.png') = img_name
+    INNER JOIN ruranobe_db.mw_page ON (img_name = page_title AND page_namespace = 6);
 
 UPDATE projects p
   INNER JOIN external_resources r ON concat('sidebanner-', p.url, '.png') = r.title
 SET image_id = resource_id;
 
-INSERT INTO external_resources (user_id, mime_type, url, title, uploaded_when)
+INSERT IGNORE INTO external_resources_history (history_id, uploaded_when, project_id, volume_id)
+  SELECT DISTINCT
+    page_id,
+    img_timestamp,
+    project_id,
+    volume_id
+  FROM ruranobe_db.mw_image
+    INNER JOIN ruranobe_db.mw_imagelinks ON il_to = img_name
+    INNER JOIN ch_text ON il_from = pg
+    INNER JOIN ruranobe_db.mw_page ON (img_name = page_title AND page_namespace = 6)
+    INNER JOIN chapters ON ch = chapter_id
+    INNER JOIN volumes USING (volume_id);
+
+INSERT INTO external_resources (user_id, mime_type, url, thumbnail, title, uploaded_when, history_id)
   SELECT DISTINCT
     img_user,
     concat(img_major_mime, '/', img_minor_mime),
     concat('https://ruranobe.ru/images/', substr(md5(img_name), 1, 1), '/', substr(md5(img_name), 1, 2), '/',
            img_name),
+    concat('https://ruranobe.ru/images/thumb/', substr(md5(img_name), 1, 1), '/', substr(md5(img_name), 1, 2), '/',
+           replace(img_name, '%', '%%'), '/%dpx-', replace(img_name, '%', '%%')),
     img_name,
-    img_timestamp
+    img_timestamp,
+    page_id
   FROM ruranobe_db.mw_image
     INNER JOIN ruranobe_db.mw_imagelinks ON il_to = img_name
     INNER JOIN ch_text ON il_from = pg
+    INNER JOIN ruranobe_db.mw_page ON (img_name = page_title AND page_namespace = 6)
   ORDER BY img_name;
 
 INSERT INTO chapter_images (chapter_id, volume_id, non_colored_image_id, colored_image_id, order_number, adult)
@@ -473,25 +527,50 @@ INSERT INTO chapter_images (chapter_id, volume_id, non_colored_image_id, colored
     INNER JOIN ch_text ON il_from = pg
     INNER JOIN chapters ON ch = chapter_id;
 
-INSERT IGNORE INTO external_resources (user_id, mime_type, url, title, uploaded_when)
+UPDATE external_resources_history h
+  INNER JOIN external_resources r USING (history_id)
+  INNER JOIN chapter_images ch ON r.resource_id = ch.non_colored_image_id
+SET h.chapter_image_id = ch.chapter_image_id;
+
+INSERT IGNORE INTO external_resources_history (history_id, uploaded_when, project_id, volume_id)
   SELECT DISTINCT
-    img_user,
-    concat(img_major_mime, '/', img_minor_mime),
-    concat('https://ruranobe.ru/images/', substr(md5(img_name), 1, 1), '/', substr(md5(img_name), 1, 2), '/',
-           img_name),
-    img_name,
-    img_timestamp
+    img_page.page_id,
+    img_timestamp,
+    project_id,
+    volume_id
   FROM ruranobe_db.mw_image
     INNER JOIN ruranobe_db.mw_imagelinks ON il_to = img_name
     INNER JOIN ruranobe_db.mw_page ON page_id = il_from
     INNER JOIN volumes ON page_title = url
     INNER JOIN ruranobe_db.main_releases ON release_id = volume_id
+    INNER JOIN ruranobe_db.mw_page img_page ON (img_name = img_page.page_title AND img_page.page_namespace = 6)
+  WHERE img_name LIKE concat(replace(cover, ' ', '_'), '.%');
+
+INSERT IGNORE INTO external_resources (user_id, mime_type, url, thumbnail, title, uploaded_when, history_id)
+  SELECT DISTINCT
+    img_user,
+    concat(img_major_mime, '/', img_minor_mime),
+    concat('https://ruranobe.ru/images/', substr(md5(img_name), 1, 1), '/', substr(md5(img_name), 1, 2), '/',
+           img_name),
+    concat('https://ruranobe.ru/images/thumb/', substr(md5(img_name), 1, 1), '/', substr(md5(img_name), 1, 2), '/',
+           replace(img_name, '%', '%%'), '/%dpx-', replace(img_name, '%', '%%')),
+    img_name,
+    img_timestamp,
+    img_page.page_id
+  FROM ruranobe_db.mw_image
+    INNER JOIN ruranobe_db.mw_imagelinks ON il_to = img_name
+    INNER JOIN ruranobe_db.mw_page ON page_id = il_from
+    INNER JOIN volumes ON page_title = url
+    INNER JOIN ruranobe_db.main_releases ON release_id = volume_id
+    INNER JOIN ruranobe_db.mw_page img_page ON (img_name = img_page.page_title AND img_page.page_namespace = 6)
   WHERE img_name LIKE concat(replace(cover, ' ', '_'), '.%');
 
 UPDATE volumes
   INNER JOIN ruranobe_db.main_releases ON release_id = volume_id
   INNER JOIN external_resources r ON r.title LIKE concat(replace(cover, ' ', '_'), '.%')
 SET image_one = resource_id;
+
+DROP TEMPORARY TABLE ch_text;
 
 
 UPDATE texts
@@ -612,7 +691,7 @@ CREATE TEMPORARY TABLE ch_parent_first (
 
 INSERT INTO ch_parent_first
   SELECT
-    @merge_id := @merge_id + 1,
+    if(text_wiki LIKE '%===%', @merge_id := @merge_id + 1, NULL),
     p.chapter_id,
     f.chapter_id,
     f.url,
@@ -622,121 +701,31 @@ INSERT INTO ch_parent_first
      WHERE f.chapter_id = chapter_id
      ORDER BY order_number
      LIMIT 1)
-  FROM chapters p, chapters f, texts t, (SELECT @merge_id := max(text_id)
-                                         FROM texts) xxx
+  FROM chapters p
+    INNER JOIN chapters f USING (volume_id)
+    LEFT JOIN texts t ON (f.text_id = t.text_id)
+    , (SELECT @merge_id := max(text_id)
+       FROM texts) xxx
   WHERE p.text_id IS NULL
-#         AND f.text_id IS NOT NULL
-        AND p.volume_id = f.volume_id
         AND !p.nested AND f.nested
         AND f.order_number = (SELECT order_number
                               FROM chapters n
                               WHERE p.volume_id = n.volume_id
                                     AND n.order_number > p.order_number
                               ORDER BY order_number
-                              LIMIT 1)
-        AND f.text_id = t.text_id
-        AND text_wiki LIKE '%===%';
-
-UPDATE ch_parent_first
-SET parent_new_text_id = NULL
-WHERE first_text_id IS NULL;
+                              LIMIT 1);
 
 INSERT INTO texts (text_id, text_wiki)
   SELECT
     parent_new_text_id,
     left(text_wiki, locate('===', text_wiki) - 1)
-  FROM ch_parent_first, texts
-  WHERE text_id = first_text_id;
-
-UPDATE chapters
-  INNER JOIN ch_parent_first ON chapter_id = parent_chapter_id
-SET text_id = parent_new_text_id, published = 1, url = if(right(first_url, 1) = 'p',
-                                                          left(first_url, length(first_url) - 1),
-                                                          if(right(first_url, 3) LIKE 'ch%',
-                                                             left(first_url, length(first_url) - 3),
-                                                             left(first_url, length(first_url) - 2)));
-
-UPDATE texts
-  INNER JOIN ch_parent_first ON text_id = first_text_id
-SET text_wiki = substr(text_wiki, locate('===', text_wiki));
-
-UPDATE texts
-SET text_wiki = substr(text_wiki, locate('\n', text_wiki, locate('==', text_wiki)) + 1)
-WHERE text_wiki LIKE '==%' OR text_wiki LIKE '\n==%';
-
-UPDATE chapter_images
-  INNER JOIN ch_parent_first ON first_chapter_id = chapter_id
-  INNER JOIN texts ON parent_new_text_id = text_id
-SET chapter_images.chapter_id = parent_chapter_id
-WHERE text_wiki LIKE '{{Иллюстрация}}%'
-      AND order_number < min_first_chapter_image_order_number
-                         + round((char_length(text_wiki) - char_length(replace(text_wiki, '{{Иллюстрация}}', ''))) /
-                                 char_length('{{Иллюстрация}}'), 0);
-
+  FROM ch_parent_first
+    INNER JOIN texts ON text_id = first_text_id
+  WHERE parent_new_text_id IS NOT NULL;
 
 UPDATE `chapters`
 SET `url` = 'sao/p1/c2'
 WHERE `chapter_id` = '930';
-UPDATE `chapters`
-SET `url` = 'sao/p2/c3'
-WHERE `chapter_id` = '933';
-UPDATE `chapters`
-SET `url` = 'lh/v2/ch3'
-WHERE `chapter_id` = '3290';
-UPDATE `chapters`
-SET `url` = 'lh/v2/ch4'
-WHERE `chapter_id` = '3296';
-UPDATE `chapters`
-SET `url` = 'lh/v2/ch5'
-WHERE `chapter_id` = '3301';
-UPDATE `chapters`
-SET `url` = 'snpnk/v3/ch1'
-WHERE `chapter_id` = '4767';
-UPDATE `chapters`
-SET `url` = 'snpnk/v3/ch2'
-WHERE `chapter_id` = '4768';
-UPDATE `chapters`
-SET `url` = 'snpnk/v3/ch3'
-WHERE `chapter_id` = '4769';
-UPDATE `chapters`
-SET `url` = 'snpnk/v3/ch4'
-WHERE `chapter_id` = '4770';
-UPDATE `chapters`
-SET `url` = 'snpnk/v4/ch1'
-WHERE `chapter_id` = '4839';
-UPDATE `chapters`
-SET `url` = 'snpnk/v4/ch2'
-WHERE `chapter_id` = '4840';
-UPDATE `chapters`
-SET `url` = 'snpnk/v4/ch3'
-WHERE `chapter_id` = '4841';
-UPDATE `chapters`
-SET `url` = 'snpnk/v4/ch4'
-WHERE `chapter_id` = '4842';
-UPDATE `chapters`
-SET `url` = 'tnynn/trans/v2'
-WHERE `chapter_id` = '4893';
-UPDATE `chapters`
-SET `url` = 'tnynn/trans/v3'
-WHERE `chapter_id` = '5376';
-UPDATE `chapters`
-SET `url` = 'smnk/v2/ch3'
-WHERE `chapter_id` = '5781';
-UPDATE `chapters`
-SET `url` = 'smnk/v2/ch4'
-WHERE `chapter_id` = '5790';
-UPDATE `chapters`
-SET `url` = 'smnk/v2/che'
-WHERE `chapter_id` = '5801';
-UPDATE `chapters`
-SET `url` = 'ol/v4/ch3'
-WHERE `chapter_id` = '5918';
-UPDATE `chapters`
-SET `url` = 'ol/v4/ch4'
-WHERE `chapter_id` = '5919';
-UPDATE `chapters`
-SET `url` = 'ol/v4/ch5'
-WHERE `chapter_id` = '5920';
 UPDATE `chapters`
 SET `url` = 'zl/v1/a1'
 WHERE `chapter_id` = '6012';
@@ -765,14 +754,44 @@ UPDATE `chapters`
 SET `url` = 'zl/v2/a9'
 WHERE `chapter_id` = '6047';
 UPDATE `chapters`
-SET `url` = 'sg/v2/ch1'
-WHERE `chapter_id` = '6048';
-UPDATE `chapters`
-SET `url` = 'sg/v2/ch2'
-WHERE `chapter_id` = '6056';
-UPDATE `chapters`
-SET `url` = 'sg/v2/ch3'
-WHERE `chapter_id` = '6062';
-UPDATE `chapters`
 SET `url` = 'tnynn/trans/v5'
 WHERE `chapter_id` = '6305';
+UPDATE `chapters`
+SET `url` = 'drrr/v4/e'
+WHERE `chapter_id` = '4891';
+
+UPDATE chapters
+  INNER JOIN ch_parent_first ON chapter_id = parent_chapter_id
+SET text_id    = parent_new_text_id,
+  publish_date = now(),
+  url          = coalesce(url, if(right(first_url, 1) = 'p',
+                                  left(first_url, length(first_url) - 1),
+                                  if(right(first_url, 3) LIKE 'ch%',
+                                     left(first_url,
+                                          length(first_url) - 3),
+                                     left(first_url,
+                                          length(first_url) - 2))));
+
+DELETE FROM ch_parent_first
+WHERE parent_new_text_id IS NULL;
+
+
+UPDATE texts
+  INNER JOIN ch_parent_first ON text_id = first_text_id
+SET text_wiki = substr(text_wiki, locate('===', text_wiki));
+
+UPDATE texts
+SET text_wiki = substr(text_wiki, locate('\n', text_wiki, locate('==', text_wiki)) + 1)
+WHERE text_wiki LIKE '==%' OR text_wiki LIKE '\n==%';
+
+UPDATE chapter_images
+  INNER JOIN ch_parent_first ON first_chapter_id = chapter_id
+  INNER JOIN texts ON parent_new_text_id = text_id
+SET chapter_images.chapter_id = parent_chapter_id
+WHERE text_wiki LIKE '{{Иллюстрация}}%'
+      AND order_number < min_first_chapter_image_order_number
+                         + round((char_length(text_wiki) - char_length(replace(text_wiki, '{{Иллюстрация}}', ''))) /
+                                 char_length('{{Иллюстрация}}'), 0);
+
+
+DROP TEMPORARY TABLE ch_parent_first;
