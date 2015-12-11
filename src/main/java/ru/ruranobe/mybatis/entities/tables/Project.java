@@ -38,9 +38,9 @@ public class Project extends PageRepresentable implements Serializable
     private String author;
     private String illustrator;
     private Integer orderNumber;
-    private boolean bannerHidden;
-    private boolean projectHidden;
-    private boolean onevolume;
+    private Boolean bannerHidden;
+    private Boolean projectHidden;
+    private Boolean onevolume;
     private String franchise;
     private String annotation;
 	private Integer forumId;
