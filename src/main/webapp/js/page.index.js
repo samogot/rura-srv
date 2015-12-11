@@ -1,4 +1,4 @@
- $(document).ready(function() {
+$(document).ready(function () {
      $('#main-search input').typeahead({
          hint: true,
          highlight: true,
@@ -7,22 +7,32 @@
          name: 'projects',
          display: 'nameEn',
          source: function (query, syncResults, asyncResults) {
-             $.get('/api/projects/get/all?params=name_ru;url;name_jp;name_en', function (data) {
+             $.get('/api/projects/get/all?params=name_ru;url;name_jp;name_en;name_romaji;title', function (data) {
                  var matches, substringRegex;
                  matches = [];
                  substrRegex = new RegExp(query, 'i');
                  $.each(data, function (i, str) {
                      if (str == null) return;
-                     if (substrRegex.test(str.nameEn) || substrRegex.test(str.nameRu) || substrRegex.test(str.nameJp)) {
-                         str.nameEn = (str.nameEn == undefined) ? '' : str.nameEn;
-                         str.nameRu = (str.nameRu == undefined) ? '' : str.nameRu;
-                         str.nameJp = (str.nameJp == undefined) ? '' : str.nameJp;
-                         matches.push({
-                             nameEn: str.nameEn,
-                             nameRu: str.nameRu,
-                             nameJp: str.nameJp,
-                             link: str.url
-                         });
+                     var match = {
+                         match: '',
+                         title: str.title,
+                         link: str.url
+                     };
+                     if (substrRegex.test(str.title)) {
+                         matches.push(match);
+                         return;
+                     }
+                     if (substrRegex.test(str.nameRu))
+                         match.match += ' ' + str.nameRu;
+                     if (substrRegex.test(str.nameEn))
+                         match.match += ' ' + str.nameEn;
+                     if (substrRegex.test(str.nameRomaji))
+                         match.match += ' ' + str.nameRomaji;
+                     if (substrRegex.test(str.nameJp))
+                         match.match += ' ' + str.nameJp;
+                     if (match.match != '') {
+                         match.match = match.match.substr(1);
+                         matches.push(match);
                      }
                  });
                  asyncResults(matches);
@@ -37,15 +47,18 @@
                  ].join('\n')
              },
              suggestion: function(data) {
-                 return '<p style="cursor:pointer"><strong>' + data.nameEn + '</strong><small class="text-muted" style="font-size:12px"><br>' + data.nameJp + ' ' + data.nameRu + '</small></p>';
+                 return '<p style="cursor:pointer"><strong>' + data.title + '</strong>' +
+                     (data.match ? '<small class="text-muted" style="font-size:12px"><br>' + data.match + '</small>' : '') +
+                     '</p>';
              }
          }
-     }).on('typeahead:selected, typeahead:autocomplete', function(event, selection) {
+     }).bind('typeahead:select', function (ev, selection) {
+         location.href = '/r/' + selection.link;
+     }).bind('typeahead:autocomplete', function (ev, selection) {
          location.href = '/r/' + selection.link;
      });
      $('.twitter-typeahead').css('vertical-align', 'bottom');
      $('#main-search button').click(function () {
          location.href = "https://cse.google.ru/cse/publicurl?cx=016828743293566058131:ctxseqkthgk&q=" + $('#main-search .tt-input').val();
-         ;
      });
  });
