@@ -918,6 +918,19 @@ button.loginClose {
     position: absolute;
 }
 
+.miniSearch .twitter-typeahead input {
+    width: 100%;
+    height: 100%;
+}
+
+.miniSearch .twitter-typeahead {
+    width: 180px;
+    height: 40px;
+    background: rgb(242, 242, 242);
+    border: none;
+    padding-left: 10px;
+}
+
 /*.list-group.select{
     max-height: 300px;
     overflow-y: auto;
