@@ -11,11 +11,6 @@ import java.util.List;
 public class Chapter extends PageRepresentable implements Serializable
 {
 
-    public Date getPublishDate()
-    {
-        return publishDate;
-    }
-
     private static final long serialVersionUID = 1L;
     private Integer chapterId;
     private Integer volumeId;
@@ -25,7 +20,6 @@ public class Chapter extends PageRepresentable implements Serializable
     private Integer orderNumber;
     private Date publishDate;
     private boolean nested;
-
     /* Optional */
     private Chapter prevChapter;
     private Chapter nextChapter;
@@ -33,7 +27,6 @@ public class Chapter extends PageRepresentable implements Serializable
     private List<Chapter> childChapters;
     private boolean visibleOnPage = false;
     private Text text;
-
     public Chapter()
     {
     }
@@ -51,6 +44,11 @@ public class Chapter extends PageRepresentable implements Serializable
     public static PageParameters makeUrlParameters(String[] urlParts)
     {
         return new PageParameters().set("project", urlParts[0]).set("volume", urlParts[1]).set("chapter", urlParts[2]);
+    }
+
+    public Date getPublishDate()
+    {
+        return publishDate;
     }
 
     public Class getLinkClass()
@@ -99,7 +97,7 @@ public class Chapter extends PageRepresentable implements Serializable
 
     public boolean isPublished()
     {
-        return new Date().after(publishDate);
+        return publishDate == null ? false : new Date().after(publishDate);
     }
 
     public void setPublished(boolean published)
