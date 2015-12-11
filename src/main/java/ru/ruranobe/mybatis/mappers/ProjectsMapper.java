@@ -1,5 +1,6 @@
 package ru.ruranobe.mybatis.mappers;
 
+import org.apache.ibatis.annotations.Param;
 import ru.ruranobe.mybatis.entities.tables.Project;
 
 import java.util.Collection;
@@ -16,6 +17,8 @@ public interface ProjectsMapper
     Collection<Project> getAllProjects();
 
     Collection<Project> getRootProjects();
+
+    Collection<Project> getAllProjectsWithCustomColumns(@Param("columns") String columns);
 
     void updateProject(Project Project);
 

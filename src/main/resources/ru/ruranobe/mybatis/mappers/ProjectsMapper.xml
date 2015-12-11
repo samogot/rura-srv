@@ -4,14 +4,6 @@
 
 <mapper namespace="ru.ruranobe.mybatis.mappers.ProjectsMapper">
 
-    <!-- The only need for this cache is operation getProjectsByUrl -->
-    <!--cache type="org.mybatis.caches.ehcache.EhcacheCache">
-        <property name="timeToIdleSeconds" value="3600"/>
-        <property name="timeToLiveSeconds" value="3600"/>
-        <property name="maxEntriesLocalHeap" value="1000"/>
-        <property name="memoryStoreEvictionPolicy" value="LRU"/>
-    </cache-->
-
     <select id="getRootProjects" resultMap="ProjectResult">
         SELECT *
         FROM projects
@@ -21,6 +13,12 @@
 
     <select id="getAllProjects" resultMap="ProjectResult">
         SELECT *
+        FROM projects
+        ORDER BY order_number;
+    </select>
+
+    <select id="getAllProjectsWithCustomColumns" parameterType="String" resultMap="ProjectResult">
+        SELECT ${columns}
         FROM projects
         ORDER BY order_number;
     </select>
@@ -93,54 +91,5 @@
         <result property="annotation" column="annotation"/>
         <result property="forumId" column="forum_id"/>
     </resultMap>
-
-    <!--select id="getSeriesById" parameterType="int" resultType="ru.ruranobe.mybatis.entities.tables.Series">
-        SELECT
-            series_id as seriesId,
-            name_url as nameUrl,
-            title,
-            parent_id as parentId
-        FROM main_series
-        WHERE series_id = #{seriesId}
-    </select>
-    
-    <select id="getSeriesByUrl" parameterType="String" resultType="ru.ruranobe.mybatis.entities.tables.Series">
-        SELECT
-            series_id as seriesId,
-            name_url as nameUrl,
-            title,
-            parent_id as parentId
-        FROM main_series
-        WHERE name_url = #{url}
-    </select>
-
-    <resultMap type="ru.ruranobe.mybatis.entities.tables.Series" id="SeriesResult">
-        <id property="seriesId" column="series_id"/>
-        <result property="nameUrl" column="name_url"/>
-        <result property="title" column="title"/>
-        <result property="parentId" column="parent_id"/>
-    </resultMap>
-
-    <select id="getAllSeries" resultMap="SeriesResult">
-        SELECT * FROM main_series
-    </select>
-
-    <insert id="insertSeries" parameterType="ru.ruranobe.mybatis.entities.tables.Series" useGeneratedKeys="true" keyProperty="seriesId">
-        INSERT INTO SERIES(series_id, name_url, title, parent_id)
-        VALUES(#{seriesId}, #{nameUrl}, #{title}, #{parentId})
-    </insert>
-
-    <update id="updateSeries" parameterType="ru.ruranobe.mybatis.entities.tables.Series">
-        UPDATE main_series
-        SET
-            name_url = #{nameUrl},
-            title = #{title},
-            parent_id = #{parentId}
-        WHERE series_id = #{seriesId}
-    </update>
-
-    <delete id="deleteSeries" parameterType="int">
-        DELETE FROM main_series WHERE series_id = #{seriesId}
-    </delete-->
 
 </mapper>

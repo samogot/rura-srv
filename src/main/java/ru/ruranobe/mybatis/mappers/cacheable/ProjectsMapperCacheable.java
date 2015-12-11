@@ -63,6 +63,11 @@ public class ProjectsMapperCacheable implements ProjectsMapper
     }
 
     @Override
+    public Collection<Project> getAllProjectsWithCustomColumns(String columns) {
+        return mapper.getAllProjectsWithCustomColumns(columns);
+    }
+
+    @Override
     public void updateProject(Project project)
     {
         mapper.updateProject(project);
