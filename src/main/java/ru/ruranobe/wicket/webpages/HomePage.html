@@ -3,6 +3,8 @@
 <body>
 
 <wicket:extend>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+    <script src="js/page.index.js"></script>
     <div class="container">
         <div class="leftColumn">
             <main class="content">
@@ -13,8 +15,8 @@
                     возможность ознакомиться с японскими лайт-новел и прочей связанной с ними литературой
                 </p>
 
-                <div class="input-group input-group-lg sharp">
-                    <input type="text" class="form-control" placeholder="Введите слово для поиска">
+                <div id="main-search" class="input-group input-group-lg sharp">
+                    <input type="text" class="form-control" style="height: 38px; vertical-align: bottom;" placeholder="Введите слово для поиска">
                     <span class="input-group-btn">
                         <button class="btn btn-primary" type="button"><i class="fa fa-search"></i></button>
                     </span>
