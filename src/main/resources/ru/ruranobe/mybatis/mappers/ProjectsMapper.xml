@@ -20,6 +20,7 @@
     <select id="getAllProjectsWithCustomColumns" parameterType="String" resultMap="ProjectResult">
         SELECT ${columns}
         FROM projects
+        WHERE !project_hidden
         ORDER BY order_number;
     </select>
 

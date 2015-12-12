@@ -79,7 +79,6 @@ public class ProjectsRestWebService extends GsonRestResource
                 .put("illustrator", "illustrator")
                 .put("order_number", "order_number")
                 .put("banner_hidden", "banner_hidden")
-                .put("project_hidden", "project_hidden")
                 .put("onevolume", "onevolume")
                 .put("franchise", "franchise")
                 .put("annotation", "annotation")
