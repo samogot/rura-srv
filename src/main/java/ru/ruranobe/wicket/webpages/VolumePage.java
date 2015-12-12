@@ -1,5 +1,6 @@
 package ru.ruranobe.wicket.webpages;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -11,6 +12,7 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
@@ -31,7 +33,9 @@ import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 import java.io.Serializable;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class VolumePage extends SidebarLayoutPage
@@ -127,14 +131,40 @@ public class VolumePage extends SidebarLayoutPage
             List<VolumeReleaseActivity> volumeReleaseActivities = new ArrayList<VolumeReleaseActivity>(
                     volumeReleaseActivitiesMapperCacheable.getVolumeReleaseActivitiesByVolumeId(volume.getVolumeId()));
 
-            add(new ListView<VolumeReleaseActivity>("volumeReleaseActivitiesView", volumeReleaseActivities)
+            final Map<String, ArrayList<String>> activityNameToMemberName = new HashMap<String, ArrayList<String>>();
+            if (volumeReleaseActivities != null)
+            {
+                for (VolumeReleaseActivity activity : volumeReleaseActivities)
+                {
+                    String activityName = activity.getActivityName();
+                    String memberName = activity.getMemberName();
+
+                    if (activityNameToMemberName.get(activityName) == null)
+                    {
+                        ArrayList<String> temp = new ArrayList<String>();
+                        temp.add(memberName);
+                        activityNameToMemberName.put(activityName, temp);
+                    }
+                    else
+                    {
+                        activityNameToMemberName.get(activityName).add(memberName);
+                    }
+                }
+            }
+
+            List<String> activityNames = new ArrayList<String>(activityNameToMemberName.keySet());
+            add(new ListView<String>("volumeReleaseActivitiesView", activityNames)
             {
                 @Override
-                protected void populateItem(ListItem<VolumeReleaseActivity> item)
+                protected void populateItem(ListItem<String> item)
                 {
-                    item.setDefaultModel(new CompoundPropertyModel<VolumeReleaseActivity>(item.getModelObject()));
-                    item.add(new Label("activityName"));
-                    item.add(new Label("memberName"));
+                    String activityName = item.getModelObject();
+                    item.add(new Label("activityName", activityName));
+                    String[] members = activityNameToMemberName.get(activityName).toArray(new String[0]);
+                    item.add(
+                            new Label("memberName",
+                                      StringUtils.join(StringUtils.join(members, ','))
+                            ));
                 }
 
                 @Override
