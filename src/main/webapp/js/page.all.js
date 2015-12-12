@@ -1,5 +1,5 @@
-$(document).ready(function () {
-    $('.module_name').click(function () {
+$(document).ready(function() {
+    $('.module_name').click(function() {
         $(this).children('.fa').toggleClass("fa-chevron-right fa-chevron-down").end()
             .toggleClass("opened").next('.actions').slideToggle($('#contents-module').length ? reinitAffix : undefined);
     });
@@ -86,3 +86,54 @@ $(document).ready(function () {
         });
     }
 });
+
+ function supportsLocalStorage() {
+     try {
+         return 'localStorage' in window && window['localStorage'] !== null;
+     } catch (e) {
+         return false;
+     }
+ }
+
+ function saveSettings(options) {
+     if (!supportsLocalStorage()) {
+         return false;
+     }
+     localStorage.setItem(options.key, options.item);
+ }
+
+ function loadSettings() {
+     if (!supportsLocalStorage()) {
+         return false;
+     }
+     if (localStorage.getItem("night") == "true") {
+         $('body').addClass("night");
+         $('a.navbar-brand img').attr('src', 'img/logo1_night.png');
+         $('.daynight-button .fa').toggleClass('fa-sun-o fa-moon-o');
+     } else {
+         $('body').removeClass("night");
+         $('a.navbar-brand img').attr('src', 'img/logo1.png');
+     }
+ }
+ $(document).ready(function() {
+     loadSettings()
+ });
+ $('.daynight-button').on('click', function(e) {
+     if ($(this).children('.fa').hasClass('fa-sun-o')) {
+         $('body').addClass("night");
+         $('a.navbar-brand img').attr('src', 'img/logo1_night.png');
+         saveSettings({
+             key: 'night',
+             item: true
+         });
+     } else {
+         $('body').removeClass("night");
+         $('a.navbar-brand img').attr('src', 'img/logo1.png');
+         saveSettings({
+             key: 'night',
+             item: false
+         });
+     }
+     $(this).children('.fa').toggleClass('fa-sun-o fa-moon-o');
+});
+ 
