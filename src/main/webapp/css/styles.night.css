@@ -1,4 +1,30 @@
 /* body.night START */
+body.night .navbar-default .navbar-nav > li > a:hover, body.night .navbar-default .navbar-nav > li > a:focus {
+    color: #E0E0E0;
+    border-bottom: 1px dashed #777;
+}
+body.night .ranobeList > div > a {
+    color: #E0E0E0;
+}
+body.night .ranobeList > div > .pull-left{
+    color: #282828;
+}
+body.night .ranobeList > div:hover > a{
+    color: #282828;
+}
+body.night .ranobeList > div:hover > .pull-left{
+    background-color: #282828;
+    color: #E0E0E0;
+}
+body.night .navbar-default .navbar-nav > li > span {
+    color: #E0E0E0;
+}
+body.night .aboutRelease {
+    color: #E0E0E0;
+}
+body.night #vk_groups {
+    opacity: 0.95;
+}
 body.night .text p.show {
     background: #424242;
     cursor: pointer;

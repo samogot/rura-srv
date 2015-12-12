@@ -16,7 +16,7 @@ $(document).ready(function() {
             if (deleteFrom < 4) deleteFrom = 4;
             $('#all-projects-module .banners a').slice(deleteFrom + 1).hide();
             $('#all-projects-module .banners').append('<span class="more moreprojects">Больше</span>');
-            $('.moreprojects').click(function () {
+            $('.moreprojects').click(function() {
                 $(this).remove();
                 $('#all-projects-module .banners a:hidden').slideDown($('#contents-module').length ? reinitAffix : undefined);
             });
@@ -24,116 +24,142 @@ $(document).ready(function() {
     }
     if ($('.miniSearch').length != 0 || $('#main-search').length != 0) {
         var element = $('.miniSearch').length != 0 ? $('.miniSearch') : $('#main-search')
-        element.children('input').typeahead({
-            hint: true,
-            highlight: true,
-            minLength: 1
-        }, {
-            name: 'projects',
-            display: 'title',
-            source: function (query, syncResults, asyncResults) {
-                $.get('/api/projects?fields=name_ru,url,name_jp,name_romaji,title', function (data) {
-                    var matches, substringRegex;
-                    matches = [];
-                    substrRegex = new RegExp(query, 'i');
-                    $.each(data, function (i, str) {
-                        if (str == null || !str.url) return;
-                        var match = {
-                            match: '',
-                            title: str.title,
-                            link: str.url
-                        };
-                        if (substrRegex.test(str.title))
-                            match.match = ' ';
-                        if (substrRegex.test(str.nameRu))
-                            match.match += ' ' + str.nameRu;
-                        if (substrRegex.test(str.nameEn))
-                            match.match += ' ' + str.nameEn;
-                        if (substrRegex.test(str.nameRomaji))
-                            match.match += ' ' + str.nameRomaji;
-                        if (substrRegex.test(str.nameJp))
-                            match.match += ' ' + str.nameJp;
-                        if (match.match != '') {
-                            match.match = match.match.trim();
-                            matches.push(match);
-                        }
+        $.getScript('https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js', function() {
+            element.children('input').typeahead({
+                hint: true,
+                highlight: true,
+                minLength: 1
+            }, {
+                name: 'projects',
+                display: 'title',
+                source: function(query, syncResults, asyncResults) {
+                    $.get('/api/projects/get/all?params=name_ru;url;name_jp;name_romaji;title', function(data) {
+                        var matches, substringRegex;
+                        matches = [];
+                        substrRegex = new RegExp(query, 'i');
+                        $.each(data, function(i, str) {
+                            if (str == null) return;
+                            if (substrRegex.test(str.title) || substrRegex.test(str.nameEn) || substrRegex.test(str.nameRu) || substrRegex.test(str.nameJp) || substrRegex.test(str.Romaji)) {
+                                str.nameEn = (str.nameEn == undefined) ? '' : str.nameEn;
+                                str.nameRu = (str.nameRu == undefined) ? '' : str.nameRu;
+                                str.nameJp = (str.nameJp == undefined) ? '' : str.nameJp;
+                                str.nameRomaji = (str.nameRomaji == undefined) ? '' : str.nameRomaji;
+                                matches.push({
+                                    title: str.title,
+                                    nameEn: str.nameEn,
+                                    nameRu: str.nameRu,
+                                    nameJp: str.nameJp,
+                                    nameRomaji: str.nameRomaji,
+                                    link: str.url
+                                });
+                            }
+                        });
+                        asyncResults(matches);
                     });
-                    asyncResults(matches);
-                });
-            },
-            templates: {
-                empty: function (data) {
-                    return [
-                        '<div class="empty-message" align="center" style="width:100%">',
-                        'Извините, данный проект не найден :С',
-                        '</div>'
-                    ].join('\n')
                 },
-                suggestion: function (data) {
-                    return '<p style="cursor:pointer"><strong>' + data.title + '</strong>' +
-                        (data.match ? '<small class="text-muted" style="font-size:12px"><br>' + data.match + '</small>' : '') +
-                        '</p>';
+                templates: {
+                    empty: function(data) {
+                        return [
+                            '<div class="empty-message" align="center" style="width:100%">',
+                            'Извините, данный проект не найден :С',
+                            '</div>'
+                        ].join('\n')
+                    },
+                    suggestion: function(data) {
+                        return '<p style="cursor:pointer"><strong>' + data.title + '</strong><small class="text-muted" style="font-size:12px"><br>' + data.nameEn + ' ' + data.nameJp + ' ' + data.nameRu + ' ' + data.nameRomaji + '</small></p>';
+                    }
                 }
-            }
-        }).bind('typeahead:select', function (ev, selection) {
-            location.href = '/r/' + selection.link;
-        }).bind('typeahead:autocomplete', function (ev, selection) {
-            location.href = '/r/' + selection.link;
+            }).bind('typeahead:select', function(ev, selection) {
+                location.href = '/r/' + selection.link;
+            }).bind('typeahead:autocomplete', function(ev, selection) {
+                location.href = '/r/' + selection.link;
+            });
+
+            element.children('button').click(function() {
+                location.href = "https://cse.google.ru/cse/publicurl?cx=016828743293566058131:ctxseqkthgk&q=" + element.children('.tt-input').val();;
+            });
+            if ($('#main-search').length != 0) $('#main-search span').css('vertical-align', 'bottom');
+        });
+    }
+
+});
+
+function supportsLocalStorage() {
+    try {
+        return 'localStorage' in window && window['localStorage'] !== null;
+    } catch (e) {
+        return false;
+    }
+}
+
+function saveSettings(options) {
+    if (!supportsLocalStorage()) {
+        return false;
+    }
+    localStorage.setItem(options.key, options.item);
+}
+
+function loadSettings() {
+    if (!supportsLocalStorage()) {
+        return false;
+    }
+    if (localStorage.getItem("night") == "true") {
+        $('body').addClass("night");
+        $('a.navbar-brand img').attr('src', '/img/logo1_night.png');
+        $('.daynight-button .fa').toggleClass('fa-sun-o fa-moon-o');
+    } else {
+        $('body').removeClass("night");
+        $('a.navbar-brand img').attr('src', '/img/logo1.png');
+    }
+}
+$(document).ready(function() {
+    loadSettings()
+});
+$('.daynight-button').on('click', function(e) {
+    if ($(this).children('.fa').hasClass('fa-sun-o')) {
+        $('body').addClass("night");
+        $('a.navbar-brand img').attr('src', '/img/logo1_night.png');
+        saveSettings({
+            key: 'night',
+            item: true
+        });
+        VKbgcolor = '282828';
+        VKtext = 'E0E0E0';
+        VKbuttons = '4E4E4E';
+        twTheme = 'dark';
+    } else {
+        $('body').removeClass("night");
+        VKbgcolor = 'FFFFFF';
+        VKtext = '5290b5';
+        VKbuttons = '60a7d2';
+        twTheme = 'light';
+        $('a.navbar-brand img').attr('src', '/img/logo1.png');
+        saveSettings({
+            key: 'night',
+            item: false
+        });
+    }
+    $(this).children('.fa').toggleClass('fa-sun-o fa-moon-o');
+    if ($('#vk_groups').length != 0) {
+        $('.twitter-timeline').remove();
+        $('<a class="twitter-timeline" href="https://twitter.com/RuRa_team">Твиты от @RuRa_team</a>').insertAfter('.right-sidebar hr');
+        $('#vk_groups').empty();
+        VK.Widgets.Group("vk_groups", {
+            mode: 2,
+            width: "230",
+            height: "660",
+            color1: VKbgcolor,
+            color2: VKtext,
+            color3: VKbuttons
+        }, 43340456);
+        twttr.widgets.createTimeline('540043044683546624', document.getElementsByClassName('twitter-timeline')[0], {
+            theme: twTheme,
+            dnt: true
         });
 
-        element.children('button').click(function () {
-            location.href = "https://cse.google.ru/cse/publicurl?cx=016828743293566058131:ctxseqkthgk&q=" + element.find('.tt-input').val();
-        });
     }
 });
 
- function supportsLocalStorage() {
-     try {
-         return 'localStorage' in window && window['localStorage'] !== null;
-     } catch (e) {
-         return false;
-     }
- }
 
- function saveSettings(options) {
-     if (!supportsLocalStorage()) {
-         return false;
-     }
-     localStorage.setItem(options.key, options.item);
- }
 
- function loadSettings() {
-     if (!supportsLocalStorage()) {
-         return false;
-     }
-     if (localStorage.getItem("night") == "true") {
-         $('body').addClass("night");
-         $('a.navbar-brand img').attr('src', 'img/logo1_night.png');
-         $('.daynight-button .fa').toggleClass('fa-sun-o fa-moon-o');
-     } else {
-         $('body').removeClass("night");
-         $('a.navbar-brand img').attr('src', 'img/logo1.png');
-     }
- }
- $(document).ready(function() {
-     loadSettings()
- });
- $('.daynight-button').on('click', function(e) {
-     if ($(this).children('.fa').hasClass('fa-sun-o')) {
-         $('body').addClass("night");
-         $('a.navbar-brand img').attr('src', 'img/logo1_night.png');
-         saveSettings({
-             key: 'night',
-             item: true
-         });
-     } else {
-         $('body').removeClass("night");
-         $('a.navbar-brand img').attr('src', 'img/logo1.png');
-         saveSettings({
-             key: 'night',
-             item: false
-         });
-     }
-     $(this).children('.fa').toggleClass('fa-sun-o fa-moon-o');
-});
- 
+
