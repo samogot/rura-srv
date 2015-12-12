@@ -14,14 +14,14 @@
 
     <select id="getInfoByProjectId" parameterType="int" resultType="ru.ruranobe.mybatis.entities.tables.ProjectInfo">
         SELECT
-            count(*)              AS volumesCount,
+            (SELECT count(*)
+              FROM volumes
+              WHERE project_id = #{projectId}
+                AND volume_type = 'Ранобэ') AS volumesCount,
             volumes.author,
             volumes.illustrator,
             volumes.volume_status AS volumeStatus
-        FROM (SELECT count(*)
-              FROM volumes
-              WHERE project_id = #{projectId}
-                AND volume_type = 'Ранобэ') volumesCount, volumes
+        FROM volumes
         WHERE volumes.project_id = #{projectId}
         ORDER BY volume_id DESC
         LIMIT 1
