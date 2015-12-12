@@ -84,7 +84,7 @@ $(document).ready(function () {
         });
 
         element.children('button').click(function () {
-            location.href = "https://cse.google.ru/cse/publicurl?cx=016828743293566058131:ctxseqkthgk&q=" + element.children('input').val();
+            location.href = "https://cse.google.ru/cse/publicurl?cx=016828743293566058131:ctxseqkthgk&q=" + element.find('.tt-input').val();
             ;
         });
     }
