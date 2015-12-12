@@ -32,7 +32,7 @@ $(document).ready(function () {
             name: 'projects',
             display: 'title',
             source: function (query, syncResults, asyncResults) {
-                $.get('/api/projects/get/all?params=name_ru;url;name_jp;name_romaji;title', function (data) {
+                $.get('/api/projects?fields=name_ru,url,name_jp,name_romaji,title', function (data) {
                     var matches, substringRegex;
                     matches = [];
                     substrRegex = new RegExp(query, 'i');
@@ -43,10 +43,8 @@ $(document).ready(function () {
                             title: str.title,
                             link: str.url
                         };
-                        if (substrRegex.test(str.title)) {
-                            matches.push(match);
-                            return;
-                        }
+                        if (substrRegex.test(str.title))
+                            match.match = ' ';
                         if (substrRegex.test(str.nameRu))
                             match.match += ' ' + str.nameRu;
                         if (substrRegex.test(str.nameEn))
@@ -56,7 +54,7 @@ $(document).ready(function () {
                         if (substrRegex.test(str.nameJp))
                             match.match += ' ' + str.nameJp;
                         if (match.match != '') {
-                            match.match = match.match.substr(1);
+                            match.match = match.match.trim();
                             matches.push(match);
                         }
                     });
@@ -85,7 +83,6 @@ $(document).ready(function () {
 
         element.children('button').click(function () {
             location.href = "https://cse.google.ru/cse/publicurl?cx=016828743293566058131:ctxseqkthgk&q=" + element.find('.tt-input').val();
-            ;
         });
     }
 });
