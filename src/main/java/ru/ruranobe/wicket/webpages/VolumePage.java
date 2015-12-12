@@ -144,19 +144,8 @@ public class VolumePage extends SidebarLayoutPage
                 }
             });
 
-            AbstractLink readAllLink;
-            if (volume.isStatusExternal() && volume.getExternalUrl() != null)
-            {
-                readAllLink = new ExternalLink("readAllLink", volume.getExternalUrl());
-            }
-            else
-            {
-                readAllLink = new BookmarkablePageLink("readAllLink", Text.class, volume.getUrlParameters());
-            }
-            add(readAllLink);
-
             ChaptersMapper chaptersMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
-            List<Chapter> chapters = chaptersMapperCacheable.getChaptersByVolumeId(volume.getVolumeId());
+            final List<Chapter> chapters = chaptersMapperCacheable.getChaptersByVolumeId(volume.getVolumeId());
             ListView<Chapter> chaptersView = new ListView<Chapter>("chaptersView", chapters)
             {
                 @Override
@@ -181,6 +170,24 @@ public class VolumePage extends SidebarLayoutPage
                 }
             };
             add(chaptersView);
+
+            AbstractLink readAllLink;
+            if (volume.isStatusExternal() && volume.getExternalUrl() != null)
+            {
+                readAllLink = new ExternalLink("readAllLink", volume.getExternalUrl());
+            }
+            else
+            {
+                readAllLink = new BookmarkablePageLink("readAllLink", Text.class, volume.getUrlParameters())
+                {
+                    @Override
+                    public boolean isVisible()
+                    {
+                        return chapters != null && !chapters.isEmpty();
+                    }
+                };
+            }
+            add(readAllLink);
 
             add(new CommentsPanel("comments", volume.getTopicId()));
             sidebarModules.add(new UpdatesSidebarModule("sidebarModule", volume.getProjectId()));

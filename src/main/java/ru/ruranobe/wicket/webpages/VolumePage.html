@@ -49,19 +49,20 @@
             <div class="annotation" wicket:id="annotationParsed"></div>
         </wicket:enclosure>
     </div>
-    <h2 style="clear: left">Читать</h2>
-
-    <div class="read">
-        <a wicket:id="readAllLink">
-            <div><strong>Читать весь текст</strong></div>
-        </a>
-
-        <wicket:container wicket:id="chaptersView">
-            <a wicket:id="chapterLink">
-                <div wicket:id="chapterName"></div>
+    <wicket:enclosure child="readAllLink">
+        <h2 style="clear: left">Читать</h2>
+        <div class="read">
+            <a wicket:id="readAllLink">
+                <div><strong>Читать весь текст</strong></div>
             </a>
-        </wicket:container>
-    </div>
+
+            <wicket:container wicket:id="chaptersView">
+                <a wicket:id="chapterLink">
+                    <div wicket:id="chapterName"></div>
+                </a>
+            </wicket:container>
+        </div>
+    </wicket:enclosure>
     <wicket:fragment wicket:id="comments"/>
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.min.js"></script>
