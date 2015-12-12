@@ -20,7 +20,8 @@
             volumes.volume_status AS volumeStatus
         FROM (SELECT count(*)
               FROM volumes
-              WHERE project_id = #{projectId}) volumesCount, volumes
+              WHERE project_id = #{projectId}
+                AND volume_type = 'Ранобэ') volumesCount, volumes
         WHERE volumes.project_id = #{projectId}
         ORDER BY volume_id DESC
         LIMIT 1
