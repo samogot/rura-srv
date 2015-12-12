@@ -20,8 +20,9 @@ public class OrphusCommentsMapperCacheable implements OrphusCommentsMapper
     }
 
     @Override
-    public List<OrphusComment> getLastOrphusCommentsBy(String sortingOrder, long limitFrom, long limitTo) {
-        return mapper.getLastOrphusCommentsBy(sortingOrder, limitFrom, limitTo);
+    public List<OrphusComment> getLastOrphusCommentsBy(Integer projectId,Integer volumeId,Integer chapterId,String sortingOrder, long limitFrom, long limitTo)
+    {
+        return mapper.getLastOrphusCommentsBy(projectId, volumeId, chapterId, sortingOrder, limitFrom, limitTo);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package ru.ruranobe.wicket.webpages;
 
 import org.apache.ibatis.session.SqlSession;
+import org.apache.wicket.core.request.mapper.MountedMapper;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
@@ -9,11 +10,19 @@ import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.Request;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.commons.lang3.StringUtils;
+import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.Chapter;
 import ru.ruranobe.mybatis.entities.tables.OrphusComment;
+import ru.ruranobe.mybatis.entities.tables.Project;
+import ru.ruranobe.mybatis.entities.tables.Volume;
+import ru.ruranobe.mybatis.mappers.ChaptersMapper;
 import ru.ruranobe.mybatis.mappers.OrphusCommentsMapper;
+import ru.ruranobe.mybatis.mappers.ProjectsMapper;
+import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.webpages.base.BaseLayoutPage;
 
@@ -22,11 +31,14 @@ import java.util.Iterator;
 
 public class Orphus extends BaseLayoutPage
 {
-    public Orphus()
+
+    public Orphus(PageParameters parameters)
     {
         setStatelessHint(true);
 
-        DataView<OrphusComment> orphusRepeater = new DataView<OrphusComment>("orphusRepeater", new OrphusCommentsDataProvider())
+        parsePageParameters(parameters);
+
+        DataView<OrphusComment> orphusRepeater = new DataView<OrphusComment>("orphusRepeater", new OrphusCommentsDataProvider(projectId, volumeId, chapterId))
         {
             @Override
             protected void populateItem(Item<OrphusComment> item)
@@ -130,6 +142,13 @@ public class Orphus extends BaseLayoutPage
     private class OrphusCommentsDataProvider implements IDataProvider<OrphusComment>
     {
 
+        public OrphusCommentsDataProvider(Integer projectId, Integer volumeId, Integer chapterId)
+        {
+            this.projectId = projectId;
+            this.volumeId = volumeId;
+            this.chapterId = chapterId;
+        }
+
         @Override
         public Iterator<? extends OrphusComment> iterator(long first, long count)
         {
@@ -138,7 +157,7 @@ public class Orphus extends BaseLayoutPage
             try
             {
                 OrphusCommentsMapper orphusCommentsMapperCacheable = CachingFacade.getCacheableMapper(session, OrphusCommentsMapper.class);
-                iter = orphusCommentsMapperCacheable.getLastOrphusCommentsBy("desc", first, first+count).iterator();
+                iter = orphusCommentsMapperCacheable.getLastOrphusCommentsBy(projectId, volumeId, chapterId, "desc", first, first+count).iterator();
             }
             finally
             {
@@ -175,5 +194,105 @@ public class Orphus extends BaseLayoutPage
         {
 
         }
+
+        private Integer projectId = null;
+        private Integer volumeId = null;
+        private Integer chapterId = null;
     }
+
+    private void parsePageParameters(PageParameters parameters)
+    {
+        String projectUrl = parameters.get("project").toOptionalString();
+        String volumeUrl = parameters.get("volume").toOptionalString();
+        String chapterUrl = parameters.get("chapter").toOptionalString();
+
+        StringBuilder fullUrl = new StringBuilder();
+        if (StringUtils.isNotEmpty(projectUrl))
+        {
+            fullUrl.append(projectUrl);
+            if (StringUtils.isNotEmpty(volumeUrl))
+            {
+                fullUrl.append("/").append(volumeUrl);
+                if (StringUtils.isNotEmpty(chapterUrl))
+                {
+                    fullUrl.append("/").append(chapterUrl);
+                    SqlSession session = MybatisUtil.getSessionFactory().openSession();
+                    try
+                    {
+                        ChaptersMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
+                        Chapter chapter = volumesMapperCacheable.getChapterByUrl(fullUrl.toString());
+                        if (chapter == null)
+                        {
+                            throw RuranobeUtils.getRedirectTo404Exception(this);
+                        }
+                        chapterId = chapter.getChapterId();
+                    }
+                    finally
+                    {
+                        session.close();
+                    }
+                }
+                else
+                {
+                    SqlSession session = MybatisUtil.getSessionFactory().openSession();
+                    try
+                    {
+                        VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
+                        Volume volume = volumesMapperCacheable.getVolumeByUrl(fullUrl.toString());
+                        if (volume == null)
+                        {
+                            throw RuranobeUtils.getRedirectTo404Exception(this);
+                        }
+                        volumeId = volume.getVolumeId();
+                    }
+                    finally
+                    {
+                        session.close();
+                    }
+                }
+            }
+            else
+            {
+                SqlSession session = MybatisUtil.getSessionFactory().openSession();
+                try
+                {
+                    ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
+                    Project project = projectsMapperCacheable.getProjectByUrl(fullUrl.toString());
+                    if (project == null)
+                    {
+                        throw RuranobeUtils.getRedirectTo404Exception(this);
+                    }
+                    projectId = project.getProjectId();
+                }
+                finally
+                {
+                    session.close();
+                }
+            }
+        }
+    }
+
+    /**
+     * Wicket has a bag in MountedMapper.getCompatibilityScore for optional parameters which leads to selecting
+     * the wrong page. Dumb fix in this class.
+     */
+    public static class OrphusMountedMapper extends MountedMapper
+    {
+        String startMountedPath;
+
+        public OrphusMountedMapper(String mountedPath, String startMountedPath)
+        {
+            super(mountedPath, Orphus.class);
+            this.startMountedPath = startMountedPath;
+        }
+
+        public int getCompatibilityScore(Request request)
+        {
+            return this.urlStartsWith(request.getUrl(), startMountedPath) ? Integer.MAX_VALUE : Integer.MIN_VALUE;
+        }
+    }
+
+    private Integer projectId = null;
+    private Integer volumeId = null;
+    private Integer chapterId = null;
 }

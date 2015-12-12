@@ -92,7 +92,7 @@ public class WicketApplication extends AuthenticatedWebApplication
         getRootRequestMapperAsCompound().add(new NoVersionMapper("/a/${project}/${volume}", VolumeEdit.class));
         getRootRequestMapperAsCompound().add(new NoVersionMapper("/a/${project}", ProjectEdit.class));
         getRootRequestMapperAsCompound().add(new NoVersionMapper("/a", GlobalEdit.class));
-        mount(new MountedMapper("/a/orphus", Orphus.class));
+        mount(new Orphus.OrphusMountedMapper("/a/orphus/#{project}/#{volume}/#{chapter}","/a/orphus"));
         mount(new MountedMapper("/notfound", NotFound.class));
 
         mountResource("/bookmarks", new ResourceReference("bookmarksResource")

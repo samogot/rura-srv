@@ -32,6 +32,18 @@
           on u.user_id = c.user_id
         join chapters ch
           on ch.chapter_id = c.chapter_id
+        join volumes v
+          on v.volume_id = ch.volume_id
+        where 1=1
+        <if test="volumeId != null">
+            AND v.volume_id = #{volumeId}
+        </if>
+        <if test="chapterId != null">
+            AND ch.chapter_id = #{chapterId}
+        </if>
+        <if test="projectId != null">
+            AND v.project_id = #{projectId}
+        </if>
         ORDER BY c.created_when
         <if test="sortingOrder == 'asc'">
             ASC
