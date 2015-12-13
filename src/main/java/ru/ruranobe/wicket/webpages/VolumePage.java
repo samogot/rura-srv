@@ -3,6 +3,7 @@ package ru.ruranobe.wicket.webpages;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -12,7 +13,6 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
@@ -77,7 +77,7 @@ public class VolumePage extends SidebarLayoutPage
             add(nextUrl);
 
             ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.
-                    getCacheableMapper(session, ExternalResourcesMapper.class);
+                                                                                            getCacheableMapper(session, ExternalResourcesMapper.class);
             ExternalResource volumeCover;
             List<SimpleEntry<String, String>> covers = new ArrayList<SimpleEntry<String, String>>();
             volumeCover = externalResourcesMapperCacheable.getExternalResourceById(volume.getImageOne());
@@ -163,7 +163,7 @@ public class VolumePage extends SidebarLayoutPage
                     String[] members = activityNameToMemberName.get(activityName).toArray(new String[0]);
                     item.add(
                             new Label("memberName",
-                                      StringUtils.join(StringUtils.join(members, ','))
+                                    StringUtils.join(StringUtils.join(members, ','))
                             ));
                 }
 
@@ -190,6 +190,7 @@ public class VolumePage extends SidebarLayoutPage
                     else
                     {
                         chapterLink = new WebMarkupContainer("chapterLink");
+                        chapterLink.add(new AttributeModifier("class", "unpublished"));
                     }
                     if (chapter.isNested())
                     {
