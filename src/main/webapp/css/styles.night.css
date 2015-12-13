@@ -3,7 +3,7 @@ body.night .navbar-default .navbar-nav > li > a:hover, body.night .navbar-defaul
     color: #E0E0E0;
     border-bottom: 1px dashed #777;
 }
-body.night .ranobeList > div > a {
+body.night .ranobeList > div > a, body.night .read > a {
     color: #E0E0E0;
 }
 body.night .ranobeList > div > .pull-left{
@@ -22,8 +22,8 @@ body.night .navbar-default .navbar-nav > li > span {
 body.night .aboutRelease {
     color: #E0E0E0;
 }
-body.night #vk_groups {
-    opacity: 0.95;
+body.night #vk_groups, body.night .twitter-timeline, body.night .project img {
+    opacity: 0.9;
 }
 body.night .text p.show {
     background: #424242;
