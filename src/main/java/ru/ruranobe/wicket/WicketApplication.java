@@ -8,7 +8,6 @@ import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.core.request.mapper.MountedMapper;
 import org.apache.wicket.core.util.file.WebApplicationPath;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.page.PageAccessSynchronizer;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebResponse;
 import org.apache.wicket.request.IRequestHandler;
@@ -22,10 +21,8 @@ import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.crypt.CachingSunJceCryptFactory;
 import org.wicketstuff.pageserializer.kryo.KryoSerializer;
+import org.wicketstuff.rest.utils.mounting.PackageScanner;
 import ru.ruranobe.misc.RuranobeUtils;
-import ru.ruranobe.wicket.resources.BookmarksRestWebService;
-import ru.ruranobe.wicket.resources.OrphusRestWebService;
-import ru.ruranobe.wicket.resources.ProjectsRestWebService;
 import ru.ruranobe.wicket.webpages.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -95,38 +92,7 @@ public class WicketApplication extends AuthenticatedWebApplication
         mount(new Orphus.OrphusMountedMapper("/a/orphus/#{project}/#{volume}/#{chapter}","/a/orphus"));
         mount(new MountedMapper("/notfound", NotFound.class));
 
-        mountResource("/bookmarks", new ResourceReference("bookmarksResource")
-        {
-            BookmarksRestWebService bookmarksResource = new BookmarksRestWebService();
-
-            @Override
-            public IResource getResource()
-            {
-                return bookmarksResource;
-            }
-        });
-
-        mountResource("/orphus", new ResourceReference("orphusResource")
-        {
-            OrphusRestWebService orphusResource = new OrphusRestWebService();
-
-            @Override
-            public IResource getResource()
-            {
-                return orphusResource;
-            }
-        });
-
-        mountResource("/api/projects", new ResourceReference("projectsResource")
-        {
-            ProjectsRestWebService projectsResource = new ProjectsRestWebService();
-
-            @Override
-            public IResource getResource()
-            {
-                return projectsResource;
-            }
-        });
+        PackageScanner.scanPackage("ru.ruranobe.wicket.resources");
     }
 
     protected WebResponse newWebResponse(final WebRequest webRequest,

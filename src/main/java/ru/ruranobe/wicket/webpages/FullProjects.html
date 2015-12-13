@@ -65,27 +65,53 @@
         <aside class="right-sidebar visible-lg-block">
             <script type="text/javascript" src="https://vk.com/js/api/openapi.js?115"></script>
             <div id="vk_groups"></div>
-            <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/RuRa_team"
-               data-widget-id="540043044683546624">Твиты от @RuRa_team</a>
-            <script>
+          <hr>
+          <a class="twitter-timeline" data-theme=""href="https://twitter.com/RuRa_team" align="center" data-widget-id="540043044683546624">Твиты от @RuRa_team</a>
+          <script>
+          window.twttr = (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0],
+              t = window.twttr || {};
+            if (d.getElementById(id)) return t;
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "https://platform.twitter.com/widgets.js";
+            fjs.parentNode.insertBefore(js, fjs);
+           
+            t._e = [];
+            t.ready = function(f) {
+              t._e.push(f);
+            };
+           
+            return t;
+          }(document, "script", "twitter-wjs"));
+            $(window).load(function() {
+                if ($('body').hasClass('night')) {
+                    VKbgcolor = '282828';
+                    VKtext = 'E0E0E0';
+                    VKbuttons = '4E4E4E';
+                    twTheme = 'dark';
+                } else {
+                    VKbgcolor = 'FFFFFF';
+                    VKtext = '5290b5';
+                    VKbuttons = '60a7d2';
+                    twTheme = 'light';
+                }
                 VK.Widgets.Group("vk_groups", {
                     mode: 2,
                     width: "230",
                     height: "660",
-                    color1: 'FFFFFF',
-                    color2: '5290b5',
-                    color3: '60a7d2'
+                    color1: VKbgcolor,
+                    color2: VKtext,
+                    color3: VKbuttons
                 }, 43340456);
-                !function (d, s, id) {
-                    var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
-                    if (!d.getElementById(id)) {
-                        js = d.createElement(s);
-                        js.id = id;
-                        js.src = p + "://platform.twitter.com/widgets.js";
-                        fjs.parentNode.insertBefore(js, fjs);
-                    }
-                }(document, "script", "twitter-wjs");
-            </script>
+                $('.twitter-timeline').remove();
+                $('<a class="twitter-timeline" href="https://twitter.com/RuRa_team">Твиты от @RuRa_team</a>').insertAfter('.right-sidebar hr');
+                twttr.widgets.createTimeline('540043044683546624', document.getElementsByClassName('twitter-timeline')[0], {
+                    theme: twTheme,
+                    dnt: true
+                });
+            });       
+          </script>
         </aside>
     </div>
 

@@ -322,7 +322,7 @@ $('.controlText .btn.bookmark-button').click(function () {
         .on('click', function () {
             $.ajax({
                 type: "POST",
-                url: '/bookmarks/insert',
+                url: '/api/bookmarks',
                 data: '{' +
                 'chapterId:' + $(this).attr('chapter-id') +
                 ',paragraphId:\"' + $(this).attr('id') + '\"' +
@@ -432,7 +432,7 @@ function showOrphusDialog(chapterId, paragraph, startOffset, originalText, fullT
                     var data = $('#orphusForm').serialize();
                     $.ajax({
                         type: "POST",
-                        url: '/orphus/insert',
+                        url: '/api/orphus',
                         data: '{'+
                         'chapterId:' + chapterId +
                         ',paragraph:' + paragraph +

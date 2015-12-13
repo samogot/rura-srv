@@ -257,6 +257,11 @@
             <version>0.10.3</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.rometools</groupId>
+            <artifactId>rome</artifactId>
+            <version>1.5.1</version>
+        </dependency>
 
     </dependencies>
     <build>

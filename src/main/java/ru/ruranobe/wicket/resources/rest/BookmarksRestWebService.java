@@ -1,29 +1,31 @@
-package ru.ruranobe.wicket.resources;
+package ru.ruranobe.wicket.resources.rest;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.util.string.Strings;
 import org.wicketstuff.rest.annotations.MethodMapping;
+import org.wicketstuff.rest.annotations.ResourcePath;
 import org.wicketstuff.rest.annotations.parameters.RequestBody;
 import org.wicketstuff.rest.resource.gson.GsonRestResource;
 import org.wicketstuff.rest.utils.http.HttpMethod;
 import ru.ruranobe.misc.ParagraphService;
 import ru.ruranobe.mybatis.MybatisUtil;
+import ru.ruranobe.mybatis.entities.tables.Bookmark;
+import ru.ruranobe.mybatis.entities.tables.Chapter;
 import ru.ruranobe.mybatis.entities.tables.Paragraph;
 import ru.ruranobe.mybatis.entities.tables.User;
 import ru.ruranobe.mybatis.mappers.BookmarksMapper;
 import ru.ruranobe.mybatis.mappers.ChaptersMapper;
 import ru.ruranobe.mybatis.mappers.ParagraphsMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
-import ru.ruranobe.mybatis.entities.tables.Bookmark;
-import ru.ruranobe.mybatis.entities.tables.Chapter;
 import ru.ruranobe.wicket.LoginSession;
 
 import java.util.Date;
 
+@ResourcePath("/api/bookmarks")
 public class BookmarksRestWebService extends GsonRestResource
 {
-    @MethodMapping(value = "/insert", httpMethod = HttpMethod.POST)
+    @MethodMapping(value = "", httpMethod = HttpMethod.POST)
     public void insertBookmark(@RequestBody Bookmark bookmark)
     {
         if (bookmark.getUserId() == null)

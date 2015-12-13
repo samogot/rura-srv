@@ -32,7 +32,7 @@ $(document).ready(function () {
             name: 'projects',
             display: 'title',
             source: function (query, syncResults, asyncResults) {
-                $.get('/api/projects/get/all?params=name_ru;url;name_jp;name_romaji;title', function (data) {
+                $.get('/api/projects?fields=name_ru,url,name_jp,name_romaji,title', function (data) {
                     var matches, substringRegex;
                     matches = [];
                     substrRegex = new RegExp(query, 'i');
@@ -43,10 +43,8 @@ $(document).ready(function () {
                             title: str.title,
                             link: str.url
                         };
-                        if (substrRegex.test(str.title)) {
-                            matches.push(match);
-                            return;
-                        }
+                        if (substrRegex.test(str.title))
+                            match.match = ' ';
                         if (substrRegex.test(str.nameRu))
                             match.match += ' ' + str.nameRu;
                         if (substrRegex.test(str.nameEn))
@@ -56,7 +54,7 @@ $(document).ready(function () {
                         if (substrRegex.test(str.nameJp))
                             match.match += ' ' + str.nameJp;
                         if (match.match != '') {
-                            match.match = match.match.substr(1);
+                            match.match = match.match.trim();
                             matches.push(match);
                         }
                     });
@@ -85,7 +83,88 @@ $(document).ready(function () {
 
         element.children('button').click(function () {
             location.href = "https://cse.google.ru/cse/publicurl?cx=016828743293566058131:ctxseqkthgk&q=" + element.find('.tt-input').val();
-            ;
+        });
+        if ($('#main-search').length != 0) $('#main-search span').css('vertical-align', 'bottom');
+    }
+
+});
+
+function supportsLocalStorage() {
+    try {
+        return 'localStorage' in window && window['localStorage'] !== null;
+    } catch (e) {
+        return false;
+    }
+}
+
+function saveSettings(options) {
+    if (!supportsLocalStorage()) {
+        return false;
+    }
+    localStorage.setItem(options.key, options.item);
+}
+
+function loadSettings() {
+    if (!supportsLocalStorage()) {
+        return false;
+    }
+    if (localStorage.getItem("night") == "true") {
+        $('body').addClass("night");
+        $('a.navbar-brand img').attr('src', '/img/logo1_night.png');
+        $('.daynight-button .fa').toggleClass('fa-sun-o fa-moon-o');
+    } else {
+        $('body').removeClass("night");
+        $('a.navbar-brand img').attr('src', '/img/logo1.png');
+    }
+}
+$(document).ready(function () {
+    loadSettings()
+});
+$('.daynight-button').on('click', function (e) {
+    if ($(this).children('.fa').hasClass('fa-sun-o')) {
+        $('body').addClass("night");
+        $('a.navbar-brand img').attr('src', '/img/logo1_night.png');
+        saveSettings({
+            key: 'night',
+            item: true
+        });
+        VKbgcolor = '282828';
+        VKtext = 'E0E0E0';
+        VKbuttons = '4E4E4E';
+        twTheme = 'dark';
+    } else {
+        $('body').removeClass("night");
+        VKbgcolor = 'FFFFFF';
+        VKtext = '5290b5';
+        VKbuttons = '60a7d2';
+        twTheme = 'light';
+        $('a.navbar-brand img').attr('src', '/img/logo1.png');
+        saveSettings({
+            key: 'night',
+            item: false
         });
     }
+    $(this).children('.fa').toggleClass('fa-sun-o fa-moon-o');
+    if ($('#vk_groups').length != 0) {
+        $('.twitter-timeline').remove();
+        $('<a class="twitter-timeline" href="https://twitter.com/RuRa_team">Твиты от @RuRa_team</a>').insertAfter('.right-sidebar hr');
+        $('#vk_groups').empty();
+        VK.Widgets.Group("vk_groups", {
+            mode: 2,
+            width: "230",
+            height: "660",
+            color1: VKbgcolor,
+            color2: VKtext,
+            color3: VKbuttons
+        }, 43340456);
+        twttr.widgets.createTimeline('540043044683546624', document.getElementsByClassName('twitter-timeline')[0], {
+            theme: twTheme,
+            dnt: true
+        });
+
+    }
 });
+
+
+
+
