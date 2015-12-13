@@ -12,4 +12,8 @@ public class Faq extends SidebarLayoutPage
         sidebarModules.add(new FriendsSidebarModule("sidebarModule"));
     }
 
+	@Override
+	protected String getPageTitle() {
+		return "FAQ - РуРанобе";
+	}
 }

@@ -370,4 +370,9 @@ public class Updates extends SidebarLayoutPage
             setResponsePage(Updates.class, p);
         }
     }
+
+	@Override
+	protected String getPageTitle() {
+		return "Обновления - РуРанобе";
+	}
 }

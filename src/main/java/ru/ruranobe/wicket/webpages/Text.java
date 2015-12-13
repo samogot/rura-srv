@@ -34,6 +34,7 @@ import java.util.List;
 public class Text extends SidebarLayoutPage
 {
     public static final String DELIMITER = ",;,";
+	protected String titleName;
 
     public Text(PageParameters parameters)
     {
@@ -70,6 +71,7 @@ public class Text extends SidebarLayoutPage
             {
                 throw RuranobeUtils.getRedirectTo404Exception(this);
             }
+	        titleName = volume.getNameTitle();
 
             allChapterList = chaptersMapperCacheable.getChaptersByVolumeId(volume.getVolumeId());
 
@@ -369,4 +371,8 @@ public class Text extends SidebarLayoutPage
         processChapterTextContents(minLevel, prevLevel, contentsHolders, chapterContents);
     }
 
+	@Override
+	protected String getPageTitle() {
+		return titleName != null ? titleName + " - РуРанобе" : super.getPageTitle();
+	}
 }

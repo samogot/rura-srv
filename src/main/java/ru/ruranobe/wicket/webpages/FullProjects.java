@@ -22,7 +22,6 @@ import ru.ruranobe.wicket.webpages.base.BaseLayoutPage;
 
 import java.util.*;
 
-
 public class FullProjects extends BaseLayoutPage
 {
     @Override
@@ -155,6 +154,11 @@ public class FullProjects extends BaseLayoutPage
             session.close();
         }
     }
+
+	@Override
+	protected String getPageTitle() {
+		return "Проекты - РуРанобе";
+	}
 
     private class ProjectExtendedWithInfo
     {

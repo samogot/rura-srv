@@ -13,9 +13,6 @@ import ru.ruranobe.wicket.webpages.VolumePage;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Samogot on 04.05.2015.
- */
 public class SidebarLayoutPage extends BaseLayoutPage
 {
     protected List<SidebarModuleBase> sidebarModules = new ArrayList<SidebarModuleBase>();
