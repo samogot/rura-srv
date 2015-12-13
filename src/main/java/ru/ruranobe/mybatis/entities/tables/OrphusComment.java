@@ -23,6 +23,7 @@ public class OrphusComment implements Serializable
     private String username;
     private String chapterUrl;
     private String chapterName;
+    private String projectTitle;
 
     public OrphusComment()
     {
@@ -176,5 +177,13 @@ public class OrphusComment implements Serializable
 
     public void setChapterName(String chapterName) {
         this.chapterName = chapterName;
+    }
+
+    public String getProjectTitle() {
+        return projectTitle;
+    }
+
+    public void setProjectTitle(String projectTitle) {
+        this.projectTitle = projectTitle;
     }
 }

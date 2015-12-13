@@ -115,6 +115,17 @@ public class Orphus extends BaseLayoutPage
 
                 item.add(orphusOptionalComment);
 
+                Label projectTitle = new Label("projectTitle", new Model<String>()
+                {
+                    @Override
+                    public String getObject()
+                    {
+                        return orphusComment.getProjectTitle();
+                    }
+                });
+
+                item.add(projectTitle);
+
                 PageParameters chapterPageParameters = Chapter.makeUrlParameters(orphusComment.getChapterUrl().split("/", -1));
                 BookmarkablePageLink orphusChapterUrl = new BookmarkablePageLink("orphusChapterUrl", Text.class, chapterPageParameters)
                 {

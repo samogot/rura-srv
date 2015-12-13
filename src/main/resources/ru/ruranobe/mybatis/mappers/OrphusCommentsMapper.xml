@@ -24,7 +24,8 @@
                p.*,
                u.username,
                ch.url,
-               ch.title
+               ch.title,
+               projects.title as projectTitle
         from orphus_comments c
         join paragraphs p
           on p.paragraph_id = c.paragraph
@@ -34,6 +35,8 @@
           on ch.chapter_id = c.chapter_id
         join volumes v
           on v.volume_id = ch.volume_id
+        join projects
+          on projects.project_id = v.project_id
         where 1=1
         <if test="volumeId != null">
             AND v.volume_id = #{volumeId}
@@ -76,6 +79,7 @@
         <result property="username" column="username"/>
         <result property="chapterUrl" column="url"/>
         <result property="chapterName" column="title"/>
+        <result property="projectTitle" column="projectTitle"/>
         <association property="paragrap" javaType="ru.ruranobe.mybatis.entities.tables.Paragraph">
             <id property="paragraphId" column="paragraph_id"/>
             <result property="paragraphText" column="paragraph_text"/>
