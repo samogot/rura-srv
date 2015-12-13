@@ -53,8 +53,20 @@ textarea.form-control {
 .commentText {
     margin-top: 10px;
     margin-bottom: 10px;
-    overflow: auto;
     word-wrap: break-word;
+    overflow: auto;
+}
+.commentText.overflowed {
+    overflow:hidden;
+    height: 44px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+.comment .expand {
+    margin-left: 90px;
+    margin-top: -10px;
+    cursor: pointer;
 }
 
 @media screen and (max-width: 767px) {
