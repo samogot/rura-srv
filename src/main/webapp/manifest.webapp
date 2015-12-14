@@ -1,0 +1,29 @@
+{
+  "version": "1.0.0",
+  "name": "RuRanobe",
+  "launch_path": "/index.html",
+  "description": "Main Page",
+  "icons": {
+    "128": "/favicon.ico"
+  },
+  "developer": {
+    "name": "RuRa Team",
+    "url": "http://ruranobe.ru"
+  },
+  "installs_allowed_from": [
+    "*"
+  ],
+  "default_locale": "ru",
+  "permissions": {
+  },
+  "locales": {
+    "en": {
+      "name": "RuRanobe",
+      "description": "ranobe / light novel"
+    }
+    "ru": {
+      "name": "РуРанобэ",
+      "description": "ранобэ / лайт-новел"
+    }
+  }
+}

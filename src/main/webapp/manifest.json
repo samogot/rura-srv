@@ -1,0 +1,14 @@
+{
+  "lang": "en",
+  "background_color": "#ffffff",
+  "name": "RuRanobe",
+  "short_name": "RuRa",
+  "display": "browser",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "128x128",
+      "type": "image/x-icon"
+    }
+  ]
+}
