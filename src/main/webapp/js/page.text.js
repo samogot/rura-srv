@@ -366,13 +366,16 @@ $('body').keydown(function (eventObject) {
 
 
 /* MODAL */
-function getText() {
-    if (window.getSelection) {
-        return window.getSelection() + "";
-    } else if (document.getSelection) {
-        return document.getSelection() + "";
-    } else if (document.selection) {
-        return document.selection.createRange().text + "";
+
+function getText(callback) {
+    try {
+        if (window.getSelection) {
+            callback(window.getSelection().toString());
+        } else if (document.selection) {
+            callback(document.selection.createRange().text);
+        }
+    } catch (e) {
+        /* give up */
     }
     return '';
 }
@@ -380,14 +383,11 @@ $('div.mistake').on('hidden.bs.modal', function (e) {
     $('body').css('padding', 0)
 })
 $('.btn.mistake-button').click(function () {
-    var Mistake = getText();
-    if (Mistake == "" || Mistake == ' ') {
-        alert('Для начала, выделите ошибку!');
-    } else {
+    getText(function(data){
         var Parameters = getOrphusParameters();
         var callbackUrl = '';
-        showOrphusDialog(Parameters.chapterId, Parameters.paragraph, Parameters.startOffset, Parameters.originalText, Parameters.fullText, Parameters.textId, callbackUrl);
-    }
+        showOrphusDialog(Parameters.chapterId, Parameters.paragraph, Parameters.startOffset, Parameters.originalText, Parameters.fullText, Parameters.textId, callbackUrl)
+    })
 });
 /* MODAL */
 /* ОШИБКИ */

@@ -1159,6 +1159,9 @@ center.project {
     border-bottom: 1px solid rgb(231, 231, 231);
     height: 28px;
     margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .read > a {
