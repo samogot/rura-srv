@@ -1,6 +1,5 @@
 package ru.ruranobe.wicket.resources.rest;
 
-import com.google.common.collect.ImmutableList;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.wicketstuff.rest.annotations.MethodMapping;
@@ -16,6 +15,7 @@ import ru.ruranobe.mybatis.mappers.ProjectsMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.validators.AllowedFieldsValidator;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -50,21 +50,8 @@ public class ProjectsRestWebService extends GsonRestResource
         return result;
     }
 
-    private static final List<String> ALLOWED_FIELD_LIST = new ImmutableList.Builder<String>()
-            .add("parent_id")
-            .add("image_id")
-            .add("url")
-            .add("name_jp")
-            .add("name_en")
-            .add("name_ru")
-            .add("name_romaji")
-            .add("author")
-            .add("illustrator")
-            .add("order_number")
-            .add("banner_hidden")
-            .add("onevolume")
-            .add("franchise")
-            .add("annotation")
-            .add("title")
-            .build();
+    private static final List<String> ALLOWED_FIELD_LIST = Arrays.asList("parent_id", "image_id", "url",
+            "name_jp", "name_en", "name_ru", "name_romaji", "author", "illustrator", "order_number",
+            "banner_hidden", "onevolume", "franchise", "annotation", "title");
+
 }

@@ -94,4 +94,9 @@ public class Diary extends SidebarLayoutPage
         sidebarModules.add(new FriendsSidebarModule("sidebarModule"));
         sidebarModules.add(new ContentsModule("sidebarModule", contentsHolders));
     }
+
+	@Override
+	protected String getPageTitle() {
+		return "Дневник Руйки - РуРанобе";
+	}
 }

@@ -27,9 +27,6 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by samogot on 12.12.15.
- */
 @ResourcePath("/updates.rss")
 public class RSSWebService extends AbstractResource
 {

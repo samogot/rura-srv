@@ -39,7 +39,7 @@ function reinitAffix() {
     $('.controlText>div').removeData('bs.affix').removeClass('affix affix-top affix-bottom')
         .css('top', '').affix({
             offset: {
-                top: $('.controlText > div').offset().top - 40,
+                top: ($('.controlText > div').offset().top - 40)<0 ? 126:$('.controlText > div').offset().top - 40,
                 bottom: $(document).height() - ($('#comments').length ? $('#comments').offset().top : $('.leftColumn').offset().top + $('.leftColumn').outerHeight(true))
             }
         });

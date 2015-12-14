@@ -1781,6 +1781,9 @@ span.more {
 .read a.nested div {
     padding-left: 30px;
 }
+.read a.unpublished div {
+    color: #b52a3d;
+}
 
 /*              PROJECT EDIT                 */
 /*   resize  */

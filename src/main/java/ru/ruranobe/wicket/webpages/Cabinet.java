@@ -307,6 +307,11 @@ public class Cabinet extends SidebarLayoutPage
         sidebarModules.add(new FriendsSidebarModule("sidebarModule"));
     }
 
+	@Override
+	protected String getPageTitle() {
+		return "Личный кабинет - РуРанобе";
+	}
+
     private class EmailFormModelObject
     {
         private String currentPassword;

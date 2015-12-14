@@ -40,6 +40,13 @@ $(document).ready(function () {
         $('.comments').empty();
         $.getJSON('/f/api/topic/' + topicId + '/posts', function (data) {
             $(".comments").append(commentTemplate.render(data));
-        });
+            $('.comment .commentText').each(function(i, el){
+              if($(el).height()>44) {$(el).addClass('overflowed');$(el).parent().append('<a href="return" class="expand"> Подробнее...</a>')};
+            });
+      });
     }
+    $('body').on('click','.comment .expand',function(e){
+      e.preventDefault();
+      $(this).parent().children('.commentText').removeClass('overflowed');$(this).remove();
+    })
 });
