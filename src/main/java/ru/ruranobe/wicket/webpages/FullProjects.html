@@ -30,13 +30,12 @@
                     </div>
                 </wicket:container>
                 <!-- view type 2 -->
-                <div class="viewTypeBlock2">
-                    <div class="viewType2">
-                        <wicket:container wicket:id="viewTypeTwo">
+                <wicket:container wicket:id="viewTypeTwo">
+                    <div class="viewTypeBlock2">
+                        <div class="viewType2">
                             <a wicket:id="linkOneViewTypeTwo" class="pull-left">
                                 <img wicket:id="imageViewTypeTwo" height="73" width="220"/>
                             </a>
-
                             <div style="padding-bottom: 10px;">
                                 <a wicket:id="linkTwoViewTypeTwo" style="text-decoration: underline;">
                                     <span wicket:id="titleViewTypeTwo"></span>
@@ -48,18 +47,18 @@
                                 <span class="bold">Иллюстратор:&nbsp;</span>
                                 <span wicket:id="illustratorViewTypeTwo"></span><br/>
                             </div>
-                            <div class="viewType2about pull-right">
-                                <div class="volumes">
-                                    <span class="bold">Томов:&nbsp;</span>
-                                    <span wicket:id="volumeCountViewTypeTwo"></span>
-                                </div>
+                        </div>
+                        <div class="viewType2about pull-right">
+                            <div class="volumes">
+                                <span class="bold">Томов:&nbsp;</span>
+                                <span wicket:id="volumeCountViewTypeTwo"></span>
                             </div>
-                            <!--<div class="moreAboutProject pull-right">
-                                <a wicket:id="linkThreeViewTypeTwo">Подробнее</a>
-                            </div>-->
-                        </wicket:container>
+                        </div>
+                        <!--<div class="moreAboutProject pull-right">
+                            <a wicket:id="linkThreeViewTypeTwo">Подробнее</a>
+                        </div>-->
                     </div>
-                </div>
+                </wicket:container>
             </main>
         </div>
         <aside class="right-sidebar visible-lg-block">
