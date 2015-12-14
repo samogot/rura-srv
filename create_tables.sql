@@ -274,6 +274,19 @@ CREATE TABLE paragraphs
   text_id        INT(11) NOT NULL
 );
 
+CREATE TABLE user_groups
+(
+  user_id INT(11)  NOT NULL,
+  group_id INT(11) NOT NULL
+);
+
+CREATE TABLE user_group_types
+(
+  group_id   INT(11) NOT NULL PRIMARY KEY,
+  group_name ENUM('Администраторы',
+                  'Члены команды') NOT NULL
+);
+
 ALTER TABLE paragraphs ADD CONSTRAINT fk_paragraph_text_id FOREIGN KEY (text_id) REFERENCES texts (text_id);
 
 ALTER TABLE bookmarks ADD CONSTRAINT fk_bookmark_paragraph_id FOREIGN KEY (paragraph_id) REFERENCES paragraphs (paragraph_id);
@@ -349,12 +362,28 @@ ALTER TABLE volume_release_activities ADD CONSTRAINT fk_member_id FOREIGN KEY (m
 
 ALTER TABLE volume_release_activities ADD CONSTRAINT fk_activity_id FOREIGN KEY (activity_id) REFERENCES volume_activities (activity_id);
 
-ALTER TABLE updates ADD INDEX (project_id);
+ALTER TABLE user_groups ADD CONSTRAINT fk_ug_user_id FOREIGN KEY (user_id) REFERENCES users (user_id);
+
+ALTER TABLE user_groups ADD CONSTRAINT fk_ug_group_id FOREIGN KEY (group_id) references user_group_types (group_id);
+
+/*
+ * Do MySQL and MariaDB index foreign key columns automatically?
+ * @See http://stackoverflow.com/questions/304317/does-mysql-index-foreign-key-columns-automatically  
+ */
+--ALTER TABLE updates ADD INDEX (project_id);
 
 ALTER TABLE updates ADD INDEX (project_id, show_time);
-
 ALTER TABLE updates ADD INDEX (show_time);
-
 ALTER TABLE updates ADD INDEX (update_type);
-
 ALTER TABLE updates ADD INDEX (update_type, show_time);
+
+ALTER TABLE chapters ADD INDEX (url);
+
+ALTER TABLE projects ADD INDEX (url);
+
+ALTER TABLE users ADD INDEX (username);
+ALTER TABLE users ADD INDEX (email);
+ALTER TABLE users ADD INDEX (pass_recovery_token);
+ALTER TABLE users ADD INDEX (email_token);	
+
+ALTER TABLE volumes ADD INDEX (url);

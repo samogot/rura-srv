@@ -10,14 +10,8 @@ import ru.ruranobe.engine.wiki.parser.FootnoteItem;
 import ru.ruranobe.engine.wiki.parser.WikiParser;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
-import ru.ruranobe.mybatis.entities.tables.Chapter;
-import ru.ruranobe.mybatis.entities.tables.ChapterImage;
-import ru.ruranobe.mybatis.entities.tables.ExternalResource;
-import ru.ruranobe.mybatis.entities.tables.Volume;
-import ru.ruranobe.mybatis.mappers.ChapterImagesMapper;
-import ru.ruranobe.mybatis.mappers.ChaptersMapper;
-import ru.ruranobe.mybatis.mappers.TextsMapper;
-import ru.ruranobe.mybatis.mappers.VolumesMapper;
+import ru.ruranobe.mybatis.entities.tables.*;
+import ru.ruranobe.mybatis.mappers.*;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.components.CommentsPanel;
 import ru.ruranobe.wicket.components.ContentsHolder;
@@ -58,6 +52,14 @@ public class Text extends SidebarLayoutPage
 
             String volumeUrl = parameters.get("volume").toString();
             if (Strings.isEmpty(volumeUrl))
+            {
+                throw RuranobeUtils.getRedirectTo404Exception(this);
+            }
+
+            ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
+            Project project = projectsMapperCacheable.getProjectByUrl(projectUrl);
+
+            if (project == null || project.isProjectHidden())
             {
                 throw RuranobeUtils.getRedirectTo404Exception(this);
             }

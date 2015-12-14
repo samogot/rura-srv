@@ -72,8 +72,8 @@
     </select>
 
     <insert id="insertChapter" parameterType="ru.ruranobe.mybatis.entities.tables.Chapter" keyProperty="chapterId" useGeneratedKeys="true">
-        insert into chapters (volume_id, text_id, url, title, order_number, published, nested)
-        values (#{volumeId}, #{textId}, #{url}, #{title}, #{orderNumber}, #{published}, #{nested})
+        insert into chapters (volume_id, text_id, url, title, order_number, publish_date, nested)
+        values (#{volumeId}, #{textId}, #{url}, #{title}, #{orderNumber}, #{publishDate}, #{nested})
     </insert>
 
     <delete id="deleteChapter" parameterType="int">
@@ -82,7 +82,7 @@
 
     <update id="updateChapter" parameterType="ru.ruranobe.mybatis.entities.tables.Chapter">
         update chapters set volume_id = #{volumeId}, text_id=#{textId}, url=#{url}, title = #{title}, order_number=#{orderNumber},
-        published=#{published}, nested=#{nested}
+        publish_date=#{publishDate}, nested=#{nested}
         where chapter_id=#{chapterId}
     </update>
 

@@ -7,13 +7,47 @@
     <p>
         <span class="color110">Данная страница предназначена для людей, которых интересуют детали относительно нас и наших переводов.</span>
     </p>
-    <img src="img/faq.png" style="max-width: 680px; width: 100%;">
+    <img wicket:id="faqImage" style="max-width: 680px; width: 100%;"/>
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-        <div style="margin-bottom: 5px;">
+        <wicket:container wicket:id="faqQuestions">
+            <div style="margin-bottom: 5px;">
+                <div class="panel-heading" role="tab">
+                    <h4 class="panel-title">
+                        <a wicket:id="questionHref" data-toggle="collapse" data-parent="#accordion"
+                           aria-expanded="true" aria-controls="collapseOne">
+                            <div>
+                                <div class="bold pull-left" style="margin-right:10px;">
+                                    <span wicket:id="questionNumber">1:</span>
+                                </div>
+                                <span wicket:id="questionText">С какого языка вы переводите?</span>
+                            </div>
+                        </a>
+                    </h4>
+                </div>
+                <div wicket:id="questionId" id="question1" class="panel-collapse collapse in" role="tabpanel"
+                     aria-labelledby="headingOne">
+                    <div wicket:id="htmlText"></div>
+                    <!--div class="answer">
+                        <h4 class="h4">С какого языка вы переводите?</h4>
+
+                        <div>
+                            <div class="bold pull-left">Ответ:</div>
+                            &nbsp;Основная часть наших проектов переводятся с английского. При необходимости
+                            сверяемся
+                            с японским. Есть также пара проектов, которые переводятся напрямую с японского.
+                            Подробнее можно узнать, тыкнув в нужный том (там указывается кто за что отвечает и с
+                            какого языка идет перевод).
+                        </div>
+                    </div-->
+                </div>
+            </div>
+        </wicket:container>
+    </div>
+        <!--div style="margin-bottom: 5px;">
             <div class="panel-heading" role="tab">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#question1"
+                    <a wicket:id="questionHref" data-toggle="collapse" data-parent="#accordion" href="#question1"
                        aria-expanded="true" aria-controls="collapseOne">
                         <div>
                             <div class="bold pull-left" style="margin-right:10px;">1:</div>
@@ -22,7 +56,7 @@
                     </a>
                 </h4>
             </div>
-            <div id="question1" class="panel-collapse collapse in" role="tabpanel"
+            <div wicket:id="questionId" id="question1" class="panel-collapse collapse in" role="tabpanel"
                  aria-labelledby="headingOne">
                 <div class="answer">
                     <h4 class="h4">С какого языка вы переводите?</h4>
@@ -86,7 +120,6 @@
                 </div>
             </div>
         </div>
-        <!-- конец блока -->
         <div style="margin-bottom: 5px;">
             <div class="panel-heading" role="tab">
                 <h4 class="panel-title">
@@ -111,7 +144,6 @@
                 </div>
             </div>
         </div>
-        <!-- конец блока -->
         <div style="margin-bottom: 5px;">
             <div class="panel-heading" role="tab">
                 <h4 class="panel-title">
@@ -140,7 +172,6 @@
                 </div>
             </div>
         </div>
-        <!-- конец блока -->
         <div style="margin-bottom: 5px;">
             <div class="panel-heading" role="tab">
                 <h4 class="panel-title">
@@ -166,7 +197,6 @@
                 </div>
             </div>
         </div>
-        <!-- конец блока -->
         <div style="margin-bottom: 5px;">
             <div class="panel-heading" role="tab">
                 <h4 class="panel-title">
@@ -195,7 +225,6 @@
                 </div>
             </div>
         </div>
-        <!-- конец блока -->
         <div style="margin-bottom: 5px;">
             <div class="panel-heading" role="tab">
                 <h4 class="panel-title">
@@ -251,7 +280,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- конец внутреннего блока -->
                     <div style="margin-bottom: 5px;">
                         <div class="panel-heading gray" role="tab">
                             <h4 class="panel-title">
@@ -284,11 +312,9 @@
                             </div>
                         </div>
                     </div>
-                    <!-- конец внутреннего блока -->
                 </div>
             </div>
         </div>
-        <!-- конец блока -->
         <div style="margin-bottom: 5px;">
             <div class="panel-heading" role="tab">
                 <h4 class="panel-title">
@@ -323,10 +349,9 @@
                 </div>
             </div>
         </div>
-        <!-- конец блока -->
-    </div>
+    </div-->
     <!-- end/panel-group  -->
-    <h3 class="h3">Комментарии</h3>
+    <!--h3 class="h3">Комментарии</h3>
 
     <p>
                     <span class="color110">На сайте РуРанобэ приветствуются <span class="bold">все комментарий</span>. Если вы не хотите быть анонимным, <a
@@ -361,7 +386,7 @@
                 <a href="#" class="commentAnswer bold">Ответить</a>
             </div>
         </div>
-    </div>
+    </div-->
 </wicket:extend>
 
 </body>
