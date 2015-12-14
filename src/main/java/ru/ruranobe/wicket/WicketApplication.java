@@ -89,8 +89,12 @@ public class WicketApplication extends AuthenticatedWebApplication
         getRootRequestMapperAsCompound().add(new NoVersionMapper("/a/${project}/${volume}", VolumeEdit.class));
         getRootRequestMapperAsCompound().add(new NoVersionMapper("/a/${project}", ProjectEdit.class));
         getRootRequestMapperAsCompound().add(new NoVersionMapper("/a", GlobalEdit.class));
-        mount(new Orphus.OrphusMountedMapper("/a/orphus/#{project}/#{volume}/#{chapter}","/a/orphus"));
+        mount(new Orphus.OrphusMountedMapper("/a/orphus/#{project}/#{volume}/#{chapter}", "/a/orphus"));
         mount(new MountedMapper("/notfound", NotFound.class));
+        mount(new MountedMapper("/aboutus", AboutUs.class));
+        mount(new MountedMapper("/recruit", Recruit.class));
+        mount(new MountedMapper("/contact", Contact.class));
+        mount(new MountedMapper("/help", Help.class));
 
         PackageScanner.scanPackage("ru.ruranobe.wicket.resources");
     }
