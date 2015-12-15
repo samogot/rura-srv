@@ -8,13 +8,17 @@ import org.apache.wicket.request.Request;
 
 import ru.ruranobe.misc.Authentication;
 import ru.ruranobe.mybatis.MybatisUtil;
+import ru.ruranobe.mybatis.mappers.RolesMapper;
 import ru.ruranobe.mybatis.mappers.UsersMapper;
 import ru.ruranobe.mybatis.entities.tables.User;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 
+import java.util.List;
+
 public class LoginSession extends AuthenticatedWebSession {
 
 	private User user;
+	private Roles roles = null;
 
 	public LoginSession(Request request) {
 		super(request);
@@ -37,6 +41,12 @@ public class LoginSession extends AuthenticatedWebSession {
 						usersMapper.updateUser(signInUser);
 					}
 					this.user = signInUser;
+					RolesMapper rolesMapperCacheable = CachingFacade.getCacheableMapper(session, RolesMapper.class);
+					List<String> roles = rolesMapperCacheable.getUserGroupsByUser(user.getUserId());
+					if (roles != null)
+					{
+						this.roles = new Roles(roles.toArray(new String[roles.size()]));
+					}
 					authenticationCompleted = true;
 				}
 			}
@@ -47,8 +57,9 @@ public class LoginSession extends AuthenticatedWebSession {
 	}
 
 	@Override
-	public Roles getRoles() {
-		throw new UnsupportedOperationException("Not supported yet.");
+	public Roles getRoles()
+	{
+		return roles;
 	}
 
 	public User getUser() {

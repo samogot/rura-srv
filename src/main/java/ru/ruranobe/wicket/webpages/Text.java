@@ -2,6 +2,7 @@ package ru.ruranobe.wicket.webpages;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
@@ -13,6 +14,7 @@ import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.*;
 import ru.ruranobe.mybatis.mappers.*;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
+import ru.ruranobe.wicket.InstantiationSecurityCheck;
 import ru.ruranobe.wicket.components.CommentsPanel;
 import ru.ruranobe.wicket.components.ContentsHolder;
 import ru.ruranobe.wicket.components.sidebar.ContentsModule;
@@ -25,10 +27,11 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Text extends SidebarLayoutPage
+public class Text extends SidebarLayoutPage implements InstantiationSecurityCheck
 {
     public static final String DELIMITER = ",;,";
 	protected String titleName;
+    private Chapter chapter;
 
     public Text(PageParameters parameters)
     {
@@ -38,7 +41,6 @@ public class Text extends SidebarLayoutPage
         SqlSession session = sessionFactory.openSession();
         StringBuilder volumeText = new StringBuilder();
         StringBuilder volumeFootnotes = new StringBuilder();
-        final List<ContentItem> volumeContents = new ArrayList<ContentItem>();
         Chapter currentChapter = null;
         Volume volume = null;
         List<Chapter> allChapterList;
@@ -83,7 +85,15 @@ public class Text extends SidebarLayoutPage
             {
                 for (Chapter chapter : allChapterList)
                 {
-                    chapter.setVisibleOnPage(true);
+                    if (allChapterList.size() == 1)
+                    {
+                        this.chapter = chapter;
+                        doInstantiationSecurityCheck();
+                    }
+                    else if (chapter.isPublished())
+                    {
+                        chapter.setVisibleOnPage(true);
+                    }
                 }
             }
             else
@@ -96,6 +106,8 @@ public class Text extends SidebarLayoutPage
                     if (chapter.getUrl().equals(curUrl))
                     {
                         currentChapter = chapter;
+                        this.chapter = currentChapter;
+                        doInstantiationSecurityCheck();
                     }
                     if (chapter.isNested())
                     {
@@ -377,4 +389,13 @@ public class Text extends SidebarLayoutPage
 	protected String getPageTitle() {
 		return titleName != null ? titleName + " - РуРанобе" : super.getPageTitle();
 	}
+
+    @Override
+    public void doInstantiationSecurityCheck()
+    {
+        if (!chapter.isPublished())
+        {
+            throw new UnauthorizedInstantiationException(this.getClass());
+        }
+    }
 }

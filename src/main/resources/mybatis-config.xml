@@ -33,5 +33,6 @@
         <mapper resource="ru/ruranobe/mybatis/mappers/BookmarksMapper.xml"/>
         <mapper resource="ru/ruranobe/mybatis/mappers/ChapterUrlDetailsMapper.xml"/>
         <mapper resource="ru/ruranobe/mybatis/mappers/ParagraphsMapper.xml"/>
+        <mapper resource="ru/ruranobe/mybatis/mappers/RolesMapper.xml"/>
     </mappers>
 </configuration>

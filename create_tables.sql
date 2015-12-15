@@ -4,6 +4,8 @@ SET NAMES UTF8;
 ALTER TABLE external_resources_history DROP FOREIGN KEY fk_history_project_id;
 ALTER TABLE external_resources_history DROP FOREIGN KEY fk_history_volume_id;
 ALTER TABLE external_resources_history DROP FOREIGN KEY fk_history_chapter_image_id;
+DROP TABLE IF EXISTS user_groups;
+DROP TABLE IF EXISTS user_group_types;
 DROP TABLE IF EXISTS orphus_comments;
 DROP TABLE IF EXISTS chapter_images;
 DROP TABLE IF EXISTS updates;
@@ -282,10 +284,12 @@ CREATE TABLE user_groups
 
 CREATE TABLE user_group_types
 (
-  group_id   INT(11) NOT NULL PRIMARY KEY,
-  group_name ENUM('Администраторы',
-                  'Члены команды') NOT NULL
+  group_id   INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  group_name VARCHAR(255) NOT NULL
 );
+
+INSERT INTO user_group_types(GROUP_NAME) VALUES('ADMIN');
+INSERT INTO user_group_types(GROUP_NAME) VALUES('TEAM MEMBER');
 
 ALTER TABLE paragraphs ADD CONSTRAINT fk_paragraph_text_id FOREIGN KEY (text_id) REFERENCES texts (text_id);
 

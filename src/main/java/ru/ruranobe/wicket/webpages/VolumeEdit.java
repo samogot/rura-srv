@@ -14,6 +14,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.markup.html.form.DateTextField;
@@ -58,6 +59,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+@AuthorizeInstantiation("ADMIN")
 public class VolumeEdit extends AdminLayoutPage
 {
 
