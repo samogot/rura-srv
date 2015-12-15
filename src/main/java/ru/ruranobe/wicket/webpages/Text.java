@@ -330,6 +330,7 @@ public class Text extends SidebarLayoutPage implements InstantiationSecurityChec
         }
 
         add(new CommentsPanel("comments", volume.getTopicId()));
+        sidebarModules.add(new DownloadsSidebarModule("sidebarModule", volume.getUrlParameters()));
         if (currentChapter != null)
         {
             sidebarModules.add(new ActionsSidebarModule("sidebarModule", Editor.class, currentChapter.getUrlParameters()));

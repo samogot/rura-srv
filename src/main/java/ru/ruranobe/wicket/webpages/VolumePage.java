@@ -22,10 +22,7 @@ import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.components.CommentsPanel;
 import ru.ruranobe.wicket.components.CoverCarousel;
 import ru.ruranobe.wicket.components.LabelHideableOnNull;
-import ru.ruranobe.wicket.components.sidebar.ActionsSidebarModule;
-import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
-import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
-import ru.ruranobe.wicket.components.sidebar.UpdatesSidebarModule;
+import ru.ruranobe.wicket.components.sidebar.*;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
 import java.io.Serializable;
@@ -204,6 +201,7 @@ public class VolumePage extends SidebarLayoutPage {
 			add(readAllLink);
 
 			add(new CommentsPanel("comments", volume.getTopicId()));
+			sidebarModules.add(new DownloadsSidebarModule("sidebarModule", volume.getUrlParameters()));
 			sidebarModules.add(new ActionsSidebarModule("sidebarModule", VolumeEdit.class, volume.getUrlParameters()));
 			sidebarModules.add(new UpdatesSidebarModule("sidebarModule", volume.getProjectId()));
 			sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
