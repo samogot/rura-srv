@@ -24,7 +24,6 @@ $(document).ready(function() {
     }
     if ($('.miniSearch').length != 0 || $('#main-search').length != 0) {
         var element = $('.miniSearch').length != 0 ? $('.miniSearch') : $('#main-search')
-        $.getScript('https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js', function() {
             element.children('input').typeahead({
                 hint: true,
                 highlight: true,
@@ -33,25 +32,30 @@ $(document).ready(function() {
                 name: 'projects',
                 display: 'title',
                 source: function(query, syncResults, asyncResults) {
-                    $.get('/api/projects/get/all?params=name_ru;url;name_jp;name_romaji;title', function(data) {
+                    $.get('/api/projects?fields=name_ru,url,name_jp,name_romaji,title', function (data) {
                         var matches, substringRegex;
                         matches = [];
                         substrRegex = new RegExp(query, 'i');
                         $.each(data, function(i, str) {
-                            if (str == null) return;
-                            if (substrRegex.test(str.title) || substrRegex.test(str.nameEn) || substrRegex.test(str.nameRu) || substrRegex.test(str.nameJp) || substrRegex.test(str.Romaji)) {
-                                str.nameEn = (str.nameEn == undefined) ? '' : str.nameEn;
-                                str.nameRu = (str.nameRu == undefined) ? '' : str.nameRu;
-                                str.nameJp = (str.nameJp == undefined) ? '' : str.nameJp;
-                                str.nameRomaji = (str.nameRomaji == undefined) ? '' : str.nameRomaji;
-                                matches.push({
+                            if (str == null || !str.url) return;
+                            var match = {
+                                match: '',
                                     title: str.title,
-                                    nameEn: str.nameEn,
-                                    nameRu: str.nameRu,
-                                    nameJp: str.nameJp,
-                                    nameRomaji: str.nameRomaji,
                                     link: str.url
-                                });
+                            };
+                            if (substrRegex.test(str.title))
+                                match.match = ' ';
+                            if (substrRegex.test(str.nameRu))
+                                match.match += ' ' + str.nameRu;
+                            if (substrRegex.test(str.nameEn))
+                                match.match += ' ' + str.nameEn;
+                            if (substrRegex.test(str.nameRomaji))
+                                match.match += ' ' + str.nameRomaji;
+                            if (substrRegex.test(str.nameJp))
+                                match.match += ' ' + str.nameJp;
+                            if (match.match != '') {
+                                match.match = match.match.trim();
+                                matches.push(match);
                             }
                         });
                         asyncResults(matches);
@@ -66,7 +70,9 @@ $(document).ready(function() {
                         ].join('\n')
                     },
                     suggestion: function(data) {
-                        return '<p style="cursor:pointer"><strong>' + data.title + '</strong><small class="text-muted" style="font-size:12px"><br>' + data.nameEn + ' ' + data.nameJp + ' ' + data.nameRu + ' ' + data.nameRomaji + '</small></p>';
+                        return '<p style="cursor:pointer"><strong>' + data.title + '</strong>' +
+                            (data.match ? '<small class="text-muted" style="font-size:12px"><br>' + data.match + '</small>' : '') +
+                            '</p>';
                     }
                 }
             }).bind('typeahead:select', function(ev, selection) {
@@ -76,10 +82,9 @@ $(document).ready(function() {
             });
 
             element.children('button').click(function() {
-                location.href = "https://cse.google.ru/cse/publicurl?cx=016828743293566058131:ctxseqkthgk&q=" + element.children('.tt-input').val();;
+                location.href = "https://cse.google.ru/cse/publicurl?cx=016828743293566058131:ctxseqkthgk&q=" + element.find('.tt-input').val();
             });
             if ($('#main-search').length != 0) $('#main-search span').css('vertical-align', 'bottom');
-        });
     }
 
 });
