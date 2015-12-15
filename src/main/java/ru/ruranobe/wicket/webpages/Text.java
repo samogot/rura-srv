@@ -15,10 +15,7 @@ import ru.ruranobe.mybatis.mappers.*;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.components.CommentsPanel;
 import ru.ruranobe.wicket.components.ContentsHolder;
-import ru.ruranobe.wicket.components.sidebar.ContentsModule;
-import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
-import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
-import ru.ruranobe.wicket.components.sidebar.UpdatesSidebarModule;
+import ru.ruranobe.wicket.components.sidebar.*;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
 import java.util.ArrayList;
@@ -28,7 +25,7 @@ import java.util.List;
 public class Text extends SidebarLayoutPage
 {
     public static final String DELIMITER = ",;,";
-	protected String titleName;
+    protected String titleName;
 
     public Text(PageParameters parameters)
     {
@@ -73,7 +70,7 @@ public class Text extends SidebarLayoutPage
             {
                 throw RuranobeUtils.getRedirectTo404Exception(this);
             }
-	        titleName = volume.getNameTitle();
+            titleName = volume.getNameTitle();
 
             allChapterList = chaptersMapperCacheable.getChaptersByVolumeId(volume.getVolumeId());
 
@@ -233,7 +230,7 @@ public class Text extends SidebarLayoutPage
                             FootnoteItem footnoteItem = footnoteList.get(i);
                             String s = ((i < footnoteList.size() - 1) ? DELIMITER : "");
                             footnotes.append(footnoteItem.getFootnoteId()).append(DELIMITER)
-                                     .append(footnoteItem.getFootnoteText()).append(s);
+                                    .append(footnoteItem.getFootnoteText()).append(s);
                         }
                         chapterText.setFootnotes(footnotes.toString());
 
@@ -254,8 +251,8 @@ public class Text extends SidebarLayoutPage
                         for (int i = 0; i < footnotes.length; i += 2)
                         {
                             volumeFootnotes.append("<li id=\"cite_note-").append(footnotes[i]).append("\">")
-                                           .append("<a href=\"#cite_ref-").append(footnotes[i]).append("\">↑</a> <span class=\"reference-text\">")
-                                           .append(footnotes[i + 1]).append("</span></li>");
+                                    .append("<a href=\"#cite_ref-").append(footnotes[i]).append("\">↑</a> <span class=\"reference-text\">")
+                                    .append(footnotes[i + 1]).append("</span></li>");
                         }
                     }
 
@@ -321,6 +318,14 @@ public class Text extends SidebarLayoutPage
         }
 
         add(new CommentsPanel("comments", volume.getTopicId()));
+        if (currentChapter != null)
+        {
+            sidebarModules.add(new ActionsSidebarModule("sidebarModule", Editor.class, currentChapter.getUrlParameters()));
+        }
+        else
+        {
+            sidebarModules.add(new ActionsSidebarModule("sidebarModule", VolumeEdit.class, volume.getUrlParameters()));
+        }
         sidebarModules.add(new UpdatesSidebarModule("sidebarModule", volume.getProjectId()));
         sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
         sidebarModules.add(new FriendsSidebarModule("sidebarModule"));
@@ -373,8 +378,9 @@ public class Text extends SidebarLayoutPage
         processChapterTextContents(minLevel, prevLevel, contentsHolders, chapterContents);
     }
 
-	@Override
-	protected String getPageTitle() {
-		return titleName != null ? titleName + " - РуРанобе" : super.getPageTitle();
-	}
+    @Override
+    protected String getPageTitle()
+    {
+        return titleName != null ? titleName + " - РуРанобе" : super.getPageTitle();
+    }
 }

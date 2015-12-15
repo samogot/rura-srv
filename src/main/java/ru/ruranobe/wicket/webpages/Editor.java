@@ -4,8 +4,10 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
@@ -14,15 +16,15 @@ import ru.ruranobe.engine.wiki.parser.FootnoteItem;
 import ru.ruranobe.engine.wiki.parser.WikiParser;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
+import ru.ruranobe.mybatis.entities.tables.Chapter;
+import ru.ruranobe.mybatis.entities.tables.ChapterImage;
+import ru.ruranobe.mybatis.entities.tables.ExternalResource;
+import ru.ruranobe.mybatis.entities.tables.TextHistory;
 import ru.ruranobe.mybatis.mappers.ChapterImagesMapper;
 import ru.ruranobe.mybatis.mappers.ChaptersMapper;
 import ru.ruranobe.mybatis.mappers.TextsHistoryMapper;
 import ru.ruranobe.mybatis.mappers.TextsMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
-import ru.ruranobe.mybatis.entities.tables.Chapter;
-import ru.ruranobe.mybatis.entities.tables.ChapterImage;
-import ru.ruranobe.mybatis.entities.tables.ExternalResource;
-import ru.ruranobe.mybatis.entities.tables.TextHistory;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
 import java.util.ArrayList;
@@ -79,6 +81,10 @@ public class Editor extends SidebarLayoutPage
             editorForm.add(editor);
 
             add(editorForm);
+
+            add(new BookmarkablePageLink("breadcrumbProject", ProjectEdit.class, chapter.getUrlParameters().remove("vhapter").remove("volume")));
+            add(new BookmarkablePageLink("breadcrumbVolume", ProjectEdit.class, chapter.getUrlParameters().remove("vhapter")));
+            add(new Label("breadcrumbActive", chapter.getTitle()));
         }
         finally
         {
@@ -121,6 +127,9 @@ public class Editor extends SidebarLayoutPage
 
     private class SaveText extends AjaxButton
     {
+        private ru.ruranobe.mybatis.entities.tables.Text previousText;
+        private ru.ruranobe.mybatis.entities.tables.Text text;
+        private Chapter chapter;
         public SaveText(String name, Form form, ru.ruranobe.mybatis.entities.tables.Text text, Chapter chapter, ru.ruranobe.mybatis.entities.tables.Text previousText)
         {
             super(name, form);
@@ -212,9 +221,5 @@ public class Editor extends SidebarLayoutPage
                 session.close();
             }
         }
-
-        private ru.ruranobe.mybatis.entities.tables.Text previousText;
-        private ru.ruranobe.mybatis.entities.tables.Text text;
-        private Chapter chapter;
     }
 }

@@ -15,6 +15,7 @@ import ru.ruranobe.mybatis.mappers.ChapterImagesMapper;
 import ru.ruranobe.mybatis.mappers.ChaptersMapper;
 import ru.ruranobe.mybatis.mappers.TextsMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
+import ru.ruranobe.wicket.components.sidebar.ActionsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
@@ -32,10 +33,11 @@ public class Help extends SidebarLayoutPage
 
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
         SqlSession session = sessionFactory.openSession();
+        Chapter chapter;
         try
         {
             ChaptersMapper chaptersMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
-            Chapter chapter = chaptersMapperCacheable.getChapterByUrl("system/help/text");
+            chapter = chaptersMapperCacheable.getChapterByUrl("system/help/text");
 
             if (chapter == null)
             {
@@ -102,6 +104,7 @@ public class Help extends SidebarLayoutPage
 
         add(new Label("htmlText", textHtml).setEscapeModelStrings(false));
 
+        sidebarModules.add(new ActionsSidebarModule("sidebarModule", Editor.class, chapter.getUrlParameters()));
         sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
         sidebarModules.add(new FriendsSidebarModule("sidebarModule"));
     }

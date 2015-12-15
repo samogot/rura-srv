@@ -4,9 +4,14 @@
 <wicket:extend>
     <div class="container">
         <main class="content">
+            <h1>Редактор текста</h1>
+            <ol class="breadcrumb">
+                <li><a href="/a">Админка</a></li>
+                <li><a wicket:id="breadcrumbProject">Проект</a></li>
+                <li><a wicket:id="breadcrumbVolume">Том</a></li>
+                <li class="active" wicket:id="breadcrumbActive"></li>
+            </ol>
             <form wicket:id="editorForm">
-                <h2>Редактирование текста</h2>
-
                 <div class="btn-toolbar edittext" role="toolbar" aria-label="Toolbar">
                     <div class="btn-group BoldItalian" role="group" aria-label="Жирный / Курсив / Подчеркнутый">
                         <button type="button" class="btn btn-default" title="Жирный" data-insert="'''insert'''"><i

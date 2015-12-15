@@ -7,7 +7,7 @@
     <p>
         <span class="color110">Данная страница предназначена для людей, которых интересуют детали относительно нас и наших переводов.</span>
     </p>
-    <img wicket:id="faqImage" style="max-width: 680px; width: 100%;"/>
+    <img src="/img/faq.png" style="max-width: 680px; width: 100%;">
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <wicket:container wicket:id="faqQuestions">
@@ -387,6 +387,12 @@
             </div>
         </div>
     </div-->
+    <wicket:fragment wicket:id="comments"/>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.min.js"></script>
+    <script src="js/jsrender.min.js"></script>
+    <script src="js/CommentsPanel.js"></script>
+    <link rel="stylesheet" href="css/CommentsPanel.css">
 </wicket:extend>
 
 </body>

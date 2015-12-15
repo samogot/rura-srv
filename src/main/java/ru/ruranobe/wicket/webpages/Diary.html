@@ -7,8 +7,29 @@
     <p>
         <span class="color110">Ниже в хронологическом порядке перечислены последние записи дневника.</span>
     </p>
-    <img wicket:id="diaryImage" style="max-width: 680px; width: 100%;"/>
-    <div class="text" wicket:id="htmlText"></div>
+    <img src="/img/diary.png" style="max-width: 680px; width: 100%;">
+    <section class="articles">
+        <article class="comment" wicket:id="commentsRepeater">
+            <span class="comment-img">
+                <img src="/img/journal/1.png" alt="" width="50" height="50" wicket:id="avatar"/>
+            </span>
+
+            <div class="comment-body">
+                <div class="text" wicket:id="htmlText">
+                    <p>Тест с:</p>
+                </div>
+                <p class="attribution"><a href="#" wicket:id="date">15 декабря 2015</a></p>
+            </div>
+        </article>
+    </section>
+    ​
+    <wicket:fragment wicket:id="comments"/>
+    <link rel="stylesheet" href="css/styles.diary.css">
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.min.js"></script>
+    <script src="js/jsrender.min.js"></script>
+    <script src="js/CommentsPanel.js"></script>
+    <link rel="stylesheet" href="css/CommentsPanel.css">
 </wicket:extend>
 
 

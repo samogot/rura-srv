@@ -3,11 +3,13 @@ package ru.ruranobe.wicket.components.admin.formitems;
 import com.google.common.collect.ImmutableMap;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import ru.ruranobe.mybatis.entities.tables.Project;
 import ru.ruranobe.wicket.components.admin.BannerUploadComponent;
+import ru.ruranobe.wicket.webpages.ProjectEdit;
 
 
 /**
@@ -25,5 +27,6 @@ public class ProjectFormItemPanel extends Panel
         add(new BannerUploadComponent("image", model).setContextVariables(new ImmutableMap.Builder<String, String>()
                 .put("project", model.getObject().getUrl())
                 .build()));
+        add(new BookmarkablePageLink("link", ProjectEdit.class, model.getObject().getUrlParameters()));
     }
 }

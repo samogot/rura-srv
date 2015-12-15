@@ -2,7 +2,6 @@ package ru.ruranobe.wicket.webpages;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.AttributeModifier;
@@ -13,17 +12,17 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
+import ru.ruranobe.mybatis.entities.tables.Project;
+import ru.ruranobe.mybatis.entities.tables.Volume;
 import ru.ruranobe.mybatis.mappers.ExternalResourcesMapper;
 import ru.ruranobe.mybatis.mappers.ProjectsMapper;
 import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
-import ru.ruranobe.mybatis.entities.tables.Project;
-import ru.ruranobe.mybatis.entities.tables.Volume;
 import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.components.CoverCarousel;
+import ru.ruranobe.wicket.components.sidebar.ActionsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.UpdatesSidebarModule;
@@ -275,10 +274,13 @@ public class ProjectPage extends SidebarLayoutPage {
 
 			add(new CoverCarousel("projectCoverCarousel", allCoverIds));
 
+			sidebarModules.add(new ActionsSidebarModule("sidebarModule", ProjectEdit.class, mainProject.getUrlParameters()));
 			sidebarModules.add(new UpdatesSidebarModule("sidebarModule", mainProject.getProjectId()));
 			sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
 			sidebarModules.add(new FriendsSidebarModule("sidebarModule"));
-		} finally {
+		}
+		finally
+		{
 			session.close();
 		}
 	}

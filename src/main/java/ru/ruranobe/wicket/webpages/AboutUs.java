@@ -7,11 +7,14 @@ import org.apache.wicket.util.string.Strings;
 import ru.ruranobe.engine.wiki.parser.WikiParser;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
-import ru.ruranobe.mybatis.entities.tables.*;
+import ru.ruranobe.mybatis.entities.tables.Chapter;
+import ru.ruranobe.mybatis.entities.tables.ChapterImage;
+import ru.ruranobe.mybatis.entities.tables.ExternalResource;
 import ru.ruranobe.mybatis.mappers.ChapterImagesMapper;
 import ru.ruranobe.mybatis.mappers.ChaptersMapper;
 import ru.ruranobe.mybatis.mappers.TextsMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
+import ru.ruranobe.wicket.components.sidebar.ActionsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
@@ -29,10 +32,11 @@ public class AboutUs extends SidebarLayoutPage
 
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
         SqlSession session = sessionFactory.openSession();
+        Chapter chapter;
         try
         {
             ChaptersMapper chaptersMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
-            Chapter chapter = chaptersMapperCacheable.getChapterByUrl("system/aboutus/text");
+            chapter = chaptersMapperCacheable.getChapterByUrl("system/aboutus/text");
 
             if (chapter == null)
             {
@@ -99,6 +103,7 @@ public class AboutUs extends SidebarLayoutPage
 
         add(new Label("htmlText", textHtml).setEscapeModelStrings(false));
 
+        sidebarModules.add(new ActionsSidebarModule("sidebarModule", Editor.class, chapter.getUrlParameters()));
         sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
         sidebarModules.add(new FriendsSidebarModule("sidebarModule"));
     }

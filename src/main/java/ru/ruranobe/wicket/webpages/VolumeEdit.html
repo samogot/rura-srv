@@ -7,6 +7,12 @@
     <script src="https://cdn.rawgit.com/blueimp/jQuery-File-Upload/master/js/vendor/jquery.ui.widget.js"></script>
 </wicket:head>
 <wicket:extend>
+    <h1>Админка тома</h1>
+    <ol class="breadcrumb">
+        <li><a href="/a">Админка</a></li>
+        <li><a wicket:id="breadcrumbProject"></a></li>
+        <li class="active" wicket:id="breadcrumbActive"></li>
+    </ol>
     <div wicket:id="info"></div>
     <div wicket:id="staff"></div>
     <div wicket:id="chapters"></div>
@@ -159,6 +165,12 @@
             <label wicket:for="title">Заголовок</label>
             <input wicket:id="title" class="form-control name-input" type="text">
         </div>
+        <div class="form-group">
+            <a href="#" target="_blank" wicket:id="link">Править&nbsp;
+                <small class="fa fa-external-link"></small>
+            </a>
+        </div>
+
     </wicket:fragment>
 
     <wicket:fragment wicket:id="updateFormItemFragment">

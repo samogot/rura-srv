@@ -5,12 +5,14 @@ import org.apache.wicket.extensions.markup.html.form.select.IOptionRenderer;
 import org.apache.wicket.extensions.markup.html.form.select.Select;
 import org.apache.wicket.extensions.markup.html.form.select.SelectOptions;
 import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import ru.ruranobe.mybatis.entities.tables.Project;
 import ru.ruranobe.mybatis.entities.tables.Volume;
 import ru.ruranobe.wicket.RuraConstants;
+import ru.ruranobe.wicket.webpages.VolumeEdit;
 
 import java.util.List;
 
@@ -19,6 +21,22 @@ import java.util.List;
  */
 public class VolumeTableRowPanel extends Panel
 {
+    private final IOptionRenderer<String> optionRenderer = new IOptionRenderer<String>()
+    {
+        @Override
+        public String getDisplayValue(String object)
+        {
+            return RuraConstants.VOLUME_STATUS_TO_FULL_TEXT.get(object);
+        }
+
+        @Override
+        public IModel<String> getModel(String value)
+        {
+            return Model.of(value);
+        }
+    };
+
+
     public VolumeTableRowPanel(String id, IModel<Volume> model, List<Project> projects)
     {
         super(id, model);
@@ -47,21 +65,6 @@ public class VolumeTableRowPanel extends Panel
         add(new TextField<String>("externalUrl"));
         add(new TextArea<String>("annotation"));
         add(new CheckBox("adult"));
+        add(new BookmarkablePageLink("link", VolumeEdit.class, model.getObject().getUrlParameters()));
     }
-
-
-    private final IOptionRenderer<String> optionRenderer = new IOptionRenderer<String>()
-    {
-        @Override
-        public String getDisplayValue(String object)
-        {
-            return RuraConstants.VOLUME_STATUS_TO_FULL_TEXT.get(object);
-        }
-
-        @Override
-        public IModel<String> getModel(String value)
-        {
-            return Model.of(value);
-        }
-    };
 }

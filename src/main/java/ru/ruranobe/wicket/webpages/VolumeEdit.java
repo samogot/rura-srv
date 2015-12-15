@@ -25,6 +25,7 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -231,6 +232,10 @@ public class VolumeEdit extends AdminLayoutPage
         reinitAllChapters();
 //        final Dataset teamMembersDataset = new Dataset("teamMembers").withLocal(teamMembers).withValueKey("nikname");
 
+        add(new BookmarkablePageLink("breadcrumbProject", ProjectEdit.class, volume.getProject().getUrlParameters())
+                .setBody(Model.of(volume.getProject().getTitle())));
+        add(new Label("breadcrumbActive", volume.getNameTitle()));
+
         add(new AdminInfoFormPanel<Volume>("info", "Информация", new CompoundPropertyModel<Volume>(volume))
         {
             @Override
@@ -412,7 +417,7 @@ public class VolumeEdit extends AdminLayoutPage
             }
 
             @Override
-            protected Component getFormItemLabelComponent(String id, IModel<Chapter> model)
+            protected Component getFormItemLabelComponent(String id, final IModel<Chapter> model)
             {
                 return new Fragment(id, "chapterFormItemFragment", VolumeEdit.this, model)
                 {
@@ -424,6 +429,7 @@ public class VolumeEdit extends AdminLayoutPage
                         add(new CheckBox("nested"));
                         add(new TextField<String>("urlPart").setRequired(true).setLabel(Model.of("Ссылка")));
                         add(new TextField<String>("title").setRequired(true).setLabel(Model.of("Заголовок")));
+                        add(new BookmarkablePageLink("link", Editor.class, model.getObject().getUrlParameters()));
                     }
                 };
             }

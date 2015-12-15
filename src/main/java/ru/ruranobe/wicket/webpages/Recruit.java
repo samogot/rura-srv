@@ -2,6 +2,7 @@ package ru.ruranobe.wicket.webpages;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.string.Strings;
 import ru.ruranobe.engine.wiki.parser.WikiParser;
@@ -9,8 +10,13 @@ import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.*;
 import ru.ruranobe.mybatis.entities.tables.Text;
-import ru.ruranobe.mybatis.mappers.*;
+import ru.ruranobe.mybatis.mappers.ChapterImagesMapper;
+import ru.ruranobe.mybatis.mappers.ChaptersMapper;
+import ru.ruranobe.mybatis.mappers.TextsMapper;
+import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
+import ru.ruranobe.wicket.components.CommentsPanel;
+import ru.ruranobe.wicket.components.sidebar.ActionsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
@@ -28,10 +34,19 @@ public class Recruit extends SidebarLayoutPage
 
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
         SqlSession session = sessionFactory.openSession();
+        Volume recruitVolume;
+        Chapter chapter;
         try
         {
+            VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
+            recruitVolume = volumesMapperCacheable.getVolumeByUrl("system/recruit");
+            if (recruitVolume == null)
+            {
+                throw RuranobeUtils.getRedirectTo404Exception(this);
+            }
+
             ChaptersMapper chaptersMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
-            Chapter chapter = chaptersMapperCacheable.getChapterByUrl("system/recruit/text");
+            chapter = chaptersMapperCacheable.getChapterByUrl("system/recruit/text");
 
             if (chapter == null)
             {
@@ -97,7 +112,16 @@ public class Recruit extends SidebarLayoutPage
         }
 
         add(new Label("htmlText", textHtml).setEscapeModelStrings(false));
+        if (recruitVolume.getTopicId() != null)
+        {
+            add(new CommentsPanel("comments", recruitVolume.getTopicId()));
+        }
+        else
+        {
+            add(new WebMarkupContainer("comments"));
+        }
 
+        sidebarModules.add(new ActionsSidebarModule("sidebarModule", Editor.class, chapter.getUrlParameters()));
         sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
         sidebarModules.add(new FriendsSidebarModule("sidebarModule"));
     }

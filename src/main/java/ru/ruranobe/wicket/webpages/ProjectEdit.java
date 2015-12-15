@@ -8,6 +8,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -16,13 +17,12 @@ import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
+import ru.ruranobe.mybatis.entities.tables.Project;
+import ru.ruranobe.mybatis.entities.tables.Volume;
 import ru.ruranobe.mybatis.mappers.ExternalResourcesMapper;
 import ru.ruranobe.mybatis.mappers.ProjectsMapper;
 import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
-import ru.ruranobe.mybatis.entities.tables.ExternalResource;
-import ru.ruranobe.mybatis.entities.tables.Project;
-import ru.ruranobe.mybatis.entities.tables.Volume;
 import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.components.admin.AdminAffixedListPanel;
 import ru.ruranobe.wicket.components.admin.AdminInfoFormPanel;
@@ -41,26 +41,50 @@ import java.util.List;
 public class ProjectEdit extends AdminLayoutPage
 {
 
-    private Project getProject(final PageParameters parameters)
+    private final List<Project> subProjects;
+    private final List<Project> allProjects;
+    private final List<Volume> volumes;
+    private final Project project;
+    private final List<String> VOLUMES_TABLE_COLUMNS = new ImmutableList.Builder<String>()
+            .add("Ссылка")
+            .add("Имя для файлов")
+            .add("Заголовок")
+            .add("Название (ориг.)")
+            .add("Название (англ.)")
+            .add("Название (рус.)")
+            .add("Название (романдзи)")
+            .add("Короткое название")
+            .add("Серия")
+            .add("Номер в серии")
+            .add("Автор")
+            .add("Иллюстратор")
+            .add("Дата публикации")
+            .add("ISBN")
+            .add("Тип релиза")
+            .add("Cтатус релиза")
+            .add("Внешняя ссылка")
+            .add("Аннотация")
+            .add("18+")
+            .add("Править")
+            .build();
+    private final Comparator<Project> projectComparator = new Comparator<Project>()
     {
-        String projectUrl = parameters.get("project").toOptionalString();
-        SqlSession session = MybatisUtil.getSessionFactory().openSession();
-        try
+        @Override
+        public int compare(Project o1, Project o2)
         {
-            return CachingFacade.getCacheableMapper(session, ProjectsMapper.class).getProjectByUrl(projectUrl);
+            int parentComp = ObjectUtils.compare(o1.getParentId(), o2.getParentId(), false);
+            return parentComp == 0 ? ObjectUtils.compare(o1.getOrderNumber(), o2.getOrderNumber(), true) : parentComp;
         }
-        finally
-        {
-            session.close();
-        }
-    }
-
-    private void reinitAllProjects()
+    };
+    private final Comparator<Volume> volumeComparator = new Comparator<Volume>()
     {
-        allProjects.clear();
-        allProjects.add(project);
-        allProjects.addAll(subProjects);
-    }
+        @Override
+        public int compare(Volume o1, Volume o2)
+        {
+            int compProj = projectComparator.compare(o1.getProject(), o2.getProject());
+            return compProj == 0 ? ObjectUtils.compare(o1.getSequenceNumber(), o2.getSequenceNumber(), true) : compProj;
+        }
+    };
 
     public ProjectEdit(final PageParameters parameters)
     {
@@ -105,7 +129,7 @@ public class ProjectEdit extends AdminLayoutPage
         Collections.sort(allProjects, projectComparator);
         Collections.sort(volumes, volumeComparator);
 
-
+        add(new Label("breadcrumbActive", project.getTitle()));
         add(new AdminInfoFormPanel<Project>("info", "Информация", new CompoundPropertyModel<Project>(project))
         {
             @Override
@@ -307,49 +331,24 @@ public class ProjectEdit extends AdminLayoutPage
         }.setSortable(true));
     }
 
-    private final List<Project> subProjects;
-    private final List<Project> allProjects;
-    private final List<Volume> volumes;
-    private final Project project;
-    private final List<String> VOLUMES_TABLE_COLUMNS = new ImmutableList.Builder<String>()
-            .add("Ссылка")
-            .add("Имя для файлов")
-            .add("Заголовок")
-            .add("Название (ориг.)")
-            .add("Название (англ.)")
-            .add("Название (рус.)")
-            .add("Название (романдзи)")
-            .add("Короткое название")
-            .add("Серия")
-            .add("Номер в серии")
-            .add("Автор")
-            .add("Иллюстратор")
-            .add("Дата публикации")
-            .add("ISBN")
-            .add("Тип релиза")
-            .add("Cтатус релиза")
-            .add("Внешняя ссылка")
-            .add("Аннотация")
-            .add("18+")
-            .build();
-
-    private final Comparator<Project> projectComparator = new Comparator<Project>()
+    private Project getProject(final PageParameters parameters)
     {
-        @Override
-        public int compare(Project o1, Project o2)
+        String projectUrl = parameters.get("project").toOptionalString();
+        SqlSession session = MybatisUtil.getSessionFactory().openSession();
+        try
         {
-            int parentComp = ObjectUtils.compare(o1.getParentId(), o2.getParentId(), false);
-            return parentComp == 0 ? ObjectUtils.compare(o1.getOrderNumber(), o2.getOrderNumber(), true) : parentComp;
+            return CachingFacade.getCacheableMapper(session, ProjectsMapper.class).getProjectByUrl(projectUrl);
         }
-    };
+        finally
+        {
+            session.close();
+        }
+    }
 
-    private final Comparator<Volume> volumeComparator = new Comparator<Volume>()
+    private void reinitAllProjects()
     {
-        @Override
-        public int compare(Volume o1, Volume o2)
-        {
-            int compProj = projectComparator.compare(o1.getProject(), o2.getProject());
-            return compProj == 0 ? ObjectUtils.compare(o1.getSequenceNumber(), o2.getSequenceNumber(), true) : compProj;
-        }
-    };
+        allProjects.clear();
+        allProjects.add(project);
+        allProjects.addAll(subProjects);
+    }
 }

@@ -15,6 +15,7 @@ import ru.ruranobe.mybatis.mappers.UpdatesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.components.UpdatesWideList;
+import ru.ruranobe.wicket.components.sidebar.ActionsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
@@ -329,6 +330,7 @@ public class Updates extends SidebarLayoutPage
             add(updatesPaginator);
             add(new UpdatesWideList("updatesList", projectId, volumeId, searchType, (page - 1) * UPDATES_COUNT_ON_PAGE, UPDATES_COUNT_ON_PAGE));
 
+            sidebarModules.add(new ActionsSidebarModule("sidebarModule", GlobalEdit.class, null));
             sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
             sidebarModules.add(new FriendsSidebarModule("sidebarModule"));
         }
@@ -336,6 +338,12 @@ public class Updates extends SidebarLayoutPage
         {
             session.close();
         }
+    }
+
+    @Override
+    protected String getPageTitle()
+    {
+        return "Обновления - РуРанобе";
     }
 
     private static class StatelessLinkToPage extends StatelessLink
@@ -370,9 +378,4 @@ public class Updates extends SidebarLayoutPage
             setResponsePage(Updates.class, p);
         }
     }
-
-	@Override
-	protected String getPageTitle() {
-		return "Обновления - РуРанобе";
-	}
 }
