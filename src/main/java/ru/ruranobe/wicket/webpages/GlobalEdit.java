@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
@@ -26,6 +27,7 @@ import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
 
 import java.util.*;
 
+@AuthorizeInstantiation("ADMIN")
 public class GlobalEdit extends AdminLayoutPage
 {
 

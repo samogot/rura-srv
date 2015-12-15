@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ru.ruranobe.mybatis.mappers.RolesMapper">
+
+    <select id="getUserGroupsByUser" parameterType="int" resultType="java.lang.String">
+        SELECT ugt.group_name
+        FROM user_groups ug
+        join user_group_types ugt
+          on ugt.group_id = ug.group_id
+        WHERE ug.user_id = #{userId}
+    </select>
+
+</mapper>
