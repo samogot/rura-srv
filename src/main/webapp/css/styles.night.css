@@ -1,8 +1,11 @@
 /* body.night START */
-
+body.night .panel .row {
+    color: #282828;
+}
 body.night input,
 body.night textarea,
-body.night select {
+body.night select,
+body.night .list-group-item {
     opacity: 0.95;
 }
 
