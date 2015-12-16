@@ -30,7 +30,7 @@
             <div class="commentText">Оставьте первый комментарий</div>
         </div>
     {{/for}}
-    {{if ~greater(posts_count, posts.length)}}
+    {{if posts && ~greater(posts_count, posts.length)}}
         <div class="comment">
             <div class="commentText">
                 <a href="/f/viewtopic.php?f={{:forum_id}}&t={{:topic_id}}" target="_blank">
