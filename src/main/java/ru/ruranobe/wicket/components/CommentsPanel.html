@@ -25,7 +25,20 @@
             <div class="threadLink"><a href="/f/viewtopic.php?f={{:~root.forum_id}}&t={{:~root.topic_id}}&p={{:post_id}}#p{{:post_id}}" target="_blank">#</a></div>
             <div class="commentText">{{:post_text}}</div>
         </div>
+    {{else}}
+        <div class="comment">
+            <div class="commentText">Оставьте первый комментарий</div>
+        </div>
     {{/for}}
+    {{if ~greater(posts_count, posts.length)}}
+        <div class="comment">
+            <div class="commentText">
+                <a href="/f/viewtopic.php?f={{:forum_id}}&t={{:topic_id}}" target="_blank">
+                    Посмотреть все {{:posts_count}} на форуме
+                </a>
+            </div>
+        </div>
+    {{/if}}
     </script>
     <div class="comments" wicket:id="comments">
     </div>

@@ -8,8 +8,11 @@ $(document).ready(function () {
     var reply = form.find(".reply");
     var newComment = form.find(".new-comment");
     var commentTemplate = $.templates("#commentTemplate");
+    var commentHelpers = {
+        greater: function(a, b) { return a > b; }
+    };
     if (topicId) {
-        updateComments(commentTemplate);
+        updateComments(commentTemplate, commentHelpers);
         form.submit(function () {
             var text = newComment.val().trim();
             if (text) {
@@ -23,7 +26,7 @@ $(document).ready(function () {
                            success: function () {
                                newComment.val("");
                                reply.prop("disabled", false);
-                               updateComments(commentTemplate);
+                               updateComments(commentTemplate, commentHelpers);
                            },
                            error: function () {
                                reply.prop("disabled", false);
@@ -36,10 +39,10 @@ $(document).ready(function () {
         });
         reply.prop("disabled", false);
     }
-    function updateComments(commentTemplate) {
+    function updateComments(commentTemplate, commentHelpers) {
         $('.comments').empty();
-        $.getJSON('/f/api/topic/' + topicId + '/posts', function (data) {
-            $(".comments").append(commentTemplate.render(data));
+        $.getJSON('/f/api/topic/' + topicId + '/posts', {limit: 20, sort: "desc", olderThan: 1}, function (data) {
+            $(".comments").append(commentTemplate.render(data, commentHelpers));
             $('.comment .commentText').each(function(i, el){
               if($(el).height()>44) {$(el).addClass('overflowed');$(el).parent().append('<a href="return" class="expand"> Подробнее...</a>')};
             });
