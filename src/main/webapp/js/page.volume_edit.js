@@ -863,7 +863,7 @@ $('#imageModalUpload #fileupload').fileupload({
     autoUpload: false,
     previewMaxWidth: 500,
     previewMinWidth: 500,
-    acceptFileTypes: /(\.|\/)(gif|jpe?g|png|jpg)$/i,
+    acceptFileTypes: /(\.|\/)(gif|jpe?g|png|jpg)$/i
 }).on('fileuploadadd', function (e, data) {
     imgIndx++;
     data.context = $('<div/>').attr('class', 'imageDraggable').attr('data-pos', imgIndx);

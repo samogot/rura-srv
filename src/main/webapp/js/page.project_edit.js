@@ -214,7 +214,7 @@ $('#banner').fileupload({
     acceptFileTypes: /(\.|\/)(jpe?g|png|jpg)$/i,
     previewMaxHeight: 73,
     previewMaxWidth: 220,
-    maxNumberOfFiles: 1,
+    maxNumberOfFiles: 1
 }).on('fileuploadadd', function (e, data) {
     $('#imageform .progress').collapse('show');
     $('#banner').attr('src', 'loading.gif');

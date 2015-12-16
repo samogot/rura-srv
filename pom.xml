@@ -216,12 +216,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.0</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava-jdk5</artifactId>
             <version>13.0</version>
@@ -304,12 +298,48 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.5.1</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                     <encoding>UTF-8</encoding>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.0.2</version>
+            </plugin>
+            <plugin>
+                <groupId>com.samaxes.maven</groupId>
+                <artifactId>minify-maven-plugin</artifactId>
+                <version>1.7.4</version>
+                <executions>
+                    <execution>
+                        <id>default-minify</id>
+                        <configuration>
+                            <skipMerge>true</skipMerge>
+                            <nosuffix>true</nosuffix>
+                            <jsEngine>CLOSURE</jsEngine>
+                            <cssSourceIncludes>
+                                <cssSourceInclude>**</cssSourceInclude>
+                            </cssSourceIncludes>
+                            <cssSourceExcludes>
+                                <cssSourceExclude>**/*.min.css</cssSourceExclude>
+                                <cssSourceExclude>**/*.map</cssSourceExclude>
+                            </cssSourceExcludes>
+                            <jsSourceIncludes>
+                                <jsSourceInclude>**</jsSourceInclude>
+                            </jsSourceIncludes>
+                            <jsSourceExcludes>
+                                <jsSourceExclude>**/*.min.js</jsSourceExclude>
+                            </jsSourceExcludes>
+                        </configuration>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
@@ -340,22 +370,6 @@
                     <wtpversion>${wtp.version}</wtpversion>
                 </configuration>
             </plugin>
-            <!-- Dirty hacks. All hail Google Picassa API. >
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.0.2</version>
-                <configuration>
-                    <webResources>
-                        <resource>
-                            <directory>C:/Users/Viktor/Downloads/gdata-samples.java-1.47.1/gdata/java/lib</directory>
-                            <targetPath>WEB-INF/lib</targetPath>
-                        </resource>
-                    </webResources>
-                </configuration>
-            </plugin-->
-
-
             <!--This stupid idiot decided it is a good idea to include servlet-api-2.5-20081211 in the war file.
                 (At least locally on my PC)
                 It causes Tomcat to fail and prevents project from working on the server.
@@ -367,43 +381,6 @@
                 </dependency>
                 Didn't solve the problem, so we delete the file manually.
                 Fuck this shit m8.-->
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.7</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <configuration>
-                            <tasks>
-                                <delete>
-                                    <fileset
-                                            dir="C:\Users\Viktor\new.ruranobe.ru\target\Ruranobe-1.1-SNAPSHOT\WEB-INF\lib"
-                                            includes="servlet-api-2.5-20081211.jar"/>
-                                    <fileset dir="C:\Program Files\Apache Tomcat\7.0.63\webapps\ROOT\WEB-INF\lib"
-                                             includes="servlet-api-2.5-20081211.jar"/>
-                                </delete>
-
-                                <unzip src="C:\Users\Viktor\new.ruranobe.ru\target\Ruranobe-1.1-SNAPSHOT.war"
-                                       dest="C:\Users\Viktor\new.ruranobe.ru\target\tempfolder"/>
-
-                                <delete>
-                                    <fileset dir="C:\Users\Viktor\new.ruranobe.ru\target"
-                                             includes="Ruranobe-1.1-SNAPSHOT.war"/>
-                                </delete>
-
-                                <jar destfile="C:\Users\Viktor\new.ruranobe.ru\target\Ruranobe-1.1-SNAPSHOT.war"
-                                     basedir="C:\Users\Viktor\new.ruranobe.ru\target\tempfolder"
-                                     includes="**\*"
-                                     excludes="**\WEB-INF\lib\servlet-api-2.5-20081211.jar"
-                                        />
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
