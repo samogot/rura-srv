@@ -81,7 +81,7 @@ public class Faq extends SidebarLayoutPage
                 Integer textId = faqChapter.getTextId();
                 if (textId != null)
                 {
-                    Text text = textsMapper.getHtmlInfoById(faqChapter.getTextId());
+                    Text text = textsMapper.getTextById(faqChapter.getTextId());
                     if (Strings.isEmpty(text.getTextHtml()))
                     {
                         WikiParser wikiParser = new WikiParser(textId, faqChapter.getChapterId(), text.getTextWiki());
@@ -89,7 +89,7 @@ public class Faq extends SidebarLayoutPage
                         textsMapper.updateText(text);
                     }
 
-                    questions.add(new Question(questionNumber++, faqChapter.getTitle(), text.getTextHtml()));
+                    questions.add(new Question(++questionNumber, faqChapter.getTitle(), text.getTextHtml()));
 
                    /* String chapterLink = "#" + diaryChapter.getUrlPart();
                     ContentsHolder holder = new ContentsHolder(chapterLink, diaryChapter.getTitle());
