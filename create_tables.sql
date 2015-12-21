@@ -288,8 +288,8 @@ CREATE TABLE user_group_types
   group_name VARCHAR(255) NOT NULL
 );
 
-INSERT INTO user_group_types(GROUP_NAME) VALUES('ADMIN');
-INSERT INTO user_group_types(GROUP_NAME) VALUES('TEAM MEMBER');
+INSERT INTO user_group_types VALUES (1, 'ADMIN');
+INSERT INTO user_group_types VALUES (2, 'TEAM MEMBER');
 
 ALTER TABLE paragraphs ADD CONSTRAINT fk_paragraph_text_id FOREIGN KEY (text_id) REFERENCES texts (text_id);
 

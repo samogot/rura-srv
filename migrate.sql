@@ -227,6 +227,13 @@ SET
 WHERE
   mw.user_password LIKE ":pbkdf2:%";
 
+INSERT INTO user_groups
+  SELECT
+    ug_user,
+    1
+  FROM ruranobe_db.mw_user_groups
+  WHERE `ug_group` IN ('bureaucrat', 'sysop', 'proofreader');
+
 INSERT INTO team_members (member_id, user_id, team_id, nikname, active)
   SELECT
     worker_id,
