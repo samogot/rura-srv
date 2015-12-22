@@ -472,7 +472,7 @@ INSERT INTO external_resources_history (history_id, uploaded_when, project_id)
     INNER JOIN projects ON concat('sidebanner-', url, '.png') = img_name
     INNER JOIN ruranobe_db.mw_page ON (img_name = page_title AND page_namespace = 6);
 
-INSERT INTO external_resources (user_id, mime_type, url, thumbnail, title, uploaded_when, history_id)
+INSERT INTO external_resources (user_id, mime_type, url, thumbnail, title, uploaded_when, history_id, width, height)
   SELECT
     img_user,
     concat(img_major_mime, '/', img_minor_mime),
@@ -482,7 +482,9 @@ INSERT INTO external_resources (user_id, mime_type, url, thumbnail, title, uploa
            replace(img_name, '%', '%%'), '/%dpx-', replace(img_name, '%', '%%')),
     img_name,
     img_timestamp,
-    page_id
+    page_id,
+    img_width,
+    img_height
   FROM ruranobe_db.mw_image
     INNER JOIN projects ON concat('sidebanner-', url, '.png') = img_name
     INNER JOIN ruranobe_db.mw_page ON (img_name = page_title AND page_namespace = 6);
@@ -504,7 +506,7 @@ INSERT IGNORE INTO external_resources_history (history_id, uploaded_when, projec
     INNER JOIN chapters ON ch = chapter_id
     INNER JOIN volumes USING (volume_id);
 
-INSERT INTO external_resources (user_id, mime_type, url, thumbnail, title, uploaded_when, history_id)
+INSERT INTO external_resources (user_id, mime_type, url, thumbnail, title, uploaded_when, history_id, width, height)
   SELECT DISTINCT
     img_user,
     concat(img_major_mime, '/', img_minor_mime),
@@ -514,7 +516,9 @@ INSERT INTO external_resources (user_id, mime_type, url, thumbnail, title, uploa
            replace(img_name, '%', '%%'), '/%dpx-', replace(img_name, '%', '%%')),
     img_name,
     img_timestamp,
-    page_id
+    page_id,
+    img_width,
+    img_height
   FROM ruranobe_db.mw_image
     INNER JOIN ruranobe_db.mw_imagelinks ON il_to = img_name
     INNER JOIN ch_text ON il_from = pg
@@ -553,7 +557,7 @@ INSERT IGNORE INTO external_resources_history (history_id, uploaded_when, projec
     INNER JOIN ruranobe_db.mw_page img_page ON (img_name = img_page.page_title AND img_page.page_namespace = 6)
   WHERE img_name LIKE concat(replace(cover, ' ', '_'), '.%');
 
-INSERT IGNORE INTO external_resources (user_id, mime_type, url, thumbnail, title, uploaded_when, history_id)
+INSERT IGNORE INTO external_resources (user_id, mime_type, url, thumbnail, title, uploaded_when, history_id, width, height)
   SELECT DISTINCT
     img_user,
     concat(img_major_mime, '/', img_minor_mime),
@@ -563,7 +567,9 @@ INSERT IGNORE INTO external_resources (user_id, mime_type, url, thumbnail, title
            replace(img_name, '%', '%%'), '/%dpx-', replace(img_name, '%', '%%')),
     img_name,
     img_timestamp,
-    img_page.page_id
+    img_page.page_id,
+    img_width,
+    img_height
   FROM ruranobe_db.mw_image
     INNER JOIN ruranobe_db.mw_imagelinks ON il_to = img_name
     INNER JOIN ruranobe_db.mw_page ON page_id = il_from
