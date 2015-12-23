@@ -43,6 +43,14 @@ public class WikiTag
         return listOrderNumber;
     }
 
+    public Integer getExternalResourceId() {
+        return externalResourceId;
+    }
+
+    public void setExternalResourceId(Integer externalResourceId) {
+        this.externalResourceId = externalResourceId;
+    }
+
     public Map<String, String> getAttributeNameToValue()
     {
         return attributeNameToValue;
@@ -100,4 +108,6 @@ public class WikiTag
     private int listOrderNumber;
     private String imageUrl;
     private int wikiTagLength;
+    private Integer externalResourceId;
+
 }

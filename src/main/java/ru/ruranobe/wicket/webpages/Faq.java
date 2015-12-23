@@ -27,6 +27,7 @@ import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Faq extends SidebarLayoutPage
 {
@@ -85,7 +86,7 @@ public class Faq extends SidebarLayoutPage
                     if (Strings.isEmpty(text.getTextHtml()))
                     {
                         WikiParser wikiParser = new WikiParser(textId, faqChapter.getChapterId(), text.getTextWiki());
-                        text.setTextHtml(wikiParser.parseWikiText(new ArrayList<String>(), true));
+                        text.setTextHtml(wikiParser.parseWikiText(new ArrayList<Map.Entry<Integer, String>>(), true));
                         textsMapper.updateText(text);
                     }
 

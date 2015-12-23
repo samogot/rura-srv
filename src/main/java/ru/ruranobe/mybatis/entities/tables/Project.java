@@ -7,6 +7,7 @@ import ru.ruranobe.wicket.webpages.VolumePage;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Project extends PageRepresentable implements Serializable
 {
@@ -287,13 +288,13 @@ public class Project extends PageRepresentable implements Serializable
     public String getAnnotationParsed()
     {
         WikiParser wikiParser = new WikiParser(null, null, annotation);
-        return annotation == null ? null : wikiParser.parseWikiText(new ArrayList<String>(), false);
+        return annotation == null ? null : wikiParser.parseWikiText(new ArrayList<Map.Entry<Integer, String>>(), false);
     }
 
     public String getFranchiseParsed()
     {
         WikiParser wikiParser = new WikiParser(null, null, franchise);
-        return franchise == null ? null : wikiParser.parseWikiText(new ArrayList<String>(), false);
+        return franchise == null ? null : wikiParser.parseWikiText(new ArrayList<Map.Entry<Integer, String>>(), false);
     }
 
     /*@Override

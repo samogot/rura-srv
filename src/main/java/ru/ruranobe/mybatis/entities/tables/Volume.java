@@ -9,6 +9,7 @@ import ru.ruranobe.wicket.webpages.VolumePage;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 public class Volume extends PageRepresentable implements Serializable, Cloneable
 {
@@ -493,6 +494,6 @@ public class Volume extends PageRepresentable implements Serializable, Cloneable
     public String getAnnotationParsed()
     {
         WikiParser wikiParser = new WikiParser(null, null, annotation);
-        return annotation == null ? null : wikiParser.parseWikiText(new ArrayList<String>(), false);
+        return annotation == null ? null : wikiParser.parseWikiText(new ArrayList<Map.Entry<Integer, String>>(), false);
     }
 }

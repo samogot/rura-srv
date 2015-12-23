@@ -29,6 +29,7 @@ import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -69,7 +70,7 @@ public class Diary extends SidebarLayoutPage
                     if (Strings.isEmpty(text.getTextHtml()))
                     {
                         WikiParser wikiParser = new WikiParser(textId, diaryChapter.getChapterId(), text.getTextWiki());
-                        text.setTextHtml(wikiParser.parseWikiText(new ArrayList<String>(), true));
+                        text.setTextHtml(wikiParser.parseWikiText(new ArrayList<Map.Entry<Integer, String>>(), true));
                         textsMapper.updateText(text);
                     }
                     diaryChapter.setText(text);

@@ -21,8 +21,10 @@ import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Recruit extends SidebarLayoutPage
 {
@@ -72,28 +74,36 @@ public class Recruit extends SidebarLayoutPage
                 chapterText = textsMapperCacheable.getTextById(textId);
                 List<ChapterImage> chapterImages = chapterImagesMapperCacheable.getChapterImagesByChapterId(chapter.getChapterId());
 
-                List<String> imageUrls = new ArrayList<String>();
+                List<Map.Entry<Integer, String>> images = new ArrayList<Map.Entry<Integer, String>>();
                 for (ChapterImage chapterImage : chapterImages)
                 {
-                    String imageUrl = "unknownSource";
+                    Map.Entry<Integer, String> image = new AbstractMap.SimpleEntry<Integer, String>(-1, "unknownSource");
                     ExternalResource coloredImage = chapterImage.getColoredImage();
                     if (coloredImage != null && !Strings.isEmpty(coloredImage.getUrl()))
                     {
-                        imageUrl = coloredImage.getUrl();
+                        image = new AbstractMap.SimpleEntry<Integer, String>
+                        (
+                                coloredImage.getResourceId(),
+                                coloredImage.getUrl()
+                        );
                     }
                     else
                     {
                         ExternalResource nonColoredImage = chapterImage.getNonColoredImage();
                         if (nonColoredImage != null && !Strings.isEmpty(nonColoredImage.getUrl()))
                         {
-                            imageUrl = nonColoredImage.getUrl();
+                            image = new AbstractMap.SimpleEntry<Integer, String>
+                            (
+                                    nonColoredImage.getResourceId(),
+                                    nonColoredImage.getUrl()
+                            );
                         }
                     }
-                    imageUrls.add(imageUrl);
+                    images.add(image);
                 }
 
                 WikiParser wikiParser = new WikiParser(chapterText.getTextId(), chapter.getChapterId(), chapterText.getTextWiki());
-                chapterText.setTextHtml(wikiParser.parseWikiText(imageUrls, true));
+                chapterText.setTextHtml(wikiParser.parseWikiText(images, true));
 
                 textsMapperCacheable.updateText(chapterText);
 
