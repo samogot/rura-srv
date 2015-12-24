@@ -24,7 +24,7 @@ body.night table .header-copy {
 }
 
 body.night .list-group.select .form-control,
-.admin-table .form-control {
+body.night .admin-table .form-control {
     color: #DFDFDF;
 }
 
