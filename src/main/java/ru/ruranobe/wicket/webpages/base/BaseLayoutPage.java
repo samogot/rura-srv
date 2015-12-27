@@ -24,6 +24,6 @@ public abstract class BaseLayoutPage extends WebPage {
 	}
 
 	protected String getPageTitle() {
-		return "РуРанобе";
+		return "РуРанобэ";
 	}
 }

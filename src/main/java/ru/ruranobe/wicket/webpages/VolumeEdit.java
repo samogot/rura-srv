@@ -224,7 +224,7 @@ public class VolumeEdit extends AdminLayoutPage
         }
         for (TeamMember member : teamMembers)
         {
-            memberNickToId.put(member.getNikname(), member.getMemberId());
+            memberNickToId.put(member.getNickname(), member.getMemberId());
         }
 
         stubСhapter = new Chapter();
@@ -232,7 +232,7 @@ public class VolumeEdit extends AdminLayoutPage
         stubСhapter.setTitle("Весь том");
         Collections.sort(chapters, chapterComparator);
         reinitAllChapters();
-//        final Dataset teamMembersDataset = new Dataset("teamMembers").withLocal(teamMembers).withValueKey("nikname");
+//        final Dataset teamMembersDataset = new Dataset("teamMembers").withLocal(teamMembers).withValueKey("nickname");
 
         add(new BookmarkablePageLink("breadcrumbProject", ProjectEdit.class, volume.getProject().getUrlParameters())
                 .setBody(Model.of(volume.getProject().getTitle())));

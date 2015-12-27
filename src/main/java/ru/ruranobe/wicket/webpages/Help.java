@@ -122,6 +122,6 @@ public class Help extends SidebarLayoutPage
     @Override
     protected String getPageTitle()
     {
-        return "Помощь - РуРанобе";
+        return "Помощь - РуРанобэ";
     }
 }

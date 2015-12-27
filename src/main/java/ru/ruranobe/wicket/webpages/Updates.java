@@ -343,7 +343,7 @@ public class Updates extends SidebarLayoutPage
     @Override
     protected String getPageTitle()
     {
-        return "Обновления - РуРанобе";
+        return "Обновления - РуРанобэ";
     }
 
     private static class StatelessLinkToPage extends StatelessLink

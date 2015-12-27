@@ -400,7 +400,7 @@ public class Text extends SidebarLayoutPage implements InstantiationSecurityChec
     @Override
     protected String getPageTitle()
     {
-        return titleName != null ? titleName + " - РуРанобе" : super.getPageTitle();
+        return titleName != null ? titleName + " - РуРанобэ" : super.getPageTitle();
 	}
 
     @Override

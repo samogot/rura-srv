@@ -139,6 +139,6 @@ public class Recruit extends SidebarLayoutPage
     @Override
     protected String getPageTitle()
     {
-        return "Набор в команду - РуРанобе";
+        return "Набор в команду - РуРанобэ";
     }
 }

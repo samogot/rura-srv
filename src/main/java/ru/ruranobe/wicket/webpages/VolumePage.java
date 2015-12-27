@@ -213,7 +213,7 @@ public class VolumePage extends SidebarLayoutPage {
 
 	@Override
 	protected String getPageTitle() {
-		return titleName != null ? titleName + " - РуРанобе" : super.getPageTitle();
+		return titleName != null ? titleName + " - РуРанобэ" : super.getPageTitle();
 	}
 
 	private class VolumeReleaseActivityExtended implements Serializable {

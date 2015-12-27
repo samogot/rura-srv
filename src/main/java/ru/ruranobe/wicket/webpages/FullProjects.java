@@ -157,7 +157,7 @@ public class FullProjects extends BaseLayoutPage
 
 	@Override
 	protected String getPageTitle() {
-		return "Проекты - РуРанобе";
+		return "Проекты - РуРанобэ";
 	}
 
     private class ProjectExtendedWithInfo

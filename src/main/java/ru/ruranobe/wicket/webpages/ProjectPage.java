@@ -287,7 +287,7 @@ public class ProjectPage extends SidebarLayoutPage {
 
 	@Override
 	protected String getPageTitle() {
-		return titleName != null ? titleName + " - РуРанобе" : super.getPageTitle();
+		return titleName != null ? titleName + " - РуРанобэ" : super.getPageTitle();
 	}
 
 	private static class VolumesComparator implements Comparator<Volume> {

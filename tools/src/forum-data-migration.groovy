@@ -18,7 +18,8 @@ class forumDataMigration {
     final RESTClient api;
 
     static void main(args) {
-        def forumRootId = 242;
+        def forumRootId = 317;
+        def avatarsCount = 286;
         def forumUserSecret = '342950507aede02cf327383dc6652cd99f40cf0f9b2649da';
         def forumApi = new RESTClient('https://beta.ruranobe.ru/f/api/', ContentType.JSON)
         def mw = connect('localhost', 'ruranobe_db', 'root', 'SankaReaz3');
@@ -30,7 +31,7 @@ class forumDataMigration {
         println("Migrating volumes")
         migrationTool.migrateVolumes(forumUserSecret);
         println("Migrating users")
-        migrationTool.migrateUsers()
+        migrationTool.migrateUsers(avatarsCount)
         println("Migrating comments")
         migrationTool.migrateComments()
         println("Migration completed")
@@ -95,7 +96,7 @@ WHERE volume_id = ${volume.volume_id};
         }
     }
 
-    def migrateUsers() {
+    def migrateUsers(avatarsCount) {
         site.eachRow("""
 SELECT
   user_id, username, email, registration_date
@@ -118,14 +119,16 @@ ORDER BY
                                       body: [text: 'c'],
                                       requestContentType: ContentType.JSON)
             assert unique_id.status == 200
+            def avatarId = user.username.collect { (int)it }.sum() % avatarsCount
+            def avatar = "ruranobe/${avatarId}.jpg".toString()
             try {
                 def ids = forum.executeInsert("""
 INSERT INTO
-    phpbb_users (group_id, user_permissions, user_regdate, username, username_clean, user_email, user_email_hash, user_lang, user_timezone, user_dateformat, user_form_salt, user_sig)
+    phpbb_users (group_id, user_permissions, user_regdate, username, username_clean, user_email, user_email_hash, user_lang, user_timezone, user_dateformat, user_form_salt, user_avatar, user_avatar_type, user_avatar_width, user_avatar_height, user_sig)
 VALUES
-    (2, '', :user_regdate, :username, :username_clean, :email, :email_hash, 'ru', 'Europe/Moscow', 'd M Y, H:i', :user_form_salt, '');
+    (2, '', :user_regdate, :username, :username_clean, :email, :email_hash, 'ru', 'Europe/Moscow', 'd M Y, H:i', :user_form_salt, :avatar, 'avatar.driver.local', 150, 150, '');
 """, [user_regdate: unix_time, username: user.username, username_clean: username_clean.data.text, email: email,
-      email_hash: email_hash.data.text, user_form_salt: unique_id.data.text])
+      email_hash: email_hash.data.text, user_form_salt: unique_id.data.text, avatar: avatar])
                 if (ids && ids.size()) {
                     def forum_user_id = ids[0][0]
                     forum.executeInsert("""

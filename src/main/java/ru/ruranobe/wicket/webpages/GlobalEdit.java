@@ -321,7 +321,7 @@ public class GlobalEdit extends AdminLayoutPage
             @Override
             protected Component getSelectorItemLabelComponent(String id, IModel<TeamMember> model)
             {
-                return new Label(id, new PropertyModel<TeamMember>(model, "nikname"));
+                return new Label(id, new PropertyModel<TeamMember>(model, "nickname"));
             }
 
             @Override

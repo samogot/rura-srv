@@ -127,6 +127,6 @@ public class Diary extends SidebarLayoutPage
     @Override
     protected String getPageTitle()
     {
-        return "Дневник Руйки - РуРанобе";
+        return "Дневник Руйки - РуРанобэ";
     }
 }

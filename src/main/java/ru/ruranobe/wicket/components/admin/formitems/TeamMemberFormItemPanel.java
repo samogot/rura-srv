@@ -20,7 +20,7 @@ public class TeamMemberFormItemPanel extends Panel
     public TeamMemberFormItemPanel(String id, IModel<TeamMember> model, List<Team> teams)
     {
         super(id, model);
-        add(new TextField<String>("nikname").setRequired(true).setLabel(Model.of("Никнейм")));
+        add(new TextField<String>("nickname").setRequired(true).setLabel(Model.of("Никнейм")));
         add(new DropDownChoice<Team>("team", teams).setChoiceRenderer(new ChoiceRenderer<Team>("teamName", "teamId"))
                                                    .setOutputMarkupId(true));
         add(new CheckBox("active"));

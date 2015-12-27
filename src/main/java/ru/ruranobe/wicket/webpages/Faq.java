@@ -151,7 +151,7 @@ public class Faq extends SidebarLayoutPage
     @Override
     protected String getPageTitle()
     {
-        return "FAQ - РуРанобе";
+        return "FAQ - РуРанобэ";
     }
 
 }

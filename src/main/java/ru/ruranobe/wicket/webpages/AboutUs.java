@@ -121,6 +121,6 @@ public class AboutUs extends SidebarLayoutPage
     @Override
     protected String getPageTitle()
     {
-        return "О нас - РуРанобе";
+        return "О нас - РуРанобэ";
     }
 }

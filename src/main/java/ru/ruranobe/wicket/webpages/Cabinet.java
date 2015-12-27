@@ -309,7 +309,7 @@ public class Cabinet extends SidebarLayoutPage
 
 	@Override
 	protected String getPageTitle() {
-		return "Личный кабинет - РуРанобе";
+		return "Личный кабинет - РуРанобэ";
 	}
 
     private class EmailFormModelObject

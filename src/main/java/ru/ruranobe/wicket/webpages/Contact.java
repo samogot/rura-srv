@@ -121,6 +121,6 @@ public class Contact extends SidebarLayoutPage
     @Override
     protected String getPageTitle()
     {
-        return "Связь - РуРанобе";
+        return "Связь - РуРанобэ";
     }
 }

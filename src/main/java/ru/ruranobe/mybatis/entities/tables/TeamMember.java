@@ -51,14 +51,14 @@ public class TeamMember implements Serializable
         this.teamId = teamId;
     }
 
-    public String getNikname()
+    public String getNickname()
     {
-        return nikname;
+        return nickname;
     }
 
-    public void setNikname(String nikname)
+    public void setNickname(String nickname)
     {
-        this.nikname = nikname;
+        this.nickname = nickname;
     }
 
     public boolean isActive()
@@ -98,7 +98,7 @@ public class TeamMember implements Serializable
     private Integer memberId;
     private Integer userId;
     private Integer teamId;
-    private String nikname;
+    private String nickname;
     private boolean active;
     //Optional
     private Team team;

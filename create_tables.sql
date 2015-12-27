@@ -228,7 +228,7 @@ CREATE TABLE team_members
   member_id INT(11) PRIMARY KEY AUTO_INCREMENT,
   user_id   INT(11),
   team_id   INT(11),
-  nikname   VARCHAR(64) UNIQUE NOT NULL,
+  nickname   VARCHAR(64) UNIQUE NOT NULL,
   active    BOOLEAN            NOT NULL
 );
 
