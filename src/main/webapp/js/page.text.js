@@ -385,8 +385,9 @@ $('div.mistake').on('hidden.bs.modal', function (e) {
 $('.btn.mistake-button').click(function () {
     getText(function(data){
         var Parameters = getOrphusParameters();
+        if (!Parameters) {alert('Выделите только один параграф!'); return false; } else {
         var callbackUrl = '';
-        showOrphusDialog(Parameters.chapterId, Parameters.paragraph, Parameters.startOffset, Parameters.originalText, Parameters.fullText, Parameters.textId, callbackUrl)
+        showOrphusDialog(Parameters.chapterId, Parameters.paragraph, Parameters.startOffset, Parameters.originalText, Parameters.fullText, Parameters.textId, callbackUrl)}
     })
 });
 /* MODAL */
@@ -489,6 +490,8 @@ function getSelectionRange() {
 function getOrphusParameters() {
     var range = getSelectionRange();
     var p = $(range.startContainer).closest('p').get(0);
+    var p1 = $(range.endContainer).closest('p').get(0);
+    if (p.id != p1.id) return false;
     var offset = 0;
     if (range.cloneRange) {
         var preCaretRange = range.cloneRange();
