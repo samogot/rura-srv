@@ -29,6 +29,13 @@ $(document).ready(function () {
 /* AFFIX */
 function reinitAffix() {
     $(window).off('.affix')
+    $('.controlText>div').removeData('bs.affix').removeClass('affix affix-top affix-bottom')
+        .css('top', '').affix({
+            offset: {
+                top: ($('.controlText > div').offset().top - 40)<0 ? 126:$('.controlText > div').offset().top - 40,
+                bottom: $(document).height() - $('.text').offset().top - $('.text').outerHeight(true)
+            }
+        });
     $('#contents-module>div').removeData('bs.affix').removeClass('affix affix-top affix-bottom')
         .css('top', '').affix({
             offset: {
@@ -36,13 +43,6 @@ function reinitAffix() {
                 bottom: $('footer').outerHeight(true)
             }
         })
-    $('.controlText>div').removeData('bs.affix').removeClass('affix affix-top affix-bottom')
-        .css('top', '').affix({
-            offset: {
-                top: ($('.controlText > div').offset().top - 40)<0 ? 126:$('.controlText > div').offset().top - 40,
-                bottom: $(document).height() - ($('#comments').length ? $('#comments').offset().top : $('.leftColumn').offset().top + $('.leftColumn').outerHeight(true))
-            }
-        });
 }
 $(window).resize(reinitAffix);
 $(document).ready(function () {

@@ -244,4 +244,8 @@ body.night .controlText div .hint .miniicon {
     background: url('../img/actions/textControl2.png') left no-repeat;
 }
 
+body.night .comment .text, body.night .comment .text:before {
+    background: #4e4e4e;
+}
+
 /* body.night END */
