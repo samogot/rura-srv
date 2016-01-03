@@ -1,4 +1,5 @@
 /* body.night START */
+
 body.night .panel .row {
     color: #282828;
 }
@@ -9,7 +10,8 @@ body.night .list-group-item {
     opacity: 0.95;
 }
 
-body.night .orphusTable thead tr {
+body.night .orphusTable thead tr, 
+body.night .miniSearch button {
     background-color: #4E4E4E;
     color: #E0E0E0;
 }
@@ -22,7 +24,13 @@ body.night .admin-header {
 body.night table .header-copy {
     background: #4E4E4E;
 }
-
+body.night .panel-heading {
+    background: #4E4E4E;
+    border: 1px solid #6e6e6e !important;
+}
+body.night .panel-heading>h4>a>div {
+    color: #E0E0E0;    
+}
 body.night .list-group.select .form-control,
 body.night .admin-table .form-control {
     color: #DFDFDF;
