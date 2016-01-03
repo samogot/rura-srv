@@ -2,7 +2,7 @@ section {
     padding-top: 20px;
 }
 
-.comment {
+.post {
     overflow: hidden;
     padding: 0 0 1em;
     border-bottom: 1px solid #ddd;
@@ -12,60 +12,60 @@ section {
     width: calc(100% - 40px);
 }
 
-.comment-img {
+.post-img {
     float: left;
     margin-right: 33px;
-    border-radius: 5px;
+    border-radius: 50%;
     overflow: hidden;
 }
 
-.comment-img img {
+.post-img img {
     display: block
 }
 
-.comment-body {
+.post-body {
     overflow: hidden
 }
 
-.comment .text {
+.post .text {
     padding: 10px;
     border: 1px solid #e5e5e5;
     border-radius: 5px;
     background: #fff;
 }
 
-.comment .text p:last-child {
+.post .text p:last-child {
     margin: 0
 }
 
-.comment .attribution {
+.post .attribution {
     margin: 0.5em 0 0;
     font-size: 14px;
     color: #666;
 }
 
-.comments,
-.comment {
+.posts,
+.post {
     position: relative
 }
 
-.comments:before,
-.comment:before,
-.comment .text:before {
+.posts:before,
+.post:before,
+.post .text:before {
     content: "";
     position: absolute;
     top: 0;
     left: 65px;
 }
 
-.comments:before {
+.posts:before {
     width: 3px;
     left: 105px;
     bottom: 0px;
     background: rgba(0, 0, 0, 0.1);
 }
 
-.comment:before {
+.post:before {
     width: 9px;
     height: 9px;
     margin: 17px 0 0 -3px;
@@ -75,7 +75,7 @@ section {
     border-radius: 100px;
 }
 
-.comment .text:before {
+.post .text:before {
     top: 18px;
     left: 78px;
     width: 9px;
