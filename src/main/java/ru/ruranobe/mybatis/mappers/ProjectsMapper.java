@@ -23,4 +23,6 @@ public interface ProjectsMapper
     void updateProject(Project Project);
 
     void deleteProject(Integer projectId);
+
+    Collection<String> getAllPeople();
 }

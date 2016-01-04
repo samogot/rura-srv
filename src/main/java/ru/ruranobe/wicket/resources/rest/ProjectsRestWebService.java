@@ -6,7 +6,6 @@ import org.wicketstuff.rest.annotations.MethodMapping;
 import org.wicketstuff.rest.annotations.ResourcePath;
 import org.wicketstuff.rest.annotations.parameters.RequestParam;
 import org.wicketstuff.rest.annotations.parameters.ValidatorKey;
-import org.wicketstuff.rest.contenthandling.RestMimeTypes;
 import org.wicketstuff.rest.resource.gson.GsonRestResource;
 import org.wicketstuff.rest.resource.gson.GsonSerialDeserial;
 import ru.ruranobe.mybatis.MybatisUtil;
@@ -29,25 +28,16 @@ public class ProjectsRestWebService extends GsonRestResource
         registerValidator("fields_validator", new AllowedFieldsValidator(ALLOWED_FIELD_LIST).setParamName("fields"));
     }
 
-    @MethodMapping(value = "", produces = RestMimeTypes.APPLICATION_JSON)
+    @MethodMapping("")
     public Collection<Project> getProjects(@RequestParam(value = "fields", required = false, defaultValue = "title,url")
                                            @ValidatorKey("fields_validator") String columns)
     {
-        Collection<Project> result;
-
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-        SqlSession session = sessionFactory.openSession();
-        try
+        try (SqlSession session = sessionFactory.openSession())
         {
             ProjectsMapper projectsMapper = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
-            result = projectsMapper.getAllProjectsWithCustomColumns(columns);
+            return projectsMapper.getAllProjectsWithCustomColumns(columns);
         }
-        finally
-        {
-            session.close();
-        }
-
-        return result;
     }
 
     private static final List<String> ALLOWED_FIELD_LIST = Arrays.asList("parent_id", "image_id", "url",

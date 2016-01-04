@@ -15,12 +15,12 @@
     <select id="getInfoByProjectId" parameterType="int" resultType="ru.ruranobe.mybatis.entities.tables.ProjectInfo">
         SELECT
             (SELECT count(*)
-              FROM volumes
-              WHERE project_id = #{projectId}
-                AND volume_type = 'Ранобэ') AS volumesCount,
+             FROM volumes
+             WHERE project_id = #{projectId}
+                   AND volume_type = 'Ранобэ') AS volumesCount,
             volumes.author,
             volumes.illustrator,
-            volumes.volume_status AS volumeStatus
+            volumes.volume_status              AS volumeStatus
         FROM volumes
         WHERE volumes.project_id = #{projectId}
         ORDER BY volume_id DESC
@@ -69,35 +69,35 @@
     </select>
 
     <update id="updateVolume" parameterType="ru.ruranobe.mybatis.entities.tables.Volume">
-        update volumes
-        set
-          project_id = #{projectId},
-          image_one = #{imageOne},
-          image_two = #{imageTwo},
-          image_three = #{imageThree},
-          image_four = #{imageFour},
-          url = #{url},
-          name_file = #{nameFile},
-          name_title = #{nameTitle},
-          name_jp = #{nameJp},
-          name_en = #{nameEn},
-          name_ru = #{nameRu},
-          name_romaji = #{nameRomaji},
-          name_short = #{nameShort},
-          sequence_number = #{sequenceNumber},
-          author = #{author},
-          illustrator = #{illustrator},
-          original_design = #{originalDesign},
-          release_date = #{releaseDate},
-          isbn = #{isbn},
-          external_url = #{externalUrl},
-          volume_type = #{volumeType},
-          volume_status = #{volumeStatus},
-          volume_status_hint = #{volumeStatusHint},
-          adult = #{adult},
-          annotation = #{annotation}
-          topic_id = #{topicId}
-        where volume_id = #{volumeId}
+        UPDATE volumes
+        SET project_id         = #{projectId},
+            image_one          = #{imageOne},
+            image_two          = #{imageTwo},
+            image_three        = #{imageThree},
+            image_four         = #{imageFour},
+            url                = #{url},
+            name_file          = #{nameFile},
+            name_title         = #{nameTitle},
+            name_jp            = #{nameJp},
+            name_en            = #{nameEn},
+            name_ru            = #{nameRu},
+            name_romaji        = #{nameRomaji},
+            name_short         = #{nameShort},
+            sequence_number    = #{sequenceNumber},
+            author             = #{author},
+            illustrator        = #{illustrator},
+            original_design    = #{originalDesign},
+            original_story     = #{originalStory},
+            release_date       = #{releaseDate},
+            isbn               = #{isbn},
+            external_url       = #{externalUrl},
+            volume_type        = #{volumeType},
+            volume_status      = #{volumeStatus},
+            volume_status_hint = #{volumeStatusHint},
+            adult              = #{adult},
+            annotation         = #{annotation},
+            topic_id           = #{topicId}
+        WHERE volume_id = #{volumeId}
     </update>
 
     <update id="updateVolumeCovers" parameterType="ru.ruranobe.mybatis.entities.tables.Volume">
@@ -110,17 +110,41 @@
         WHERE volume_id = #{volumeId}
     </update>
 
-    <insert id="insertVolume" parameterType="ru.ruranobe.mybatis.entities.tables.Volume" keyProperty="volumeId" useGeneratedKeys="true">
-        INSERT INTO volumes (project_id, image_one, image_two, image_three, image_four, url, name_file, name_title, name_jp,
-        name_en, name_ru, name_romaji, name_short, sequence_number, author, illustrator, original_design, release_date,
-        isbn, external_url, volume_type, volume_status, volume_status_hint, adult, annotation)
-        VALUES (#{projectId}, #{imageOne}, #{imageTwo}, #{imageThree}, #{imageFour}, #{url}, #{nameFile}, #{nameTitle}, #{nameJp},
-        #{nameEn}, #{nameRu}, #{nameRomaji}, #{nameShort}, #{sequenceNumber}, #{author}, #{illustrator},
-        #{originalDesign}, #{releaseDate}, #{isbn}, #{externalUrl}, #{volumeType}, #{volumeStatus}, #{volumeStatusHint}, #{adult}, #{annotation})
+    <insert id="insertVolume" parameterType="ru.ruranobe.mybatis.entities.tables.Volume" keyProperty="volumeId"
+            useGeneratedKeys="true">
+        INSERT INTO volumes
+        SET project_id         = #{projectId},
+            image_one          = #{imageOne},
+            image_two          = #{imageTwo},
+            image_three        = #{imageThree},
+            image_four         = #{imageFour},
+            url                = #{url},
+            name_file          = #{nameFile},
+            name_title         = #{nameTitle},
+            name_jp            = #{nameJp},
+            name_en            = #{nameEn},
+            name_ru            = #{nameRu},
+            name_romaji        = #{nameRomaji},
+            name_short         = #{nameShort},
+            sequence_number    = #{sequenceNumber},
+            author             = #{author},
+            illustrator        = #{illustrator},
+            original_design    = #{originalDesign},
+            original_story     = #{originalStory},
+            release_date       = #{releaseDate},
+            isbn               = #{isbn},
+            external_url       = #{externalUrl},
+            volume_type        = #{volumeType},
+            volume_status      = #{volumeStatus},
+            volume_status_hint = #{volumeStatusHint},
+            adult              = #{adult},
+            annotation         = #{annotation},
+            topic_id           = #{topicId}
     </insert>
 
     <delete id="deleteVolume" parameterType="int">
-        delete from volumes where volume_id = #{volumeId}
+        DELETE FROM volumes
+        WHERE volume_id = #{volumeId}
     </delete>
 
     <resultMap type="ru.ruranobe.mybatis.entities.tables.Volume" id="VolumeResult">
@@ -143,6 +167,7 @@
         <result property="author" column="author"/>
         <result property="illustrator" column="illustrator"/>
         <result property="originalDesign" column="original_design"/>
+        <result property="originalStory" column="original_story"/>
         <result property="releaseDate" column="release_date"/>
         <result property="isbn" column="isbn"/>
         <result property="externalUrl" column="external_url"/>

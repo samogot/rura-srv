@@ -1,7 +1,7 @@
 package ru.ruranobe.mybatis.mappers.cacheable;
 
-import ru.ruranobe.mybatis.mappers.ProjectsMapper;
 import ru.ruranobe.mybatis.entities.tables.Project;
+import ru.ruranobe.mybatis.mappers.ProjectsMapper;
 
 import java.util.Collection;
 import java.util.List;
@@ -63,7 +63,8 @@ public class ProjectsMapperCacheable implements ProjectsMapper
     }
 
     @Override
-    public Collection<Project> getAllProjectsWithCustomColumns(String columns) {
+    public Collection<Project> getAllProjectsWithCustomColumns(String columns)
+    {
         return mapper.getAllProjectsWithCustomColumns(columns);
     }
 
@@ -79,6 +80,12 @@ public class ProjectsMapperCacheable implements ProjectsMapper
     {
         mapper.deleteProject(projectId);
         projectIdToProject.remove(projectId);
+    }
+
+    @Override
+    public Collection<String> getAllPeople()
+    {
+        return mapper.getAllPeople();
     }
 }
 

@@ -41,18 +41,22 @@
 
     <div class="form-group">
         <label wicket:for="author">Автор</label>
-
-        <div id="author-name-typeahead">
-            <input class="form-control typeahead author-name" type="text" wicket:id="author">
-        </div>
+        <input class="form-control people-name-input typeahead" type="text" wicket:id="author">
     </div>
 
     <div class="form-group">
         <label wicket:for="illustrator">Иллюстратор</label>
+        <input class="form-control people-name-input typeahead" type="text" wicket:id="illustrator">
+    </div>
 
-        <div id="illustrator-name-typeahead">
-            <input class="form-control typeahead illustrator-name" type="text" wicket:id="illustrator">
-        </div>
+    <div class="form-group">
+        <label wicket:for="originalStory">Оригинальный сюжет</label>
+        <input class="form-control people-name-input typeahead" type="text" wicket:id="originalStory">
+    </div>
+
+    <div class="form-group">
+        <label wicket:for="originalDesign">Оригинальный дизайн</label>
+        <input class="form-control people-name-input typeahead" type="text" wicket:id="originalDesign">
     </div>
 
     <div class="form-group">
@@ -81,6 +85,11 @@
     <div class="form-group">
         <label wicket:for="annotation">Аннотация</label>
         <textarea class="form-control" wicket:id="annotation" rows="15"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label wicket:for="forumId">Форум</label>
+        <input type="number" class="form-control forum-id-input" wicket:id="forumId">
     </div>
 </wicket:panel>
 </body>

@@ -39,32 +39,49 @@
 
     <insert id="insertProject" parameterType="ru.ruranobe.mybatis.entities.tables.Project" keyProperty="projectId"
             useGeneratedKeys="true">
-        INSERT INTO projects (parent_id, image_id, url, name_jp, name_en, name_ru, name_romaji,
-        author, illustrator, order_number, banner_hidden, project_hidden, onevolume, franchise, annotation, title)
-        VALUES
-        (#{parentId}, #{imageId}, #{url}, #{nameJp}, #{nameEn}, #{nameRu}, #{nameRomaji}, #{author}, #{illustrator},
-        #{orderNumber}, #{bannerHidden}, #{projectHidden}, #{onevolume}, #{franchise}, #{annotation}, #{title})
+        INSERT INTO projects
+        SET parent_id       = #{parentId},
+            image_id        = #{imageId},
+            url             = #{url},
+            title           = #{title},
+            name_jp         = #{nameJp},
+            name_en         = #{nameEn},
+            name_ru         = #{nameRu},
+            name_romaji     = #{nameRomaji},
+            author          = #{author},
+            illustrator     = #{illustrator},
+            original_design = #{originalDesign},
+            original_story  = #{originalStory},
+            order_number    = #{orderNumber},
+            banner_hidden   = #{bannerHidden},
+            project_hidden  = #{projectHidden},
+            onevolume       = #{onevolume},
+            franchise       = #{franchise},
+            annotation      = #{annotation},
+            forum_id        = #{forumId}
     </insert>
 
     <update id="updateProject" parameterType="ru.ruranobe.mybatis.entities.tables.Project">
         UPDATE projects
-        SET
-        parent_id = #{parentId},
-        image_id = #{imageId},
-        url = #{url},
-        title = #{title},
-        name_jp = #{nameJp},
-        name_en = #{nameEn},
-        name_ru = #{nameRu},
-        name_romaji = #{nameRomaji},
-        author = #{author},
-        illustrator = #{illustrator},
-        order_number = #{orderNumber},
-        banner_hidden = #{bannerHidden},
-        project_hidden = #{projectHidden},
-        onevolume = #{onevolume},
-        franchise = #{franchise},
-        annotation = #{annotation}
+        SET parent_id       = #{parentId},
+            image_id        = #{imageId},
+            url             = #{url},
+            title           = #{title},
+            name_jp         = #{nameJp},
+            name_en         = #{nameEn},
+            name_ru         = #{nameRu},
+            name_romaji     = #{nameRomaji},
+            author          = #{author},
+            illustrator     = #{illustrator},
+            original_design = #{originalDesign},
+            original_story  = #{originalStory},
+            order_number    = #{orderNumber},
+            banner_hidden   = #{bannerHidden},
+            project_hidden  = #{projectHidden},
+            onevolume       = #{onevolume},
+            franchise       = #{franchise},
+            annotation      = #{annotation},
+            forum_id        = #{forumId}
         WHERE project_id = #{projectId}
     </update>
 
@@ -72,6 +89,32 @@
         DELETE FROM projects
         WHERE project_id = #{projectId}
     </delete>
+
+    <select id="getAllPeople" resultType="string">
+        SELECT DISTINCT author
+        FROM projects
+        UNION
+        SELECT DISTINCT illustrator
+        FROM projects
+        UNION
+        SELECT DISTINCT original_design
+        FROM projects
+        UNION
+        SELECT DISTINCT original_story
+        FROM projects
+        UNION
+        SELECT DISTINCT author
+        FROM volumes
+        UNION
+        SELECT DISTINCT illustrator
+        FROM volumes
+        UNION
+        SELECT DISTINCT original_design
+        FROM volumes
+        UNION
+        SELECT DISTINCT original_story
+        FROM volumes
+    </select>
 
     <resultMap type="ru.ruranobe.mybatis.entities.tables.Project" id="ProjectResult">
         <id property="projectId" column="project_id"/>
@@ -84,6 +127,8 @@
         <result property="nameRomaji" column="name_romaji"/>
         <result property="author" column="author"/>
         <result property="illustrator" column="illustrator"/>
+        <result property="originalDesign" column="original_design"/>
+        <result property="originalStory" column="original_story"/>
         <result property="orderNumber" column="order_number"/>
         <result property="bannerHidden" column="banner_hidden" javaType="java.lang.Boolean"/>
         <result property="projectHidden" column="project_hidden" javaType="java.lang.Boolean"/>

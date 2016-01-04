@@ -4,16 +4,19 @@ import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.ibatis.session.SqlSession;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.NumberTextField;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import ru.ruranobe.misc.RuranobeUtils;
@@ -30,7 +33,6 @@ import ru.ruranobe.wicket.components.admin.AdminInfoFormPanel;
 import ru.ruranobe.wicket.components.admin.AdminTableListPanel;
 import ru.ruranobe.wicket.components.admin.AdminToolboxAjaxButton;
 import ru.ruranobe.wicket.components.admin.formitems.ProjectInfoPanel;
-import ru.ruranobe.wicket.components.admin.formitems.SubProjectSelectorItemPanel;
 import ru.ruranobe.wicket.components.admin.formitems.VolumeTableRowPanel;
 import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
 
@@ -47,7 +49,7 @@ public class ProjectEdit extends AdminLayoutPage
     private final List<Project> allProjects;
     private final List<Volume> volumes;
     private final Project project;
-    private final List<String> VOLUMES_TABLE_COLUMNS = new ImmutableList.Builder<String>()
+    private static final List<String> VOLUMES_TABLE_COLUMNS = new ImmutableList.Builder<String>()
             .add("Ссылка")
             .add("Имя для файлов")
             .add("Заголовок")
@@ -314,22 +316,31 @@ public class ProjectEdit extends AdminLayoutPage
             @Override
             protected Component getSelectorItemLabelComponent(String id, IModel<Project> model)
             {
-                return new SubProjectSelectorItemPanel(id, model);
+                return new Label(id, new PropertyModel<Project>(model, "title"));
             }
 
             @Override
             protected Component getFormItemLabelComponent(String id, IModel<Project> model)
             {
-                return new WebMarkupContainer(id, model);
+                return new Fragment(id, "subProjectFormItemFragment", ProjectEdit.this, model)
+                {
+                    @Override
+                    protected void onInitialize()
+                    {
+                        super.onInitialize();
+                        add(new TextField<String>("title").setRequired(true).setLabel(Model.of("Название")));
+                        add(new NumberTextField<Integer>("forumId").setMinimum(1));
+                    }
+                };
             }
 
-            @Override
-            protected void onInitialize()
-            {
-                super.onInitialize();
-                form.get("selectorBlock").add(new AttributeModifier("class", "col-xs-12 list-group select sortable"));
-                form.get("formBlock").add(new AttributeModifier("class", "hidden-lg admin-affix"));
-            }
+//            @Override
+//            protected void onInitialize()
+//            {
+//                super.onInitialize();
+//                form.get("selectorBlock").add(new AttributeModifier("class", "col-xs-12 list-group select sortable"));
+//                form.get("formBlock").add(new AttributeModifier("class", "hidden-lg admin-affix"));
+//            }
         }.setSortable(true));
     }
 

@@ -26,6 +26,26 @@ public class Project extends PageRepresentable implements Serializable
         }
     }
 
+    public String getOriginalDesign()
+    {
+        return originalDesign;
+    }
+
+    public void setOriginalDesign(String originalDesign)
+    {
+        this.originalDesign = originalDesign;
+    }
+
+    public String getOriginalStory()
+    {
+        return originalStory;
+    }
+
+    public void setOriginalStory(String originalStory)
+    {
+        this.originalStory = originalStory;
+    }
+
     private static final long serialVersionUID = 3L;
     private Integer projectId;
     private Integer parentId;
@@ -38,6 +58,8 @@ public class Project extends PageRepresentable implements Serializable
     private String nameRomaji;
     private String author;
     private String illustrator;
+    private String originalDesign;
+    private String originalStory;
     private Integer orderNumber;
     private Boolean bannerHidden;
     private Boolean projectHidden;

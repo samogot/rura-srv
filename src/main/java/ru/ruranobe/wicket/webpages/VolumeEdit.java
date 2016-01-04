@@ -279,6 +279,8 @@ public class VolumeEdit extends AdminLayoutPage
                         add(new TextField<Float>("sequenceNumber"));
                         add(new TextField<String>("author"));
                         add(new TextField<String>("illustrator"));
+                        add(new TextField<String>("originalDesign"));
+                        add(new TextField<String>("originalStory"));
                         add(new DateTextField("releaseDate", "dd.MM.yyyy"));
                         add(new TextField<String>("isbn"));
                         add(new DropDownChoice<String>("volumeType", RuraConstants.VOLUME_TYPE_LIST));
@@ -291,6 +293,8 @@ public class VolumeEdit extends AdminLayoutPage
                         add(new TextField<String>("externalUrl"));
                         add(new TextArea<String>("annotation"));
                         add(new CheckBox("adult"));
+                        add(new NumberTextField<Integer>("topicId").setMinimum(1).add(new AttributeModifier(
+                                "data-forum-id", volume.getProject().getForumId())));
                     }
                 };
             }

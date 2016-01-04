@@ -87,6 +87,8 @@ CREATE TABLE projects
   name_romaji        VARCHAR(255),
   author             VARCHAR(255),
   illustrator        VARCHAR(255),
+  original_design    VARCHAR(255),
+  original_story     VARCHAR(255),
   order_number       INT(11)       NOT NULL,
   banner_hidden      BOOL          NOT NULL,
   project_hidden     BOOL          NOT NULL,
@@ -118,7 +120,8 @@ CREATE TABLE volumes
   sequence_number    FLOAT,
   author             VARCHAR(255),
   illustrator        VARCHAR(255),
-  original_design    VARCHAR(255), -- по заказу малфа, для спиноф серий с другим иллюстратором
+  original_design    VARCHAR(255),
+  original_story     VARCHAR(255),
   release_date       DATE,
   ISBN               VARCHAR(16),
   external_url       VARCHAR(255),

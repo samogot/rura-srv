@@ -1,5 +1,6 @@
 package ru.ruranobe.wicket.components.admin;
 
+import com.google.common.collect.ImmutableMap;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.ComponentTag;
@@ -12,7 +13,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
 
 /**
  * Created by samogot on 29.08.15.
@@ -45,12 +45,12 @@ public class ImageUploaderComponent extends Panel implements ILabelProvider
         this.input = input;
     }
 
-    public Map<String, String> getContextVariables()
+    public ImmutableMap<String, String> getContextVariables()
     {
         return contextVariables;
     }
 
-    public ImageUploaderComponent setContextVariables(Map<String, String> contextVariables)
+    public ImageUploaderComponent setContextVariables(ImmutableMap<String, String> contextVariables)
     {
         this.contextVariables = contextVariables;
         return this;
@@ -107,7 +107,7 @@ public class ImageUploaderComponent extends Panel implements ILabelProvider
     }
 
     private IModel<String> label;
-    private Map<String, String> contextVariables;
+    private ImmutableMap<String, String> contextVariables;
     private WebMarkupContainer image;
     private WebMarkupContainer input;
 }

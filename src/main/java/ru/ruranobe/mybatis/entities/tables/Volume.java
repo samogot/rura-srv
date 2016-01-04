@@ -28,6 +28,16 @@ public class Volume extends PageRepresentable implements Serializable, Cloneable
         }
     }
 
+    public String getOriginalStory()
+    {
+        return originalStory;
+    }
+
+    public void setOriginalStory(String originalStory)
+    {
+        this.originalStory = originalStory;
+    }
+
     private static final long serialVersionUID = 2L;
     private Integer volumeId;
     private Integer projectId;
@@ -47,6 +57,7 @@ public class Volume extends PageRepresentable implements Serializable, Cloneable
     private String author;
     private String illustrator;
     private String originalDesign;
+    private String originalStory;
     private Date releaseDate;
     private String isbn;
     private String externalUrl;

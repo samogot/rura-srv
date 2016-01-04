@@ -11,6 +11,20 @@
     <div wicket:id="volumes"></div>
     <div wicket:id="subprojects"></div>
 
+    <wicket:fragment wicket:id="subProjectFormItemFragment">
+        <h3>Настройка подсерии</h3>
+
+        <div class="form-group">
+            <label wicket:for="title">Название</label>
+            <input type="text" class="form-control name-input" wicket:id="title">
+        </div>
+
+        <div class="form-group">
+            <label wicket:for="forumId">Форум</label>
+            <input type="number" class="form-control forum-id-input" wicket:id="forumId">
+        </div>
+    </wicket:fragment>
+
 
     <script src="js/listgroup.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
@@ -45,6 +59,8 @@
     <script src="js/AdminTableListPanel.js"></script>
     <link rel="stylesheet" href="css/AdminTableListPanel.css">
     <script src="js/BannerUploaderComponent.js"></script>
+    <script src="js/ForumIdDropdownChoice.js"></script>
+    <script src="js/PeopleTypeaheadTextField.js"></script>
 </wicket:extend>
 </body>
 </html>
