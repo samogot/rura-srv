@@ -13,6 +13,8 @@ public interface TeamMembersMapper
 
     List<TeamMember> getAllTeamMembers();
 
+    List<TeamMember> getAllTeamMembersWithUsernName();
+
     void insertTeamMember(TeamMember teamMember);
 
     void deleteTeamMember(int teamMemberId);

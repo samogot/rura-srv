@@ -22,6 +22,16 @@ import java.util.List;
 public abstract class AdminTableListPanel<T> extends AdminListPanel<T>
 {
 
+    private List<String> headersList;
+    private PropertyListView<T> rowRepeater;
+
+    public AdminTableListPanel(String id, String title, IModel<? extends List<T>> model, List<String> headersList)
+    {
+        super(id, title, model);
+        this.headersList = headersList;
+        toolbarButtons.add(toolbarButtons.size() - 1, new AdminToolboxColumnsFilterButton("button", Model.ofList(headersList)));
+    }
+
     protected abstract Component getRowComponent(String id, IModel<T> model);
 
     @Override
@@ -78,6 +88,7 @@ public abstract class AdminTableListPanel<T> extends AdminListPanel<T>
             {
                 super.updateAjaxAttributes(attributes);
                 attributes.setEventPropagation(AjaxRequestAttributes.EventPropagation.BUBBLE);
+                attributes.setAllowDefault(true);
             }
 
             @Override
@@ -88,14 +99,4 @@ public abstract class AdminTableListPanel<T> extends AdminListPanel<T>
         });
         item.add(rowComponent);
     }
-
-    public AdminTableListPanel(String id, String title, IModel<? extends List<T>> model, List<String> headersList)
-    {
-        super(id, title, model);
-        this.headersList = headersList;
-        toolbarButtons.add(toolbarButtons.size() - 1, new AdminToolboxColumnsFilterButton("button", Model.ofList(headersList)));
-    }
-
-    private List<String> headersList;
-    private PropertyListView<T> rowRepeater;
 }

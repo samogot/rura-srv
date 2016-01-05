@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<html xmlns:wicket="http://wicket.apache.org" xmlns="http://www.w3.org/1999/xhtml">
 <body>
 <wicket:panel>
     <h3>Настройка участника</h3>
@@ -14,19 +14,18 @@
         <select wicket:id="team" class="form-control all_teams"></select>
     </div>
 
-    <!--<div class="form-group">-->
-    <!--<div class="username-input">-->
-    <!--<label wicket:for="userName">Пользователь</label>-->
-    <!--<input wicket:id="userName" class="form-control typeahead" type="text">-->
-    <!--<input wicket:id="userId" class="user-id-hidden" type="hidden">-->
-    <!--<a wicket:id="userLabel" class="selected-user-label"></a>-->
-    <!--</div>-->
-    <!--</div>-->
+    <div class="form-group">
+        <div class="username-input">
+            <label wicket:for="userName">Пользователь</label>
+            <input wicket:id="userName" class="form-control typeahead" type="text">
+            <input wicket:id="userId" class="user-id-hidden" type="hidden">
+        </div>
+    </div>
 
-    <!--<div class="form-group">-->
-    <!--<label wicket:for="role">Роль</label>-->
-    <!--<select wicket:id="role" class="form-control role-select"></select>-->
-    <!--</div>-->
+    <div class="form-group">
+        <label wicket:for="userRoles">Роли</label>
+        <select wicket:id="userRoles" class="form-control role-select" multiple></select>
+    </div>
 </wicket:panel>
 </body>
 </html>

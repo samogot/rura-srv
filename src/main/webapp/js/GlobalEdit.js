@@ -10,12 +10,13 @@ var users = new Bloodhound({
     }
 });
 $('.username-input').each(function () {
-    $this = $(this);
+    var $this = $(this);
 
     function onselect(e, selection) {
         $this.find('.user-id-hidden').val(selection.user_id);
-        $this.find('.selected-user-label').text(selection.username)
-            .attr('href', '/f/memberlist.php?mode=viewprofile&u=' + selection.user_id);
+        $this.closest('.form-item').find('.role-select').prop('disabled', !selection.user_id);
+        if (!selection.user_id)
+            $this.find('.typeahead').typeahead('val', '').typeahead('close');
     }
 
     $this.find('.typeahead').typeahead({
@@ -41,7 +42,7 @@ $('.username-input').each(function () {
         }
     }).bind('typeahead:select', onselect).bind('typeahead:autocomplete', onselect);
 
-    $this.on('click', '.clear-user-message', function () {
-        return onselect(null, {});
+    $this.on('click', '.clear-user-message', function (e) {
+        return onselect(e, {});
     });
 });

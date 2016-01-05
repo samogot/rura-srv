@@ -232,6 +232,13 @@ INSERT INTO user_groups
     ug_user,
     1
   FROM ruranobe_db.mw_user_groups
+  WHERE `ug_group` IN ('bureaucrat', 'sysop');
+
+INSERT INTO user_groups
+  SELECT
+    ug_user,
+    2
+  FROM ruranobe_db.mw_user_groups
   WHERE `ug_group` IN ('bureaucrat', 'sysop', 'proofreader');
 
 INSERT INTO team_members (member_id, user_id, team_id, nickname, active)

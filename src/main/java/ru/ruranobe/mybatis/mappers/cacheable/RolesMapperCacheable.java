@@ -17,4 +17,19 @@ public class RolesMapperCacheable implements RolesMapper
     {
         return mapper.getUserGroupsByUser(userId);
     }
+
+    public void deleteUserGroupsByUserId(int userId)
+    {
+        mapper.deleteUserGroupsByUserId(userId);
+    }
+
+    public void setUserGroupsByUserId(int userId, List<String> userGroups)
+    {
+        mapper.setUserGroupsByUserId(userId, userGroups);
+    }
+
+    public List<String> getAllUserGroups()
+    {
+        return mapper.getAllUserGroups();
+    }
 }

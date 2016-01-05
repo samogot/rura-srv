@@ -1957,3 +1957,9 @@ form.admin-block {
 .admin-affix h3 {
     margin-top: 10px;
 }
+
+.tt-suggestion:hover, .clear-user-message:hover {
+    cursor: pointer;
+    color: #fff;
+    background-color: #0097cf;
+}

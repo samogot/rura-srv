@@ -7,9 +7,28 @@
     <select id="getUserGroupsByUser" parameterType="int" resultType="java.lang.String">
         SELECT ugt.group_name
         FROM user_groups ug
-        join user_group_types ugt
-          on ugt.group_id = ug.group_id
+        JOIN user_group_types ugt
+        ON ugt.group_id = ug.group_id
         WHERE ug.user_id = #{userId}
     </select>
+
+    <select id="getAllUserGroups" resultType="java.lang.String">
+        SELECT group_name
+        FROM user_group_types
+    </select>
+
+    <delete id="deleteUserGroupsByUserId" parameterType="int">
+        DELETE FROM user_groups
+        WHERE user_id = #{userId}
+    </delete>
+
+    <insert id="setUserGroupsByUserId" parameterType="map">
+        INSERT INTO user_groups VALUES
+        <foreach collection="userGroups" item="group" separator=",">
+            (#{userId}, (SELECT group_id
+            FROM user_group_types
+            WHERE group_name = #{element.name}))
+        </foreach>
+    </insert>
 
 </mapper>

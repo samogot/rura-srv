@@ -13,26 +13,37 @@
     <select id="getAllTeamMembers" resultMap="TeamMemberResult">
         SELECT *
         FROM team_members
-        order by member_id asc
+        ORDER BY member_id ASC
     </select>
 
-    <insert id="insertTeamMember" parameterType="ru.ruranobe.mybatis.entities.tables.TeamMember" keyProperty="memberId" useGeneratedKeys="true">
-        insert into team_members (team_id, nickname, active)
-        values (#{teamId}, #{nickname}, #{active})
+    <select id="getAllTeamMembersWithUsernName" resultMap="TeamMemberResult">
+        SELECT *
+        FROM team_members
+            LEFT JOIN users USING (user_id)
+        ORDER BY nickname ASC
+    </select>
+
+    <insert id="insertTeamMember" parameterType="ru.ruranobe.mybatis.entities.tables.TeamMember" keyProperty="memberId"
+            useGeneratedKeys="true">
+        INSERT INTO team_members (team_id, nickname, active)
+        VALUES (#{teamId}, #{nickname}, #{active})
     </insert>
 
     <delete id="deleteTeamMember" parameterType="int">
-        delete from team_members where member_id=#{memberId}
+        DELETE FROM team_members
+        WHERE member_id = #{memberId}
     </delete>
 
     <update id="updateTeamMember" parameterType="ru.ruranobe.mybatis.entities.tables.TeamMember">
-        update team_members set team_id = #{teamId}, nickname=#{nickname}, active=#{active}
-        where member_id=#{memberId}
+        UPDATE team_members
+        SET team_id = #{teamId}, nickname = #{nickname}, active = #{active}
+        WHERE member_id = #{memberId}
     </update>
 
     <resultMap type="ru.ruranobe.mybatis.entities.tables.TeamMember" id="TeamMemberResult">
         <id property="memberId" column="member_id"/>
         <result property="userId" column="user_id"/>
+        <result property="userName" column="username"/>
         <result property="teamId" column="team_id"/>
         <result property="nickname" column="nickname"/>
         <result property="active" column="active"/>

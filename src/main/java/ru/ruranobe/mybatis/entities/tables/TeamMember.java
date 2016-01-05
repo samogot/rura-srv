@@ -1,12 +1,24 @@
 package ru.ruranobe.mybatis.entities.tables;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by samogot on 08.05.15.
  */
 public class TeamMember implements Serializable
 {
+    private static final long serialVersionUID = 1L;
+    private Integer memberId;
+    private Integer userId;
+    private Integer teamId;
+    private String nickname;
+    private boolean active;
+    //Optional
+    private Team team;
+    private List<String> userRoles;
+    private String userName;
+
     public Team getTeam()
     {
         return team;
@@ -71,12 +83,23 @@ public class TeamMember implements Serializable
         this.active = active;
     }
 
-    private static final long serialVersionUID = 1L;
-    private Integer memberId;
-    private Integer userId;
-    private Integer teamId;
-    private String nickname;
-    private boolean active;
-    //Optional
-    private Team team;
+    public List<String> getUserRoles()
+    {
+        return userRoles;
+    }
+
+    public void setUserRoles(List<String> roles)
+    {
+        this.userRoles = roles;
+    }
+
+    public String getUserName()
+    {
+        return userName;
+    }
+
+    public void setUserName(String userName)
+    {
+        this.userName = userName;
+    }
 }

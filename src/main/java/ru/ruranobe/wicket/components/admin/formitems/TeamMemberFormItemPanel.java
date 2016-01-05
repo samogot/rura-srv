@@ -1,9 +1,7 @@
 package ru.ruranobe.wicket.components.admin.formitems;
 
-import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.ChoiceRenderer;
-import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -17,12 +15,25 @@ import java.util.List;
  */
 public class TeamMemberFormItemPanel extends Panel
 {
-    public TeamMemberFormItemPanel(String id, IModel<TeamMember> model, List<Team> teams)
+    public TeamMemberFormItemPanel(String id, IModel<TeamMember> model, List<Team> teams, List<String> allRoles)
     {
         super(id, model);
         add(new TextField<String>("nickname").setRequired(true).setLabel(Model.of("Никнейм")));
         add(new DropDownChoice<Team>("team", teams).setChoiceRenderer(new ChoiceRenderer<Team>("teamName", "teamId"))
-                                                   .setOutputMarkupId(true));
-        add(new CheckBox("active"));
+                .setOutputMarkupId(true));
+        add(new TextField<String>("userName"));
+        add(new HiddenField<Integer>("userId"));
+        add(new ListMultipleChoice<String>("userRoles", allRoles)
+        {
+            @Override
+            protected void onComponentTag(ComponentTag tag)
+            {
+                super.onComponentTag(tag);
+                if (getDefaultModelObject() == null)
+                {
+                    tag.getAttributes().put("disabled", "disabled");
+                }
+            }
+        });
     }
 }

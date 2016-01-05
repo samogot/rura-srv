@@ -12,12 +12,12 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
 import ru.ruranobe.mybatis.MybatisUtil;
-import ru.ruranobe.mybatis.mappers.*;
-import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.mybatis.entities.tables.Project;
 import ru.ruranobe.mybatis.entities.tables.Team;
 import ru.ruranobe.mybatis.entities.tables.TeamMember;
 import ru.ruranobe.mybatis.entities.tables.VolumeActivity;
+import ru.ruranobe.mybatis.mappers.*;
+import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.components.admin.AdminAffixedListPanel;
 import ru.ruranobe.wicket.components.admin.formitems.ProjectFormItemPanel;
 import ru.ruranobe.wicket.components.admin.formitems.TeamFormItemPanel;
@@ -31,16 +31,16 @@ import java.util.*;
 public class GlobalEdit extends AdminLayoutPage
 {
 
-    @Override
-    public boolean isVersioned()
-    {
-        return false;
-    }
+    private List<Project> projects;
+    private List<String> allRoles;
+    private List<VolumeActivity> activities;
+    private List<Team> teams;
+    private List<TeamMember> teamMembers;
+    private AdminAffixedListPanel<Team> teamsAdminAffixedListPanel;
 
     public GlobalEdit()
     {
-        SqlSession session = MybatisUtil.getSessionFactory().openSession();
-        try
+        try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
         {
             ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
             Collection<Project> projectsCollection = projectsMapperCacheable.getRootProjects();
@@ -53,7 +53,17 @@ public class GlobalEdit extends AdminLayoutPage
             teams = teamsMapperCacheable.getAllTeams();
 
             TeamMembersMapper teamMembersMapperCacheable = CachingFacade.getCacheableMapper(session, TeamMembersMapper.class);
-            teamMembers = teamMembersMapperCacheable.getAllTeamMembers();
+            teamMembers = teamMembersMapperCacheable.getAllTeamMembersWithUsernName();
+
+            RolesMapper rolesMapperCacheable = CachingFacade.getCacheableMapper(session, RolesMapper.class);
+            allRoles = rolesMapperCacheable.getAllUserGroups();
+            for (TeamMember member : teamMembers)
+            {
+                if (member.getUserId() != null)
+                {
+                    member.setUserRoles(rolesMapperCacheable.getUserGroupsByUser(member.getUserId()));
+                }
+            }
 
             ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.getCacheableMapper(session, ExternalResourcesMapper.class);
             for (Project project : projects)
@@ -63,10 +73,6 @@ public class GlobalEdit extends AdminLayoutPage
                     project.setImage(externalResourcesMapperCacheable.getExternalResourceById(project.getImageId()));
                 }
             }
-        }
-        finally
-        {
-            session.close();
         }
 
         Collections.sort(projects, new Comparator<Project>()
@@ -151,8 +157,7 @@ public class GlobalEdit extends AdminLayoutPage
             @Override
             public void onSubmit()
             {
-                SqlSession session = MybatisUtil.getSessionFactory().openSession();
-                try
+                try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
                     VolumeActivitiesMapper mapper = CachingFacade.getCacheableMapper(session, VolumeActivitiesMapper.class);
                     for (VolumeActivity item : model.getObject())
@@ -177,10 +182,6 @@ public class GlobalEdit extends AdminLayoutPage
                         }
                     }
                     session.commit();
-                }
-                finally
-                {
-                    session.close();
                 }
             }
 
@@ -209,8 +210,7 @@ public class GlobalEdit extends AdminLayoutPage
             @Override
             public void onSubmit()
             {
-                SqlSession session = MybatisUtil.getSessionFactory().openSession();
-                try
+                try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
                     TeamsMapper mapper = CachingFacade.getCacheableMapper(session, TeamsMapper.class);
                     for (Team item : model.getObject())
@@ -235,10 +235,6 @@ public class GlobalEdit extends AdminLayoutPage
                         }
                     }
                     session.commit();
-                }
-                finally
-                {
-                    session.close();
                 }
             }
 
@@ -276,10 +272,10 @@ public class GlobalEdit extends AdminLayoutPage
             public void onSubmit()
             {
                 teamsAdminAffixedListPanel.onSubmit();
-                SqlSession session = MybatisUtil.getSessionFactory().openSession();
-                try
+                try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
                     TeamMembersMapper mapper = CachingFacade.getCacheableMapper(session, TeamMembersMapper.class);
+                    RolesMapper rolesMapper = CachingFacade.getCacheableMapper(session, RolesMapper.class);
                     for (TeamMember item : model.getObject())
                     {
                         if (!removed.contains(item))
@@ -292,6 +288,11 @@ public class GlobalEdit extends AdminLayoutPage
                             {
                                 mapper.insertTeamMember(item);
                             }
+                            if (item.getUserId() != null)
+                            {
+                                rolesMapper.deleteUserGroupsByUserId(item.getUserId());
+                                rolesMapper.setUserGroupsByUserId(item.getUserId(), item.getUserRoles());
+                            }
                         }
                     }
                     for (TeamMember removedItem : removed)
@@ -302,10 +303,6 @@ public class GlobalEdit extends AdminLayoutPage
                         }
                     }
                     session.commit();
-                }
-                finally
-                {
-                    session.close();
                 }
             }
 
@@ -327,15 +324,15 @@ public class GlobalEdit extends AdminLayoutPage
             @Override
             protected Component getFormItemLabelComponent(String id, IModel<TeamMember> model)
             {
-                return new TeamMemberFormItemPanel(id, model, teams);
+                return new TeamMemberFormItemPanel(id, model, teams, allRoles);
             }
         });
 
     }
 
-    private List<Project> projects;
-    private List<VolumeActivity> activities;
-    private List<Team> teams;
-    private List<TeamMember> teamMembers;
-    private AdminAffixedListPanel<Team> teamsAdminAffixedListPanel;
+    @Override
+    public boolean isVersioned()
+    {
+        return false;
+    }
 }

@@ -1,7 +1,7 @@
 package ru.ruranobe.mybatis.mappers.cacheable;
 
-import ru.ruranobe.mybatis.mappers.TeamMembersMapper;
 import ru.ruranobe.mybatis.entities.tables.TeamMember;
+import ru.ruranobe.mybatis.mappers.TeamMembersMapper;
 
 import java.util.List;
 
@@ -27,6 +27,12 @@ public class TeamMembersMapperCacheable implements TeamMembersMapper
     public List<TeamMember> getAllTeamMembers()
     {
         return mapper.getAllTeamMembers();
+    }
+
+    @Override
+    public List<TeamMember> getAllTeamMembersWithUsernName()
+    {
+        return mapper.getAllTeamMembersWithUsernName();
     }
 
     @Override
