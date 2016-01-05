@@ -24,10 +24,10 @@
 
     <insert id="setUserGroupsByUserId" parameterType="map">
         INSERT INTO user_groups VALUES
-        <foreach collection="userGroups" item="group" separator=",">
+        <foreach collection="userGroups" item="groupName" separator=",">
             (#{userId}, (SELECT group_id
             FROM user_group_types
-            WHERE group_name = #{element.name}))
+            WHERE group_name = #{groupName}))
         </foreach>
     </insert>
 
