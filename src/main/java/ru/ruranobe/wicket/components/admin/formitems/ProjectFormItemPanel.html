@@ -26,12 +26,14 @@
         </div>
     </div>
 
-    <div class="form-group">
-        <div class="form-group banner-upload" style="position: relative;">
-            <label wicket:for="image">Изображение</label>
-            <wicket:container wicket:id="image"/>
+    <wicket:enclosure>
+        <div class="form-group">
+            <div class="form-group banner-upload" style="position: relative;">
+                <label wicket:for="image">Изображение</label>
+                <wicket:container wicket:id="image"/>
+            </div>
         </div>
-    </div>
+    </wicket:enclosure>
 
     <div class="form-group">
         <a href="#" target="_blank" wicket:id="link">Править&nbsp;

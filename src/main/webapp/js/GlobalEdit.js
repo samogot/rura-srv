@@ -46,3 +46,20 @@ $('.username-input').each(function () {
         return onselect(e, {});
     });
 });
+
+function initMemberTeamsLabels() {
+    var $teamMembers = $('#teamMembers');
+    var $listGroup = $teamMembers.find('.list-group.select');
+    var $formItems = $teamMembers.find('.form-item');
+    var $noTeamHeading = $('<a class="list-group-item heading">&lt;без команды&gt;</a>');
+    $listGroup.prepend($noTeamHeading);
+    $('#teams').find('.form-item').each(function () {
+        var $teamHeading = $noTeamHeading.clone();
+        var teamName = $(this).find('.name-input').val();
+        $teamHeading.text(teamName);
+        var firstId = $formItems.find('option:selected:contains("' + teamName + '"):eq(0)').closest('.form-item').prop('id');
+        if (firstId)
+            $listGroup.find('a[href="#' + firstId + '"]').before($teamHeading);
+    });
+}
+$(initMemberTeamsLabels);

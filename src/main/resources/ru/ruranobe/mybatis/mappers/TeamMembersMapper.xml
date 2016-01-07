@@ -20,7 +20,7 @@
         SELECT *
         FROM team_members
             LEFT JOIN users USING (user_id)
-        ORDER BY nickname ASC
+        ORDER BY team_id, nickname
     </select>
 
     <insert id="insertTeamMember" parameterType="ru.ruranobe.mybatis.entities.tables.TeamMember" keyProperty="memberId"

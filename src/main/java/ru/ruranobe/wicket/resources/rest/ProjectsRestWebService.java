@@ -7,7 +7,6 @@ import org.wicketstuff.rest.annotations.ResourcePath;
 import org.wicketstuff.rest.annotations.parameters.RequestParam;
 import org.wicketstuff.rest.annotations.parameters.ValidatorKey;
 import org.wicketstuff.rest.resource.gson.GsonRestResource;
-import org.wicketstuff.rest.resource.gson.GsonSerialDeserial;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.Project;
 import ru.ruranobe.mybatis.mappers.ProjectsMapper;
@@ -23,7 +22,8 @@ public class ProjectsRestWebService extends GsonRestResource
 {
 
     @Override
-    protected void onInitialize(GsonSerialDeserial objSerialDeserial)
+    @SuppressWarnings("deprecation")
+    protected void onInitialize(org.wicketstuff.rest.resource.gson.GsonSerialDeserial objSerialDeserial)
     {
         registerValidator("fields_validator", new AllowedFieldsValidator(ALLOWED_FIELD_LIST).setParamName("fields"));
     }
