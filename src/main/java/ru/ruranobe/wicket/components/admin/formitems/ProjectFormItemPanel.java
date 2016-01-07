@@ -1,6 +1,7 @@
 package ru.ruranobe.wicket.components.admin.formitems;
 
 import com.google.common.collect.ImmutableMap;
+import com.rometools.utils.Strings;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -24,9 +25,14 @@ public class ProjectFormItemPanel extends Panel
         add(new TextField<String>("title").setRequired(true).setLabel(Model.of("Заголовок")));
         add(new CheckBox("projectHidden"));
         add(new CheckBox("bannerHidden"));
-        add(new BannerUploadComponent("image").setContextVariables(new ImmutableMap.Builder<String, String>()
-                .put("project", model.getObject().getUrl())
-                .build()));
+        ImmutableMap<String, String> contextVariables = null;
+        if (!Strings.isEmpty(model.getObject().getUrl()))
+        {
+            contextVariables = new ImmutableMap.Builder<String, String>()
+                    .put("project", model.getObject().getUrl())
+                    .build();
+        }
+        add(new BannerUploadComponent("image").setContextVariables(contextVariables).setVisible(contextVariables != null));
         add(new BookmarkablePageLink("link", ProjectEdit.class, model.getObject().getUrlParameters()));
     }
 }

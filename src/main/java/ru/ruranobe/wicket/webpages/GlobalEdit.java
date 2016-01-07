@@ -135,7 +135,12 @@ public class GlobalEdit extends AdminLayoutPage
             @Override
             protected Project makeItem()
             {
-                return new Project();
+                Project project = new Project();
+                project.setBannerHidden(true);
+                project.setProjectHidden(true);
+                project.setOnevolume(false);
+                project.setUrl("");
+                return project;
             }
 
             @Override

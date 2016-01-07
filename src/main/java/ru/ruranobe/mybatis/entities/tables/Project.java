@@ -66,11 +66,11 @@ public class Project extends PageRepresentable implements Serializable
     private Boolean onevolume;
     private String franchise;
     private String annotation;
-	private Integer forumId;
+    private Integer forumId;
     //optional
     private ExternalResource image;
 
-	public Project(Integer parentId, Integer imageId, String url, String title, Integer orderNumber, boolean bannerHidden, boolean projectHidden, String annotation)
+    public Project(Integer parentId, Integer imageId, String url, String title, Integer orderNumber, boolean bannerHidden, boolean projectHidden, String annotation)
     {
         this.parentId = parentId;
         this.imageId = imageId;
@@ -115,7 +115,7 @@ public class Project extends PageRepresentable implements Serializable
 
     public PageParameters getUrlParameters()
     {
-        return onevolume ? makeUrlParameters(url).set("volume", "v1") : makeUrlParameters(url);
+        return Boolean.TRUE.equals(onevolume) ? makeUrlParameters(url).set("volume", "v1") : makeUrlParameters(url);
     }
 
     public Class getLinkClass()
@@ -133,7 +133,7 @@ public class Project extends PageRepresentable implements Serializable
         this.annotation = annotation;
     }
 
-    public boolean isBannerHidden()
+    public Boolean isBannerHidden()
     {
         return bannerHidden;
     }
@@ -163,7 +163,7 @@ public class Project extends PageRepresentable implements Serializable
         this.parentId = parentId;
     }
 
-    public boolean isProjectHidden()
+    public Boolean isProjectHidden()
     {
         return projectHidden;
     }
@@ -283,7 +283,7 @@ public class Project extends PageRepresentable implements Serializable
         this.nameRomaji = nameRomaji;
     }
 
-    public boolean getOnevolume()
+    public Boolean getOnevolume()
     {
         return onevolume;
     }
@@ -293,15 +293,17 @@ public class Project extends PageRepresentable implements Serializable
         this.onevolume = onevolume;
     }
 
-	public Integer getForumId() {
-		return forumId;
-	}
+    public Integer getForumId()
+    {
+        return forumId;
+    }
 
-	public void setForumId(Integer forumId) {
-		this.forumId = forumId;
-	}
+    public void setForumId(Integer forumId)
+    {
+        this.forumId = forumId;
+    }
 
-	@Override
+    @Override
     public String toString()
     {
         return "Project{" + "projectId=" + projectId + ", parentId=" + parentId + ", imageId=" + imageId + ", url=" + url + ", title=" + title + ", orderNumber=" + orderNumber + ", bannerHidden=" + bannerHidden + ", projectHidden=" + projectHidden + ", annotation=" + annotation + '}';
