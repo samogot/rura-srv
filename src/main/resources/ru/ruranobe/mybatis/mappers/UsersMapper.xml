@@ -45,6 +45,7 @@
         pass = #{pass},
         pass_recovery_token = #{passRecoveryToken},
         pass_recovery_token_date = #{passRecoveryTokenDate},
+        pass_version = #{passVersion},
         email = #{email},
         email_token = #{emailToken},
         email_token_date = #{emailTokenDate},

@@ -7,6 +7,9 @@ import org.dom4j.xpath.DefaultXPath;
 import ru.ruranobe.engine.Webpage;
 import ru.ruranobe.engine.files.FileStorageService;
 import ru.ruranobe.engine.image.ImageStorage;
+import ru.ruranobe.misc.smtp.Email;
+import ru.ruranobe.misc.smtp.EmailMessageTemplate;
+import ru.ruranobe.misc.smtp.SmtpParameters;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +22,7 @@ public class ApplicationContext
     {
         loadFileStorageServiceConfig(document);
         loadWebPageConfig(document);
+        loadSmtpConfig(document);
     }
 
     private void loadWebPageConfig(Document document)
@@ -83,6 +87,34 @@ public class ApplicationContext
                         .build());
             }
         }
+    }
+
+    private void loadSmtpConfig(Document document)
+    {
+        XPath xpath = new DefaultXPath("/Configuration/Smtp/Host");
+        String host = xpath.selectSingleNode(document).getText();
+        xpath = new DefaultXPath("/Configuration/Smtp/Address");
+        String address = xpath.selectSingleNode(document).getText();
+        xpath = new DefaultXPath("/Configuration/Smtp/Port");
+        int port = Integer.parseInt(xpath.selectSingleNode(document).getText());
+
+        List<EmailMessageTemplate> smtpMessages = new ArrayList<EmailMessageTemplate>();
+        xpath = new DefaultXPath("/Configuration/Smtp/Message");
+
+        List<Element> messages = xpath.selectNodes(document);
+        if (messages != null)
+        {
+            for (Element message : messages)
+            {
+                String id = message.elementText("Id");
+                String subject = message.elementText("Subject");
+                String text = message.elementText("Text");
+                smtpMessages.add(new EmailMessageTemplate(id,subject,text));
+            }
+        }
+
+        SmtpParameters parameters = new SmtpParameters(host, address, port, smtpMessages);
+        Email.initializeSmtp(parameters);
     }
 
     public Webpage getWebpageByPageClass(String pageClass)

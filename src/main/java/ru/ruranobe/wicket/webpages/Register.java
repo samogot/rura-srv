@@ -8,10 +8,8 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.util.string.Strings;
-import ru.ruranobe.misc.Email;
-import ru.ruranobe.misc.MD5;
-import ru.ruranobe.misc.RuranobeUtils;
-import ru.ruranobe.misc.Token;
+import ru.ruranobe.misc.*;
+import ru.ruranobe.misc.smtp.Email;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.UsersMapper;
 import ru.ruranobe.mybatis.entities.tables.User;
@@ -101,11 +99,16 @@ public class Register extends SidebarLayoutPage
                         User user = new User();
                         user.setUsername(username);
                         user.setPass(MD5.crypt(password));
+                        user.setPassVersion(Authentication.HASH_MD5);
                         user.setRealname(realname);
                         user.setEmail(email);
                         user.setRegistrationDate(new Date(System.currentTimeMillis()));
                         user.setPassRecoveryToken(null);
                         user.setPassRecoveryTokenDate(null);
+                        user.setConverterType("fb2");
+                        user.setNavigationType("Главам");
+                        user.setPreferColoredImgs(true);
+                        user.setConvertImgsSize(1080);
                         usersMapper.registerUser(user);
 
                         if (!Strings.isEmpty(email))
@@ -116,8 +119,7 @@ public class Register extends SidebarLayoutPage
                             user.setEmailActivated(false);
                             try
                             {
-                                Email.sendEmail(user.getEmail(), ACTIVATE_EMAIL_SUBJECT,
-                                        String.format(ACTIVATE_EMAIL_TEXT, user.getEmailToken()));
+                                Email.sendEmailActivationMessage(user.getEmail(), user.getEmailToken());
                                 usersMapper.updateUser(user);
                             }
                             catch (Exception ex)

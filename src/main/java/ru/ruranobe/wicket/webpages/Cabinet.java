@@ -11,7 +11,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
-import ru.ruranobe.misc.Email;
+import ru.ruranobe.misc.smtp.Email;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.misc.Token;
 import ru.ruranobe.mybatis.MybatisUtil;
@@ -276,8 +276,7 @@ public class Cabinet extends SidebarLayoutPage
                             user.setEmailActivated(false);
                             try
                             {
-                                Email.sendEmail(user.getEmail(), Email.ACTIVATE_EMAIL_SUBJECT,
-                                        String.format(Email.ACTIVATE_EMAIL_TEXT, user.getEmailToken()));
+                                Email.sendEmailActivationMessage(user.getEmail(), user.getEmailToken());
                                 usersMapperCacheable.updateUser(user);
                             }
                             catch (Exception ex)

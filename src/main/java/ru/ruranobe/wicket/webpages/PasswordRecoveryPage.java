@@ -29,7 +29,6 @@ public class PasswordRecoveryPage extends WebPage
 
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
         SqlSession session = sessionFactory.openSession();
-
         try
         {
             UsersMapper usersMapper = CachingFacade.getCacheableMapper(session, UsersMapper.class);
@@ -38,11 +37,13 @@ public class PasswordRecoveryPage extends WebPage
             {
                 throw RuranobeUtils.getRedirectTo404Exception(this);
             }
-            add(new PasswordRecoveryPanel("passwordRecoveryPanel", user, usersMapper, session));
+            add(new PasswordRecoveryPanel("passwordRecoveryPanel", user));
         }
         finally
         {
             session.close();
         }
+
+
     }
 }

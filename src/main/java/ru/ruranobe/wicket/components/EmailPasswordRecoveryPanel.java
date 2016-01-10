@@ -8,7 +8,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.util.string.Strings;
-import ru.ruranobe.misc.Email;
+import ru.ruranobe.misc.smtp.Email;
 import ru.ruranobe.misc.Token;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.UsersMapper;
@@ -19,10 +19,7 @@ import javax.mail.MessagingException;
 
 public class EmailPasswordRecoveryPanel extends Panel
 {
-
     private static final String EMAIL_PASSWORD_RECOVERY_FORM = "emailPasswordRecoveryForm";
-    private static final String EMAIL_PASSWORD_RECOVERY_SUBJECT = "Восстановление пароля";
-    private static final String EMAIL_PASSWORD_RECOVERY_TEXT = "Для восстановления пароля проследуйте по ссылке https://ruranobe.ru/user/recover/pass?token=%s";
     private static final long EXPIRATION_TIME_6_HOURS = 21600000L;
     private static final long serialVersionUID = 1L;
     private String email;
@@ -103,8 +100,7 @@ public class EmailPasswordRecoveryPanel extends Panel
                         usersMapper.updateUser(user);
                         try
                         {
-                            Email.sendEmail(user.getEmail(), EMAIL_PASSWORD_RECOVERY_SUBJECT,
-                                    String.format(EMAIL_PASSWORD_RECOVERY_TEXT, user.getPassRecoveryToken()));
+                            Email.sendPasswordRecoveryMessage(user.getEmail(), user.getPassRecoveryToken());
                             session.commit();
                         }
                         catch (MessagingException ex)

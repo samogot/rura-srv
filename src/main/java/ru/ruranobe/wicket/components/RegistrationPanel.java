@@ -9,7 +9,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.util.string.Strings;
-import ru.ruranobe.misc.Email;
+import ru.ruranobe.misc.smtp.Email;
 import ru.ruranobe.misc.MD5;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.misc.Token;
@@ -20,6 +20,7 @@ import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 
 import java.util.Date;
 
+/* The class is probably not used in system. */
 public class RegistrationPanel extends Panel
 {
     private static final String REGISTRATION_FORM = "registrationForm";
@@ -179,8 +180,8 @@ public class RegistrationPanel extends Panel
                             user.setEmailActivated(false);
                             try
                             {
-                                Email.sendEmail(user.getEmail(), Email.ACTIVATE_EMAIL_SUBJECT,
-                                        String.format(Email.ACTIVATE_EMAIL_TEXT, user.getEmailToken()));
+                              /*  Email.send(user.getEmail(), Email.ACTIVATE_EMAIL_SUBJECT,
+                                        String.format(Email.ACTIVATE_EMAIL_TEXT, user.getEmailToken()));*/
                                 usersMapper.updateUser(user);
                             }
                             catch (Exception ex)
