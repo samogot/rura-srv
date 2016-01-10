@@ -241,7 +241,7 @@ public class Updates extends SidebarLayoutPage
                 };
                 firstPageLink.setVisible(false);
             }
-            if (page == numberOfPages)
+            if (page == numberOfPages || numberOfPages == 0)
             {
                 AttributeAppender appender = new AttributeAppender("class", "disabled");
                 lastPage.add(appender);
@@ -327,6 +327,10 @@ public class Updates extends SidebarLayoutPage
                     listItem.add(listItem.getModelObject());
                 }
             };
+            if (references.size()==1)
+            {
+                updatesPaginator.setVisible(false);
+            }
             add(updatesPaginator);
             add(new UpdatesWideList("updatesList", projectId, volumeId, searchType, (page - 1) * UPDATES_COUNT_ON_PAGE, UPDATES_COUNT_ON_PAGE));
 
