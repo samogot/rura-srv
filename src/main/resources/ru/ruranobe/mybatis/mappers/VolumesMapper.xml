@@ -13,15 +13,10 @@
     </cache-->
 
     <select id="getVolumesCountByProjectId" parameterType="int" resultType="int">
-        SELECT
-            (SELECT count(*)
-             FROM volumes
-             WHERE project_id = #{projectId}
-                   AND volume_type = 'Ранобэ') AS volumesCount,
+        SELECT count(*) AS volumesCount
         FROM volumes
-        WHERE volumes.project_id = #{projectId}
-        ORDER BY volume_id DESC
-        LIMIT 1
+        WHERE project_id = #{projectId}
+          AND volume_type = 'Ранобэ'
     </select>
 
     <select id="getVolumeByUrl" parameterType="String" resultMap="VolumeResult">
