@@ -29,7 +29,7 @@ public class ProjectFormItemPanel extends Panel
         HashMap<String, String> contextVariables = null;
         if (!Strings.isEmpty(model.getObject().getUrl()))
         {
-            contextVariables = new HashMap<String, String>();
+            contextVariables = new HashMap<>();
             contextVariables.put("project", model.getObject().getUrl());
         }
         add(new BannerUploadComponent("image").setContextVariables(contextVariables).setVisible(contextVariables != null));

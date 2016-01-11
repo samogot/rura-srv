@@ -14,7 +14,7 @@ public class Replacement
 
     public static List<Replacement> getReplacementsForPair(WikiTag startTag, WikiTag endTag)
     {
-        List<Replacement> replacements = new ArrayList<Replacement>();
+        List<Replacement> replacements = new ArrayList<>();
         if (startTag.getWikiTagType() == FOOTNOTE)
         {
             String replacementText = TAG_TO_REPLACEMENT_TEXT.get(FOOTNOTE);
@@ -103,11 +103,7 @@ public class Replacement
 
             WikiTagPair that = (WikiTagPair) o;
 
-            if (key != that.key)
-            {
-                return false;
-            }
-            return value == that.value;
+            return key == that.key && value == that.value;
 
         }
 

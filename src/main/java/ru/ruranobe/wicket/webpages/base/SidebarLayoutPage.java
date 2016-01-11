@@ -15,7 +15,7 @@ import java.util.List;
 
 public class SidebarLayoutPage extends BaseLayoutPage
 {
-    protected List<SidebarModuleBase> sidebarModules = new ArrayList<SidebarModuleBase>();
+    protected List<SidebarModuleBase> sidebarModules = new ArrayList<>();
     protected WebMarkupContainer textPageUtils;
     protected BookmarkablePageLink homeTextLink = null;
     protected BookmarkablePageLink prevTextLink = null;

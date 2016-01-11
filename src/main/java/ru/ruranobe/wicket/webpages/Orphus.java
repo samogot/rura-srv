@@ -1,5 +1,6 @@
 package ru.ruranobe.wicket.webpages;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.wicket.core.request.mapper.MountedMapper;
 import org.apache.wicket.markup.html.basic.Label;
@@ -12,7 +13,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.commons.lang3.StringUtils;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.Chapter;
@@ -72,14 +72,10 @@ public class Orphus extends BaseLayoutPage
                     public String getObject()
                     {
                         String comment = orphusComment.getParagrap().getParagraphText();
-                        StringBuilder result = new StringBuilder();
-                        result.append(comment.substring(0, orphusComment.getStartOffset()));
-                        result.append("<span class=\"orphusMark\">");
-                        result.append(orphusComment.getOriginalText());
-                        result.append("</span>");
-                        result.append(comment.substring(orphusComment.getStartOffset() + orphusComment.getOriginalText().length(),
-                                comment.length()));
-                        return result.toString();
+                        return String.format("%s<span class=\"orphusMark\">%s</span>%s",
+                                comment.substring(0, orphusComment.getStartOffset()), orphusComment.getOriginalText(),
+                                comment.substring(orphusComment.getStartOffset() + orphusComment.getOriginalText().length(),
+                                        comment.length()));
                     }
                 });
                 orphusOriginalText.setEscapeModelStrings(false);
@@ -91,14 +87,10 @@ public class Orphus extends BaseLayoutPage
                     public String getObject()
                     {
                         String comment = orphusComment.getParagrap().getParagraphText();
-                        StringBuilder result = new StringBuilder();
-                        result.append(comment.substring(0, orphusComment.getStartOffset()));
-                        result.append("<span class=\"orphusMark\">");
-                        result.append(orphusComment.getReplacementText());
-                        result.append("</span>");
-                        result.append(comment.substring(orphusComment.getStartOffset() + orphusComment.getOriginalText().length(),
-                                comment.length()));
-                        return result.toString();
+                        return String.format("%s<span class=\"orphusMark\">%s</span>%s",
+                                comment.substring(0, orphusComment.getStartOffset()), orphusComment.getReplacementText(),
+                                comment.substring(orphusComment.getStartOffset() + orphusComment.getOriginalText().length(),
+                                        comment.length()));
                     }
                 });
                 orphusReplacementText.setEscapeModelStrings(false);
@@ -164,15 +156,10 @@ public class Orphus extends BaseLayoutPage
         public Iterator<? extends OrphusComment> iterator(long first, long count)
         {
             Iterator<? extends OrphusComment> iter;
-            SqlSession session = MybatisUtil.getSessionFactory().openSession();
-            try
+            try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
             {
                 OrphusCommentsMapper orphusCommentsMapperCacheable = CachingFacade.getCacheableMapper(session, OrphusCommentsMapper.class);
-                iter = orphusCommentsMapperCacheable.getLastOrphusCommentsBy(projectId, volumeId, chapterId, "desc", first, first+count).iterator();
-            }
-            finally
-            {
-                session.close();
+                iter = orphusCommentsMapperCacheable.getLastOrphusCommentsBy(projectId, volumeId, chapterId, "desc", first, first + count).iterator();
             }
             return iter;
         }
@@ -181,15 +168,10 @@ public class Orphus extends BaseLayoutPage
         public long size()
         {
             int size;
-            SqlSession session = MybatisUtil.getSessionFactory().openSession();
-            try
+            try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
             {
                 OrphusCommentsMapper orphusCommentsMapperCacheable = CachingFacade.getCacheableMapper(session, OrphusCommentsMapper.class);
                 size = orphusCommentsMapperCacheable.getOrphusCommentsSize();
-            }
-            finally
-            {
-                session.close();
             }
             return size;
         }
@@ -227,8 +209,7 @@ public class Orphus extends BaseLayoutPage
                 if (StringUtils.isNotEmpty(chapterUrl))
                 {
                     fullUrl.append("/").append(chapterUrl);
-                    SqlSession session = MybatisUtil.getSessionFactory().openSession();
-                    try
+                    try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                     {
                         ChaptersMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
                         Chapter chapter = volumesMapperCacheable.getChapterByUrl(fullUrl.toString());
@@ -238,15 +219,10 @@ public class Orphus extends BaseLayoutPage
                         }
                         chapterId = chapter.getChapterId();
                     }
-                    finally
-                    {
-                        session.close();
-                    }
                 }
                 else
                 {
-                    SqlSession session = MybatisUtil.getSessionFactory().openSession();
-                    try
+                    try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                     {
                         VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
                         Volume volume = volumesMapperCacheable.getVolumeByUrl(fullUrl.toString());
@@ -256,16 +232,11 @@ public class Orphus extends BaseLayoutPage
                         }
                         volumeId = volume.getVolumeId();
                     }
-                    finally
-                    {
-                        session.close();
-                    }
                 }
             }
             else
             {
-                SqlSession session = MybatisUtil.getSessionFactory().openSession();
-                try
+                try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
                     ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
                     Project project = projectsMapperCacheable.getProjectByUrl(fullUrl.toString());
@@ -274,10 +245,6 @@ public class Orphus extends BaseLayoutPage
                         throw RuranobeUtils.getRedirectTo404Exception(this);
                     }
                     projectId = project.getProjectId();
-                }
-                finally
-                {
-                    session.close();
                 }
             }
         }

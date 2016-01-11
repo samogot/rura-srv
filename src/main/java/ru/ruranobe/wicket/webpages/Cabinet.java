@@ -11,9 +11,9 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
-import ru.ruranobe.misc.smtp.Email;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.misc.Token;
+import ru.ruranobe.misc.smtp.Email;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.additional.ChapterUrlDetails;
 import ru.ruranobe.mybatis.entities.tables.*;
@@ -37,13 +37,13 @@ public class Cabinet extends SidebarLayoutPage
     {
         setStatelessHint(true);
 
-        final User user = ((LoginSession) LoginSession.get()).getUser();
+        final User user = LoginSession.get().getUser();
         if (user == null)
         {
             throw RuranobeUtils.getRedirectTo404Exception(this);
         }
 
-        setDefaultModel(new CompoundPropertyModel<User>(user));
+        setDefaultModel(new CompoundPropertyModel<>(user));
 
         WebMarkupContainer avatarNoImageText = new WebMarkupContainer("avatarNoImageText")
         {
@@ -75,8 +75,7 @@ public class Cabinet extends SidebarLayoutPage
         registrationDate.setRenderBodyOnly(true);
         add(registrationDate);
 
-        SqlSession session = MybatisUtil.getSessionFactory().openSession();
-        try
+        try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
         {
             BookmarksMapper bookmarksMapperCacheable = CachingFacade.getCacheableMapper(session, BookmarksMapper.class);
             final List<Bookmark> bookmarks = bookmarksMapperCacheable.getBookmarksExtendedByUser(user.getUserId());
@@ -93,15 +92,10 @@ public class Cabinet extends SidebarLayoutPage
                     listItem.add(bookmarkForm);
 
                     ChapterUrlDetails chapterUrlDetails;
-                    SqlSession session = MybatisUtil.getSessionFactory().openSession();
-                    try
+                    try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                     {
                         ChapterUrlDetailsMapper chapterUrlDetailsMapperCacheable = CachingFacade.getCacheableMapper(session, ChapterUrlDetailsMapper.class);
                         chapterUrlDetails = chapterUrlDetailsMapperCacheable.getChapterUrlDetailsByChapter(bookmark.getChapterId());
-                    }
-                    finally
-                    {
-                        session.close();
                     }
 
                     PageParameters projectPageParameters = Project.makeUrlParameters(chapterUrlDetails.getProjectUrl());
@@ -139,7 +133,7 @@ public class Cabinet extends SidebarLayoutPage
                         protected CharSequence getURL()
                         {
                             CharSequence url = super.getURL();
-                            return url+"#"+paragraphId;
+                            return url + "#" + paragraphId;
                         }
                     };
                     bookmarkForm.add(bookmarkUrl);
@@ -149,17 +143,12 @@ public class Cabinet extends SidebarLayoutPage
                         @Override
                         public void onSubmit()
                         {
-                            SqlSession session = MybatisUtil.getSessionFactory().openSession();
-                            try
+                            try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                             {
                                 BookmarksMapper bookmarksMapperCacheable = CachingFacade.getCacheableMapper(session, BookmarksMapper.class);
                                 bookmarksMapperCacheable.deleteBookmark(bookmark.getBookmarkId());
 
                                 session.commit();
-                            }
-                            finally
-                            {
-                                session.close();
                             }
                             throw new RedirectToUrlException(super.getPage().urlFor(super.getPage().getPageClass(), null).toString());
                         }
@@ -175,18 +164,14 @@ public class Cabinet extends SidebarLayoutPage
             };
             add(userBookmarksRepeater);
         }
-        finally
-        {
-            session.close();
-        }
 
         StatelessForm userSettings = new StatelessForm("userSettings");
         add(userSettings);
 
-        DropDownChoice<String> converterType = new DropDownChoice<String>("converterType", Arrays.asList("fb2", "docx", "epub"));
+        DropDownChoice<String> converterType = new DropDownChoice<>("converterType", Arrays.asList("fb2", "docx", "epub"));
         userSettings.add(converterType);
 
-        DropDownChoice<String> navigationType = new DropDownChoice<String>("navigationType", Arrays.asList("Главам", "Подглавам"));
+        DropDownChoice<String> navigationType = new DropDownChoice<>("navigationType", Arrays.asList("Главам", "Подглавам"));
         userSettings.add(navigationType);
 
         CheckBox convertWithImgs = new CheckBox("convertWithImgs");
@@ -198,7 +183,7 @@ public class Cabinet extends SidebarLayoutPage
         CheckBox preferColoredImgs = new CheckBox("preferColoredImgs");
         userSettings.add(preferColoredImgs);
 
-        TextField<Integer> convertImgsSize = new TextField<Integer>("convertImgsSize");
+        TextField<Integer> convertImgsSize = new TextField<>("convertImgsSize");
         userSettings.add(convertImgsSize);
 
         Button saveUserSettings = new Button("saveUserSettings")
@@ -206,25 +191,20 @@ public class Cabinet extends SidebarLayoutPage
             @Override
             public void onSubmit()
             {
-                SqlSession session = MybatisUtil.getSessionFactory().openSession();
-                try
+                try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
                     UsersMapper usersMapperCacheable = CachingFacade.getCacheableMapper(session, UsersMapper.class);
                     usersMapperCacheable.updateUser(user);
 
                     session.commit();
                 }
-                finally
-                {
-                    session.close();
-                }
             }
         };
         userSettings.add(saveUserSettings);
 
 
-        StatelessForm<EmailFormModelObject> emailForm = new StatelessForm<EmailFormModelObject>("emailForm",
-                new CompoundPropertyModel<EmailFormModelObject>(new EmailFormModelObject()));
+        StatelessForm<EmailFormModelObject> emailForm = new StatelessForm<>("emailForm",
+                new CompoundPropertyModel<>(new EmailFormModelObject()));
         emailForm.setOutputMarkupId(true);
         emailForm.setMarkupId("settingsEmail");
         add(emailForm);
@@ -244,11 +224,11 @@ public class Cabinet extends SidebarLayoutPage
                 String password = emailFormModelObject.getCurrentPassword();
                 String email = emailFormModelObject.getNewEmail();
 
-                if (((LoginSession) LoginSession.get()).validatePassword(password))
+                if (LoginSession.get().validatePassword(password))
                 {
                     error("Введенный пароль не верен.");
                 }
-                else if (!Strings.isEmpty(email) && !Email.isEmailSyntaxValid(email))
+                else if (!Strings.isEmpty(email) && Email.isEmailSyntaxInvalid(email))
                 {
                     error("Указан неверный адрес электронной почты.");
                 }
@@ -258,8 +238,7 @@ public class Cabinet extends SidebarLayoutPage
                 }
                 else
                 {
-                    SqlSession session = MybatisUtil.getSessionFactory().openSession();
-                    try
+                    try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                     {
                         UsersMapper usersMapperCacheable = CachingFacade.getCacheableMapper(session, UsersMapper.class);
                         if (usersMapperCacheable.getUserByEmail(email) != null)
@@ -268,7 +247,7 @@ public class Cabinet extends SidebarLayoutPage
                         }
                         else
                         {
-                            User user = new User(((LoginSession) LoginSession.get()).getUser());
+                            User user = new User(LoginSession.get().getUser());
 
                             Token token = Token.valueOf(user.getUserId(), Email.ETERNITY_EXPIRATION_TIME);
                             user.setEmailToken(token.getTokenValue());
@@ -291,10 +270,6 @@ public class Cabinet extends SidebarLayoutPage
                             info("Электронный адрес был успешно изменен");
                         }
                     }
-                    finally
-                    {
-                        session.close();
-                    }
                 }
             }
         };
@@ -302,8 +277,8 @@ public class Cabinet extends SidebarLayoutPage
 
         add(new EmailPasswordRecoveryPanel("emailPasswordRecoveryPanel"));
 
-        sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
-        sidebarModules.add(new FriendsSidebarModule("sidebarModule"));
+        sidebarModules.add(new ProjectsSidebarModule());
+        sidebarModules.add(new FriendsSidebarModule());
     }
 
 	@Override

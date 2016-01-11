@@ -6,8 +6,8 @@ package ru.ruranobe.wicket.components.sidebar;
 public class FriendsSidebarModule extends SidebarModuleBase
 {
 
-    public FriendsSidebarModule(String id)
+    public FriendsSidebarModule()
     {
-        super(id, "friends", "Друзья");
+        super("sidebarModule", "friends", "Друзья");
     }
 }

@@ -10,9 +10,9 @@ public class ActionsSidebarModule extends SidebarModuleBase
 {
     private static final int UPDATES_BY_PROJECT_ON_PAGE = 5;
 
-    public ActionsSidebarModule(String id, Class editClass, PageParameters pageParameters)
+    public ActionsSidebarModule(Class editClass, PageParameters pageParameters)
     {
-        super(id, "actions", "Действия");
+        super("sidebarModule", "actions", "Действия");
         moduleBody.add(new BookmarkablePageLink("edit", editClass, pageParameters));
         moduleBody.add(new BookmarkablePageLink("orphus", Orphus.class, pageParameters));
     }

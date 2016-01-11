@@ -139,7 +139,7 @@ public class WikiParser
     // Connect related special tags together. Determine tag's end position in text.
     private void connectWikiTags(Iterator<Map.Entry<Integer, String>> imagesIterator)
     {
-        List<HashMap.SimpleEntry<Integer, Integer>> preParsingBoundaries = new ArrayList<HashMap.SimpleEntry<Integer, Integer>>();
+        List<HashMap.SimpleEntry<Integer, Integer>> preParsingBoundaries = new ArrayList<>();
 
         int j = 0;
         int k = 0;
@@ -179,7 +179,7 @@ public class WikiParser
                     else if (footnote != null && footnote.getStartPosition() == startPosition)
                     {
                         footnote.setListOrderNumber(k);
-                        AbstractMap.SimpleEntry<Integer, Integer> entry = new AbstractMap.SimpleEntry<Integer, Integer>
+                        AbstractMap.SimpleEntry<Integer, Integer> entry = new AbstractMap.SimpleEntry<>
                                 (footnote.getStartPosition() + footnote.getWikiTagLength(), doubleEndBracket.getStartPosition());
                         preParsingBoundaries.add(entry);
 
@@ -343,14 +343,14 @@ public class WikiParser
 
             if (tagType == WikiTagType.FOOTNOTE)
             {
-                attributeNameToValue = new HashMap<String, String>();
+                attributeNameToValue = new HashMap<>();
                 attributeNameToValue.put("href", "#cite_note-" + uniqueId);
             }
             else if (tagType == WikiTagType.NEW_LINE)
             {
                 uniqueId = RuranobeUtils.paragraphIdOf(chapterId, textId, paragraphOrderNumber);
 
-                attributeNameToValue = new HashMap<String, String>();
+                attributeNameToValue = new HashMap<>();
                 if (textId != null)
                 {
                     attributeNameToValue.put("text-id", textId.toString());
@@ -365,11 +365,12 @@ public class WikiParser
             else if (tagType == WikiTagType.LINK)
             {
                 int j = i + tagLength;
+                //noinspection StatementWithEmptyBody
                 for (; j < s.length() && j < i + tagLength + 300 && s.charAt(j) != ' '; ++j) ;
                 String href = ((s.charAt(j) == ' ') ? ("http" + s.substring(i + tagLength, j)) : null);
                 if (href != null)
                 {
-                    attributeNameToValue = new HashMap<String, String>();
+                    attributeNameToValue = new HashMap<>();
                     attributeNameToValue.put("href", href);
                     tag = new WikiTag(tagType, i, uniqueId, attributeNameToValue);
                     tag.setWikiTagLength(j - i);
@@ -384,7 +385,7 @@ public class WikiParser
 
             if (wikiTagTypeToWikiTags.get(tagType) == null)
             {
-                ArrayList<WikiTag> tags = new ArrayList<WikiTag>();
+                ArrayList<WikiTag> tags = new ArrayList<>();
                 tags.add(tag);
                 wikiTagTypeToWikiTags.put(tagType, tags);
             }
@@ -437,17 +438,17 @@ public class WikiParser
     }
 
     //private StringBuilder footnotes = new StringBuilder();
-    private List<FootnoteItem> footnotes = new ArrayList<FootnoteItem>();
-    private List<ContentItem> contents = new ArrayList<ContentItem>();
+    private List<FootnoteItem> footnotes = new ArrayList<>();
+    private List<ContentItem> contents = new ArrayList<>();
 
     private final Map<WikiTagType, ArrayList<WikiTag>> wikiTagTypeToWikiTags = new
-            EnumMap<WikiTagType, ArrayList<WikiTag>>(WikiTagType.class);
+            EnumMap<>(WikiTagType.class);
     private final Map<Integer, Replacement> startPositionToReplacement = new
-            HashMap<Integer, Replacement>();
+            HashMap<>();
     private final Map<HashMap.SimpleEntry<Integer, Integer>, Replacement> footnoteParsingBoundariesToFootnoteReplacement = new
-            HashMap<AbstractMap.SimpleEntry<Integer, Integer>, Replacement>();
+            HashMap<>();
     private final Map<HashMap.SimpleEntry<Integer, Integer>, String> footnoteParsingBoundariesToFootnoteId = new
-            HashMap<AbstractMap.SimpleEntry<Integer, Integer>, String>();
+            HashMap<>();
     private final Integer textId;
     private final Integer chapterId;
     private final String wikiText;

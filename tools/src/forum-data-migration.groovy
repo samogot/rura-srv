@@ -3,12 +3,19 @@
 @Grab(group = 'mysql', module = 'mysql-connector-java', version = '5.1.36')
 @Grab(group = 'org.codehaus.groovy.modules.http-builder', module = 'http-builder', version = '0.7.1')
 @GrabExclude(group = 'xerces', module = 'xercesImpl')
+import groovy.sql.Sql
+@GrabConfig(systemClassLoader = true)
+@Grab(group = 'mysql', module = 'mysql-connector-java', version = '5.1.36')
+@Grab(group = 'org.codehaus.groovy.modules.http-builder', module = 'http-builder', version = '0.7.1')
+@GrabExclude(group = 'xerces', module = 'xercesImpl')
 
 import groovy.sql.Sql
 import groovyx.net.http.ContentType
 import groovyx.net.http.RESTClient
 
 import java.sql.SQLException
+
+import static java.security.MessageDigest.getInstance
 
 class forumDataMigration {
 
@@ -150,7 +157,7 @@ WHERE user_id = ${user.user_id};
     }
 
     def migrateComments() {
-        def digest = java.security.MessageDigest.getInstance("MD5")
+        def digest = getInstance("MD5")
         site.eachRow("""
 SELECT
     vol.volume_id AS volume_id, vol.url AS url, vol.topic_id AS topic_id, vol.name_title AS name_title, prj.forum_id AS forum_id

@@ -2,7 +2,6 @@ package ru.ruranobe;
 
 import org.junit.Assert;
 import org.junit.Test;
-
 import ru.ruranobe.misc.Authentication;
 import ru.ruranobe.misc.MD5;
 
@@ -31,11 +30,7 @@ public class TestAuthentication {
 		Assert.assertEquals(newPassword.length(), 41);
 		Assert.assertEquals(newPassword.indexOf(":"), 8);
 		String[] passwordParts = newPassword.split(":");
-		StringBuilder sb = new StringBuilder();
-		sb.append(passwordParts[0]);
-		sb.append('-');
-		sb.append(md5Hash);
-		String password = passwordParts[0] + ":" + MD5.crypt(sb.toString());
+		String password = passwordParts[0] + ":" + MD5.crypt(passwordParts[0] + '-' + md5Hash);
 		Assert.assertEquals(newPassword, password);
 	}
 }

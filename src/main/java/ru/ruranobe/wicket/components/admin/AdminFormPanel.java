@@ -73,7 +73,7 @@ public abstract class AdminFormPanel extends Panel
                 item.add(item.getModelObject());
             }
         });
-        AdminToolboxAjaxButton saveButton = new AdminToolboxAjaxButton("button", "Сохранить", "primary", "floppy-o", form)
+        AdminToolboxAjaxButton saveButton = new AdminToolboxAjaxButton("Сохранить", "primary", "floppy-o", form)
         {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form)
@@ -100,7 +100,7 @@ public abstract class AdminFormPanel extends Panel
         target.appendJavaScript(String.format(";updateFeedbackPanelTimeout('#%s');", feedbackPanel.getMarkupId()));
     }
 
-    protected List<Component> toolbarButtons = new ArrayList<Component>();
+    protected List<Component> toolbarButtons = new ArrayList<>();
     protected Form form;
     private String title;
     protected FeedbackPanel feedbackPanel;

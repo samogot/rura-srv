@@ -1,6 +1,5 @@
 package ru.ruranobe.wicket.components;
 
-import org.apache.tools.ant.taskdefs.optional.Cab;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
@@ -56,7 +55,7 @@ public class UserActionsPanel extends Panel
             };
             add(cabingPageLink);
 
-            User user = ((LoginSession) LoginSession.get()).getUser();
+            User user = LoginSession.get().getUser();
             String username = user == null ? "" : user.getUsername();
             cabingPageLink.add(new Label("username", username)
             {

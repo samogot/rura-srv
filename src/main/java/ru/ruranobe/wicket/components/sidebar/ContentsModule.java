@@ -22,9 +22,9 @@ public class ContentsModule extends SidebarModuleBase
 //        response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(this.getClass(), "ContentsModule.js")));
 //    }
 
-    public ContentsModule(String id, List<ContentsHolder> contents)
+    public ContentsModule(List<ContentsHolder> contents)
     {
-        super(id, "contents", "Содержание");
+        super("sidebarModule", "contents", "Содержание");
         module.add(new AttributeAppender("class", " scrollspy"));
         moduleWrapper.add(new AttributeModifier("data-spy", "affix"));
         moduleBody.add(new ListView<ContentsHolder>("h2Repeater", contents)

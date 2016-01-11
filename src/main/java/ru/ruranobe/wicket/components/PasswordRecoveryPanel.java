@@ -11,8 +11,8 @@ import org.apache.wicket.util.string.Strings;
 import ru.ruranobe.misc.MD5;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
-import ru.ruranobe.mybatis.mappers.UsersMapper;
 import ru.ruranobe.mybatis.entities.tables.User;
+import ru.ruranobe.mybatis.mappers.UsersMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 
 public class PasswordRecoveryPanel extends Panel
@@ -60,7 +60,7 @@ public class PasswordRecoveryPanel extends Panel
         public PasswordRecoveryForm(final String id)
         {
             super(id);
-            setModel(new CompoundPropertyModel<PasswordRecoveryPanel>(PasswordRecoveryPanel.this));
+            setModel(new CompoundPropertyModel<>(PasswordRecoveryPanel.this));
             add(new PasswordTextField("password"));
             add(new PasswordTextField("confirmPassword"));
         }
@@ -80,7 +80,7 @@ public class PasswordRecoveryPanel extends Panel
             {
                 error("Введенные пароли не совпадают.");
             }
-            else if (!RuranobeUtils.isPasswordSyntaxValid(password))
+            else if (RuranobeUtils.isPasswordSyntaxInvalid(password))
             {
                 error("Пароль может состоять только из больших и маленьких латинских букв, а также цифр.");
             }
@@ -91,9 +91,8 @@ public class PasswordRecoveryPanel extends Panel
             else
             {
                 SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-                SqlSession session = sessionFactory.openSession();
 
-                try
+                try (SqlSession session = sessionFactory.openSession())
                 {
                     UsersMapper usersMapper = CachingFacade.getCacheableMapper(session, UsersMapper.class);
 
@@ -101,10 +100,6 @@ public class PasswordRecoveryPanel extends Panel
                     usersMapper.updateUser(user);
                     session.commit();
                     info("Пароль был успешно изменен.");
-                }
-                finally
-                {
-                    session.close();
                 }
             }
         }

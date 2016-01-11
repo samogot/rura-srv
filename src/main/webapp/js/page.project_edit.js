@@ -29,8 +29,8 @@ function checkCheck() {
 $('#btn-sub-add').click(function () {
     sublength++;
     var newSub = '<a data-toggle="collapse" data-parent="#subseries" data-type="subseries_n' + sublength + '" href="#sub' + sublength + '" aria-expanded="true" aria-controls="sub' + sublength + '" class="list-group-item FormAjax FormUpdate" >';
-    newSub += '<i class="fa fa-ellipsis-v move"></i>'
-    newSub += '<input type="text" class="form-control" placeholder="<пусто>" id="' + sublength + 'sub_input" name="external_url">'
+    newSub += '<i class="fa fa-ellipsis-v move"></i>';
+    newSub += '<input type="text" class="form-control" placeholder="<пусто>" id="' + sublength + 'sub_input" name="external_url">';
     newSub += '</a>';
     if ($('.subseriestable a.list-group-item').hasClass('active')) {
         $(newSub).insertAfter($(".subseriestable a.list-group-item.active"));
@@ -44,7 +44,7 @@ $('#btn-sub-add').click(function () {
 $('#btn-sub-delete').click(function () {
     if ($('.subseriestable a.list-group-item').hasClass('active')) {
         var type = $(this).data('type');
-        var Needdelete = $('[data-parent="#' + type + '"].info')
+        var Needdelete = $('[data-parent="#' + type + '"].info');
         AdminOnDelete(Needdelete.data('type'));
         $thissub = $('.subseriestable a.list-group-item.active');
         if ($thissub.index() == $('.subseriestable a.list-group-item:last').index()) {
@@ -91,12 +91,12 @@ $('.dropdown-menu.noclose li').click(function () {
 $('.volumetable').on('click', 'tr', function () {
     $('.volumetable tr').removeClass('info');
     $(this).addClass('info');
-    var tableOrderNumber = $(this).find('label[name=volOrderNumber]').text()
+    var tableOrderNumber = $(this).find('label[name=volOrderNumber]').text();
     Wicket.Ajax.get({"u": callbackUrl1, "ep": {"tableOrderNumber": tableOrderNumber}});
 });
 $('#btn-update-clone').click(function () {
     if ($('.volumetable tr').hasClass('info')) {
-        volumelength++
+        volumelength++;
         $('.volumetable tr').removeClass('clonned');
         $('.volumetable tr.info')
             .clone()
@@ -118,7 +118,7 @@ $('#btn-update-clone').click(function () {
 $('#btn-update-delete').click(function () {
     if ($('.volumetable tr').hasClass('info')) {
         var type = $(this).data('type');
-        var Needdelete = $('[data-parent="#' + type + '"].info')
+        var Needdelete = $('[data-parent="#' + type + '"].info');
         AdminOnDelete(Needdelete.data('type'));
         $thisvol = $('.volumetable tr.info');
         if ($thisvol.index() == $('.volumetable tr:last').index()) {
@@ -126,7 +126,7 @@ $('#btn-update-delete').click(function () {
         } else {
             $nextvol = $thisvol.next();
         }
-        volumelength--
+        volumelength--;
         $thisvol.remove();
         $nextvol.addClass('info');
     }
@@ -254,7 +254,7 @@ $('body').on('change', '#subseries input',
         alert(JSON.stringify(SubPositions));
         return false;
     }
-)
+);
 $('#subseries').sortable({
     stop: function (e, ui) {
         $.map($(this).find('a'), function (el) {
@@ -282,7 +282,7 @@ $(function () {
 function updateScrollbar() {
     $('#scrollbar').width($('#scrollable').width());
     $('#innerScrollbar').width($('#scrollable').children('table').width());
-    var x = $('#scrollbar').get(0).scrollLeft
+    var x = $('#scrollbar').get(0).scrollLeft;
     $('#scrollable').get(0).scrollLeft = x;
     $('.volumetable .header-copy').css({
         'margin-left': -x - 1,
@@ -302,7 +302,7 @@ $(function () {
                 return $('#scrollable').offset().top - $(window).height() + $('#scrollbar').height()
             },
             bottom: function () {
-                return $(document).height() - $('#scrollable').offset().top - $('#scrollable').outerHeight()//+$(window).height()-$('#scrollbar').height()
+                return $(document).height() - $('#scrollable').offset().top - $('#scrollable').outerHeight();//+$(window).height()-$('#scrollbar').height()
             }
         }
     });
@@ -319,7 +319,7 @@ var resizeHead = function (o) {
         });
     });
     o.find('thead.header-copy').css('width', o.outerWidth());
-}
+};
 
 $(function () {
     $('.volumetable .header').clone().removeClass('header').addClass('header-copy').insertAfter('.volumetable .header');

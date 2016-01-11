@@ -19,7 +19,7 @@ public class ProjectInfoPanel extends Panel
     {
         super(id, model);
         add(new TextField<String>("url").setRequired(true).setLabel(Model.of("Ссылка")));
-        add(new BannerUploadComponent("image").setContextVariables(new HashMap<String, String>(new ImmutableMap.Builder<String, String>()
+        add(new BannerUploadComponent("image").setContextVariables(new HashMap<>(new ImmutableMap.Builder<String, String>()
                 .put("project", model.getObject().getUrl())
                 .build())));
         add(new TextField<String>("title").setRequired(true).setLabel(Model.of("Заголовок")));

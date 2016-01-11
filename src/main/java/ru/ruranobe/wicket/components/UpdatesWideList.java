@@ -11,9 +11,9 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import ru.ruranobe.mybatis.MybatisUtil;
+import ru.ruranobe.mybatis.entities.tables.Update;
 import ru.ruranobe.mybatis.mappers.UpdatesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
-import ru.ruranobe.mybatis.entities.tables.Update;
 import ru.ruranobe.wicket.RuraConstants;
 
 import java.text.SimpleDateFormat;
@@ -28,8 +28,7 @@ public class UpdatesWideList extends Panel
         super(id);
 
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-        SqlSession session = sessionFactory.openSession();
-        try
+        try (SqlSession session = sessionFactory.openSession())
         {
             UpdatesMapper updatesMapperCacheable = CachingFacade.getCacheableMapper(session, UpdatesMapper.class);
             List<Update> updates = updatesMapperCacheable.getLastUpdatesBy(projectId, volumeId, updateType, limitFrom, limitTo);
@@ -55,16 +54,12 @@ public class UpdatesWideList extends Panel
                     SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
                     listItem.add(new Label("updateDate", sdf.format(updateDateValue)));
                     BookmarkablePageLink updateLink = update.makeBookmarkablePageLink("updateLink");
-                    updateLink.setBody(new Model<String>(update.getVolumeTitle()));
+                    updateLink.setBody(new Model<>(update.getVolumeTitle()));
                     listItem.add(updateLink);
                     listItem.add(new Label("updateTitle", updateTitleValue));
                 }
             };
             add(updatesView);
-        }
-        finally
-        {
-            session.close();
         }
     }
 }

@@ -30,7 +30,7 @@ public class BookmarksRestWebService extends GsonRestResource
     {
         if (bookmark.getUserId() == null)
         {
-            User user = ((LoginSession) LoginSession.get()).getUser();
+            User user = LoginSession.get().getUser();
             if (user != null)
             {
                 bookmark.setUserId(user.getUserId());
@@ -62,8 +62,7 @@ public class BookmarksRestWebService extends GsonRestResource
         }
 
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-        SqlSession session = sessionFactory.openSession();
-        try
+        try (SqlSession session = sessionFactory.openSession())
         {
             ChaptersMapper chaptersMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
             Chapter chapter = chaptersMapperCacheable.getChapterById(bookmark.getChapterId());
@@ -78,16 +77,12 @@ public class BookmarksRestWebService extends GsonRestResource
             paragraph.setParagraphText(bookmark.getFullText());
             paragraph.setTextId(bookmark.getTextId());
 
-            ParagraphService.databaseHandleParagraph(paragraphsMapperCacheable,paragraph,bookmark.getParagraphId());
+            ParagraphService.databaseHandleParagraph(paragraphsMapperCacheable, paragraph, bookmark.getParagraphId());
 
             BookmarksMapper bookmarksMapperCacheable = CachingFacade.getCacheableMapper(session, BookmarksMapper.class);
             bookmark.setCreatedWhen(new Date());
             bookmarksMapperCacheable.insertBookmark(bookmark);
             session.commit();
-        }
-        finally
-        {
-            session.close();
         }
     }
 

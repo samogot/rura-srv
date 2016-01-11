@@ -15,6 +15,7 @@ import ru.ruranobe.mybatis.entities.tables.*;
 import ru.ruranobe.mybatis.mappers.*;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.InstantiationSecurityCheck;
+import ru.ruranobe.wicket.LoginSession;
 import ru.ruranobe.wicket.components.CommentsPanel;
 import ru.ruranobe.wicket.components.ContentsHolder;
 import ru.ruranobe.wicket.components.sidebar.*;
@@ -33,14 +34,13 @@ public class Text extends SidebarLayoutPage implements InstantiationSecurityChec
         setStatelessHint(true);
 
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-        SqlSession session = sessionFactory.openSession();
         StringBuilder volumeText = new StringBuilder();
         StringBuilder volumeFootnotes = new StringBuilder();
         Chapter currentChapter = null;
-        Volume volume = null;
+        Volume volume;
         List<Chapter> allChapterList;
 
-        try
+        try (SqlSession session = sessionFactory.openSession())
         {
             String projectUrl = parameters.get("project").toString();
             if (Strings.isEmpty(projectUrl))
@@ -75,7 +75,7 @@ public class Text extends SidebarLayoutPage implements InstantiationSecurityChec
             allChapterList = chaptersMapperCacheable.getChaptersByVolumeId(volume.getVolumeId());
 
             String chapterUrl = parameters.get("chapter").toString();
-            boolean preferNested = false;// TODO load from user preferences
+            boolean preferNested = Objects.equals(LoginSession.get().getUser().getNavigationType(), "Подглавам");
             if (Strings.isEmpty(chapterUrl))
             {
                 for (Chapter chapter : allChapterList)
@@ -198,29 +198,29 @@ public class Text extends SidebarLayoutPage implements InstantiationSecurityChec
                         chapterText = textsMapperCacheable.getTextById(textId);
                         List<ChapterImage> chapterImages = chapterImagesMapperCacheable.getChapterImagesByChapterId(chapter.getChapterId());
 
-                        List<Map.Entry<Integer, String>> images = new ArrayList<Map.Entry<Integer, String>>();
+                        List<Map.Entry<Integer, String>> images = new ArrayList<>();
                         for (ChapterImage chapterImage : chapterImages)
                         {
-                            Map.Entry<Integer, String> image = new AbstractMap.SimpleEntry<Integer, String>(-1, "unknownSource");
+                            Map.Entry<Integer, String> image = new AbstractMap.SimpleEntry<>(-1, "unknownSource");
                             ExternalResource coloredImage = chapterImage.getColoredImage();
                             if (coloredImage != null && !Strings.isEmpty(coloredImage.getUrl()))
                             {
-                                image = new AbstractMap.SimpleEntry<Integer, String>
-                                (
-                                        coloredImage.getResourceId(),
-                                        coloredImage.getUrl()
-                                );
+                                image = new AbstractMap.SimpleEntry<>
+                                        (
+                                                coloredImage.getResourceId(),
+                                                coloredImage.getUrl()
+                                        );
                             }
                             else
                             {
                                 ExternalResource nonColoredImage = chapterImage.getNonColoredImage();
                                 if (nonColoredImage != null && !Strings.isEmpty(nonColoredImage.getUrl()))
                                 {
-                                    image = new AbstractMap.SimpleEntry<Integer, String>
-                                    (
-                                            nonColoredImage.getResourceId(),
-                                            nonColoredImage.getUrl()
-                                    );
+                                    image = new AbstractMap.SimpleEntry<>
+                                            (
+                                                    nonColoredImage.getResourceId(),
+                                                    nonColoredImage.getUrl()
+                                            );
                                 }
                             }
                             images.add(image);
@@ -248,7 +248,7 @@ public class Text extends SidebarLayoutPage implements InstantiationSecurityChec
                             FootnoteItem footnoteItem = footnoteList.get(i);
                             String s = ((i < footnoteList.size() - 1) ? DELIMITER : "");
                             footnotes.append(footnoteItem.getFootnoteId()).append(DELIMITER)
-                                    .append(footnoteItem.getFootnoteText()).append(s);
+                                     .append(footnoteItem.getFootnoteText()).append(s);
                         }
                         chapterText.setFootnotes(footnotes.toString());
 
@@ -269,8 +269,8 @@ public class Text extends SidebarLayoutPage implements InstantiationSecurityChec
                         for (int i = 0; i < footnotes.length; i += 2)
                         {
                             volumeFootnotes.append("<li id=\"cite_note-").append(footnotes[i]).append("\">")
-                                    .append("<a href=\"#cite_ref-").append(footnotes[i]).append("\">↑</a> <span class=\"reference-text\">")
-                                    .append(footnotes[i + 1]).append("</span></li>");
+                                           .append("<a href=\"#cite_ref-").append(footnotes[i]).append("\">↑</a> <span class=\"reference-text\">")
+                                           .append(footnotes[i + 1]).append("</span></li>");
                         }
                     }
 
@@ -283,10 +283,6 @@ public class Text extends SidebarLayoutPage implements InstantiationSecurityChec
                 session.commit();
             }
         }
-        finally
-        {
-            session.close();
-        }
 
         if (!Strings.isEmpty(volumeFootnotes))
         {
@@ -297,7 +293,7 @@ public class Text extends SidebarLayoutPage implements InstantiationSecurityChec
 
         add(new Label("htmlText", volumeText.toString()).setEscapeModelStrings(false));
 
-        List<ContentsHolder> contentsHolders = new ArrayList<ContentsHolder>();
+        List<ContentsHolder> contentsHolders = new ArrayList<>();
         for (Chapter chapter : allChapterList)
         {
             List<ContentsHolder> tempHolderList = contentsHolders;
@@ -322,10 +318,7 @@ public class Text extends SidebarLayoutPage implements InstantiationSecurityChec
 
 
         textPageUtils.setVisible(true);
-        if (volume != null)
-        {
-            textPageUtils.add(homeTextLink = volume.makeBookmarkablePageLink("homeTextLink"));
-        }
+        textPageUtils.add(homeTextLink = volume.makeBookmarkablePageLink("homeTextLink"));
         if (currentChapter != null && currentChapter.getNextChapter() != null)
         {
             textPageUtils.add(nextTextLink = currentChapter.getNextChapter().makeBookmarkablePageLink("nextTextLink"));
@@ -336,19 +329,19 @@ public class Text extends SidebarLayoutPage implements InstantiationSecurityChec
         }
 
         add(new CommentsPanel("comments", volume.getTopicId()));
-        sidebarModules.add(new DownloadsSidebarModule("sidebarModule", volume.getUrlParameters()));
+        sidebarModules.add(new DownloadsSidebarModule(volume.getUrlParameters()));
         if (currentChapter != null)
         {
-            sidebarModules.add(new ActionsSidebarModule("sidebarModule", Editor.class, currentChapter.getUrlParameters()));
+            sidebarModules.add(new ActionsSidebarModule(Editor.class, currentChapter.getUrlParameters()));
         }
         else
         {
-            sidebarModules.add(new ActionsSidebarModule("sidebarModule", VolumeEdit.class, volume.getUrlParameters()));
+            sidebarModules.add(new ActionsSidebarModule(VolumeEdit.class, volume.getUrlParameters()));
         }
-        sidebarModules.add(new UpdatesSidebarModule("sidebarModule", volume.getProjectId()));
-        sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
-        sidebarModules.add(new FriendsSidebarModule("sidebarModule"));
-        sidebarModules.add(new ContentsModule("sidebarModule", contentsHolders));
+        sidebarModules.add(new UpdatesSidebarModule(volume.getProjectId()));
+        sidebarModules.add(new ProjectsSidebarModule());
+        sidebarModules.add(new FriendsSidebarModule());
+        sidebarModules.add(new ContentsModule(contentsHolders));
     }
 
     private void processChapterContents(Chapter chapter, List<ContentsHolder> contentsHolders, int level)
@@ -359,7 +352,7 @@ public class Text extends SidebarLayoutPage implements InstantiationSecurityChec
         if (chapter.getText() != null && !Strings.isEmpty(chapter.getText().getContents()))
         {
             String[] contents = chapter.getText().getContents().split(DELIMITER);
-            List<ContentItem> chapterContents = new LinkedList<ContentItem>();
+            List<ContentItem> chapterContents = new LinkedList<>();
             for (int i = 0; i < contents.length; i += 3)
             {
                 chapterContents.add(new ContentItem(contents[i], contents[i + 1], contents[i + 2]));

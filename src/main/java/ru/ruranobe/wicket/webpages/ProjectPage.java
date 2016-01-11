@@ -60,20 +60,21 @@ public class ProjectPage extends SidebarLayoutPage {
 		}
 
 		SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-		SqlSession session = sessionFactory.openSession();
 
-		try {
+		try (SqlSession session = sessionFactory.openSession())
+		{
 			ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
 
 			final Project mainProject = projectsMapperCacheable.getProjectByUrl(projectUrl);
 
-			if (mainProject == null) {
+			if (mainProject == null)
+			{
 				throw RuranobeUtils.getRedirectTo404Exception(this);
 			}
 			titleName = mainProject.getTitle();
 			Collection<Project> subProjects =
-							projectsMapperCacheable.getSubProjectsByParentProjectId(mainProject.getProjectId());
-			final ArrayList<Project> projects = new ArrayList<Project>();
+					projectsMapperCacheable.getSubProjectsByParentProjectId(mainProject.getProjectId());
+			final ArrayList<Project> projects = new ArrayList<>();
 			projects.add(mainProject);
 			projects.addAll(subProjects);
 
@@ -83,7 +84,7 @@ public class ProjectPage extends SidebarLayoutPage {
 			add(projectTitle);
 
 			final ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.
-							getCacheableMapper(session, ExternalResourcesMapper.class);
+																								  getCacheableMapper(session, ExternalResourcesMapper.class);
 
 			Label projectName = new Label("projectName", mainProject.getTitle());
 			add(projectName);
@@ -101,75 +102,93 @@ public class ProjectPage extends SidebarLayoutPage {
 			Label projectAnnotation = new Label("projectAnnotation", mainProject.getAnnotation());
 			add(projectAnnotation);
 
-			ArrayList<Volume> mainProjectFirstCovers = new ArrayList<Volume>();
-			ArrayList<Volume> mainProjectActiveCovers = new ArrayList<Volume>();
-			ArrayList<Volume> firstCovers = new ArrayList<Volume>();
-			ArrayList<Volume> activeCovers = new ArrayList<Volume>();
+			ArrayList<Volume> mainProjectFirstCovers = new ArrayList<>();
+			ArrayList<Volume> mainProjectActiveCovers = new ArrayList<>();
+			ArrayList<Volume> firstCovers = new ArrayList<>();
+			ArrayList<Volume> activeCovers = new ArrayList<>();
 			Volume mainProjectLastCover = null;
 			Volume lastCover = null;
 
 			final Map<SimpleEntry<String, String>, Integer>
-							shortNameLabelWidthMap =
-							new HashMap<SimpleEntry<String, String>, Integer>();
+					shortNameLabelWidthMap =
+					new HashMap<>();
 			final Map<String, ArrayList<SimpleEntry<String, ArrayList<Volume>>>>
-							volumeTypeToSubProjectToVolumes =
-							new HashMap<String, ArrayList<SimpleEntry<String, ArrayList<Volume>>>>();
-			for (Project project : projects) {
+					volumeTypeToSubProjectToVolumes =
+					new HashMap<>();
+			for (Project project : projects)
+			{
 				String subProjectTitle = project.getTitle();
-				if (project == mainProject) {
+				if (project == mainProject)
+				{
 					subProjectTitle = "";
 				}
 				Collection<Volume> volumes = volumesMapperCacheable.getVolumesByProjectId(project.getProjectId());
-				for (Volume volume : volumes) {
+				for (Volume volume : volumes)
+				{
 					String type = volume.getVolumeType();
-					if (!type.isEmpty()) {
-						if (volume.getImageOne() != null) {
+					if (!type.isEmpty())
+					{
+						if (volume.getImageOne() != null)
+						{
 							if (subProjectTitle.isEmpty() && type.equals(DISPLAYABLE_NAMES.get(0))
-							    && mainProjectFirstCovers.size() < 3) {
+								&& mainProjectFirstCovers.size() < 3)
+							{
 								mainProjectFirstCovers.add(volume);
-							} else if (mainProjectFirstCovers.isEmpty() && firstCovers.size() < 3) {
+							}
+							else if (mainProjectFirstCovers.isEmpty() && firstCovers.size() < 3)
+							{
 								firstCovers.add(volume);
 							}
 
 							if (volume.getVolumeStatus().equals(RuraConstants.VOLUME_STATUS_ONGOING)
-							    || volume.getVolumeStatus().equals(RuraConstants.VOLUME_STATUS_TRANSLATING)
-							    || volume.getVolumeStatus().equals(RuraConstants.VOLUME_STATUS_PROOFREAD)) {
+								|| volume.getVolumeStatus().equals(RuraConstants.VOLUME_STATUS_TRANSLATING)
+								|| volume.getVolumeStatus().equals(RuraConstants.VOLUME_STATUS_PROOFREAD))
+							{
 								if (subProjectTitle.isEmpty() && type.equals(DISPLAYABLE_NAMES.get(0))
-								    && mainProjectActiveCovers.size() < 3) {
+									&& mainProjectActiveCovers.size() < 3)
+								{
 									mainProjectActiveCovers.add(volume);
-								} else if (mainProjectActiveCovers.isEmpty() && activeCovers.size() < 3) {
+								}
+								else if (mainProjectActiveCovers.isEmpty() && activeCovers.size() < 3)
+								{
 									activeCovers.add(volume);
 								}
 							}
 
 							if (subProjectTitle.isEmpty() && type.equals(DISPLAYABLE_NAMES.get(0))
-							    && (mainProjectLastCover == null || mainProjectLastCover.getProjectId() < volume.getProjectId())) {
+								&& (mainProjectLastCover == null || mainProjectLastCover.getProjectId() < volume.getProjectId()))
+							{
 								mainProjectLastCover = volume;
 							}
-							if (lastCover == null || lastCover.getProjectId() < volume.getProjectId()) {
+							if (lastCover == null || lastCover.getProjectId() < volume.getProjectId())
+							{
 								lastCover = volume;
 							}
 						}
 
-						if (volumeTypeToSubProjectToVolumes.get(type) == null) {
+						if (volumeTypeToSubProjectToVolumes.get(type) == null)
+						{
 							volumeTypeToSubProjectToVolumes.put(type, new ArrayList<SimpleEntry<String, ArrayList<Volume>>>());
 						}
 						ArrayList<SimpleEntry<String, ArrayList<Volume>>>
-										subProjectToVolumes =
-										volumeTypeToSubProjectToVolumes.get(type);
+								subProjectToVolumes =
+								volumeTypeToSubProjectToVolumes.get(type);
 						if (subProjectToVolumes.isEmpty() || !subProjectToVolumes.get(subProjectToVolumes.size() - 1).getKey()
-										.equals(subProjectTitle)) {
+																				 .equals(subProjectTitle))
+						{
 							subProjectToVolumes
-											.add(new SimpleEntry<String, ArrayList<Volume>>(subProjectTitle, new ArrayList<Volume>()));
+									.add(new SimpleEntry<>(subProjectTitle, new ArrayList<Volume>()));
 						}
 						subProjectToVolumes.get(subProjectToVolumes.size() - 1).getValue().add(volume);
 
 						SimpleEntry<String, String>
-										volumeTypeAndSubProject =
-										new SimpleEntry<String, String>(type, subProjectTitle);
-						if (volume.getNameShort() != null) {
+								volumeTypeAndSubProject =
+								new SimpleEntry<>(type, subProjectTitle);
+						if (volume.getNameShort() != null)
+						{
 							if (shortNameLabelWidthMap.get(volumeTypeAndSubProject) == null
-							    || shortNameLabelWidthMap.get(volumeTypeAndSubProject) < volume.getNameShort().length()) {
+								|| shortNameLabelWidthMap.get(volumeTypeAndSubProject) < volume.getNameShort().length())
+							{
 								shortNameLabelWidthMap.put(volumeTypeAndSubProject, volume.getNameShort().length());
 							}
 						}
@@ -177,111 +196,126 @@ public class ProjectPage extends SidebarLayoutPage {
 				}
 			}
 
-			ListView<String> volumeTypeRepeater = new ListView<String>("volumeTypeRepeater", DISPLAYABLE_NAMES) {
+			ListView<String> volumeTypeRepeater = new ListView<String>("volumeTypeRepeater", DISPLAYABLE_NAMES)
+			{
 				@Override
-				protected void populateItem(final ListItem<String> listItem1) {
+				protected void populateItem(final ListItem<String> listItem1)
+				{
 					final String displayableName = listItem1.getModelObject();
 					Label volumeType = new Label("volumeType", displayableName);
-					if (volumeTypeToSubProjectToVolumes.get(displayableName) == null) {
+					if (volumeTypeToSubProjectToVolumes.get(displayableName) == null)
+					{
 						volumeType.setVisible(false);
 					}
 					listItem1.add(volumeType);
 					ListView<SimpleEntry<String, ArrayList<Volume>>>
-									volumeSubProjectRepeater
-									=
-									new ListView<SimpleEntry<String, ArrayList<Volume>>>("volumeSubProjectRepeater",
-									                                                     volumeTypeToSubProjectToVolumes
-													                                                     .get(displayableName)) {
-										@Override
-										protected void populateItem(ListItem<SimpleEntry<String, ArrayList<Volume>>> listItem2) {
-											SimpleEntry<String, ArrayList<Volume>> projectTitleAndVolumes = listItem2.getModelObject();
-											String subProjectNameString = projectTitleAndVolumes.getKey();
-											Label projectName = new Label("projectName", subProjectNameString);
-											if (subProjectNameString.isEmpty()) {
-												projectName.setVisible(false);
-											}
-											listItem2.add(projectName);
-											ArrayList<Volume> volumes = projectTitleAndVolumes.getValue();
-											Collections.sort(volumes, COMPARATOR);
-											final Integer
-															shortNameLabelWidth =
-															shortNameLabelWidthMap
-																			.get(new SimpleEntry<String, String>(displayableName, subProjectNameString));
-											ListView<Volume>
-															volumeRepeater =
-															new ListView<Volume>("volumeRepeater", projectTitleAndVolumes.getValue()) {
-																@Override
-																protected void populateItem(final ListItem<Volume> listItem3) {
-																	Volume volume = listItem3.getModelObject();
-																	String nameShort = volume.getNameShort();
-																	Label volumeName = new Label("volumeName", nameShort);
-																	if (shortNameLabelWidth != null) {
-																		volumeName.add(new AttributeModifier("style",
-																		                                     "width:" + (shortNameLabelWidth * 7.5 + 10)
-																		                                     + "px;"));
-																	}
-																	listItem3.add(volumeName);
-																	String volumeStatusStr = volume.getVolumeStatus();
-																	Label volumeStatus = new Label("volumeStatus",
-																	                               RuraConstants.VOLUME_STATUS_TO_LABEL_TEXT
-																					                               .get(volumeStatusStr));
-																	volumeStatus.add(new AttributeAppender("class",
-																	                                       " label-" + VOLUME_STATUS_LABEL_COLOR_CLASS
-																					                                       .get(volumeStatusStr)));
-																	listItem3.add(volumeStatus);
-																	if (volumeStatusStr.equals(RuraConstants.VOLUME_STATUS_HIDDEN)) {
-																		listItem3.setVisible(false); //todo show grayed if allowed to user
-																	}
-																	BookmarkablePageLink volumeLink = volume.makeBookmarkablePageLink("volumeLink");
-																	volumeLink.setBody(new Model<String>(volume.getNameTitle()));
-																	listItem3.add(volumeLink);
-																}
-															};
-											listItem2.add(volumeRepeater);
-										}
-									};
+							volumeSubProjectRepeater
+							=
+							new ListView<SimpleEntry<String, ArrayList<Volume>>>("volumeSubProjectRepeater",
+									volumeTypeToSubProjectToVolumes
+											.get(displayableName))
+							{
+								@Override
+								protected void populateItem(ListItem<SimpleEntry<String, ArrayList<Volume>>> listItem2)
+								{
+									SimpleEntry<String, ArrayList<Volume>> projectTitleAndVolumes = listItem2.getModelObject();
+									String subProjectNameString = projectTitleAndVolumes.getKey();
+									Label projectName = new Label("projectName", subProjectNameString);
+									if (subProjectNameString.isEmpty())
+									{
+										projectName.setVisible(false);
+									}
+									listItem2.add(projectName);
+									ArrayList<Volume> volumes = projectTitleAndVolumes.getValue();
+									Collections.sort(volumes, COMPARATOR);
+									final Integer
+											shortNameLabelWidth =
+											shortNameLabelWidthMap
+													.get(new SimpleEntry<>(displayableName, subProjectNameString));
+									ListView<Volume>
+											volumeRepeater =
+											new ListView<Volume>("volumeRepeater", projectTitleAndVolumes.getValue())
+											{
+												@Override
+												protected void populateItem(final ListItem<Volume> listItem3)
+												{
+													Volume volume = listItem3.getModelObject();
+													String nameShort = volume.getNameShort();
+													Label volumeName = new Label("volumeName", nameShort);
+													if (shortNameLabelWidth != null)
+													{
+														volumeName.add(new AttributeModifier("style",
+																"width:" + (shortNameLabelWidth * 7.5 + 10)
+																+ "px;"));
+													}
+													listItem3.add(volumeName);
+													String volumeStatusStr = volume.getVolumeStatus();
+													Label volumeStatus = new Label("volumeStatus",
+															RuraConstants.VOLUME_STATUS_TO_LABEL_TEXT
+																	.get(volumeStatusStr));
+													volumeStatus.add(new AttributeAppender("class",
+															" label-" + VOLUME_STATUS_LABEL_COLOR_CLASS
+																	.get(volumeStatusStr)));
+													listItem3.add(volumeStatus);
+													if (volumeStatusStr.equals(RuraConstants.VOLUME_STATUS_HIDDEN))
+													{
+														listItem3.setVisible(false); //todo show grayed if allowed to user
+													}
+													BookmarkablePageLink volumeLink = volume.makeBookmarkablePageLink("volumeLink");
+													volumeLink.setBody(new Model<>(volume.getNameTitle()));
+													listItem3.add(volumeLink);
+												}
+											};
+									listItem2.add(volumeRepeater);
+								}
+							};
 					listItem1.add(volumeSubProjectRepeater);
 				}
 			};
 			add(volumeTypeRepeater);
 
-			Set<Volume> allCoversSet = new HashSet<Volume>();
-			if (mainProjectFirstCovers.isEmpty()) {
+			Set<Volume> allCoversSet = new HashSet<>();
+			if (mainProjectFirstCovers.isEmpty())
+			{
 				allCoversSet.addAll(firstCovers);
-			} else {
+			}
+			else
+			{
 				allCoversSet.addAll(mainProjectFirstCovers);
 			}
-			if (mainProjectActiveCovers.isEmpty()) {
+			if (mainProjectActiveCovers.isEmpty())
+			{
 				allCoversSet.addAll(activeCovers);
-			} else {
+			}
+			else
+			{
 				allCoversSet.addAll(mainProjectActiveCovers);
 			}
-			if (mainProjectLastCover != null) {
+			if (mainProjectLastCover != null)
+			{
 				allCoversSet.add(mainProjectLastCover);
 			}
-			if (lastCover != null) {
+			if (lastCover != null)
+			{
 				allCoversSet.add(lastCover);
 			}
-			ArrayList<Volume> allCovers = new ArrayList<Volume>(allCoversSet);
+			ArrayList<Volume> allCovers = new ArrayList<>(allCoversSet);
 			Collections.sort(allCovers, COMPARATOR);
-			ArrayList<SimpleEntry<String, String>> allCoverIds = new ArrayList<SimpleEntry<String, String>>();
-			for (Volume volume : allCovers) {
-				allCoverIds.add(new SimpleEntry<String, String>(volume.getNameTitle(),
-				                                                externalResourcesMapperCacheable
-								                                                .getExternalResourceById(volume.getImageOne())
-								                                                .getUrl()));
+			ArrayList<SimpleEntry<String, String>> allCoverIds = new ArrayList<>();
+			for (Volume volume : allCovers)
+			{
+				allCoverIds.add(new SimpleEntry<>(volume.getNameTitle(),
+						externalResourcesMapperCacheable
+								.getExternalResourceById(volume.getImageOne())
+								.getUrl()));
 			}
 
 			add(new CoverCarousel("projectCoverCarousel", allCoverIds));
 
-			sidebarModules.add(new ActionsSidebarModule("sidebarModule", ProjectEdit.class, mainProject.getUrlParameters()));
-			sidebarModules.add(new UpdatesSidebarModule("sidebarModule", mainProject.getProjectId()));
-			sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
-			sidebarModules.add(new FriendsSidebarModule("sidebarModule"));
-		}
-		finally
-		{
-			session.close();
+			sidebarModules.add(new ActionsSidebarModule(ProjectEdit.class, mainProject.getUrlParameters()));
+			sidebarModules.add(new UpdatesSidebarModule(mainProject.getProjectId()));
+			sidebarModules.add(new ProjectsSidebarModule());
+			sidebarModules.add(new FriendsSidebarModule());
 		}
 	}
 

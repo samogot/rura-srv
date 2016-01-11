@@ -8,11 +8,11 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.util.string.Strings;
-import ru.ruranobe.misc.smtp.Email;
 import ru.ruranobe.misc.Token;
+import ru.ruranobe.misc.smtp.Email;
 import ru.ruranobe.mybatis.MybatisUtil;
-import ru.ruranobe.mybatis.mappers.UsersMapper;
 import ru.ruranobe.mybatis.entities.tables.User;
+import ru.ruranobe.mybatis.mappers.UsersMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 
 import javax.mail.MessagingException;
@@ -51,7 +51,7 @@ public class EmailPasswordRecoveryPanel extends Panel
             super(id);
             this.setOutputMarkupId(true);
             this.setMarkupId("settingsPass");
-            setModel(new CompoundPropertyModel<EmailPasswordRecoveryPanel>(EmailPasswordRecoveryPanel.this));
+            setModel(new CompoundPropertyModel<>(EmailPasswordRecoveryPanel.this));
             add(new TextField<String>("email"));
         }
 
@@ -62,7 +62,7 @@ public class EmailPasswordRecoveryPanel extends Panel
             {
                 error("Укажите, пожалуйста, электронный адрес.");
             }
-            else if (!Email.isEmailSyntaxValid(email))
+            else if (Email.isEmailSyntaxInvalid(email))
             {
                 error("Указан неверный адрес электронной почты.");
             }
@@ -73,9 +73,8 @@ public class EmailPasswordRecoveryPanel extends Panel
             else
             {
                 SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-                SqlSession session = sessionFactory.openSession();
 
-                try
+                try (SqlSession session = sessionFactory.openSession())
                 {
                     UsersMapper usersMapper = CachingFacade.getCacheableMapper(session, UsersMapper.class);
                     User user = usersMapper.getUserByEmail(email);
@@ -108,10 +107,6 @@ public class EmailPasswordRecoveryPanel extends Panel
                             error("Отправка сообщения на указанный электронный адрес не удалась. Свяжитесь, пожалуйста, с администрацией сайта.");
                         }
                     }
-                }
-                finally
-                {
-                    session.close();
                 }
             }
         }

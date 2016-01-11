@@ -1,6 +1,5 @@
 package ru.ruranobe.wicket.components;
 
-import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.authentication.IAuthenticationStrategy;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.PasswordTextField;
@@ -129,7 +128,7 @@ public class LoginPanel extends Panel
         {
             super(id);
 
-            setModel(new CompoundPropertyModel<LoginPanel>(LoginPanel.this));
+            setModel(new CompoundPropertyModel<>(LoginPanel.this));
 
             // Attach textfields for username and password
             add(new TextField<String>("username"));

@@ -20,8 +20,8 @@ public class AdminLayoutPage extends SidebarLayoutPage
     protected void onInitialize()
     {
         super.onInitialize();
-        sidebarModules.add(new ContentsModule("sidebarModule", contentsHolders));
+        sidebarModules.add(new ContentsModule(contentsHolders));
     }
 
-    private List<ContentsHolder> contentsHolders = new ArrayList<ContentsHolder>();
+    private List<ContentsHolder> contentsHolders = new ArrayList<>();
 }

@@ -18,7 +18,7 @@ public class MybatisUtil
 
     private static SqlSessionFactory buildSessionFactory()
     {
-        Reader reader = null;
+        Reader reader;
         try
         {
             reader = Resources.getResourceAsReader("mybatis-config.xml");

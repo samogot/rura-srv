@@ -7,9 +7,9 @@ public class DownloadsSidebarModule extends SidebarModuleBase
 {
     private static final int UPDATES_BY_PROJECT_ON_PAGE = 5;
 
-    public DownloadsSidebarModule(String id, PageParameters pageParameters)
+    public DownloadsSidebarModule(PageParameters pageParameters)
     {
-        super(id, "downloads", "Скачать том");
+        super("sidebarModule", "downloads", "Скачать том");
         String url = String.format("%s/%s", pageParameters.get("project").toString(), pageParameters.get("volume").toString());
         moduleBody.add(new ExternalLink("fb2pic", "/d/fb2/" + url));
         moduleBody.add(new ExternalLink("fb2nopic", "/d/fb2/" + url + "?pic=0"));

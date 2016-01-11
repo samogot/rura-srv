@@ -13,7 +13,7 @@ public class ProjectsMapperCacheable implements ProjectsMapper
 {
     private static final AtomicBoolean getAllProjectsMethodCalled = new AtomicBoolean(false);
     private static final ConcurrentHashMap<Integer, Project> projectIdToProject =
-            new ConcurrentHashMap<Integer, Project>();
+            new ConcurrentHashMap<>();
     private final ProjectsMapper mapper;
 
     public ProjectsMapperCacheable(ProjectsMapper mapper)

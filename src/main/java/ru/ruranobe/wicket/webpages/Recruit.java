@@ -35,10 +35,9 @@ public class Recruit extends SidebarLayoutPage
         String textHtml = "";
 
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-        SqlSession session = sessionFactory.openSession();
         Volume recruitVolume;
         Chapter chapter;
-        try
+        try (SqlSession session = sessionFactory.openSession())
         {
             VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
             recruitVolume = volumesMapperCacheable.getVolumeByUrl("system/recruit");
@@ -74,29 +73,29 @@ public class Recruit extends SidebarLayoutPage
                 chapterText = textsMapperCacheable.getTextById(textId);
                 List<ChapterImage> chapterImages = chapterImagesMapperCacheable.getChapterImagesByChapterId(chapter.getChapterId());
 
-                List<Map.Entry<Integer, String>> images = new ArrayList<Map.Entry<Integer, String>>();
+                List<Map.Entry<Integer, String>> images = new ArrayList<>();
                 for (ChapterImage chapterImage : chapterImages)
                 {
-                    Map.Entry<Integer, String> image = new AbstractMap.SimpleEntry<Integer, String>(-1, "unknownSource");
+                    Map.Entry<Integer, String> image = new AbstractMap.SimpleEntry<>(-1, "unknownSource");
                     ExternalResource coloredImage = chapterImage.getColoredImage();
                     if (coloredImage != null && !Strings.isEmpty(coloredImage.getUrl()))
                     {
-                        image = new AbstractMap.SimpleEntry<Integer, String>
-                        (
-                                coloredImage.getResourceId(),
-                                coloredImage.getUrl()
-                        );
+                        image = new AbstractMap.SimpleEntry<>
+                                (
+                                        coloredImage.getResourceId(),
+                                        coloredImage.getUrl()
+                                );
                     }
                     else
                     {
                         ExternalResource nonColoredImage = chapterImage.getNonColoredImage();
                         if (nonColoredImage != null && !Strings.isEmpty(nonColoredImage.getUrl()))
                         {
-                            image = new AbstractMap.SimpleEntry<Integer, String>
-                            (
-                                    nonColoredImage.getResourceId(),
-                                    nonColoredImage.getUrl()
-                            );
+                            image = new AbstractMap.SimpleEntry<>
+                                    (
+                                            nonColoredImage.getResourceId(),
+                                            nonColoredImage.getUrl()
+                                    );
                         }
                     }
                     images.add(image);
@@ -116,10 +115,6 @@ public class Recruit extends SidebarLayoutPage
                 session.commit();
             }
         }
-        finally
-        {
-            session.close();
-        }
 
         add(new Label("htmlText", textHtml).setEscapeModelStrings(false));
         if (recruitVolume.getTopicId() != null)
@@ -131,9 +126,9 @@ public class Recruit extends SidebarLayoutPage
             add(new WebMarkupContainer("comments"));
         }
 
-        sidebarModules.add(new ActionsSidebarModule("sidebarModule", Editor.class, chapter.getUrlParameters()));
-        sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
-        sidebarModules.add(new FriendsSidebarModule("sidebarModule"));
+        sidebarModules.add(new ActionsSidebarModule(Editor.class, chapter.getUrlParameters()));
+        sidebarModules.add(new ProjectsSidebarModule());
+        sidebarModules.add(new FriendsSidebarModule());
     }
 
     @Override

@@ -97,7 +97,7 @@ public class Chapter extends PageRepresentable implements Serializable
 
     public boolean isPublished()
     {
-        return publishDate == null ? false : new Date().after(publishDate);
+        return publishDate != null && new Date().after(publishDate);
     }
 
     public void setPublished(boolean published)
@@ -206,7 +206,7 @@ public class Chapter extends PageRepresentable implements Serializable
     {
         if (this.childChapters == null)
         {
-            this.childChapters = new ArrayList<Chapter>();
+            this.childChapters = new ArrayList<>();
         }
         this.childChapters.add(chapter);
     }

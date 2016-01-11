@@ -5,12 +5,11 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.request.Request;
-
 import ru.ruranobe.misc.Authentication;
 import ru.ruranobe.mybatis.MybatisUtil;
+import ru.ruranobe.mybatis.entities.tables.User;
 import ru.ruranobe.mybatis.mappers.RolesMapper;
 import ru.ruranobe.mybatis.mappers.UsersMapper;
-import ru.ruranobe.mybatis.entities.tables.User;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 
 import java.util.List;
@@ -24,18 +23,26 @@ public class LoginSession extends AuthenticatedWebSession {
 		super(request);
 	}
 
+	public static LoginSession get()
+	{
+		return (LoginSession) AuthenticatedWebSession.get();
+	}
+
 	@Override
 	public boolean authenticate(String username, String password) {
 		boolean authenticationCompleted = false;
 		SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-		SqlSession session = sessionFactory.openSession();
-		try {
+		try (SqlSession session = sessionFactory.openSession())
+		{
 			UsersMapper usersMapper = CachingFacade.getCacheableMapper(session, UsersMapper.class);
 			User signInUser = usersMapper.getUserByUsername(username);
-			if (signInUser != null) {
+			if (signInUser != null)
+			{
 				String hash = Authentication.getPassHash(signInUser.getPassVersion(), password, signInUser.getPass());
-				if (areHashesEqual(hash, signInUser.getPass())) {
-					if (signInUser.getPassVersion() < Authentication.ACTUAL_HASH_TYPE) {
+				if (areHashesEqual(hash, signInUser.getPass()))
+				{
+					if (signInUser.getPassVersion() < Authentication.ACTUAL_HASH_TYPE)
+					{
 						signInUser.setPass(Authentication.getPassHash(Authentication.ACTUAL_HASH_TYPE, password, ""));
 						signInUser.setPassVersion(Authentication.ACTUAL_HASH_TYPE);
 						usersMapper.updateUser(signInUser);
@@ -50,8 +57,6 @@ public class LoginSession extends AuthenticatedWebSession {
 					authenticationCompleted = true;
 				}
 			}
-		} finally {
-			session.close();
 		}
 		return authenticationCompleted;
 	}

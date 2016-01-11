@@ -23,7 +23,7 @@ $(document).ready(function() {
         }
     }
     if ($('.miniSearch').length != 0 || $('#main-search').length != 0) {
-        var element = $('.miniSearch').length != 0 ? $('.miniSearch') : $('#main-search')
+        var element = $('.miniSearch').length != 0 ? $('.miniSearch') : $('#main-search');
             element.children('input').typeahead({
                 hint: true,
                 highlight: true,

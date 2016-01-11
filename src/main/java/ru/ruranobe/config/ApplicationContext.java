@@ -98,7 +98,7 @@ public class ApplicationContext
         xpath = new DefaultXPath("/Configuration/Smtp/Port");
         int port = Integer.parseInt(xpath.selectSingleNode(document).getText());
 
-        List<EmailMessageTemplate> smtpMessages = new ArrayList<EmailMessageTemplate>();
+        List<EmailMessageTemplate> smtpMessages = new ArrayList<>();
         xpath = new DefaultXPath("/Configuration/Smtp/Message");
 
         List<Element> messages = xpath.selectNodes(document);
@@ -122,8 +122,8 @@ public class ApplicationContext
         return pageClassToWebpage.get(pageClass);
     }
 
-    private Map<String, Webpage> pageClassToWebpage = new HashMap<String, Webpage>();
-    private List<FileStorageService> fileStorageServices = new ArrayList<FileStorageService>();
+    private Map<String, Webpage> pageClassToWebpage = new HashMap<>();
+    private List<FileStorageService> fileStorageServices = new ArrayList<>();
     private static final String WEBPAGE_PAGE_CLASS = "PageClass";
     private static final String WEBPAGE_IMAGE_STORAGE = "ImageStorage";
     private static final String IMAGE_STORAGE_SERVICE_NAME = "ServiceName";

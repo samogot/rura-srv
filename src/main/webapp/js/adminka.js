@@ -10,7 +10,7 @@ $('button[type=submit]').on('click',
 $('body').on('click', 'button.btn-success',
     function () {
         var type = $(this).data('type');
-        var length = $('[data-parent="#' + type + '"]').length
+        var length = $('[data-parent="#' + type + '"]').length;
         AdminOnInsert(type + '_n' + length);
         return false;
     }
@@ -44,7 +44,7 @@ function AdminOnUpdate(parent, projectId, type) {
         var el = parent.find('textarea:eq(' + i + ')');
         projectInfo[el.attr('name')] = el.val();
     }
-    var info = {'type': type, 'projectId': projectId, 'projectInfo': projectInfo}
+    var info = {'type': type, 'projectId': projectId, 'projectInfo': projectInfo};
     console.log(info);
     alert(JSON.stringify(info));
 }

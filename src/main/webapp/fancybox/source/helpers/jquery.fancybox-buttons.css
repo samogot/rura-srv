@@ -46,9 +46,7 @@
 	width: 30px;
 	height: 30px;
 	text-indent: -9999px;
-	background-color: transparent;
-	background-image: url('fancybox_buttons.png');
-	background-repeat: no-repeat;
+	background: transparent url('fancybox_buttons.png') no-repeat;
 	outline: none;
 	opacity: 0.8;
 }
@@ -88,7 +86,7 @@
 #fancybox-buttons a.btnClose {
 	border-left: 1px solid #111;
 	width: 35px;
-	background-position: -56px 0px;
+	background-position: -56px 0;
 }
 
 #fancybox-buttons a.btnDisabled {

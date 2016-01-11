@@ -27,7 +27,7 @@ import java.util.Set;
 
 public class Updates extends SidebarLayoutPage
 {
-    private static final Set<String> SEARCH_TYPES = new HashSet<String>();
+    private static final Set<String> SEARCH_TYPES = new HashSet<>();
     private static final int UPDATES_COUNT_ON_PAGE = 50;
     private static final int NUMBER_OF_PAGES_ON_UPDATE_LIST = 5;
 
@@ -172,8 +172,7 @@ public class Updates extends SidebarLayoutPage
         add(fifth);
 
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-        SqlSession session = sessionFactory.openSession();
-        try
+        try (SqlSession session = sessionFactory.openSession())
         {
             UpdatesMapper updatesMapperCacheable = CachingFacade.getCacheableMapper(session, UpdatesMapper.class);
 
@@ -260,7 +259,7 @@ public class Updates extends SidebarLayoutPage
             add(firstPage);
             add(lastPage);
 
-            List<StatelessLink> references = new ArrayList<StatelessLink>();
+            List<StatelessLink> references = new ArrayList<>();
             AttributeAppender activeAppender = new AttributeAppender("class", "active");
             if (page <= NUMBER_OF_PAGES_ON_UPDATE_LIST)
             {
@@ -327,20 +326,16 @@ public class Updates extends SidebarLayoutPage
                     listItem.add(listItem.getModelObject());
                 }
             };
-            if (references.size()==1)
+            if (references.size() == 1)
             {
                 updatesPaginator.setVisible(false);
             }
             add(updatesPaginator);
             add(new UpdatesWideList("updatesList", projectId, volumeId, searchType, (page - 1) * UPDATES_COUNT_ON_PAGE, UPDATES_COUNT_ON_PAGE));
 
-            sidebarModules.add(new ActionsSidebarModule("sidebarModule", GlobalEdit.class, null));
-            sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
-            sidebarModules.add(new FriendsSidebarModule("sidebarModule"));
-        }
-        finally
-        {
-            session.close();
+            sidebarModules.add(new ActionsSidebarModule(GlobalEdit.class, null));
+            sidebarModules.add(new ProjectsSidebarModule());
+            sidebarModules.add(new FriendsSidebarModule());
         }
     }
 

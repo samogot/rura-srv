@@ -12,7 +12,6 @@ import ru.ruranobe.engine.wiki.parser.WikiParser;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.Chapter;
-import ru.ruranobe.mybatis.entities.tables.ExternalResource;
 import ru.ruranobe.mybatis.entities.tables.Text;
 import ru.ruranobe.mybatis.entities.tables.Volume;
 import ru.ruranobe.mybatis.mappers.ChaptersMapper;
@@ -39,15 +38,12 @@ public class Diary extends SidebarLayoutPage
     {
         setStatelessHint(true);
 
-        ExternalResource diaryImageResource = null;
-        StringBuilder diaryText = new StringBuilder();
-        final List<ContentsHolder> contentsHolders = new ArrayList<ContentsHolder>();
+        final List<ContentsHolder> contentsHolders = new ArrayList<>();
 
         Volume diaryVolume;
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-        SqlSession session = sessionFactory.openSession();
         List<Chapter> diaryChapters;
-        try
+        try (SqlSession session = sessionFactory.openSession())
         {
             VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
             diaryVolume = volumesMapperCacheable.getVolumeByUrl("system/diary");
@@ -79,10 +75,6 @@ public class Diary extends SidebarLayoutPage
                 }
             }
 
-        }
-        finally
-        {
-            session.close();
         }
 
         add(new ListView<Chapter>("commentsRepeater", diaryChapters)
@@ -118,10 +110,10 @@ public class Diary extends SidebarLayoutPage
             add(new WebMarkupContainer("comments"));
         }
 
-        sidebarModules.add(new ActionsSidebarModule("sidebarModule", VolumeEdit.class, diaryVolume.getUrlParameters()));
-        sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
-        sidebarModules.add(new FriendsSidebarModule("sidebarModule"));
-        sidebarModules.add(new ContentsModule("sidebarModule", contentsHolders));
+        sidebarModules.add(new ActionsSidebarModule(VolumeEdit.class, diaryVolume.getUrlParameters()));
+        sidebarModules.add(new ProjectsSidebarModule());
+        sidebarModules.add(new FriendsSidebarModule());
+        sidebarModules.add(new ContentsModule(contentsHolders));
     }
 
     @Override

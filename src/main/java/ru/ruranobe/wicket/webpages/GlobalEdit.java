@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -27,19 +28,19 @@ import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
 
 import java.util.*;
 
-@AuthorizeInstantiation("ADMIN")
+@AuthorizeInstantiation(Roles.ADMIN)
 public class GlobalEdit extends AdminLayoutPage
 {
 
-    private List<Project> projects;
     private List<String> allRoles;
-    private List<VolumeActivity> activities;
     private List<Team> teams;
-    private List<TeamMember> teamMembers;
     private AdminAffixedListPanel<Team> teamsAdminAffixedListPanel;
 
     public GlobalEdit()
     {
+        List<Project> projects;
+        List<VolumeActivity> activities;
+        List<TeamMember> teamMembers;
         try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
         {
             ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
@@ -84,7 +85,7 @@ public class GlobalEdit extends AdminLayoutPage
             }
         });
 
-        HashMap<Integer, Team> teamIdToTeamMap = new HashMap<Integer, Team>();
+        HashMap<Integer, Team> teamIdToTeamMap = new HashMap<>();
         for (Team team : teams)
         {
             teamIdToTeamMap.put(team.getTeamId(), team);
@@ -94,13 +95,12 @@ public class GlobalEdit extends AdminLayoutPage
             member.setTeam(teamIdToTeamMap.get(member.getTeamId()));
         }
 
-        add(new AdminAffixedListPanel<Project>("projects", "Серии", new ListModel<Project>(projects))
+        add(new AdminAffixedListPanel<Project>("projects", "Серии", new ListModel<>(projects))
         {
             @Override
             public void onSubmit()
             {
-                SqlSession session = MybatisUtil.getSessionFactory().openSession();
-                try
+                try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
                     ProjectsMapper mapper = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
                     for (Project item : model.getObject())
@@ -125,10 +125,6 @@ public class GlobalEdit extends AdminLayoutPage
                         }
                     }
                     session.commit();
-                }
-                finally
-                {
-                    session.close();
                 }
             }
 
@@ -156,7 +152,7 @@ public class GlobalEdit extends AdminLayoutPage
             }
         }.setSortable(true));
 
-        add(new AdminAffixedListPanel<VolumeActivity>("activities", "Виды работ", new ListModel<VolumeActivity>(activities))
+        add(new AdminAffixedListPanel<VolumeActivity>("activities", "Виды работ", new ListModel<>(activities))
         {
 
             @Override
@@ -210,7 +206,7 @@ public class GlobalEdit extends AdminLayoutPage
 
         });
 
-        add(teamsAdminAffixedListPanel = new AdminAffixedListPanel<Team>("teams", "Команды", new ListModel<Team>(teams))
+        add(teamsAdminAffixedListPanel = new AdminAffixedListPanel<Team>("teams", "Команды", new ListModel<>(teams))
         {
             @Override
             public void onSubmit()
@@ -271,7 +267,7 @@ public class GlobalEdit extends AdminLayoutPage
             }
         });
 
-        add(new AdminAffixedListPanel<TeamMember>("teamMembers", "Члены команд", new ListModel<TeamMember>(teamMembers))
+        add(new AdminAffixedListPanel<TeamMember>("teamMembers", "Члены команд", new ListModel<>(teamMembers))
         {
             @Override
             public void onSubmit()

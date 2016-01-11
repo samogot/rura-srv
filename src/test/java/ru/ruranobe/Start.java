@@ -1,13 +1,5 @@
 package ru.ruranobe;
 
-import org.apache.wicket.util.time.Duration;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.bio.SocketConnector;
-import org.eclipse.jetty.server.ssl.SslSocketConnector;
-import org.eclipse.jetty.util.resource.Resource;
-import org.eclipse.jetty.util.ssl.SslContextFactory;
-import org.eclipse.jetty.webapp.WebAppContext;
-
 public class Start {
     public static void main(String[] args) throws Exception {
         /*

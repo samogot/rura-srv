@@ -29,15 +29,14 @@ public class ImageServices
             throw new IllegalUnbindException("Unable to upload image because storage list is empty. Check configuration file.");
         }
 
-        Map<String, String> nameContextVariables = new HashMap<String, String>(pageContextVariables);
+        Map<String, String> nameContextVariables = new HashMap<>(pageContextVariables);
         nameContextVariables.put("uuid", UUID.randomUUID().toString());
         nameContextVariables.put("ext", toUpload.getExtension());
         nameContextVariables.put("fullname", toUpload.getTitle());
         nameContextVariables.put("name", FilenameUtils.getBaseName(toUpload.getTitle()));
 
-        List<ExternalResource> externalResources = new ArrayList<ExternalResource>();
-        SqlSession session = MybatisUtil.getSessionFactory().openSession();
-        try
+        List<ExternalResource> externalResources = new ArrayList<>();
+        try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
         {
             ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.getCacheableMapper(session, ExternalResourcesMapper.class);
             ExternalResourcesHistoryMapper externalResourcesHistoryMapperCacheable = CachingFacade.getCacheableMapper(session, ExternalResourcesHistoryMapper.class);
@@ -55,7 +54,7 @@ public class ImageServices
                 String storagePath = storage.getStoragePath();
                 String storageFileName = storage.getStorageFileName();
 
-                User user = ((LoginSession) LoginSession.get()).getUser();
+                User user = LoginSession.get().getUser();
                 resource.setUserId(user == null ? 1 : user.getUserId()); // TODO: 1 only for testing purposes
                 resource.setTitle(toUpload.getTitle());
                 resource.setMimeType(toUpload.getMimeType());
@@ -99,10 +98,6 @@ public class ImageServices
                 i++;
             }
             session.commit();
-        }
-        finally
-        {
-            session.close();
         }
 
         return externalResources;

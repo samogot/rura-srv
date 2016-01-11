@@ -62,11 +62,7 @@ public class ConfigurationManager
 
                 reader = new SAXReader(parser.getXMLReader());
             }
-            catch (ParserConfigurationException ex)
-            {
-                throw new RuntimeException(ex);
-            }
-            catch (SAXException ex)
+            catch (ParserConfigurationException | SAXException ex)
             {
                 throw new RuntimeException(ex);
             }

@@ -59,7 +59,7 @@ public class ImageUploaderComponent extends Panel implements ILabelProvider
     @Override
     public IModel getLabel()
     {
-        return null;
+        return label;
     }
 
     public ImageUploaderComponent setLabel(IModel<String> label)

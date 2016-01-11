@@ -17,7 +17,7 @@ public class ContentsHolder implements Serializable
     {
         this.url = url;
         this.title = title;
-        this.children = new ArrayList<ContentsHolder>();
+        this.children = new ArrayList<>();
     }
 
     public String getUrl()

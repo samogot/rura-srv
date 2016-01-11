@@ -151,7 +151,7 @@ public class RuraImage
     private final String extension;
     private final String title;
     private final Map<StorageService, String> imageServiceSystemToUrl =
-            new EnumMap<StorageService, String>(StorageService.class);
+            new EnumMap<>(StorageService.class);
     private final Map<StorageService, String> imageServiceSystemToThumbnailUrl =
-            new EnumMap<StorageService, String>(StorageService.class);
+            new EnumMap<>(StorageService.class);
 }

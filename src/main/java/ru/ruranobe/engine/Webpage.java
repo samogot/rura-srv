@@ -91,5 +91,5 @@ public class Webpage
     }
 
     Class pageClass;
-    List<ImageStorage> imageStorages = new ArrayList<ImageStorage>();
+    List<ImageStorage> imageStorages = new ArrayList<>();
 }

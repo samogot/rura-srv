@@ -30,7 +30,7 @@ public class OrphusRestWebService extends GsonRestResource
     {
         if (orphusComment.getUserId() == null)
         {
-            User user = ((LoginSession) LoginSession.get()).getUser();
+            User user = LoginSession.get().getUser();
             if (user != null)
             {
                 orphusComment.setUserId(user.getUserId());
@@ -78,8 +78,7 @@ public class OrphusRestWebService extends GsonRestResource
         }
 
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-        SqlSession session = sessionFactory.openSession();
-        try
+        try (SqlSession session = sessionFactory.openSession())
         {
             ChaptersMapper chaptersMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
             Chapter chapter = chaptersMapperCacheable.getChapterById(orphusComment.getChapterId());
@@ -100,10 +99,6 @@ public class OrphusRestWebService extends GsonRestResource
             orphusComment.setCreatedWhen(new Date());
             orphusCommentsMapperCacheable.insertOrphusComment(orphusComment);
             session.commit();
-        }
-        finally
-        {
-            session.close();
         }
 
     }

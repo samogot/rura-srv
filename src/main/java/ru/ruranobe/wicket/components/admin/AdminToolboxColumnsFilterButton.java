@@ -26,9 +26,9 @@ public class AdminToolboxColumnsFilterButton extends Panel
         tag.getAttributes().put("class", "btn-group");
     }
 
-    public AdminToolboxColumnsFilterButton(String id, IModel<List<? extends String>> model)
+    public AdminToolboxColumnsFilterButton(IModel<List<? extends String>> model)
     {
-        super(id, model);
+        super("button", model);
         add(new ListView<String>("repeater", model)
         {
             @Override

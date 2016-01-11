@@ -29,7 +29,7 @@ public abstract class AdminTableListPanel<T> extends AdminListPanel<T>
     {
         super(id, title, model);
         this.headersList = headersList;
-        toolbarButtons.add(toolbarButtons.size() - 1, new AdminToolboxColumnsFilterButton("button", Model.ofList(headersList)));
+        toolbarButtons.add(toolbarButtons.size() - 1, new AdminToolboxColumnsFilterButton(Model.ofList(headersList)));
     }
 
     protected abstract Component getRowComponent(String id, IModel<T> model);
@@ -62,7 +62,7 @@ public abstract class AdminTableListPanel<T> extends AdminListPanel<T>
     @Override
     protected void onAddItem(T newItem, AjaxRequestTarget target, Form form)
     {
-        ListItem<T> rowListItem = new ListItem<T>(rowRepeater.size(), new CompoundPropertyModel<T>(newItem));
+        ListItem<T> rowListItem = new ListItem<>(rowRepeater.size(), new CompoundPropertyModel<>(newItem));
         initializeRowListItem(rowListItem);
         rowRepeater.add(rowListItem);
         target.prependJavaScript(String.format(";addAdminTableRowStub('%s', '%s');", rowListItem.get("item").getMarkupId(), form.getMarkupId()));

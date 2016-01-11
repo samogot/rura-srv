@@ -87,14 +87,14 @@ public class VolumeEdit extends AdminLayoutPage
         }
     };
     private final Chapter stubСhapter;
-    private final Map<String, Integer> memberNickToId = new HashMap<String, Integer>();
+    private final Map<String, Integer> memberNickToId = new HashMap<>();
     private Volume volume;
     private List<Project> projects;
     private List<VolumeReleaseActivity> volumeReleaseActivities;
     private List<VolumeActivity> activities;
     private List<TeamMember> teamMembers;
     private List<Chapter> chapters;
-    private List<Chapter> allChapters = new ArrayList<Chapter>();
+    private List<Chapter> allChapters = new ArrayList<>();
     private List<Update> updates;
     private List<ChapterImage> volumeImages;
 
@@ -109,8 +109,7 @@ public class VolumeEdit extends AdminLayoutPage
 
         String volumeUrl = projectName + "/" + volumeName;
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-        SqlSession session = sessionFactory.openSession();
-        try
+        try (SqlSession session = sessionFactory.openSession())
         {
             VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
             volume = volumesMapperCacheable.getVolumeByUrl(volumeUrl);
@@ -164,12 +163,8 @@ public class VolumeEdit extends AdminLayoutPage
             }
 
         }
-        finally
-        {
-            session.close();
-        }
 
-        final Map<Integer, Chapter> chaptertIdToChapter = new HashMap<Integer, Chapter>();
+        final Map<Integer, Chapter> chaptertIdToChapter = new HashMap<>();
         for (Chapter chapter : chapters)
         {
             chaptertIdToChapter.put(chapter.getChapterId(), chapter);
@@ -180,7 +175,7 @@ public class VolumeEdit extends AdminLayoutPage
         }
 
 
-        final Map<Integer, Project> projectIdToProject = new HashMap<Integer, Project>();
+        final Map<Integer, Project> projectIdToProject = new HashMap<>();
         for (Project project : projects)
         {
             projectIdToProject.put(project.getProjectId(), project);
@@ -213,7 +208,7 @@ public class VolumeEdit extends AdminLayoutPage
                 }
             }
         });
-        Map<Integer, VolumeActivity> activityIdToActivity = new HashMap<Integer, VolumeActivity>();
+        Map<Integer, VolumeActivity> activityIdToActivity = new HashMap<>();
         for (VolumeActivity activity : activities)
         {
             activityIdToActivity.put(activity.getActivityId(), activity);
@@ -238,21 +233,16 @@ public class VolumeEdit extends AdminLayoutPage
                 .setBody(Model.of(volume.getProject().getTitle())));
         add(new Label("breadcrumbActive", volume.getNameTitle()));
 
-        add(new AdminInfoFormPanel<Volume>("info", "Информация", new CompoundPropertyModel<Volume>(volume))
+        add(new AdminInfoFormPanel<Volume>("info", "Информация", new CompoundPropertyModel<>(volume))
         {
             @Override
             public void onSubmit()
             {
-                SqlSession session = MybatisUtil.getSessionFactory().openSession();
-                try
+                try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
                     VolumesMapper mapper = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
                     mapper.updateVolume(volume);
                     session.commit();
-                }
-                finally
-                {
-                    session.close();
                 }
             }
 
@@ -274,8 +264,8 @@ public class VolumeEdit extends AdminLayoutPage
                         add(new TextField<String>("nameRu"));
                         add(new TextField<String>("nameRomaji"));
                         add(new TextField<String>("nameShort"));
-                        add(new DropDownChoice<Project>("project", projects).setChoiceRenderer(new ChoiceRenderer<Project>("title", "projectId"))
-                                                                            .setOutputMarkupId(true));
+                        add(new DropDownChoice<>("project", projects).setChoiceRenderer(new ChoiceRenderer<Project>("title", "projectId"))
+                                                                     .setOutputMarkupId(true));
                         add(new TextField<Float>("sequenceNumber"));
                         add(new TextField<String>("author"));
                         add(new TextField<String>("illustrator"));
@@ -283,13 +273,13 @@ public class VolumeEdit extends AdminLayoutPage
                         add(new TextField<String>("originalStory"));
                         add(new DateTextField("releaseDate", "dd.MM.yyyy"));
                         add(new TextField<String>("isbn"));
-                        add(new DropDownChoice<String>("volumeType", RuraConstants.VOLUME_TYPE_LIST));
+                        add(new DropDownChoice<>("volumeType", RuraConstants.VOLUME_TYPE_LIST));
                         add(new Select<String>("volumeStatus")
-                                .add(new SelectOptions<String>("basic", RuraConstants.VOLUME_STATUS_BASIC_LIST, optionRenderer))
-                                .add(new SelectOptions<String>("external", RuraConstants.VOLUME_STATUS_EXTERNAL_LIST, optionRenderer))
-                                .add(new SelectOptions<String>("not_in_work", RuraConstants.VOLUME_STATUS_IN_WORK_LIST, optionRenderer))
-                                .add(new SelectOptions<String>("in_work", RuraConstants.VOLUME_STATUS_NOT_IN_WORK_LIST, optionRenderer))
-                                .add(new SelectOptions<String>("published", RuraConstants.VOLUME_STATUS_PUBLISHED_LIST, optionRenderer)));
+                                .add(new SelectOptions<>("basic", RuraConstants.VOLUME_STATUS_BASIC_LIST, optionRenderer))
+                                .add(new SelectOptions<>("external", RuraConstants.VOLUME_STATUS_EXTERNAL_LIST, optionRenderer))
+                                .add(new SelectOptions<>("not_in_work", RuraConstants.VOLUME_STATUS_IN_WORK_LIST, optionRenderer))
+                                .add(new SelectOptions<>("in_work", RuraConstants.VOLUME_STATUS_NOT_IN_WORK_LIST, optionRenderer))
+                                .add(new SelectOptions<>("published", RuraConstants.VOLUME_STATUS_PUBLISHED_LIST, optionRenderer)));
                         add(new TextField<String>("externalUrl"));
                         add(new TextArea<String>("annotation"));
                         add(new CheckBox("adult"));
@@ -300,13 +290,12 @@ public class VolumeEdit extends AdminLayoutPage
             }
         });
 
-        add(new AdminAffixedListPanel<VolumeReleaseActivity>("staff", "Этапы работы", new ListModel<VolumeReleaseActivity>(volumeReleaseActivities))
+        add(new AdminAffixedListPanel<VolumeReleaseActivity>("staff", "Этапы работы", new ListModel<>(volumeReleaseActivities))
         {
             @Override
             public void onSubmit()
             {
-                SqlSession session = MybatisUtil.getSessionFactory().openSession();
-                try
+                try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
                     VolumeReleaseActivitiesMapper mapper = CachingFacade.getCacheableMapper(session, VolumeReleaseActivitiesMapper.class);
                     for (VolumeReleaseActivity item : model.getObject())
@@ -332,10 +321,6 @@ public class VolumeEdit extends AdminLayoutPage
                     }
                     session.commit();
                 }
-                finally
-                {
-                    session.close();
-                }
             }
 
             @Override
@@ -360,7 +345,7 @@ public class VolumeEdit extends AdminLayoutPage
                     {
                         super.onInitialize();
                         add(new TextField<String>("memberName").setRequired(true).setLabel(Model.of("Участник")).setOutputMarkupId(true));
-                        add(new DropDownChoice<VolumeActivity>("activity", activities)
+                        add(new DropDownChoice<>("activity", activities)
                                 .setChoiceRenderer(new ChoiceRenderer<VolumeActivity>("activityName", "activityId")));
                         add(new CheckBox("teamHidden"));
                     }
@@ -368,13 +353,12 @@ public class VolumeEdit extends AdminLayoutPage
             }
         }.setSortable(true));
 
-        add(new AdminAffixedListPanel<Chapter>("chapters", "Главы", new ListModel<Chapter>(chapters))
+        add(new AdminAffixedListPanel<Chapter>("chapters", "Главы", new ListModel<>(chapters))
         {
             @Override
             public void onSubmit()
             {
-                SqlSession session = MybatisUtil.getSessionFactory().openSession();
-                try
+                try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
                     ChaptersMapper mapper = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
                     for (Chapter item : model.getObject())
@@ -399,10 +383,6 @@ public class VolumeEdit extends AdminLayoutPage
                         }
                     }
                     session.commit();
-                }
-                finally
-                {
-                    session.close();
                 }
             }
 
@@ -441,13 +421,12 @@ public class VolumeEdit extends AdminLayoutPage
             }
         }.setSortable(true));
 
-        add(new AdminAffixedListPanel<Update>("updates", "Обновления", new ListModel<Update>(updates))
+        add(new AdminAffixedListPanel<Update>("updates", "Обновления", new ListModel<>(updates))
         {
             @Override
             public void onSubmit()
             {
-                SqlSession session = MybatisUtil.getSessionFactory().openSession();
-                try
+                try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
                     UpdatesMapper mapper = CachingFacade.getCacheableMapper(session, UpdatesMapper.class);
                     for (Update item : model.getObject())
@@ -472,10 +451,6 @@ public class VolumeEdit extends AdminLayoutPage
                         }
                     }
                     session.commit();
-                }
-                finally
-                {
-                    session.close();
                 }
             }
 
@@ -503,8 +478,8 @@ public class VolumeEdit extends AdminLayoutPage
                     protected void onInitialize()
                     {
                         super.onInitialize();
-                        add(new DropDownChoice<String>("updateType", RuraConstants.UPDATE_TYPE_LIST));
-                        add(new DropDownChoice<Chapter>("chapter", allChapters)
+                        add(new DropDownChoice<>("updateType", RuraConstants.UPDATE_TYPE_LIST));
+                        add(new DropDownChoice<>("chapter", allChapters)
                                 .setChoiceRenderer(new ChoiceRenderer<Chapter>("leveledTitle", "chapterId")));
                         add(new DateTextField("showTime", "dd.MM.yyyy HH:mm"));
                         add(new TextField<String>("description"));
@@ -513,13 +488,12 @@ public class VolumeEdit extends AdminLayoutPage
             }
         });
 
-        add(new AdminAffixedListPanel<ChapterImage>("images", "Изображения", new ListModel<ChapterImage>(volumeImages))
+        add(new AdminAffixedListPanel<ChapterImage>("images", "Изображения", new ListModel<>(volumeImages))
         {
             @Override
             public void onSubmit()
             {
-                SqlSession session = MybatisUtil.getSessionFactory().openSession();
-                try
+                try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
                     ChapterImagesMapper mapper = CachingFacade.getCacheableMapper(session, ChapterImagesMapper.class);
                     boolean coversEdit = false;
@@ -577,10 +551,6 @@ public class VolumeEdit extends AdminLayoutPage
                         }
                     }
                     session.commit();
-                }
-                finally
-                {
-                    session.close();
                 }
             }
 
@@ -780,7 +750,7 @@ public class VolumeEdit extends AdminLayoutPage
                 ServletFileUpload upload = new ServletFileUpload(factory);
                 String uploadingFileExtension = null;
                 String filename = null;
-                HashMap<String, String> multipartParameters = new HashMap<String, String>();
+                HashMap<String, String> multipartParameters = new HashMap<>();
                 try
                 {
                     List<FileItem> items = upload.parseRequest(request);

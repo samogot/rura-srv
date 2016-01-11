@@ -38,15 +38,14 @@ public class Editor extends SidebarLayoutPage
     public Editor(PageParameters parameters)
     {
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-        SqlSession session = sessionFactory.openSession();
-        try
+        try (SqlSession session = sessionFactory.openSession())
         {
             Chapter chapter = getChapter(parameters, session);
             final Integer textId = chapter.getTextId();
 
             final ru.ruranobe.mybatis.entities.tables.Text currentText = new ru.ruranobe.mybatis.entities.tables.Text();
             ru.ruranobe.mybatis.entities.tables.Text prevText = null;
-            TextArea<String> editor = new TextArea<String>("editor", new Model<String>()
+            TextArea<String> editor = new TextArea<>("editor", new Model<String>()
             {
                 @Override
                 public void setObject(String wikiText)
@@ -85,10 +84,6 @@ public class Editor extends SidebarLayoutPage
             add(new BookmarkablePageLink("breadcrumbProject", ProjectEdit.class, chapter.getUrlParameters().remove("vhapter").remove("volume")));
             add(new BookmarkablePageLink("breadcrumbVolume", ProjectEdit.class, chapter.getUrlParameters().remove("vhapter")));
             add(new Label("breadcrumbActive", chapter.getTitle()));
-        }
-        finally
-        {
-            session.close();
         }
 
 
@@ -142,8 +137,7 @@ public class Editor extends SidebarLayoutPage
         protected void onSubmit(AjaxRequestTarget target, Form<?> form)
         {
             SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-            SqlSession session = sessionFactory.openSession();
-            try
+            try (SqlSession session = sessionFactory.openSession())
             {
                 TextsMapper textsMapperCacheable = CachingFacade.getCacheableMapper(session, TextsMapper.class);
                 textsMapperCacheable.insertText(text);
@@ -151,29 +145,29 @@ public class Editor extends SidebarLayoutPage
                 ChapterImagesMapper chapterImagesMapperCacheable = CachingFacade.getCacheableMapper(session, ChapterImagesMapper.class);
                 List<ChapterImage> chapterImages = chapterImagesMapperCacheable.getChapterImagesByChapterId(chapter.getChapterId());
 
-                List<Map.Entry<Integer, String>> images = new ArrayList<Map.Entry<Integer, String>>();
+                List<Map.Entry<Integer, String>> images = new ArrayList<>();
                 for (ChapterImage chapterImage : chapterImages)
                 {
-                    Map.Entry<Integer, String> image = new AbstractMap.SimpleEntry<Integer, String>(-1, "unknownSource");
+                    Map.Entry<Integer, String> image = new AbstractMap.SimpleEntry<>(-1, "unknownSource");
                     ExternalResource coloredImage = chapterImage.getColoredImage();
                     if (coloredImage != null && !Strings.isEmpty(coloredImage.getUrl()))
                     {
-                        image = new AbstractMap.SimpleEntry<Integer, String>
-                        (
-                            coloredImage.getResourceId(),
-                            coloredImage.getUrl()
-                        );
+                        image = new AbstractMap.SimpleEntry<>
+                                (
+                                        coloredImage.getResourceId(),
+                                        coloredImage.getUrl()
+                                );
                     }
                     else
                     {
                         ExternalResource nonColoredImage = chapterImage.getNonColoredImage();
                         if (nonColoredImage != null && !Strings.isEmpty(nonColoredImage.getUrl()))
                         {
-                            image = new AbstractMap.SimpleEntry<Integer, String>
-                            (
-                                nonColoredImage.getResourceId(),
-                                nonColoredImage.getUrl()
-                            );
+                            image = new AbstractMap.SimpleEntry<>
+                                    (
+                                            nonColoredImage.getResourceId(),
+                                            nonColoredImage.getUrl()
+                                    );
                         }
                     }
                     images.add(image);
@@ -223,10 +217,6 @@ public class Editor extends SidebarLayoutPage
                 textsHistoryMapperCacheable.insertTextHistory(textHistory);
 
                 session.commit();
-            }
-            finally
-            {
-                session.close();
             }
         }
     }

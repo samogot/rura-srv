@@ -17,8 +17,8 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.CoreLibrariesContributor;
 import ru.ruranobe.mybatis.MybatisUtil;
-import ru.ruranobe.mybatis.mappers.OrphusCommentsMapper;
 import ru.ruranobe.mybatis.entities.tables.OrphusComment;
+import ru.ruranobe.mybatis.mappers.OrphusCommentsMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 
 import java.util.Date;
@@ -64,7 +64,6 @@ public class AjaxOrphusMessageDialog extends WebComponent
                                                         .getParameterValue(ORPHUS_COMMENT_CHAPTER_ID).toString(""));
                 /*int paragraph = Integer.parseInt(request.getRequestParameters()
                         .getParameterValue(ORPHUS_COMMENT_PARAGRAPH).toString(""));*/
-                int paragraph = Integer.parseInt("0");
                 int startOffset = Integer.parseInt(request.getRequestParameters()
                                                           .getParameterValue(ORPHUS_COMMENT_START_OFFSET).toString(""));
                 String originalText = request.getRequestParameters()
@@ -78,15 +77,10 @@ public class AjaxOrphusMessageDialog extends WebComponent
                         startOffset, originalText, replacementText, optionalComment, new Date(System.currentTimeMillis()));
 
                 SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-                SqlSession session = sessionFactory.openSession();
-                try
+                try (SqlSession session = sessionFactory.openSession())
                 {
                     OrphusCommentsMapper orphusCommentsMapper = CachingFacade.getCacheableMapper(session, OrphusCommentsMapper.class);
                     orphusCommentsMapper.insertOrphusComment(orphusComment);
-                }
-                finally
-                {
-                    session.close();
                 }
             }
         };

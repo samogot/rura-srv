@@ -21,9 +21,9 @@ public class RuranobeUtils
     private static final String PASSWORD_REGEXP = "^[A-Za-z0-9]+";
     private static final Pattern PASSWORD_PATTERN = Pattern.compile(PASSWORD_REGEXP);
 
-    public static boolean isPasswordSyntaxValid(String password)
+    public static boolean isPasswordSyntaxInvalid(String password)
     {
-        return PASSWORD_PATTERN.matcher(password).matches();
+        return !PASSWORD_PATTERN.matcher(password).matches();
     }
 
     public static RedirectToUrlException getRedirectTo404Exception(WebPage sourcePage)
@@ -59,7 +59,7 @@ public class RuranobeUtils
 
         UrlEncoder urlEncoder = UrlEncoder.QUERY_INSTANCE;
 
-        Set<String> setParameters = new HashSet<String>();
+        Set<String> setParameters = new HashSet<>();
 
         for (INamedParameters.NamedPair pair : params.getAllNamed())
         {

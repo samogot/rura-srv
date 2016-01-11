@@ -6,8 +6,7 @@ section {
     overflow: hidden;
     padding: 0 0 1em;
     border-bottom: 1px solid #ddd;
-    margin: 0 0 1em;
-    margin-left: 40px;
+    margin: 0 0 1em 40px;
     *zoom: 1;
     width: calc(100% - 40px);
 }
@@ -61,7 +60,7 @@ section {
 .posts:before {
     width: 3px;
     left: 105px;
-    bottom: 0px;
+    bottom: 0;
     background: rgba(0, 0, 0, 0.1);
 }
 

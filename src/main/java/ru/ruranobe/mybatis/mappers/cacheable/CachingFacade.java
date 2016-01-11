@@ -9,8 +9,8 @@ import java.util.Map;
 
 public class CachingFacade
 {
-    private static final Map<Class<?>, Class<?>> mapperToMapperCacheable =
-            new ImmutableMap.Builder<Class<?>, Class<?>>()
+    private static final Map<Class, Class> mapperToMapperCacheable =
+            new ImmutableMap.Builder<Class, Class>()
                     .put(ProjectsMapper.class, ProjectsMapperCacheable.class)
                     .put(ExternalResourcesMapper.class, ExternalResourcesCacheableMapper.class)
                     .put(ExternalResourcesHistoryMapper.class, ExternalResourcesHistoryCacheableMapper.class)
@@ -34,7 +34,7 @@ public class CachingFacade
 
     public static <T> T getCacheableMapper(SqlSession session, Class<T> mapperClass)
     {
-        Class<?> mapperCacheableClass = mapperToMapperCacheable.get(mapperClass);
+        Class<T> mapperCacheableClass = (Class<T>) mapperToMapperCacheable.get(mapperClass);
         if (mapperCacheableClass == null)
         {
             throw new IllegalArgumentException("Unable to receive cacheable version of class " + mapperClass.toString());
@@ -43,8 +43,8 @@ public class CachingFacade
         T mapper = session.getMapper(mapperClass);
         try
         {
-            Constructor<?> constructor = mapperCacheableClass.getConstructor(mapperClass);
-            return (T) constructor.newInstance(mapper);
+            Constructor<T> constructor = mapperCacheableClass.getConstructor(mapperClass);
+            return constructor.newInstance(mapper);
         }
         catch (NoSuchMethodException ex)
         {

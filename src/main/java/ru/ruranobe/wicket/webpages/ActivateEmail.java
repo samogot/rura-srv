@@ -8,8 +8,8 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
-import ru.ruranobe.mybatis.mappers.UsersMapper;
 import ru.ruranobe.mybatis.entities.tables.User;
+import ru.ruranobe.mybatis.mappers.UsersMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 
 public class ActivateEmail extends WebPage
@@ -31,8 +31,7 @@ public class ActivateEmail extends WebPage
         }
 
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-        SqlSession session = sessionFactory.openSession();
-        try
+        try (SqlSession session = sessionFactory.openSession())
         {
             UsersMapper usersMapper = CachingFacade.getCacheableMapper(session, UsersMapper.class);
             User user = usersMapper.getUserByEmailToken(emailToken);
@@ -42,10 +41,6 @@ public class ActivateEmail extends WebPage
                 usersMapper.updateUser(user);
                 session.commit();
             }
-        }
-        finally
-        {
-            session.close();
         }
 
         info("Электронный адрес успешно активирован.");

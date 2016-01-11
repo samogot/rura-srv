@@ -41,8 +41,8 @@ public class UploadImage extends WebPage
             setMultiPart(true);
             setMaxSize(Bytes.megabytes(10));
 
-            picasaPathField = new TextField<String>("picasaPath", Model.of(""));
-            titleField = new TextField<String>("title", Model.of(""));
+            picasaPathField = new TextField<>("picasaPath", Model.of(""));
+            titleField = new TextField<>("title", Model.of(""));
             fileUploadField = new FileUploadField("fileUpload");
 
             add(picasaPathField);
@@ -74,8 +74,7 @@ public class UploadImage extends WebPage
                 //String externalLink = imageUploader.uploadImage(file, mimeType, picasaPath, title);
 
                 SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-                SqlSession session = sessionFactory.openSession();
-                try
+                try (SqlSession session = sessionFactory.openSession())
                 {
                     ExternalResourcesMapper externalResourcesMapper = CachingFacade.getCacheableMapper(session, ExternalResourcesMapper.class);
                     Date uploadedWhen = new Date(System.currentTimeMillis());
@@ -83,10 +82,6 @@ public class UploadImage extends WebPage
                     //       ExternalResource externalResource = new ExternalResource(0, mimeType, externalLink, title, uploadedWhen);
 //                    externalResourcesMapper.insertExternalResource(externalResource);
                     session.commit();
-                }
-                finally
-                {
-                    session.close();
                 }
 
                 info("Файл с именем: " + uploadedFile.getClientFileName() + " был успешно загружен.");

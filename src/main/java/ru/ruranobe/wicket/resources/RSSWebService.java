@@ -62,16 +62,11 @@ public class RSSWebService extends AbstractResource
     private SyndFeed getFeed()
     {
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-        SqlSession session = sessionFactory.openSession();
         List<Update> updateList;
-        try
+        try (SqlSession session = sessionFactory.openSession())
         {
             UpdatesMapper updatesMapper = CachingFacade.getCacheableMapper(session, UpdatesMapper.class);
             updateList = updatesMapper.getLastUpdatesBy(null, null, null, 0, 20);
-        }
-        finally
-        {
-            session.close();
         }
         SyndFeed feed = new SyndFeedImpl();
         feed.setFeedType("rss_2.0");
@@ -81,7 +76,7 @@ public class RSSWebService extends AbstractResource
         UrlRenderer urlRenderer = requestCycle.getUrlRenderer();
         feed.setLink(urlRenderer.renderFullUrl(Url.parse(requestCycle.urlFor(HomePage.class, null))));
         feed.setDescription("Последние обновления переводов на проекте RuRanobe");
-        List<SyndEntry> entries = new ArrayList<SyndEntry>();
+        List<SyndEntry> entries = new ArrayList<>();
         for (Update update : updateList)
         {
             SyndEntry entry = new SyndEntryImpl();

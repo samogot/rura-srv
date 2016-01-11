@@ -19,9 +19,9 @@ public class TeamMemberFormItemPanel extends Panel
     {
         super(id, model);
         add(new TextField<String>("nickname").setRequired(true).setLabel(Model.of("Никнейм")));
-        add(new DropDownChoice<Team>("team", teams).setNullValid(true)
-                                                   .setChoiceRenderer(new ChoiceRenderer<Team>("teamName", "teamId"))
-                                                   .setOutputMarkupId(true));
+        add(new DropDownChoice<>("team", teams).setNullValid(true)
+                                               .setChoiceRenderer(new ChoiceRenderer<Team>("teamName", "teamId"))
+                                               .setOutputMarkupId(true));
         add(new TextField<String>("userName"));
         add(new HiddenField<Integer>("userId"));
         add(new ListMultipleChoice<String>("userRoles", allRoles)

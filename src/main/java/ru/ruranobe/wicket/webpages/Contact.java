@@ -33,9 +33,8 @@ public class Contact extends SidebarLayoutPage
         String textHtml = "";
 
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-        SqlSession session = sessionFactory.openSession();
         Chapter chapter;
-        try
+        try (SqlSession session = sessionFactory.openSession())
         {
             ChaptersMapper chaptersMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
             chapter = chaptersMapperCacheable.getChapterByUrl("system/contact/text");
@@ -64,14 +63,14 @@ public class Contact extends SidebarLayoutPage
                 chapterText = textsMapperCacheable.getTextById(textId);
                 List<ChapterImage> chapterImages = chapterImagesMapperCacheable.getChapterImagesByChapterId(chapter.getChapterId());
 
-                List<Map.Entry<Integer, String>> images = new ArrayList<Map.Entry<Integer, String>>();
+                List<Map.Entry<Integer, String>> images = new ArrayList<>();
                 for (ChapterImage chapterImage : chapterImages)
                 {
-                    Map.Entry<Integer, String> image = new AbstractMap.SimpleEntry<Integer, String>(-1, "unknownSource");
+                    Map.Entry<Integer, String> image = new AbstractMap.SimpleEntry<>(-1, "unknownSource");
                     ExternalResource coloredImage = chapterImage.getColoredImage();
                     if (coloredImage != null && !Strings.isEmpty(coloredImage.getUrl()))
                     {
-                        image = new AbstractMap.SimpleEntry<Integer, String>
+                        image = new AbstractMap.SimpleEntry<>
                                 (
                                         coloredImage.getResourceId(),
                                         coloredImage.getUrl()
@@ -82,7 +81,7 @@ public class Contact extends SidebarLayoutPage
                         ExternalResource nonColoredImage = chapterImage.getNonColoredImage();
                         if (nonColoredImage != null && !Strings.isEmpty(nonColoredImage.getUrl()))
                         {
-                            image = new AbstractMap.SimpleEntry<Integer, String>
+                            image = new AbstractMap.SimpleEntry<>
                                     (
                                             nonColoredImage.getResourceId(),
                                             nonColoredImage.getUrl()
@@ -106,16 +105,12 @@ public class Contact extends SidebarLayoutPage
                 session.commit();
             }
         }
-        finally
-        {
-            session.close();
-        }
 
         add(new Label("htmlText", textHtml).setEscapeModelStrings(false));
 
-        sidebarModules.add(new ActionsSidebarModule("sidebarModule", Editor.class, chapter.getUrlParameters()));
-        sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
-        sidebarModules.add(new FriendsSidebarModule("sidebarModule"));
+        sidebarModules.add(new ActionsSidebarModule(Editor.class, chapter.getUrlParameters()));
+        sidebarModules.add(new ProjectsSidebarModule());
+        sidebarModules.add(new FriendsSidebarModule());
     }
 
     @Override

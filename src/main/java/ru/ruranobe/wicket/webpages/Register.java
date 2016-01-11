@@ -8,11 +8,14 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.util.string.Strings;
-import ru.ruranobe.misc.*;
+import ru.ruranobe.misc.Authentication;
+import ru.ruranobe.misc.MD5;
+import ru.ruranobe.misc.RuranobeUtils;
+import ru.ruranobe.misc.Token;
 import ru.ruranobe.misc.smtp.Email;
 import ru.ruranobe.mybatis.MybatisUtil;
-import ru.ruranobe.mybatis.mappers.UsersMapper;
 import ru.ruranobe.mybatis.entities.tables.User;
+import ru.ruranobe.mybatis.mappers.UsersMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
@@ -34,7 +37,7 @@ public class Register extends SidebarLayoutPage
         {
             super(id);
 
-            setModel(new CompoundPropertyModel<Register>(Register.this));
+            setModel(new CompoundPropertyModel<>(Register.this));
 
             add(new TextField<String>("username"));
             add(new PasswordTextField("password"));
@@ -66,11 +69,11 @@ public class Register extends SidebarLayoutPage
             {
                 error("Введенные пароли не совпадают.");
             }
-            else if (!RuranobeUtils.isPasswordSyntaxValid(password))
+            else if (RuranobeUtils.isPasswordSyntaxInvalid(password))
             {
                 error("Пароль может состоять только из больших и маленьких латинских букв, а также цифр.");
             }
-            else if (!Strings.isEmpty(email) && !Email.isEmailSyntaxValid(email))
+            else if (!Strings.isEmpty(email) && Email.isEmailSyntaxInvalid(email))
             {
                 error("Указан неверный адрес электронной почты.");
             }
@@ -81,9 +84,8 @@ public class Register extends SidebarLayoutPage
             else
             {
                 SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-                SqlSession session = sessionFactory.openSession();
 
-                try
+                try (SqlSession session = sessionFactory.openSession())
                 {
                     UsersMapper usersMapper = CachingFacade.getCacheableMapper(session, UsersMapper.class);
                     if (usersMapper.getUserByUsername(username) != null)
@@ -130,10 +132,6 @@ public class Register extends SidebarLayoutPage
                         }
                         session.commit();
                     }
-                }
-                finally
-                {
-                    session.close();
                 }
             }
         }

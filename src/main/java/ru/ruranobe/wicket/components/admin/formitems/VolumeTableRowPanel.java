@@ -48,20 +48,20 @@ public class VolumeTableRowPanel extends Panel
         add(new TextField<String>("nameRu"));
         add(new TextField<String>("nameRomaji"));
         add(new TextField<String>("nameShort"));
-        add(new DropDownChoice<Project>("project", projects).setChoiceRenderer(new ChoiceRenderer<Project>("title", "projectId"))
-                                                            .setOutputMarkupId(true));
+        add(new DropDownChoice<>("project", projects).setChoiceRenderer(new ChoiceRenderer<Project>("title", "projectId"))
+                                                     .setOutputMarkupId(true));
         add(new TextField<Float>("sequenceNumber"));
         add(new TextField<String>("author"));
         add(new TextField<String>("illustrator"));
         add(new DateTextField("releaseDate", "dd.MM.yyyy"));
         add(new TextField<String>("isbn"));
-        add(new DropDownChoice<String>("volumeType", RuraConstants.VOLUME_TYPE_LIST));
+        add(new DropDownChoice<>("volumeType", RuraConstants.VOLUME_TYPE_LIST));
         add(new Select<String>("volumeStatus")
-                .add(new SelectOptions<String>("basic", RuraConstants.VOLUME_STATUS_BASIC_LIST, optionRenderer))
-                .add(new SelectOptions<String>("external", RuraConstants.VOLUME_STATUS_EXTERNAL_LIST, optionRenderer))
-                .add(new SelectOptions<String>("not_in_work", RuraConstants.VOLUME_STATUS_IN_WORK_LIST, optionRenderer))
-                .add(new SelectOptions<String>("in_work", RuraConstants.VOLUME_STATUS_NOT_IN_WORK_LIST, optionRenderer))
-                .add(new SelectOptions<String>("published", RuraConstants.VOLUME_STATUS_PUBLISHED_LIST, optionRenderer)));
+                .add(new SelectOptions<>("basic", RuraConstants.VOLUME_STATUS_BASIC_LIST, optionRenderer))
+                .add(new SelectOptions<>("external", RuraConstants.VOLUME_STATUS_EXTERNAL_LIST, optionRenderer))
+                .add(new SelectOptions<>("not_in_work", RuraConstants.VOLUME_STATUS_IN_WORK_LIST, optionRenderer))
+                .add(new SelectOptions<>("in_work", RuraConstants.VOLUME_STATUS_NOT_IN_WORK_LIST, optionRenderer))
+                .add(new SelectOptions<>("published", RuraConstants.VOLUME_STATUS_PUBLISHED_LIST, optionRenderer)));
         add(new TextField<String>("externalUrl"));
         add(new TextArea<String>("annotation"));
         add(new CheckBox("adult"));

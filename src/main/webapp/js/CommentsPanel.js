@@ -44,7 +44,10 @@ $(document).ready(function () {
         $.getJSON('/f/api/topic/' + topicId + '/posts', {limit: 20, sort: "desc", olderThan: 1}, function (data) {
             $(".comments").append(commentTemplate.render(data, commentHelpers));
             $('.comment .commentText').each(function(i, el){
-              if($(el).height()>44) {$(el).addClass('overflowed');$(el).parent().append('<a href="return" class="expand"> Подробнее...</a>')};
+                if ($(el).height() > 44) {
+                    $(el).addClass('overflowed');
+                    $(el).parent().append('<a href="return" class="expand"> Подробнее...</a>')
+                }
             });
       });
     }

@@ -28,7 +28,7 @@ $(document).ready(function () {
 
 /* AFFIX */
 function reinitAffix() {
-    $(window).off('.affix')
+    $(window).off('.affix');
     $('.controlText>div').removeData('bs.affix').removeClass('affix affix-top affix-bottom')
         .css('top', '').affix({
             offset: {
@@ -53,11 +53,11 @@ $(document).ready(function () {
 /* ИНСТРУМЕНТЫ */
 $('.controlText .btn').hover(
     function () {
-        $(this).children('.hint').show()
+        $(this).children('.hint').show();
         if ($(this).hasClass('options')) $(this).addClass('activated');
     },
     function () {
-        $(this).children('.hint').hide()
+        $(this).children('.hint').hide();
         if ($(this).hasClass('options')) $(this).removeClass('activated');
     }
 );
@@ -199,7 +199,7 @@ $('.options-button .font').click(function () {
         key: 'fontname',
         item: $(this).data('name')
     });
-})
+});
 $('.options-button .pagecolor').click(function () {
     if ($(this).hasClass("active")) {
     } else {
@@ -213,7 +213,7 @@ $('.options-button .pagecolor').click(function () {
             item: $(this).data('color')
         });
     }
-})
+});
 $('#daynight').bootstrapSwitch().on('switchChange.bootstrapSwitch', function (event, state) {
     if (state == true) {
         $('body').addClass("night");
@@ -280,7 +280,7 @@ function loadSettings() {
         $('a.navbar-brand img').attr('src', '/img/logo1_night.png');
         $('#daynight').bootstrapSwitch('state', true)
     } else {
-        $('#daynight').bootstrapSwitch('state', false)
+        $('#daynight').bootstrapSwitch('state', false);
         $('a.navbar-brand img').attr('src', '/img/logo1.png');
         $('body').removeClass("night");
     }
@@ -381,7 +381,7 @@ function getText(callback) {
 }
 $('div.mistake').on('hidden.bs.modal', function (e) {
     $('body').css('padding', 0)
-})
+});
 $('.btn.mistake-button').click(function () {
     getText(function(data){
         var Parameters = getOrphusParameters();

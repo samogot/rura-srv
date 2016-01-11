@@ -7,8 +7,8 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
-import ru.ruranobe.mybatis.mappers.UsersMapper;
 import ru.ruranobe.mybatis.entities.tables.User;
+import ru.ruranobe.mybatis.mappers.UsersMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.components.PasswordRecoveryPanel;
 
@@ -28,8 +28,7 @@ public class PasswordRecoveryPage extends WebPage
         }
 
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-        SqlSession session = sessionFactory.openSession();
-        try
+        try (SqlSession session = sessionFactory.openSession())
         {
             UsersMapper usersMapper = CachingFacade.getCacheableMapper(session, UsersMapper.class);
             User user = usersMapper.getUserByPassRecoveryToken(passRecoveryToken);
@@ -38,10 +37,6 @@ public class PasswordRecoveryPage extends WebPage
                 throw RuranobeUtils.getRedirectTo404Exception(this);
             }
             add(new PasswordRecoveryPanel("passwordRecoveryPanel", user));
-        }
-        finally
-        {
-            session.close();
         }
 
 

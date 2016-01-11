@@ -86,13 +86,13 @@ public abstract class AdminAffixedListPanel<T> extends AdminListPanel<T>
     @Override
     protected void onAddItem(T newItem, AjaxRequestTarget target, Form form)
     {
-        ListItem<T> formBlockListItem = new ListItem<T>(formBlockItemRepeater.size(), new CompoundPropertyModel<T>(newItem));
+        ListItem<T> formBlockListItem = new ListItem<>(formBlockItemRepeater.size(), new CompoundPropertyModel<>(newItem));
         formBlockItemRepeater.add(formBlockListItem);
         initializeFormBlockListItem(formBlockListItem);
         target.prependJavaScript(String.format("addFormItemStub('%s', '%s')", formBlockListItem.getMarkupId(), form.getMarkupId()));
         target.add(formBlockListItem);
 
-        ListItem<T> selectorBlockListItem = new ListItem<T>(selectorBlockItemRepeater.size(), new CompoundPropertyModel<T>(newItem));
+        ListItem<T> selectorBlockListItem = new ListItem<>(selectorBlockItemRepeater.size(), new CompoundPropertyModel<>(newItem));
         selectorBlockItemRepeater.add(selectorBlockListItem);
         initializeSelectorBlockListItem(selectorBlockListItem);
         target.prependJavaScript(String.format("addSelectorItemStub('%s', '%s')", selectorBlockListItem.getMarkupId(), form.getMarkupId()));

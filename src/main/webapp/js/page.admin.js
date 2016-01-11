@@ -4,7 +4,7 @@ $(function () {
 
 /* AFFIX */
 function reinitAffix() {
-    $(window).off('.affix')
+    $(window).off('.affix');
     $('.admin-header').each(function () {
         $(this).removeData('bs.affix').removeClass('affix affix-top affix-bottom').css('top', '').affix({
             offset: {
@@ -18,7 +18,7 @@ function reinitAffix() {
             top: $('#contents-module > div').offset().top - 20,
             bottom: $('footer').outerHeight(true)
         }
-    })
+    });
     $('.admin-affix').each(function () {
         var self = $(this);
         $(this).removeData('bs.affix').removeClass('affix affix-top affix-bottom').css('top', '').affix({

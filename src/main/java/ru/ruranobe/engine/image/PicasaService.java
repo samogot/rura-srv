@@ -73,7 +73,7 @@ public class PicasaService
                 new BasicAuthentication(fileStorageService.getClientId(),
                         fileStorageService.getClientSecret()));
 
-        List<String> scope = Arrays.asList("http://picasaweb.google.com/data/");
+        List<String> scope = Collections.singletonList("http://picasaweb.google.com/data/");
         refreshTokenRequest.setScopes(scope);
 
         try
@@ -172,7 +172,7 @@ public class PicasaService
 
     private static void reloadAlbumCache()
     {
-        ALBUM_TITLE_TO_ALBUM_ENTRY = new HashMap<String, AlbumEntry>();
+        ALBUM_TITLE_TO_ALBUM_ENTRY = new HashMap<>();
         try
         {
             List<AlbumEntry> albums = getAlbums();
@@ -185,11 +185,7 @@ public class PicasaService
                 ALBUM_TITLE_TO_ALBUM_ENTRY.put("unsorted", insertAlbum("unsorted"));
             }
         }
-        catch (IOException ex)
-        {
-            throw new RuntimeException(ex);
-        }
-        catch (ServiceException ex)
+        catch (IOException | ServiceException ex)
         {
             throw new RuntimeException(ex);
         }
@@ -202,7 +198,7 @@ public class PicasaService
 
         List<GphotoEntry> entries = userFeed.getEntries();
 
-        List<AlbumEntry> albums = new ArrayList<AlbumEntry>();
+        List<AlbumEntry> albums = new ArrayList<>();
         for (GphotoEntry entry : entries)
         {
             GphotoEntry adapted = entry.getAdaptedEntry();

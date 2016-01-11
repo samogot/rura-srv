@@ -66,7 +66,7 @@ $('.save').click(function () {
     }
     returnInfo = {'type': type, 'info': info};
     alert(JSON.stringify(returnInfo));
-})
+});
 
 
 $('.list-group.select.sortable').sortable({ // включаем jquery-ui sortable
@@ -199,7 +199,7 @@ var teamm = $('#teammembersselect .list-group-item').length;
 var teams_names = Array();
 $('#teamsselect .list-group-item span').each(function (indx) {
     teams_names.push($(this).text());
-})
+});
 
 function updateTeamsSelect() {
     $(".all_teams").empty();

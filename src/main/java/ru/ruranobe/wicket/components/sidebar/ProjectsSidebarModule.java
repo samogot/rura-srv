@@ -9,9 +9,9 @@ import ru.ruranobe.wicket.components.ProjectBannersList;
 public class ProjectsSidebarModule extends SidebarModuleBase
 {
 
-    public ProjectsSidebarModule(String id)
+    public ProjectsSidebarModule()
     {
-        super(id, "all-projects", "Проекты");
+        super("sidebarModule", "all-projects", "Проекты");
         moduleBody.add(new ProjectBannersList("bannersList", null));
         moduleBody.add(new AttributeAppender("class", " banners"));
     }

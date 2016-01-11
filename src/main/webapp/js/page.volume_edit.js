@@ -366,7 +366,7 @@ function addChapter(name, podglava, num) {
         $('#chapterform').append(newPanel);
         $('#imageselect').append(newChapterHeading); // то вставляем новые главы, панели для глав, heading'и в конец
     } else { // иначе
-        $('#chapterselect').children('.active').after(newChapter)
+        $('#chapterselect').children('.active').after(newChapter);
         $('#chapterform').children('.panel').each(function () {
             if ($(this).children().hasClass('in')) $(this).after(newPanel); // вставляем после выбранного элемента
         });
@@ -408,8 +408,7 @@ function addChapter(name, podglava, num) {
     if (podglava) {
         $('#chapter' + j + '_name').css('margin', '0px 0px 0px 28px')
     }
-};
-
+}
 $('#chapterform').children('.panel').each(function () {
     j++; // считаем кажую панель
 });
@@ -462,7 +461,7 @@ $('#chapterform').on('click', '.is-subchapter', function () { // обработ�
             'margin': '0px 0px 0px 3px'
         }); // либо делаем наоборот
     }
-})
+});
 
 $('#chapterselect').on('click', 'a.list-group-item', function () { // баг фикс кнопки удаления (line 1185)
     $('.chapter-data.in').collapse('hide');
@@ -625,7 +624,7 @@ $('#imageselect').on("sortupdate", function (event, ui) { // для списка
                 start = i;
             else return false;
         });
-        var end = ui.item.index() // индекс итоговой позиции известен
+        var end = ui.item.index(); // индекс итоговой позиции известен
         if (start < end) // если мы перетянули вниз
             $(this).children().slice(start, end).filter('.heading').insertAfter(ui.item); // то перемещаем все заголовки (если они есть) между индексами и ставим их в том же порядке после тепущего
         else
@@ -723,7 +722,7 @@ function replaceImage() {
         $('#imageform .progress-bar span').text(progress + '% Complete');
     }).on('fileuploaddone', function (e, data) { // при завершении загрузки заменяем превюшку на img тег с адресом уже загруженной ирасты
         $('#imageform .progress').collapse('hide');
-        console.log(data) // с сервера в json`е должны прийти поля url и id
+        console.log(data); // с сервера в json`е должны прийти поля url и id
         var $button = $(this);
         $.each(data.result.files, function (index, file) {
             if (file.url) {
@@ -814,7 +813,7 @@ $('#imageModal').on('show.bs.modal', function (e) {
             ' data-chapter_id="' + $(this).parent().children('#' + parentId + '_chapter_id').val() + '"' +
             ' data-parent_id="' + parentId + '"' +
             '>';
-        var imageBlock = $('<div class="row" style="border: 1px solid #eee;padding: 15px;text-align:center;">' + '<p>' + parentId.slice(5) + '</p>' + image + '</div>').appendTo($('#imageModal').find('.modal-body .container-fluid'))
+        var imageBlock = $('<div class="row" style="border: 1px solid #eee;padding: 15px;text-align:center;">' + '<p>' + parentId.slice(5) + '</p>' + image + '</div>').appendTo($('#imageModal').find('.modal-body .container-fluid'));
         $('<div></div>').appendTo('#imageModalUploaded').attr('class', 'imageDraggable NoImageModal').attr('data-pos', (indx + 1));
         $('#imageModalUploaded').sortable('refresh');
         imagesReplacement.push({
@@ -824,19 +823,19 @@ $('#imageModal').on('show.bs.modal', function (e) {
         });
     });
 
-})
+});
 $('#imageModal').on('hide.bs.modal', function (e) {
     $('#imageModal').find('.modal-body .container-fluid').empty();
     $('#imageModal').find('#imageModalUploaded').html('<p class="text-center">Загруженные иллюстрации. Выберите число - замену.</p>');
-})
+});
 
 function swap($object, to, sort, top) {
     var before = imagesReplacement[$object.data('pos') - 1]['order'];
     imagesReplacement[$object.data('pos') - 1]['order'] = to;
-    if (!sort & to != needReplaceImg - 1) {
+    if (!sort && to != needReplaceImg - 1) {
         $object.insertBefore($('#imageModalUploaded .imageDraggable:eq(' + (to) + ')'))
     }
-    else if (!sort & to == needReplaceImg - 1) {
+    else if (!sort && to == needReplaceImg - 1) {
         $object.insertAfter($('#imageModalUploaded .imageDraggable:eq(' + (to) + ')'))
     }
     $object.find('select, input').val(to);
@@ -845,7 +844,7 @@ function swap($object, to, sort, top) {
             imagesReplacement[$(this).data('pos') - 1]['order'] = $(this).index();
             $(this).find('select, input').val($(this).index());
         } else {
-            imagesReplacement[$(this).data('pos') - 1]['order'] = 0
+            imagesReplacement[$(this).data('pos') - 1]['order'] = 0;
             $(this).find('select, input').val(0);
         }
     });
@@ -877,10 +876,10 @@ $('#imageModalUpload #fileupload').fileupload({
     var controlBlock = $('<div class="form-inline row"></div>').appendTo(data.context);
     var selectionBlock = $('<div class="form-group col-xs-6"><label>Выберите</label> </div>').appendTo(controlBlock);
     var selection = $('<select  class="form-control uploadedModalSelect"></select>').appendTo(selectionBlock);
-    selection.append('<option value="undefined"></option>')
+    selection.append('<option value="undefined"></option>');
     $('#imageModal .modal-body .container-fluid .row').each(function (indx) {
         selection.append('<option value="' + (indx + 1) + '">' + (indx + 1) + '</option>')
-    })
+    });
     var input = $('<div class="form-group col-xs-6"><label>или введите</label><input type="number" style="width:80px !important" class="form-control"></div>').appendTo(data.context);
     input.appendTo(controlBlock);
 }).on('fileuploadprocessalways', function (e, data) {
@@ -915,7 +914,7 @@ $('#imageModalUpload #fileupload').fileupload({
     $.each(data.result.files, function (index, file) {
         imgIndx = (data.context).data('pos') - 1;
         console.log(imgIndx);
-        console.log(imagesReplacement[imgIndx])
+        console.log(imagesReplacement[imgIndx]);
         if (file.url) {
             var $imgBlock = $('#image' + imagesReplacement[imgIndx]['order']);
             $('#imageselect a[href="#image' + imagesReplacement[imgIndx]['order'] + '"] center').empty().append($('<img>').attr('src', file.url));

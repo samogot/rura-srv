@@ -67,9 +67,9 @@ public class Email
         send(address, to, subject, text);
     }
 
-    public static boolean isEmailSyntaxValid(String email)
+    public static boolean isEmailSyntaxInvalid(String email)
     {
-        return EMAIL_PATTERN.matcher(email).matches();
+        return !EMAIL_PATTERN.matcher(email).matches();
     }
 
     private static String emailPasswordRecoverySubject;

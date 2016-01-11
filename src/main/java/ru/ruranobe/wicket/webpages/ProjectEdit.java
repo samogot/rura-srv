@@ -71,7 +71,7 @@ public class ProjectEdit extends AdminLayoutPage
             .add("18+")
             .add("Править")
             .build();
-    private final Comparator<Project> projectComparator = new Comparator<Project>()
+    private static final Comparator<Project> projectComparator = new Comparator<Project>()
     {
         @Override
         public int compare(Project o1, Project o2)
@@ -80,7 +80,7 @@ public class ProjectEdit extends AdminLayoutPage
             return parentComp == 0 ? ObjectUtils.compare(o1.getOrderNumber(), o2.getOrderNumber(), true) : parentComp;
         }
     };
-    private final Comparator<Volume> volumeComparator = new Comparator<Volume>()
+    private static final Comparator<Volume> volumeComparator = new Comparator<Volume>()
     {
         @Override
         public int compare(Volume o1, Volume o2)
@@ -99,8 +99,7 @@ public class ProjectEdit extends AdminLayoutPage
             throw RuranobeUtils.getRedirectTo404Exception(this);
         }
 
-        SqlSession session = MybatisUtil.getSessionFactory().openSession();
-        try
+        try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
         {
             ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.getCacheableMapper(session, ExternalResourcesMapper.class);
             VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
@@ -110,8 +109,8 @@ public class ProjectEdit extends AdminLayoutPage
             }
 
             subProjects = CachingFacade.getCacheableMapper(session, ProjectsMapper.class).getSubProjectsByParentProjectId(project.getProjectId());
-            allProjects = new ArrayList<Project>();
-            volumes = new ArrayList<Volume>();
+            allProjects = new ArrayList<>();
+            volumes = new ArrayList<>();
             reinitAllProjects();
             for (Project project : allProjects)
             {
@@ -123,10 +122,6 @@ public class ProjectEdit extends AdminLayoutPage
                 volumes.addAll(volumesByProjectId);
             }
         }
-        finally
-        {
-            session.close();
-        }
 
 
         Collections.sort(subProjects, projectComparator);
@@ -134,21 +129,16 @@ public class ProjectEdit extends AdminLayoutPage
         Collections.sort(volumes, volumeComparator);
 
         add(new Label("breadcrumbActive", project.getTitle()));
-        add(new AdminInfoFormPanel<Project>("info", "Информация", new CompoundPropertyModel<Project>(project))
+        add(new AdminInfoFormPanel<Project>("info", "Информация", new CompoundPropertyModel<>(project))
         {
             @Override
             public void onSubmit()
             {
-                SqlSession session = MybatisUtil.getSessionFactory().openSession();
-                try
+                try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
                     ProjectsMapper mapper = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
                     mapper.updateProject(project);
                     session.commit();
-                }
-                finally
-                {
-                    session.close();
                 }
             }
 
@@ -159,13 +149,12 @@ public class ProjectEdit extends AdminLayoutPage
             }
         });
 
-        add(new AdminTableListPanel<Volume>("volumes", "Все тома", new ListModel<Volume>(volumes), VOLUMES_TABLE_COLUMNS)
+        add(new AdminTableListPanel<Volume>("volumes", "Все тома", new ListModel<>(volumes), VOLUMES_TABLE_COLUMNS)
         {
             @Override
             public void onSubmit()
             {
-                SqlSession session = MybatisUtil.getSessionFactory().openSession();
-                try
+                try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
                     VolumesMapper mapper = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
                     for (Volume item : model.getObject())
@@ -191,17 +180,13 @@ public class ProjectEdit extends AdminLayoutPage
                     }
                     session.commit();
                 }
-                finally
-                {
-                    session.close();
-                }
             }
 
             @Override
             protected void onInitialize()
             {
                 super.onInitialize();
-                toolbarButtons.add(1, new AdminToolboxAjaxButton("button", "Дублировать", "warning", "files-o", form)
+                toolbarButtons.add(1, new AdminToolboxAjaxButton("Дублировать", "warning", "files-o", form)
                 {
                     @Override
                     protected void onSubmit(AjaxRequestTarget target, Form<?> form)
@@ -241,13 +226,12 @@ public class ProjectEdit extends AdminLayoutPage
 
         });
 
-        add(new AdminAffixedListPanel<Project>("subprojects", "Подсерии", new ListModel<Project>(subProjects))
+        add(new AdminAffixedListPanel<Project>("subprojects", "Подсерии", new ListModel<>(subProjects))
         {
             @Override
             public void onSubmit()
             {
-                SqlSession session = MybatisUtil.getSessionFactory().openSession();
-                try
+                try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
                     ProjectsMapper mapper = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
                     VolumesMapper volumeMapper = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
@@ -284,10 +268,6 @@ public class ProjectEdit extends AdminLayoutPage
                         }
                     }
                     session.commit();
-                }
-                finally
-                {
-                    session.close();
                 }
             }
 
@@ -347,14 +327,9 @@ public class ProjectEdit extends AdminLayoutPage
     private Project getProject(final PageParameters parameters)
     {
         String projectUrl = parameters.get("project").toOptionalString();
-        SqlSession session = MybatisUtil.getSessionFactory().openSession();
-        try
+        try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
         {
             return CachingFacade.getCacheableMapper(session, ProjectsMapper.class).getProjectByUrl(projectUrl);
-        }
-        finally
-        {
-            session.close();
         }
     }
 

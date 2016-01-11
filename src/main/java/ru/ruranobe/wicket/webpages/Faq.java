@@ -12,7 +12,6 @@ import ru.ruranobe.engine.wiki.parser.WikiParser;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.Chapter;
-import ru.ruranobe.mybatis.entities.tables.ExternalResource;
 import ru.ruranobe.mybatis.entities.tables.Text;
 import ru.ruranobe.mybatis.entities.tables.Volume;
 import ru.ruranobe.mybatis.mappers.ChaptersMapper;
@@ -35,7 +34,6 @@ public class Faq extends SidebarLayoutPage
     {
         setStatelessHint(true);
 
-        ExternalResource faqImageResource = null;
         class Question
         {
             int questionNumber;
@@ -54,15 +52,14 @@ public class Faq extends SidebarLayoutPage
                 return "question" + questionNumber;
             }
         }
-        List<Question> questions = new ArrayList<Question>();
+        List<Question> questions = new ArrayList<>();
 
         //StringBuilder faqText = new StringBuilder();
         //List<ContentsHolder> contentsHolders = new ArrayList<ContentsHolder>();
 
         Volume faqVolume;
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-        SqlSession session = sessionFactory.openSession();
-        try
+        try (SqlSession session = sessionFactory.openSession())
         {
             VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
             faqVolume = volumesMapperCacheable.getVolumeByUrl("system/faq");
@@ -97,10 +94,6 @@ public class Faq extends SidebarLayoutPage
                     contentsHolders.add(holder);*/
                 }
             }
-        }
-        finally
-        {
-            session.close();
         }
 
         ListView<Question> faqQuestions = new ListView<Question>("faqQuestions", questions)
@@ -141,9 +134,9 @@ public class Faq extends SidebarLayoutPage
             add(new WebMarkupContainer("comments"));
         }
 
-        sidebarModules.add(new ActionsSidebarModule("sidebarModule", VolumeEdit.class, faqVolume.getUrlParameters()));
-        sidebarModules.add(new ProjectsSidebarModule("sidebarModule"));
-        sidebarModules.add(new FriendsSidebarModule("sidebarModule"));
+        sidebarModules.add(new ActionsSidebarModule(VolumeEdit.class, faqVolume.getUrlParameters()));
+        sidebarModules.add(new ProjectsSidebarModule());
+        sidebarModules.add(new FriendsSidebarModule());
         //   sidebarModules.add(new ContentsModule("sidebarModule", contentsHolders));
     }
 

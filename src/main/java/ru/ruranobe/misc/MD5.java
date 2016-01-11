@@ -23,7 +23,7 @@ public class MD5
             throw new IllegalArgumentException("String to encript cannot be null or zero length");
         }
 
-        StringBuffer hexString = new StringBuffer();
+        StringBuilder hexString = new StringBuilder();
 
         try
         {
@@ -31,15 +31,15 @@ public class MD5
             md.update(str.getBytes());
             byte[] hash = md.digest();
 
-            for (int i = 0; i < hash.length; i++)
+            for (byte hashByte : hash)
             {
-                if ((0xff & hash[i]) < 0x10)
+                if ((0xff & hashByte) < 0x10)
                 {
-                    hexString.append("0" + Integer.toHexString((0xFF & hash[i])));
+                    hexString.append("0").append(Integer.toHexString((0xFF & hashByte)));
                 }
                 else
                 {
-                    hexString.append(Integer.toHexString(0xFF & hash[i]));
+                    hexString.append(Integer.toHexString(0xFF & hashByte));
                 }
             }
         }

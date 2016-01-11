@@ -32,7 +32,7 @@ public abstract class AdminListPanel<T> extends AdminFormPanel
         super(id, title, model);
         this.model = model;
 
-        toolbarButtons.add(0, new AdminToolboxAjaxButton("button", "Добавить", "success", "plus", form)
+        toolbarButtons.add(0, new AdminToolboxAjaxButton("Добавить", "success", "plus", form)
         {
             @Override
             public void onSubmit(AjaxRequestTarget target, Form form)
@@ -44,7 +44,7 @@ public abstract class AdminListPanel<T> extends AdminFormPanel
             }
         });
 
-        toolbarButtons.add(1, new AdminToolboxAjaxButton("button", "Удалить", "danger", "trash-o", form)
+        toolbarButtons.add(1, new AdminToolboxAjaxButton("Удалить", "danger", "trash-o", form)
         {
             @Override
             public void onSubmit(AjaxRequestTarget target, Form form)
@@ -66,5 +66,5 @@ public abstract class AdminListPanel<T> extends AdminFormPanel
 
     protected T selectedItem = null;
     protected IModel<? extends List<T>> model;
-    protected Set<T> removed = new HashSet<T>();
+    protected Set<T> removed = new HashSet<>();
 }

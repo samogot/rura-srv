@@ -85,11 +85,7 @@ public class WikiTag
 
         WikiTag wikiTag = (WikiTag) o;
 
-        if (startPosition != wikiTag.startPosition)
-        {
-            return false;
-        }
-        return wikiTagType.equals(wikiTag.wikiTagType);
+        return startPosition == wikiTag.startPosition && wikiTagType.equals(wikiTag.wikiTagType);
 
     }
 

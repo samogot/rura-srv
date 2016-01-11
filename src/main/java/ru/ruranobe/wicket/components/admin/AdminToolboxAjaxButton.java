@@ -65,16 +65,16 @@ public class AdminToolboxAjaxButton extends AjaxButton
         setDefaultFormProcessing(false);
     }
 
-    public AdminToolboxAjaxButton(String id, String title, String colorClass, String icon, Form<?> form)
+    public AdminToolboxAjaxButton(String title, String colorClass, String icon, Form<?> form)
     {
-        super(id, form);
+        super("button", form);
         this.icon = icon;
         initialize(title, colorClass);
     }
 
-    public AdminToolboxAjaxButton(String id, String title, String colorClass, Form<?> form)
+    public AdminToolboxAjaxButton(String title, String colorClass, Form<?> form)
     {
-        super(id, form);
+        super("button", form);
         initialize(title, colorClass);
     }
 

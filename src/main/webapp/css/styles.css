@@ -942,7 +942,7 @@ button.loginClose {
     display: block;
     float: left;
     line-height: 21px;
-    padding: 0 10px 0 0px;
+    padding: 0 10px 0 0;
 }
 
 .move {
@@ -1677,7 +1677,7 @@ ul.ContentNav {
 
 .moduleIcon.list {
     background: url("../img/list.png") no-repeat scroll 10px 20px;
-    padding: 10px 0px 10px 35px;
+    padding: 10px 0 10px 35px;
 }
 
 .moduleIcon.type1 {
@@ -1894,7 +1894,7 @@ table.rc-table-resizing thead > th > a {
 
 .admin-header.affix {
     position: fixed;
-    top: 0px;
+    top: 0;
 }
 
 @media (min-width: 768px) {
