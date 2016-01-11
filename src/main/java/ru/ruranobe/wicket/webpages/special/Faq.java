@@ -1,4 +1,4 @@
-package ru.ruranobe.wicket.webpages;
+package ru.ruranobe.wicket.webpages.special;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -22,6 +22,7 @@ import ru.ruranobe.wicket.components.CommentsPanel;
 import ru.ruranobe.wicket.components.sidebar.ActionsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
+import ru.ruranobe.wicket.webpages.admin.VolumeEdit;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
 import java.util.ArrayList;

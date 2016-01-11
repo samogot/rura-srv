@@ -9,8 +9,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 import ru.ruranobe.mybatis.entities.tables.User;
 import ru.ruranobe.wicket.LoginSession;
-import ru.ruranobe.wicket.webpages.Cabinet;
-import ru.ruranobe.wicket.webpages.Register;
+import ru.ruranobe.wicket.webpages.personal.Cabinet;
+import ru.ruranobe.wicket.webpages.personal.Register;
 
 public class UserActionsPanel extends Panel
 {

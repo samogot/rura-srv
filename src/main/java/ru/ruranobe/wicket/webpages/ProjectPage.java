@@ -26,6 +26,7 @@ import ru.ruranobe.wicket.components.sidebar.ActionsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.UpdatesSidebarModule;
+import ru.ruranobe.wicket.webpages.admin.ProjectEdit;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
 import java.util.AbstractMap.SimpleEntry;

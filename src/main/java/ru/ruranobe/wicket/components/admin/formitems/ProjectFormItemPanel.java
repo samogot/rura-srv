@@ -9,7 +9,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import ru.ruranobe.mybatis.entities.tables.Project;
 import ru.ruranobe.wicket.components.admin.BannerUploadComponent;
-import ru.ruranobe.wicket.webpages.ProjectEdit;
+import ru.ruranobe.wicket.webpages.admin.ProjectEdit;
 
 import java.util.HashMap;
 

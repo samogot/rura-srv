@@ -12,7 +12,7 @@ import org.apache.wicket.model.Model;
 import ru.ruranobe.mybatis.entities.tables.Project;
 import ru.ruranobe.mybatis.entities.tables.Volume;
 import ru.ruranobe.wicket.RuraConstants;
-import ru.ruranobe.wicket.webpages.VolumeEdit;
+import ru.ruranobe.wicket.webpages.admin.VolumeEdit;
 
 import java.util.List;
 

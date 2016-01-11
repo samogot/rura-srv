@@ -1,4 +1,4 @@
-package ru.ruranobe.wicket.webpages;
+package ru.ruranobe.wicket.webpages.personal;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -26,6 +26,8 @@ import ru.ruranobe.wicket.components.EmailPasswordRecoveryPanel;
 import ru.ruranobe.wicket.components.LabelHideableOnNull;
 import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
+import ru.ruranobe.wicket.webpages.ProjectPage;
+import ru.ruranobe.wicket.webpages.VolumePage;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
 import java.util.Arrays;
@@ -115,7 +117,7 @@ public class Cabinet extends SidebarLayoutPage
                     bookmarkForm.add(volumeUrl);
 
                     PageParameters chapterPageParameters = Chapter.makeUrlParameters(chapterUrlDetails.getChapterUrl().split("/", -1));
-                    BookmarkablePageLink chapterUrl = new BookmarkablePageLink("chapterUrl", Text.class,
+                    BookmarkablePageLink chapterUrl = new BookmarkablePageLink("chapterUrl", ru.ruranobe.wicket.webpages.Text.class,
                             chapterPageParameters);
                     Label chapterUrlText = new Label("chapterUrlText", chapterUrlDetails.getChapterTitle());
                     chapterUrlText.setRenderBodyOnly(true);
@@ -126,7 +128,7 @@ public class Cabinet extends SidebarLayoutPage
                     bookmarkForm.add(bookmarkText);
 
                     final String paragraphId = bookmark.getParagraphId();
-                    BookmarkablePageLink bookmarkUrl = new BookmarkablePageLink("bookmarkUrl", Text.class,
+                    BookmarkablePageLink bookmarkUrl = new BookmarkablePageLink("bookmarkUrl", ru.ruranobe.wicket.webpages.Text.class,
                             Chapter.makeUrlParameters(chapterUrlDetails.getChapterUrl().split("/", -1)))
                     {
                         @Override

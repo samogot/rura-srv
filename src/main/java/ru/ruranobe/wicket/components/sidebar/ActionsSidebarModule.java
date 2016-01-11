@@ -3,7 +3,7 @@ package ru.ruranobe.wicket.components.sidebar;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeAction;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import ru.ruranobe.wicket.webpages.Orphus;
+import ru.ruranobe.wicket.webpages.admin.Orphus;
 
 @AuthorizeAction(action = "RENDER", roles = {"ADMIN"})
 public class ActionsSidebarModule extends SidebarModuleBase

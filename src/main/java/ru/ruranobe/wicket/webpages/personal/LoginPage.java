@@ -1,4 +1,4 @@
-package ru.ruranobe.wicket.webpages;
+package ru.ruranobe.wicket.webpages.personal;
 
 import org.apache.wicket.markup.html.WebPage;
 import ru.ruranobe.wicket.components.LoginPanel;

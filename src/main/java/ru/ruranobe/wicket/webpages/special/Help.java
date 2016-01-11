@@ -1,4 +1,5 @@
-package ru.ruranobe.wicket.webpages;
+package ru.ruranobe.wicket.webpages.special;
+
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -17,6 +18,7 @@ import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.components.sidebar.ActionsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
+import ru.ruranobe.wicket.webpages.admin.Editor;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
 import java.util.AbstractMap;
@@ -24,9 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Contact extends SidebarLayoutPage
+public class Help extends SidebarLayoutPage
 {
-    public Contact()
+    public Help()
     {
         setStatelessHint(true);
 
@@ -37,7 +39,7 @@ public class Contact extends SidebarLayoutPage
         try (SqlSession session = sessionFactory.openSession())
         {
             ChaptersMapper chaptersMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
-            chapter = chaptersMapperCacheable.getChapterByUrl("system/contact/text");
+            chapter = chaptersMapperCacheable.getChapterByUrl("system/help/text");
 
             if (chapter == null)
             {
@@ -116,6 +118,6 @@ public class Contact extends SidebarLayoutPage
     @Override
     protected String getPageTitle()
     {
-        return "Связь - РуРанобэ";
+        return "Помощь - РуРанобэ";
     }
 }

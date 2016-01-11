@@ -1,4 +1,4 @@
-package ru.ruranobe.wicket.webpages;
+package ru.ruranobe.wicket.webpages.admin;
 
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.ObjectUtils;

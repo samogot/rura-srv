@@ -1,4 +1,4 @@
-package ru.ruranobe.wicket.webpages;
+package ru.ruranobe.wicket.webpages.admin;
 
 import com.google.common.collect.Lists;
 import org.apache.ibatis.session.SqlSession;

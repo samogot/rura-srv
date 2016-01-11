@@ -25,6 +25,9 @@ import org.wicketstuff.pageserializer.kryo.KryoSerializer;
 import org.wicketstuff.rest.utils.mounting.PackageScanner;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.wicket.webpages.*;
+import ru.ruranobe.wicket.webpages.admin.*;
+import ru.ruranobe.wicket.webpages.personal.*;
+import ru.ruranobe.wicket.webpages.special.*;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -88,7 +91,6 @@ public class WicketApplication extends AuthenticatedWebApplication
         mount(new MountedMapper("/user/recover/pass", PasswordRecoveryPage.class));
         mount(new MountedMapper("/user/recover/pass/email", EmailPasswordRecoveryPage.class));
         mount(new MountedMapper("/user/email/activate", ActivateEmail.class));
-        mount(new MountedMapper("/upload/image", UploadImage.class));
         getRootRequestMapperAsCompound().add(new NoVersionMapper("/a/${project}/${volume}/${chapter}", Editor.class));
         getRootRequestMapperAsCompound().add(new NoVersionMapper("/a/${project}/${volume}", VolumeEdit.class));
         getRootRequestMapperAsCompound().add(new NoVersionMapper("/a/${project}", ProjectEdit.class));

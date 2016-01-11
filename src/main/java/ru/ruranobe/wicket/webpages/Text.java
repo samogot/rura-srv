@@ -19,6 +19,8 @@ import ru.ruranobe.wicket.LoginSession;
 import ru.ruranobe.wicket.components.CommentsPanel;
 import ru.ruranobe.wicket.components.ContentsHolder;
 import ru.ruranobe.wicket.components.sidebar.*;
+import ru.ruranobe.wicket.webpages.admin.Editor;
+import ru.ruranobe.wicket.webpages.admin.VolumeEdit;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
 import java.util.*;
