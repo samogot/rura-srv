@@ -136,6 +136,7 @@
         <result property="franchise" column="franchise"/>
         <result property="annotation" column="annotation"/>
         <result property="forumId" column="forum_id"/>
+        <result property="status" column="status"/>
     </resultMap>
 
 </mapper>

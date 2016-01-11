@@ -12,15 +12,12 @@
         <property name="memoryStoreEvictionPolicy" value="LRU"/>
     </cache-->
 
-    <select id="getInfoByProjectId" parameterType="int" resultType="ru.ruranobe.mybatis.entities.tables.ProjectInfo">
+    <select id="getVolumesCountByProjectId" parameterType="int" resultType="int">
         SELECT
             (SELECT count(*)
              FROM volumes
              WHERE project_id = #{projectId}
                    AND volume_type = 'Ранобэ') AS volumesCount,
-            volumes.author,
-            volumes.illustrator,
-            volumes.volume_status              AS volumeStatus
         FROM volumes
         WHERE volumes.project_id = #{projectId}
         ORDER BY volume_id DESC

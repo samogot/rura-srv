@@ -11,9 +11,6 @@ import org.apache.wicket.model.Model;
 import ru.ruranobe.mybatis.entities.tables.Project;
 import ru.ruranobe.wicket.components.admin.BannerUploadComponent;
 
-/**
- * Created by samogot on 10.09.15.
- */
 public class ProjectInfoPanel extends Panel
 {
     public ProjectInfoPanel(String id, IModel<Project> model)

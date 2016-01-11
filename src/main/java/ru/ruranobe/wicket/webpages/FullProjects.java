@@ -1,12 +1,10 @@
 package ru.ruranobe.wicket.webpages;
 
 import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import ru.ruranobe.mybatis.MybatisUtil;
@@ -16,10 +14,9 @@ import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.mybatis.entities.tables.ExternalResource;
 import ru.ruranobe.mybatis.entities.tables.Project;
-import ru.ruranobe.mybatis.entities.tables.ProjectInfo;
-import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.webpages.base.BaseLayoutPage;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 public class FullProjects extends BaseLayoutPage
@@ -28,130 +25,102 @@ public class FullProjects extends BaseLayoutPage
     protected void onInitialize()
     {
         super.onInitialize();
-        SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-        SqlSession session = sessionFactory.openSession();
-        try
+        try(SqlSession session = MybatisUtil.getSessionFactory().openSession())
         {
-            ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
-            Collection<ru.ruranobe.mybatis.entities.tables.Project> projects = projectsMapperCacheable.getAllProjects();
-            List<ProjectExtendedWithInfo> projectsList = new ArrayList<ProjectExtendedWithInfo>();
+            List<ProjectInfo> projectsList = new ArrayList<>();
+            Collection<Project> projects = CachingFacade.getCacheableMapper(session, ProjectsMapper.class)
+                    .getAllProjects();
             ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.
-                                                                                            getCacheableMapper(session, ExternalResourcesMapper.class);
+                    getCacheableMapper(session, ExternalResourcesMapper.class);
             VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
 
-            for (ru.ruranobe.mybatis.entities.tables.Project project : projects)
+            for (Project project : projects)
             {
                 if (!project.isProjectHidden())
                 {
                     ExternalResource image = (project.getImageId() != null) ? externalResourcesMapperCacheable.getExternalResourceById(project.getImageId())
                                                                             : null;
-                    ProjectInfo projectInfo = volumesMapperCacheable.getInfoByProjectId(project.getProjectId());
-                    projectsList.add(new ProjectExtendedWithInfo(project, image, projectInfo));
+                    int volumesCount = volumesMapperCacheable.getVolumesCountByProjectId(project.getProjectId());
+                    projectsList.add(new ProjectInfo(project, image, volumesCount));
                 }
             }
-            Collections.sort(projectsList, new Comparator<ProjectExtendedWithInfo>()
+
+            Collections.sort(projectsList);
+
+            add(new ListView<ProjectInfo>("viewTypeOne", projectsList)
             {
                 @Override
-                public int compare(ProjectExtendedWithInfo o1, ProjectExtendedWithInfo o2)
+                protected void populateItem(final ListItem<ProjectInfo> listItem)
                 {
-                    return o1.getProject().getOrderNumber() - o2.getProject().getOrderNumber();
+                    ProjectInfo projectInfo = listItem.getModelObject();
+                    ExternalResource projectImage = projectInfo.getProjectImage();
+                    final Project project = projectInfo.getProject();
+
+                    WebMarkupContainer imageViewTypeOne = new WebMarkupContainer("imageViewTypeOne");
+                    imageViewTypeOne.add(new AttributeModifier("title", project.getTitle()));
+                    if (projectImage != null)
+                    {
+                        imageViewTypeOne.add(new AttributeModifier("src", projectImage.getUrl()));
+                    }
+
+                    listItem.add(
+                            project.makeBookmarkablePageLink("linkOneViewTypeOne").add(imageViewTypeOne)
+                    );
+
+                    listItem.add(
+                            project.makeBookmarkablePageLink("linkTwoViewTypeOne").
+                                    add(new Label("titleViewTypeOne", project.getTitle()))
+                    );
+
+                    listItem.add(new Label("authorViewTypeOne", project.getAuthor()));
+
+                    listItem.add(new Label("volumeCountViewTypeOne", projectInfo.getVolumesCount()));
+
+                    String classStatusViewTypeOne = ("Окончен".equals(project.getStatus()))
+                                                    ? "stateRed"
+                                                    : "stateGreen";
+                    listItem.add(
+                            new WebMarkupContainer("statusViewTypeOne")
+                                    .add(new Label("statusViewTypeOneText", project.getStatus()))
+                                    .add(new AttributeAppender("class", classStatusViewTypeOne))
+                    );
+
+                    listItem.add(project.makeBookmarkablePageLink("linkThreeViewTypeOne"));
                 }
             });
 
-            ListView<ProjectExtendedWithInfo> viewTypeOne = new ListView<ProjectExtendedWithInfo>("viewTypeOne", projectsList)
+            add(new ListView<ProjectInfo>("viewTypeTwo", projectsList)
             {
                 @Override
-                protected void populateItem(final ListItem<ProjectExtendedWithInfo> listItem)
+                protected void populateItem(final ListItem<ProjectInfo> listItem)
                 {
-                    ProjectExtendedWithInfo projectExtended = listItem.getModelObject();
-                    ExternalResource imageResource = projectExtended.getExternalResource();
-                    final Project project = projectExtended.getProject();
+                    ProjectInfo projectInfo = listItem.getModelObject();
+                    ExternalResource projectImage = projectInfo.getProjectImage();
+                    final Project project = projectInfo.getProject();
 
-                    BookmarkablePageLink linkOneViewTypeOne = project.makeBookmarkablePageLink("linkOneViewTypeOne");
-                    WebMarkupContainer imageViewTypeOne = new WebMarkupContainer("imageViewTypeOne");
-                    if (imageResource != null)
-                    {
-                        imageViewTypeOne.add(new AttributeModifier("src", imageResource.getUrl()));
-                    }
-                    imageViewTypeOne.add(new AttributeModifier("title", project.getTitle()));
-                    linkOneViewTypeOne.add(imageViewTypeOne);
-                    listItem.add(linkOneViewTypeOne);
-
-                    BookmarkablePageLink linkTwoViewTypeOne = project.makeBookmarkablePageLink("linkTwoViewTypeOne");
-                    Label titleViewTypeOne = new Label("titleViewTypeOne", project.getTitle());
-                    linkTwoViewTypeOne.add(titleViewTypeOne);
-                    listItem.add(linkTwoViewTypeOne);
-
-                    ProjectInfo projectInfo = projectExtended.projectInfo;
-                    Label authorViewTypeOne = new Label("authorViewTypeOne", (projectInfo == null) ? "unknown" : projectInfo.getAuthor());
-                    listItem.add(authorViewTypeOne);
-
-                    Label volumeCountViewTypeOne = new Label("volumeCountViewTypeOne", (projectInfo == null) ? 0 : projectInfo.getVolumesCount());
-                    listItem.add(volumeCountViewTypeOne);
-
-                    WebMarkupContainer statusViewTypeOne = new WebMarkupContainer("statusViewTypeOne");
-                    String classStatusViewTypeOne = (RuraConstants.VOLUME_STATUS_DONE.equals((projectInfo == null) ? "unknown" : projectInfo.getVolumeStatus()))
-                                                    ? "stateRed"
-                                                    : "stateGreen";
-                    AttributeAppender appender = new AttributeAppender("class", classStatusViewTypeOne);
-                    statusViewTypeOne.add(appender);
-
-                    String status = (RuraConstants.VOLUME_STATUS_DONE.equals((projectInfo == null) ? "unknown" : projectInfo.getVolumeStatus()))
-                                    ? "Окончен"
-                                    : "Выпускается";
-                    Label statusViewTypeOneText = new Label("statusViewTypeOneText", status);
-                    statusViewTypeOne.add(statusViewTypeOneText);
-                    listItem.add(statusViewTypeOne);
-
-                    BookmarkablePageLink linkThreeViewTypeOne = project.makeBookmarkablePageLink("linkThreeViewTypeOne");
-                    listItem.add(linkThreeViewTypeOne);
-                }
-            };
-            add(viewTypeOne);
-
-            ListView<ProjectExtendedWithInfo> viewTypeTwo = new ListView<ProjectExtendedWithInfo>("viewTypeTwo", projectsList)
-            {
-                @Override
-                protected void populateItem(final ListItem<ProjectExtendedWithInfo> listItem)
-                {
-                    ProjectExtendedWithInfo projectExtended = listItem.getModelObject();
-                    ExternalResource imageResource = projectExtended.getExternalResource();
-                    final Project project = projectExtended.getProject();
-
-                    BookmarkablePageLink linkOneViewTypeTwo = project.makeBookmarkablePageLink("linkOneViewTypeTwo");
                     WebMarkupContainer imageViewTypeTwo = new WebMarkupContainer("imageViewTypeTwo");
-                    if (imageResource != null)
-                    {
-                        imageViewTypeTwo.add(new AttributeModifier("src", imageResource.getUrl()));
-                    }
                     imageViewTypeTwo.add(new AttributeModifier("title", project.getTitle()));
-                    linkOneViewTypeTwo.add(imageViewTypeTwo);
-                    listItem.add(linkOneViewTypeTwo);
+                    if (projectImage != null)
+                    {
+                        imageViewTypeTwo.add(new AttributeModifier("src", projectImage.getUrl()));
+                    }
 
-                    BookmarkablePageLink linkTwoViewTypeTwo = project.makeBookmarkablePageLink("linkTwoViewTypeTwo");
-                    Label titleViewTypeTwo = new Label("titleViewTypeTwo", project.getTitle());
-                    linkTwoViewTypeTwo.add(titleViewTypeTwo);
-                    listItem.add(linkTwoViewTypeTwo);
+                    listItem.add(
+                            project.makeBookmarkablePageLink("linkOneViewTypeTwo").add(imageViewTypeTwo)
+                    );
 
-                    ProjectInfo projectInfo = projectExtended.projectInfo;
-                    Label authorViewTypeTwo = new Label("authorViewTypeTwo", (projectInfo == null) ? "unknown" : projectInfo.getAuthor());
-                    listItem.add(authorViewTypeTwo);
+                    listItem.add(
+                            project.makeBookmarkablePageLink("linkTwoViewTypeTwo").
+                                    add(new Label("titleViewTypeTwo", project.getTitle()))
+                    );
 
-                    Label illustratorViewTypeTwo = new Label("illustratorViewTypeTwo", (projectInfo == null) ? "unknown" : projectInfo.getIllustrator());
-                    listItem.add(illustratorViewTypeTwo);
+                    listItem.add(new Label("authorViewTypeTwo", project.getAuthor()));
 
-                    Label volumeCountViewTypeTwo = new Label("volumeCountViewTypeTwo", (projectInfo == null) ? "unknown" : projectInfo.getVolumesCount());
-                    listItem.add(volumeCountViewTypeTwo);
+                    listItem.add(new Label("illustratorViewTypeTwo", project.getIllustrator()));
 
-    //                BookmarkablePageLink linkThreeViewTypeTwo = project.makeBookmarkablePageLink("linkThreeViewTypeTwo");
-    //                listItem.add(linkThreeViewTypeTwo);
+                    listItem.add(new Label("volumeCountViewTypeTwo", projectInfo.getVolumesCount()));
                 }
-            };
-            add(viewTypeTwo);
-        }
-        finally
-        {
-            session.close();
+            });
         }
     }
 
@@ -160,22 +129,28 @@ public class FullProjects extends BaseLayoutPage
 		return "Проекты - РуРанобэ";
 	}
 
-    private class ProjectExtendedWithInfo
+    private class ProjectInfo implements Comparable<ProjectInfo>
     {
         private final Project project;
-        private final ExternalResource imageResource;
-        private final ProjectInfo projectInfo;
+        private final ExternalResource projectImage;
+        private final int volumesCount;
 
-        public ProjectExtendedWithInfo(Project project, ExternalResource image, ProjectInfo projectInfo)
+        public ProjectInfo(Project project, ExternalResource image, int volumesCount)
         {
             this.project = project;
-            this.imageResource = image;
-            this.projectInfo = projectInfo;
+            this.projectImage = image;
+            this.volumesCount = volumesCount;
         }
 
-        public ExternalResource getExternalResource()
+        @Override
+        public int compareTo(@Nonnull ProjectInfo o)
         {
-            return imageResource;
+            return getProject().getOrderNumber() - o.getProject().getOrderNumber();
+        }
+
+        public ExternalResource getProjectImage()
+        {
+            return projectImage;
         }
 
         public Project getProject()
@@ -183,9 +158,9 @@ public class FullProjects extends BaseLayoutPage
             return project;
         }
 
-        public ProjectInfo getProjectInfo()
+        public int getVolumesCount()
         {
-            return projectInfo;
+            return volumesCount;
         }
     }
 }

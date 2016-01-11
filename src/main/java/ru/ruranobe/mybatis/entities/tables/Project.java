@@ -67,6 +67,7 @@ public class Project extends PageRepresentable implements Serializable
     private String franchise;
     private String annotation;
     private Integer forumId;
+    private String status;
     //optional
     private ExternalResource image;
 
@@ -301,6 +302,16 @@ public class Project extends PageRepresentable implements Serializable
     public void setForumId(Integer forumId)
     {
         this.forumId = forumId;
+    }
+
+    public String getStatus()
+    {
+        return status;
+    }
+
+    public void setStatus(String status)
+    {
+        this.status = status;
     }
 
     @Override
