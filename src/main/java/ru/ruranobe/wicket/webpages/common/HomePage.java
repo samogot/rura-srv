@@ -1,4 +1,4 @@
-package ru.ruranobe.wicket.webpages;
+package ru.ruranobe.wicket.webpages.common;
 
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import ru.ruranobe.wicket.components.ProjectBannersList;

@@ -24,8 +24,8 @@ import ru.ruranobe.mybatis.mappers.OrphusCommentsMapper;
 import ru.ruranobe.mybatis.mappers.ProjectsMapper;
 import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
-import ru.ruranobe.wicket.webpages.Text;
 import ru.ruranobe.wicket.webpages.base.BaseLayoutPage;
+import ru.ruranobe.wicket.webpages.common.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Iterator;

@@ -1,4 +1,4 @@
-package ru.ruranobe.wicket.webpages;
+package ru.ruranobe.wicket.webpages.common;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;

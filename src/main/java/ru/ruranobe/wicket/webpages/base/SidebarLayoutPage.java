@@ -7,8 +7,8 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import ru.ruranobe.wicket.components.sidebar.SidebarMiniSearch;
 import ru.ruranobe.wicket.components.sidebar.SidebarModuleBase;
-import ru.ruranobe.wicket.webpages.Text;
-import ru.ruranobe.wicket.webpages.VolumePage;
+import ru.ruranobe.wicket.webpages.common.Text;
+import ru.ruranobe.wicket.webpages.common.VolumePage;
 
 import java.util.ArrayList;
 import java.util.List;

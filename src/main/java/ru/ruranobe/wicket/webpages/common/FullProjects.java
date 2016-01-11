@@ -1,4 +1,4 @@
-package ru.ruranobe.wicket.webpages;
+package ru.ruranobe.wicket.webpages.common;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.wicket.AttributeModifier;
@@ -8,16 +8,19 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import ru.ruranobe.mybatis.MybatisUtil;
+import ru.ruranobe.mybatis.entities.tables.ExternalResource;
+import ru.ruranobe.mybatis.entities.tables.Project;
 import ru.ruranobe.mybatis.mappers.ExternalResourcesMapper;
 import ru.ruranobe.mybatis.mappers.ProjectsMapper;
 import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
-import ru.ruranobe.mybatis.entities.tables.ExternalResource;
-import ru.ruranobe.mybatis.entities.tables.Project;
 import ru.ruranobe.wicket.webpages.base.BaseLayoutPage;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class FullProjects extends BaseLayoutPage
 {

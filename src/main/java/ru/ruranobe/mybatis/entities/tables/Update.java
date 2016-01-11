@@ -1,7 +1,7 @@
 package ru.ruranobe.mybatis.entities.tables;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import ru.ruranobe.wicket.webpages.VolumePage;
+import ru.ruranobe.wicket.webpages.common.VolumePage;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -32,7 +32,7 @@ public class Update extends PageRepresentable implements Serializable, Comparabl
 
     public Class getLinkClass()
     {
-        return chapterId != null ? ru.ruranobe.wicket.webpages.Text.class : VolumePage.class;
+        return chapterId != null ? ru.ruranobe.wicket.webpages.common.Text.class : VolumePage.class;
     }
 
     public Integer getChapterId()

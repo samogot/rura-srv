@@ -4,7 +4,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
 import ru.ruranobe.engine.wiki.parser.WikiParser;
 import ru.ruranobe.wicket.RuraConstants;
-import ru.ruranobe.wicket.webpages.VolumePage;
+import ru.ruranobe.wicket.webpages.common.VolumePage;
 
 import java.io.Serializable;
 import java.util.ArrayList;

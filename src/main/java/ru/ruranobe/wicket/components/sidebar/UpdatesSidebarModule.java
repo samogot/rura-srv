@@ -14,7 +14,7 @@ import ru.ruranobe.mybatis.entities.tables.Update;
 import ru.ruranobe.mybatis.mappers.UpdatesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.RuraConstants;
-import ru.ruranobe.wicket.webpages.Updates;
+import ru.ruranobe.wicket.webpages.common.Updates;
 
 import java.util.List;
 

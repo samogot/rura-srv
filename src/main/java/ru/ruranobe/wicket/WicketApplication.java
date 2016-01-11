@@ -24,8 +24,8 @@ import org.apache.wicket.util.crypt.CachingSunJceCryptFactory;
 import org.wicketstuff.pageserializer.kryo.KryoSerializer;
 import org.wicketstuff.rest.utils.mounting.PackageScanner;
 import ru.ruranobe.misc.RuranobeUtils;
-import ru.ruranobe.wicket.webpages.*;
 import ru.ruranobe.wicket.webpages.admin.*;
+import ru.ruranobe.wicket.webpages.common.*;
 import ru.ruranobe.wicket.webpages.personal.*;
 import ru.ruranobe.wicket.webpages.special.*;
 

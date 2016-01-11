@@ -2,8 +2,8 @@ package ru.ruranobe.mybatis.entities.tables;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import ru.ruranobe.engine.wiki.parser.WikiParser;
-import ru.ruranobe.wicket.webpages.ProjectPage;
-import ru.ruranobe.wicket.webpages.VolumePage;
+import ru.ruranobe.wicket.webpages.common.ProjectPage;
+import ru.ruranobe.wicket.webpages.common.VolumePage;
 
 import java.io.Serializable;
 import java.util.ArrayList;

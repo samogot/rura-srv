@@ -9,7 +9,7 @@ import org.apache.wicket.util.encoding.UrlEncoder;
 import ru.ruranobe.config.ApplicationContext;
 import ru.ruranobe.config.ConfigurationManager;
 import ru.ruranobe.wicket.RuraConstants;
-import ru.ruranobe.wicket.webpages.NotFound;
+import ru.ruranobe.wicket.webpages.common.NotFound;
 
 import java.nio.charset.Charset;
 import java.util.HashSet;

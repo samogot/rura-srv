@@ -1,4 +1,4 @@
-package ru.ruranobe.wicket.webpages;
+package ru.ruranobe.wicket.webpages.common;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.SqlSession;
@@ -211,7 +211,7 @@ public class VolumePage extends SidebarLayoutPage {
 			}
 			else
 			{
-				readAllLink = new BookmarkablePageLink("readAllLink", Text.class, volume.getUrlParameters())
+				readAllLink = new BookmarkablePageLink("readAllLink", ru.ruranobe.wicket.webpages.common.Text.class, volume.getUrlParameters())
 				{
 					@Override
 					public boolean isVisible()
