@@ -9,6 +9,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.request.flow.RedirectToUrlException;
 import ru.ruranobe.misc.MD5;
 import ru.ruranobe.wicket.LoginSession;
 
@@ -49,8 +50,9 @@ public class LoginPanel extends Panel
                     continueToOriginalDestination();
 
                     // If we get this far, it means that we should redirect to the home page
-                    throw new RestartResponseException(getSession().getPageFactory().newPage(
-                            getApplication().getHomePage()));
+                    throw new RedirectToUrlException(urlFor(getPage().getClass(), getPage().getPageParameters()).toString());
+                    /*throw new RestartResponseException(getSession().getPageFactory().newPage(
+                            getApplication().getHomePage()));*/
                 }
                 else
                 {
@@ -114,7 +116,8 @@ public class LoginPanel extends Panel
         continueToOriginalDestination();
 
         // If we get this far, it means that we should redirect to the home page
-        setResponsePage(getApplication().getHomePage());
+        throw new RedirectToUrlException(urlFor(getPage().getClass(), getPage().getPageParameters()).toString());
+        //setResponsePage(getApplication().getHomePage());
     }
 
     public final class LoginForm extends StatelessForm<LoginPanel>

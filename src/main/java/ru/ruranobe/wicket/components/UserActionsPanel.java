@@ -5,6 +5,7 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.request.flow.RedirectToUrlException;
 import ru.ruranobe.mybatis.entities.tables.User;
 import ru.ruranobe.wicket.LoginSession;
 import ru.ruranobe.wicket.webpages.Cabinet;
@@ -71,7 +72,7 @@ public class UserActionsPanel extends Panel
                 public void onSubmit()
                 {
                     LoginSession.get().invalidate();
-                    setResponsePage(getApplication().getHomePage());
+                    throw new RedirectToUrlException(urlFor(getPage().getClass(), getPage().getPageParameters()).toString());
                 }
             });
         }
