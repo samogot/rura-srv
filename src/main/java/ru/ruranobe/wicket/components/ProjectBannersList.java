@@ -60,7 +60,7 @@ public class ProjectBannersList extends Panel
                     return o1.getKey().getOrderNumber() - o2.getKey().getOrderNumber();
                 }
             });
-            if (limit != null)
+            if (limit != null && projectsList.size() > limit)
             {
                 projectsList.subList(limit, projectsList.size()).clear();
             }
