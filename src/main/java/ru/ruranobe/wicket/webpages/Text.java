@@ -28,7 +28,7 @@ import java.util.*;
 public class Text extends SidebarLayoutPage implements InstantiationSecurityCheck
 {
     public static final String DELIMITER = ",;,";
-	protected String titleName;
+    protected String titleName;
     private Chapter chapter;
 
     public Text(PageParameters parameters)
@@ -77,7 +77,8 @@ public class Text extends SidebarLayoutPage implements InstantiationSecurityChec
             allChapterList = chaptersMapperCacheable.getChaptersByVolumeId(volume.getVolumeId());
 
             String chapterUrl = parameters.get("chapter").toString();
-            boolean preferNested = Objects.equals(LoginSession.get().getUser().getNavigationType(), "Подглавам");
+            boolean preferNested = LoginSession.get().getUser() != null &&
+                                   Objects.equals(LoginSession.get().getUser().getNavigationType(), "Подглавам");
             if (Strings.isEmpty(chapterUrl))
             {
                 for (Chapter chapter : allChapterList)
@@ -396,7 +397,7 @@ public class Text extends SidebarLayoutPage implements InstantiationSecurityChec
     protected String getPageTitle()
     {
         return titleName != null ? titleName + " - РуРанобэ" : super.getPageTitle();
-	}
+    }
 
     @Override
     public void doInstantiationSecurityCheck()
