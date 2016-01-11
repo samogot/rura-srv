@@ -8,6 +8,7 @@ import ru.ruranobe.wicket.components.UserActionsPanel;
 
 public abstract class BaseLayoutPage extends WebPage {
 
+	protected UserActionsPanel userActionsPanelAndroidView = null;
 	protected UserActionsPanel userActionsPanel = null;
 	protected LoginPanel loginPanel = null;
 
@@ -17,7 +18,10 @@ public abstract class BaseLayoutPage extends WebPage {
 			add(loginPanel = new LoginPanel("loginPanel"));
 		}
 		if (userActionsPanel == null) {
-			add(userActionsPanel = new UserActionsPanel("userActionsPanel"));
+			add(userActionsPanel = new UserActionsPanel("userActionsPanel", false));
+		}
+		if (userActionsPanelAndroidView == null) {
+			add(userActionsPanelAndroidView = new UserActionsPanel("userActionsPanelAndroidView", true));
 		}
 		add(new Label("pageTitle", getPageTitle()));
 		super.onInitialize();

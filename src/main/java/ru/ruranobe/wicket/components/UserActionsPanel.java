@@ -1,5 +1,7 @@
 package ru.ruranobe.wicket.components;
 
+import org.apache.tools.ant.taskdefs.optional.Cab;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.StatelessForm;
@@ -13,17 +15,22 @@ import ru.ruranobe.wicket.webpages.Register;
 
 public class UserActionsPanel extends Panel
 {
-    public UserActionsPanel(String id)
+    public UserActionsPanel(String id, boolean androidView)
     {
         super(id);
-        add(new UserActionsForm("userActionsForm"));
+        add(new UserActionsForm("userActionsForm", androidView));
     }
 
     private class UserActionsForm extends StatelessForm
     {
-        public UserActionsForm(String id)
+        public UserActionsForm(String id, boolean androidView)
         {
             super(id);
+
+            if (androidView)
+            {
+                add(new AttributeModifier("class", "navbar-form visible-xs-block"));
+            }
 
             add(new Button("signIn") {
                 @Override
@@ -72,7 +79,17 @@ public class UserActionsPanel extends Panel
                 public void onSubmit()
                 {
                     LoginSession.get().invalidate();
-                    throw new RedirectToUrlException(urlFor(getPage().getClass(), getPage().getPageParameters()).toString());
+                    Class pageClazz = getPage().getClass();
+                    /* If a user try to sign out on the cabinet page the reloading will fail, because
+                       we can load personal cabinet if only the user is signed in. */
+                    if (Cabinet.class.equals(pageClazz))
+                    {
+                        setResponsePage(getApplication().getHomePage());
+                    }
+                    else
+                    {
+                        throw new RedirectToUrlException(urlFor(pageClazz, getPage().getPageParameters()).toString());
+                    }
                 }
             });
         }
