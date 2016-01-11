@@ -12,6 +12,7 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
 import org.apache.wicket.request.resource.ByteArrayResource;
 import org.apache.wicket.request.resource.IResource;
+import org.apache.wicket.util.string.Strings;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import ru.ruranobe.config.ApplicationContext;
@@ -27,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -34,6 +36,31 @@ import java.util.List;
  */
 public class BannerUploadComponent extends ImageUploaderComponent
 {
+
+    public Project getProject()
+    {
+        return project;
+    }
+
+    public BannerUploadComponent setProject(Project project)
+    {
+        this.project = project;
+        if (project != null)
+        {
+            if (getContextVariables() == null)
+            {
+                setContextVariables(new HashMap<String, String>());
+            }
+            getContextVariables().put("project", project.getUrl());
+        }
+        return this;
+    }
+
+    @Override
+    public boolean isVisible()
+    {
+        return project != null && !Strings.isEmpty(project.getUrl());
+    }
 
     @Override
     protected void onInitialize()
@@ -80,7 +107,7 @@ public class BannerUploadComponent extends ImageUploaderComponent
             }
 
             ExternalResourceHistory externalResourceHistory = new ExternalResourceHistory();
-            externalResourceHistory.setProjectId(((Project) getDefaultModelObject()).getProjectId());
+            externalResourceHistory.setProjectId(project.getProjectId());
 
             ApplicationContext context = RuranobeUtils.getApplicationContext();
             Webpage webpage = context.getWebpageByPageClass(this.getPage().getClass().getName());
@@ -110,7 +137,6 @@ public class BannerUploadComponent extends ImageUploaderComponent
         }
     }
 
-
     public BannerUploadComponent(String id)
     {
         super(id);
@@ -120,5 +146,7 @@ public class BannerUploadComponent extends ImageUploaderComponent
     {
         super(id, model);
     }
+
+    private Project project;
 
 }

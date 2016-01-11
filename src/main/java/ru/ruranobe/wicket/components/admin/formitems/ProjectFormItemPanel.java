@@ -1,6 +1,5 @@
 package ru.ruranobe.wicket.components.admin.formitems;
 
-import com.rometools.utils.Strings;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -10,8 +9,6 @@ import org.apache.wicket.model.Model;
 import ru.ruranobe.mybatis.entities.tables.Project;
 import ru.ruranobe.wicket.components.admin.BannerUploadComponent;
 import ru.ruranobe.wicket.webpages.admin.ProjectEdit;
-
-import java.util.HashMap;
 
 
 /**
@@ -26,13 +23,7 @@ public class ProjectFormItemPanel extends Panel
         add(new TextField<String>("title").setRequired(true).setLabel(Model.of("Заголовок")));
         add(new CheckBox("projectHidden"));
         add(new CheckBox("bannerHidden"));
-        HashMap<String, String> contextVariables = null;
-        if (!Strings.isEmpty(model.getObject().getUrl()))
-        {
-            contextVariables = new HashMap<>();
-            contextVariables.put("project", model.getObject().getUrl());
-        }
-        add(new BannerUploadComponent("image").setContextVariables(contextVariables).setVisible(contextVariables != null));
+        add(new BannerUploadComponent("image").setProject(model.getObject()));
         add(new BookmarkablePageLink("link", ProjectEdit.class, model.getObject().getUrlParameters()));
     }
 }
