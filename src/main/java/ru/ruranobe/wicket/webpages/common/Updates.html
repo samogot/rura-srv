@@ -7,23 +7,18 @@
     <div style="margin-bottom: 20px;">
         Ниже в хронологическом порядке перечислены последние обновления релизов.
     </div>
-    <!--div class="input-group input-group-lg sharp">
-    <input type="text" class="form-control" placeholder="Введите слово для поиска">
-    <span class="input-group-btn">
-            <button class="btn btn-primary" type="button"><i class="fa fa-search"></i></button>
-    </span>
-    </div-->
+
     <div class="updSearch">
         <div class="bold">Искать:</div>
         <a wicket:id="first" class="first">Всё</a>
         <!--a wicket:id="second" class="second">Полностью том</a-->
         <a wicket:id="third" class="third">Глобальную редактуру</a>
-        <a wicket:id="fourth" class="fourth">Перевод</a>
+        <!--a wicket:id="fourth" class="fourth">Перевод</a-->
         <a wicket:id="fifth" class="fifth">Иллюстрации</a>
+        <a wicket:id="sixth" class="sixth">Опубликовано</a>
     </div>
 
-
-    <div class="updPaginator">
+    <div wicket:id="paginator1" class="updPaginator">
                     <span wicket:id="firstPage"><a wicket:id="firstPageLink"><i class="fa fa-chevron-left"></i>
                         Первая</a></span>
 
@@ -32,8 +27,19 @@
 
         <span wicket:id="lastPage"><a wicket:id="lastPageLink">Последняя <i class="fa fa-chevron-right"></i></a></span>
     </div>
+
     <div class="updates">
         <wicket:fragment wicket:id="updatesList"/>
+    </div>
+
+    <div wicket:id="paginator2" class="updPaginator">
+                    <span wicket:id="firstPage"><a wicket:id="firstPageLink"><i class="fa fa-chevron-left"></i>
+                        Первая</a></span>
+
+        <wicket:container wicket:id="updatesPaginator"><a wicket:id="updatesPageLink"><span
+                wicket:id="updatesPageText"/></a></wicket:container>
+
+        <span wicket:id="lastPage"><a wicket:id="lastPageLink">Последняя <i class="fa fa-chevron-right"></i></a></span>
     </div>
 </wicket:extend>
 

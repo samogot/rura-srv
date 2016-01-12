@@ -870,6 +870,10 @@ button.loginClose {
     background: rgb(96, 169, 212) url(../img/updIcons/icon4_active.png) no-repeat 11px !important;
 }
 
+.updSearch > .sixth.active {
+    background: rgb(96, 169, 212) url(../img/updIcons/icon2_active.png) no-repeat 11px !important;
+}
+
 .updSearch > .first {
     background: rgb(242, 242, 242) url(../img/updIcons/all.png) no-repeat 11px;
 }
@@ -888,6 +892,10 @@ button.loginClose {
 
 .updSearch > .fifth {
     background: rgb(242, 242, 242) url(../img/updIcons/icon4.png) no-repeat 11px;
+}
+
+.updSearch > .sixth {
+    background: rgb(242, 242, 242) url(../img/updIcons/icon2.png) no-repeat 11px;
 }
 
 .disabled {

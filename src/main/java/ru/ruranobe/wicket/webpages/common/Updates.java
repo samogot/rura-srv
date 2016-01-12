@@ -1,7 +1,6 @@
 package ru.ruranobe.wicket.webpages.common;
 
 import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -22,44 +21,36 @@ import ru.ruranobe.wicket.webpages.admin.GlobalEdit;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class Updates extends SidebarLayoutPage
 {
-    private static final Set<String> SEARCH_TYPES = new HashSet<>();
     private static final int UPDATES_COUNT_ON_PAGE = 50;
     private static final int NUMBER_OF_PAGES_ON_UPDATE_LIST = 5;
 
-    static
-    {
-        SEARCH_TYPES.add(RuraConstants.UPDATE_TYPE_IMAGES);
-        SEARCH_TYPES.add(RuraConstants.UPDATE_TYPE_PROOFREAD);
-        SEARCH_TYPES.add(RuraConstants.UPDATE_TYPE_TRANSLATE);
-    }
-
+    @SuppressWarnings("unused")
     public Updates()
     {
         initComponents(null, 1, null, null);
     }
 
+    @SuppressWarnings("unused")
     public Updates(final PageParameters parameters)
     {
-        String searchType = parameters.get("type").toOptionalString();
-        searchType = ((!SEARCH_TYPES.contains(searchType)) ? null : searchType);
-        String pageString = parameters.get("page").toOptionalString();
-        pageString = ((pageString == null) ? "1" : pageString);
         String projectString = parameters.get("project").toOptionalString();
         String volumeString = parameters.get("volume").toOptionalString();
+        String searchType = parameters.get("type").toOptionalString();
+        String pageString = parameters.get("page").toOptionalString();
+
         int page;
         Integer projectId = null;
         Integer volumeId = null;
+        searchType = RuraConstants.UPDATE_TYPE_LIST.contains(searchType) ? searchType : null;
         try
         {
-            page = Integer.parseInt(pageString);
-            projectId = projectString != null ? Integer.parseInt(projectString) : null;
-            volumeId = volumeString != null ? Integer.parseInt(volumeString) : null;
+            page = (pageString == null) ? 1 : Integer.parseInt(pageString);
+            projectId = projectString == null ? null : Integer.parseInt(projectString);
+            volumeId = volumeString == null ? null : Integer.parseInt(volumeString);
         }
         catch (Exception ex)
         {
@@ -70,274 +61,159 @@ public class Updates extends SidebarLayoutPage
 
     private void initComponents(final String searchType, final int page, final Integer volumeId, final Integer projectId)
     {
-        StatelessLink first = new StatelessLink("first")
-        {
-            @Override
-            public void onClick()
-            {
-                PageParameters p = new PageParameters();
-                p.add("page", page);
-                if (projectId != null)
-                {
-                    p.add("project", projectId);
-                }
-                if (volumeId != null)
-                {
-                    p.add("volume", volumeId);
-                }
-                setResponsePage(Updates.class, p);
-            }
-        };
-        StatelessLink third = new StatelessLink("third")
-        {
-            @Override
-            public void onClick()
-            {
-                PageParameters p = new PageParameters();
-                p.add("type", RuraConstants.UPDATE_TYPE_PROOFREAD);
-                p.add("page", page);
-                if (projectId != null)
-                {
-                    p.add("project", projectId);
-                }
-                if (volumeId != null)
-                {
-                    p.add("volume", volumeId);
-                }
-                setResponsePage(Updates.class, p);
-            }
-        };
-        StatelessLink fourth = new StatelessLink("fourth")
-        {
-            @Override
-            public void onClick()
-            {
-                PageParameters p = new PageParameters();
-                p.add("type", RuraConstants.UPDATE_TYPE_TRANSLATE);
-                p.add("page", page);
-                if (projectId != null)
-                {
-                    p.add("project", projectId);
-                }
-                if (volumeId != null)
-                {
-                    p.add("volume", volumeId);
-                }
-                setResponsePage(Updates.class, p);
-            }
-        };
-        StatelessLink fifth = new StatelessLink("fifth")
-        {
-            @Override
-            public void onClick()
-            {
-                PageParameters p = new PageParameters();
-                p.add("type", RuraConstants.UPDATE_TYPE_IMAGES);
-                p.add("page", page);
-                if (projectId != null)
-                {
-                    p.add("project", projectId);
-                }
-                if (volumeId != null)
-                {
-                    p.add("volume", volumeId);
-                }
-                setResponsePage(Updates.class, p);
-            }
-        };
+        add(
+                LinkToUpdatesPage.searchType("first", projectId, volumeId, page, null)
+                        .add(new AttributeModifier("class", ((searchType == null) ? "first active" : "first")))
+        );
 
-        if (searchType == null)
+        add(
+                LinkToUpdatesPage.searchType("third", projectId, volumeId, page, RuraConstants.UPDATE_TYPE_PROOFREAD)
+                        .add(new AttributeModifier("class", ((RuraConstants.UPDATE_TYPE_PROOFREAD.equals(searchType)) ? "third active" : "third")))
+        );
+
+        add(
+                LinkToUpdatesPage.searchType("fifth", projectId, volumeId, page, RuraConstants.UPDATE_TYPE_IMAGES)
+                        .add(new AttributeModifier("class", ((RuraConstants.UPDATE_TYPE_IMAGES.equals(searchType)) ? "fifth active" : "fifth")))
+        );
+
+        add(
+                LinkToUpdatesPage.searchType("sixth", projectId, volumeId, page, RuraConstants.UPDATE_TYPE_PUBLISH)
+                        .add(new AttributeModifier("class", ((RuraConstants.UPDATE_TYPE_PUBLISH.equals(searchType)) ? "sixth active" : "sixth")))
+        );
+
+        int numberOfPages;
+        try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
         {
-            AttributeModifier modifier = new AttributeModifier("class", "first active");
-            first.add(modifier);
-        }
-        else if (RuraConstants.UPDATE_TYPE_PROOFREAD.equals(searchType))
-        {
-            AttributeModifier modifier = new AttributeModifier("class", "third active");
-            third.add(modifier);
-        }
-        else if (RuraConstants.UPDATE_TYPE_TRANSLATE.equals(searchType))
-        {
-            AttributeModifier modifier = new AttributeModifier("class", "fourth active");
-            fourth.add(modifier);
-        }
-        else if (RuraConstants.UPDATE_TYPE_IMAGES.equals(searchType))
-        {
-            AttributeModifier modifier = new AttributeModifier("class", "fifth active");
-            fifth.add(modifier);
+            int updatesCount = CachingFacade.getCacheableMapper(session, UpdatesMapper.class)
+                    .getUpdatesCountBy(projectId, volumeId, searchType);
+            numberOfPages = (updatesCount / UPDATES_COUNT_ON_PAGE) + (((updatesCount % UPDATES_COUNT_ON_PAGE) == 0) ? 0 : 1);
         }
 
-        add(first);
-        add(third);
-        add(fourth);
-        add(fifth);
+        addPaginator("paginator1", searchType, page, volumeId, projectId, numberOfPages);
+        add(new UpdatesWideList("updatesList", projectId, volumeId, searchType, (page - 1) * UPDATES_COUNT_ON_PAGE, UPDATES_COUNT_ON_PAGE));
+        addPaginator("paginator2", searchType, page, volumeId, projectId, numberOfPages);
 
-        SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-        try (SqlSession session = sessionFactory.openSession())
+        sidebarModules.add(new ActionsSidebarModule(GlobalEdit.class, null));
+        sidebarModules.add(new ProjectsSidebarModule());
+        sidebarModules.add(new FriendsSidebarModule());
+    }
+
+    private void addPaginator(final String paginatorComponentId, final String searchType, final int page, final Integer volumeId, final Integer projectId, final int numberOfPages)
+    {
+        WebMarkupContainer parent = new WebMarkupContainer(paginatorComponentId);
+
+        StatelessLink firstPageLink = LinkToUpdatesPage.page("firstPageLink", projectId, volumeId, 1, searchType);
+        WebMarkupContainer firstPage = new WebMarkupContainer("firstPage");
+        if (page == 1)
         {
-            UpdatesMapper updatesMapperCacheable = CachingFacade.getCacheableMapper(session, UpdatesMapper.class);
+            firstPage.add(new AttributeAppender("class", "disabled"));
+            firstPageLink.setVisible(false);
+        }
 
-            int updatesCount = updatesMapperCacheable.getUpdatesCountBy(projectId, volumeId, searchType);
+        StatelessLink lastPageLink = LinkToUpdatesPage.page("lastPageLink", projectId, volumeId, numberOfPages, searchType);
+        WebMarkupContainer lastPage = new WebMarkupContainer("lastPage");
+        if (page == numberOfPages || numberOfPages == 0)
+        {
+            lastPage.add(new AttributeAppender("class", "disabled"));
+            lastPageLink.setVisible(false);
+        }
 
-            WebMarkupContainer firstPage = new WebMarkupContainer("firstPage");
-            WebMarkupContainer lastPage = new WebMarkupContainer("lastPage");
-            final int numberOfPages = (updatesCount / UPDATES_COUNT_ON_PAGE) + (((updatesCount % UPDATES_COUNT_ON_PAGE) == 0) ? 0 : 1);
-            StatelessLink firstPageLink = new StatelessLink("firstPageLink")
+        parent.add(firstPage.add(firstPageLink));
+        parent.add(lastPage.add(lastPageLink));
+
+        List<StatelessLink> references = new ArrayList<>();
+        AttributeAppender activeAppender = new AttributeAppender("class", "active");
+        if (page <= NUMBER_OF_PAGES_ON_UPDATE_LIST)
+        {
+            int endLoop = Math.min(NUMBER_OF_PAGES_ON_UPDATE_LIST, numberOfPages);
+            for (int i = 1; i <= endLoop; ++i)
             {
-                @Override
-                public void onClick()
+                StatelessLink link = LinkToUpdatesPage.page("updatesPageLink", projectId, volumeId, i, searchType);
+                link.add(new Label("updatesPageText", Integer.toString(i)));
+                if (i == page)
                 {
-                    PageParameters p = new PageParameters();
-                    p.add("page", 1);
-                    if (searchType != null)
-                    {
-                        p.add("type", searchType);
-                    }
-                    if (projectId != null)
-                    {
-                        p.add("project", projectId);
-                    }
-                    if (volumeId != null)
-                    {
-                        p.add("volume", volumeId);
-                    }
-                    setResponsePage(Updates.class, p);
+                    link.add(activeAppender);
                 }
-            };
-
-            StatelessLink lastPageLink = new StatelessLink("lastPageLink")
-            {
-                @Override
-                public void onClick()
-                {
-                    PageParameters p = new PageParameters();
-                    p.add("page", numberOfPages);
-                    if (searchType != null)
-                    {
-                        p.add("type", searchType);
-                    }
-                    if (projectId != null)
-                    {
-                        p.add("project", projectId);
-                    }
-                    if (volumeId != null)
-                    {
-                        p.add("volume", volumeId);
-                    }
-                    setResponsePage(Updates.class, p);
-                }
-            };
-
-            if (page == 1)
-            {
-                AttributeAppender appender = new AttributeAppender("class", "disabled");
-                firstPage.add(appender);
-                firstPageLink = new StatelessLink("firstPageLink")
-                {
-                    @Override
-                    public void onClick()
-                    {
-                    }
-                };
-                firstPageLink.setVisible(false);
+                references.add(link);
             }
-            if (page == numberOfPages || numberOfPages == 0)
+            if (numberOfPages > NUMBER_OF_PAGES_ON_UPDATE_LIST)
             {
-                AttributeAppender appender = new AttributeAppender("class", "disabled");
-                lastPage.add(appender);
-                lastPageLink = new StatelessLink("lastPageLink")
-                {
-                    @Override
-                    public void onClick()
-                    {
-                    }
-                };
-                lastPageLink.setVisible(false);
-            }
-
-            firstPage.add(firstPageLink);
-            lastPage.add(lastPageLink);
-            add(firstPage);
-            add(lastPage);
-
-            List<StatelessLink> references = new ArrayList<>();
-            AttributeAppender activeAppender = new AttributeAppender("class", "active");
-            if (page <= NUMBER_OF_PAGES_ON_UPDATE_LIST)
-            {
-                int endLoop = Math.min(NUMBER_OF_PAGES_ON_UPDATE_LIST, numberOfPages);
-                for (int i = 1; i <= endLoop; ++i)
-                {
-                    StatelessLink link = new StatelessLinkToPage("updatesPageLink", Integer.toString(i), searchType, "updatesPageText", Integer.toString(i));
-                    if (i == page)
-                    {
-                        link.add(activeAppender);
-                    }
-                    references.add(link);
-                }
-                if (numberOfPages > NUMBER_OF_PAGES_ON_UPDATE_LIST)
-                {
-                    StatelessLink linkToNextPage = new StatelessLinkToPage("updatesPageLink", Integer.toString(NUMBER_OF_PAGES_ON_UPDATE_LIST + 1), searchType, "updatesPageText", "...");
-                    references.add(linkToNextPage);
-                    StatelessLink linkToLastPage = new StatelessLinkToPage("updatesPageLink", Integer.toString(numberOfPages), searchType, "updatesPageText", Integer.toString(numberOfPages));
-                    references.add(linkToLastPage);
-                }
-            }
-            else if (page < numberOfPages - NUMBER_OF_PAGES_ON_UPDATE_LIST)
-            {
-                StatelessLink linkToFirstPage = new StatelessLinkToPage("updatesPageLink", "1", searchType, "updatesPageText", "1");
-                references.add(linkToFirstPage);
-                StatelessLink linkToPrevPage = new StatelessLinkToPage("updatesPageLink", Integer.toString(page - NUMBER_OF_PAGES_ON_UPDATE_LIST), searchType, "updatesPageText", "...");
-                references.add(linkToPrevPage);
-                for (int i = page; i <= page + NUMBER_OF_PAGES_ON_UPDATE_LIST - 1; ++i)
-                {
-                    StatelessLink link = new StatelessLinkToPage("updatesPageLink", Integer.toString(i), searchType, "updatesPageText", Integer.toString(i));
-                    if (i == page)
-                    {
-                        link.add(activeAppender);
-                    }
-                    references.add(link);
-                }
-                StatelessLink linkToNextPage = new StatelessLinkToPage("updatesPageLink", Integer.toString(page + NUMBER_OF_PAGES_ON_UPDATE_LIST), searchType, "updatesPageText", "...");
+                StatelessLink linkToNextPage = LinkToUpdatesPage.page("updatesPageLink", projectId, volumeId, NUMBER_OF_PAGES_ON_UPDATE_LIST + 1, searchType);
+                linkToNextPage.add(new Label("updatesPageText", "..."));
                 references.add(linkToNextPage);
-                StatelessLink linkToLastPage = new StatelessLinkToPage("updatesPageLink", Integer.toString(numberOfPages), searchType, "updatesPageText", Integer.toString(numberOfPages));
+
+                StatelessLink linkToLastPage = LinkToUpdatesPage.page("updatesPageLink", projectId, volumeId, numberOfPages, searchType);
+                linkToLastPage.add(new Label("updatesPageText", Integer.toString(numberOfPages)));
                 references.add(linkToLastPage);
             }
-            else
-            {
-                StatelessLink linkToFirstPage = new StatelessLinkToPage("updatesPageLink", "1", searchType, "updatesPageText", "1");
-                references.add(linkToFirstPage);
-                StatelessLink linkToPrevPage = new StatelessLinkToPage("updatesPageLink", Integer.toString(page - NUMBER_OF_PAGES_ON_UPDATE_LIST), searchType, "updatesPageText", "...");
-                references.add(linkToPrevPage);
-                for (int i = page; i <= numberOfPages; ++i)
-                {
-                    StatelessLink link = new StatelessLinkToPage("updatesPageLink", Integer.toString(i), searchType, "updatesPageText", Integer.toString(i));
-                    if (i == page)
-                    {
-                        link.add(activeAppender);
-                    }
-                    references.add(link);
-                }
-            }
-
-            ListView<StatelessLink> updatesPaginator = new ListView<StatelessLink>("updatesPaginator", references)
-            {
-                @Override
-                protected void populateItem(final ListItem<StatelessLink> listItem)
-                {
-                    listItem.add(listItem.getModelObject());
-                }
-            };
-            if (references.size() == 1)
-            {
-                updatesPaginator.setVisible(false);
-            }
-            add(updatesPaginator);
-            add(new UpdatesWideList("updatesList", projectId, volumeId, searchType, (page - 1) * UPDATES_COUNT_ON_PAGE, UPDATES_COUNT_ON_PAGE));
-
-            sidebarModules.add(new ActionsSidebarModule(GlobalEdit.class, null));
-            sidebarModules.add(new ProjectsSidebarModule());
-            sidebarModules.add(new FriendsSidebarModule());
         }
+        else if (page < numberOfPages - NUMBER_OF_PAGES_ON_UPDATE_LIST)
+        {
+            StatelessLink linkToFirstPage = LinkToUpdatesPage.page("updatesPageLink", projectId, volumeId, 1, searchType);
+            linkToFirstPage.add(new Label( "updatesPageText", "1"));
+            references.add(linkToFirstPage);
+
+            StatelessLink linkToPrevPage = LinkToUpdatesPage.page("updatesPageLink", projectId, volumeId, page - NUMBER_OF_PAGES_ON_UPDATE_LIST, searchType);
+            linkToPrevPage.add(new Label("updatesPageText", "..."));
+            references.add(linkToPrevPage);
+
+            for (int i = page; i <= page + NUMBER_OF_PAGES_ON_UPDATE_LIST - 1; ++i)
+            {
+                StatelessLink link = LinkToUpdatesPage.page("updatesPageLink", projectId, volumeId, i, searchType);
+                link.add(new Label("updatesPageText", Integer.toString(i)));
+                if (i == page)
+                {
+                    link.add(activeAppender);
+                }
+                references.add(link);
+            }
+
+            StatelessLink linkToNextPage = LinkToUpdatesPage.page("updatesPageLink", projectId, volumeId, page + NUMBER_OF_PAGES_ON_UPDATE_LIST, searchType);
+            linkToNextPage.add(new Label("updatesPageText", "..."));
+            references.add(linkToNextPage);
+
+            StatelessLink linkToLastPage = LinkToUpdatesPage.page("updatesPageLink", projectId, volumeId, numberOfPages, searchType);
+            linkToLastPage.add(new Label("updatesPageText", Integer.toString(numberOfPages)));
+            references.add(linkToLastPage);
+        }
+        else
+        {
+            StatelessLink linkToFirstPage = LinkToUpdatesPage.page("updatesPageLink", projectId, volumeId, 1, searchType);
+            linkToFirstPage.add(new Label( "updatesPageText", "1"));
+            references.add(linkToFirstPage);
+
+            StatelessLink linkToPrevPage = LinkToUpdatesPage.page("updatesPageLink", projectId, volumeId, page - NUMBER_OF_PAGES_ON_UPDATE_LIST, searchType);
+            linkToPrevPage.add(new Label("updatesPageText", "..."));
+            references.add(linkToPrevPage);
+
+            for (int i = page; i <= numberOfPages; ++i)
+            {
+                StatelessLink link = LinkToUpdatesPage.page("updatesPageLink", projectId, volumeId, i, searchType);
+                link.add(new Label("updatesPageText", Integer.toString(i)));
+                if (i == page)
+                {
+                    link.add(activeAppender);
+                }
+                references.add(link);
+            }
+        }
+
+        parent.add(new ListView<StatelessLink>("updatesPaginator", references)
+        {
+            @Override
+            protected void populateItem(final ListItem<StatelessLink> listItem)
+            {
+                listItem.add(listItem.getModelObject());
+            }
+
+            @Override
+            public boolean isVisible()
+            {
+                return super.isVisible() && getList().size() != 1;
+            }
+        });
+
+        add(parent);
     }
 
     @Override
@@ -346,24 +222,38 @@ public class Updates extends SidebarLayoutPage
         return "Обновления - РуРанобэ";
     }
 
-    private static class StatelessLinkToPage extends StatelessLink
+    private static class LinkToUpdatesPage extends StatelessLink
     {
-        private final String page;
-        private final String searchType;
+        private Integer projectId;
+        private Integer volumeId;
+        private int page;
+        private String updateType;
 
-        public StatelessLinkToPage(String id, String page, String searchType)
+        private LinkToUpdatesPage(String id)
         {
             super(id);
-            this.page = page;
-            this.searchType = searchType;
         }
 
-        public StatelessLinkToPage(String id, String page, String searchType, String textId, String text)
+        // link to concrete page of Updates
+        static LinkToUpdatesPage page(String componentId, Integer projectId, Integer volumeId, int page, String updateType)
         {
-            super(id);
-            this.page = page;
-            this.searchType = searchType;
-            this.add(new Label(textId, text));
+            LinkToUpdatesPage link = new LinkToUpdatesPage(componentId);
+            link.page = page;
+            link.updateType = updateType;
+            link.projectId = projectId;
+            link.volumeId = volumeId;
+            return link;
+        }
+
+        // creates search type link. By search type link i mean the link with small icon image and text such as "Опубликовано", "Иллюстрации".
+        static LinkToUpdatesPage searchType(String componentId, Integer projectId, Integer volumeId, int page, String updateType)
+        {
+            LinkToUpdatesPage link = new LinkToUpdatesPage(componentId);
+            link.projectId = projectId;
+            link.volumeId = volumeId;
+            link.page = page;
+            link.updateType = updateType;
+            return link;
         }
 
         @Override
@@ -371,9 +261,17 @@ public class Updates extends SidebarLayoutPage
         {
             PageParameters p = new PageParameters();
             p.add("page", page);
-            if (searchType != null)
+            if (updateType != null)
             {
-                p.add("type", searchType);
+                p.add("type", updateType);
+            }
+            if (projectId != null)
+            {
+                p.add("project", projectId);
+            }
+            if (volumeId != null)
+            {
+                p.add("volume", volumeId);
             }
             setResponsePage(Updates.class, p);
         }
