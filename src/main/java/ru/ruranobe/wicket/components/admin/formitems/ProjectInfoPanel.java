@@ -1,13 +1,11 @@
 package ru.ruranobe.wicket.components.admin.formitems;
 
-import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.NumberTextField;
-import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import ru.ruranobe.mybatis.entities.tables.Project;
+import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.components.admin.BannerUploadComponent;
 
 public class ProjectInfoPanel extends Panel
@@ -29,6 +27,9 @@ public class ProjectInfoPanel extends Panel
         add(new CheckBox("onevolume"));
         add(new CheckBox("projectHidden"));
         add(new CheckBox("bannerHidden"));
+        add(new TextField<String>("issueStatus"));
+        add(new TextField<String>("translationStatus"));
+        add(new DropDownChoice<>("status", RuraConstants.PROJECT_STATUS_LIST));
         add(new TextArea<String>("franchise"));
         add(new TextArea<String>("annotation"));
         add(new NumberTextField<Integer>("forumId").setMinimum(1));

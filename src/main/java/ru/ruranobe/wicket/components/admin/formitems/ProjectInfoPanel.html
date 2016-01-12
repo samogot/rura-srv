@@ -78,6 +78,21 @@
     </div>
 
     <div class="form-group">
+        <label wicket:for="issueStatus">Статус издания</label>
+        <input wicket:id="issueStatus" type="text" class="form-control">
+    </div>
+
+    <div class="form-group">
+        <label wicket:for="translationStatus">Статус перевода</label>
+        <input wicket:id="translationStatus" type="text" class="form-control">
+    </div>
+
+    <div class="form-group">
+        <label wicket:for="status">Общий статус</label>
+        <select wicket:id="status" class="form-control"></select>
+    </div>
+
+    <div class="form-group">
         <label wicket:for="franchise">Описание франшизы</label>
         <textarea class="form-control" wicket:id="franchise" rows="5"></textarea>
     </div>

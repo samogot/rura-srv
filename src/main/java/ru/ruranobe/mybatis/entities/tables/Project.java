@@ -43,6 +43,26 @@ public class Project extends PageRepresentable implements Serializable
         this.originalStory = originalStory;
     }
 
+    public String getIssueStatus()
+    {
+        return issueStatus;
+    }
+
+    public void setIssueStatus(String issueStatus)
+    {
+        this.issueStatus = issueStatus;
+    }
+
+    public String getTranslationStatus()
+    {
+        return translationStatus;
+    }
+
+    public void setTranslationStatus(String translationStatus)
+    {
+        this.translationStatus = translationStatus;
+    }
+
     private static final long serialVersionUID = 3L;
     private Integer projectId;
     private Integer parentId;
@@ -65,6 +85,8 @@ public class Project extends PageRepresentable implements Serializable
     private String annotation;
     private Integer forumId;
     private String status;
+    private String issueStatus;
+    private String translationStatus;
     //optional
     private ExternalResource image;
 

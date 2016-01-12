@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -127,4 +128,6 @@ public class RuraConstants
     private RuraConstants()
     {
     }
+
+    public static final List<String> PROJECT_STATUS_LIST = Arrays.asList("Выпускается", "Окончен", "Переведен");
 }

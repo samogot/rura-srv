@@ -58,7 +58,10 @@
             onevolume       = #{onevolume},
             franchise       = #{franchise},
             annotation      = #{annotation},
-            forum_id        = #{forumId}
+        forum_id = #{forumId},
+        status = #{status},
+        issue_status = #{issueStatus},
+        translation_status = #{translationStatus}
     </insert>
 
     <update id="updateProject" parameterType="ru.ruranobe.mybatis.entities.tables.Project">
@@ -81,7 +84,10 @@
             onevolume       = #{onevolume},
             franchise       = #{franchise},
             annotation      = #{annotation},
-            forum_id        = #{forumId}
+        forum_id = #{forumId},
+        status = #{status},
+        issue_status = #{issueStatus},
+        translation_status = #{translationStatus}
         WHERE project_id = #{projectId}
     </update>
 
@@ -137,6 +143,8 @@
         <result property="annotation" column="annotation"/>
         <result property="forumId" column="forum_id"/>
         <result property="status" column="status"/>
+        <result property="issueStatus" column="issue_status"/>
+        <result property="translationStatus" column="translation_status"/>
     </resultMap>
 
 </mapper>
