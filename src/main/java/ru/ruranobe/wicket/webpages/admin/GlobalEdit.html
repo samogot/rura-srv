@@ -11,6 +11,86 @@
     <div wicket:id="teams"></div>
     <div wicket:id="teamMembers"></div>
 
+    <wicket:fragment wicket:id="projectsFormItemFragment">
+        <h3>Настройка серии</h3>
+        <div class="form-group">
+            <label wicket:for="url">Ссылка</label>
+            <input wicket:id="url" class="form-control url-input" type="text"/>
+        </div>
+        <div class="form-group">
+            <label wicket:for="title">Заголовок</label>
+            <input wicket:id="title" class="form-control name-input" type="text"/>
+        </div>
+        <div class="form-group">
+            <div class="checkbox">
+                <label><input wicket:id="projectHidden" type="checkbox"> Проект скрыт</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="checkbox">
+                <label><input wicket:id="bannerHidden" type="checkbox"> Баннер скрыт</label>
+            </div>
+        </div>
+        <wicket:enclosure>
+            <div class="form-group">
+                <div class="form-group banner-upload" style="position: relative;">
+                    <label wicket:for="image">Изображение</label>
+                    <wicket:container wicket:id="image"/>
+                </div>
+            </div>
+        </wicket:enclosure>
+        <div class="form-group">
+            <a href="#" target="_blank" wicket:id="link">Править&nbsp;
+                <small class="fa fa-external-link"></small>
+            </a>
+        </div>
+    </wicket:fragment>
+
+    <wicket:fragment wicket:id="activitiesFormItemFragment">
+        <h3>Настройка вида</h3>
+        <div class="form-group">
+            <label wicket:for="activityName">Название</label>
+            <input wicket:id="activityName" class="form-control name-input" type="text">
+        </div>
+        <div class="form-group">
+            <label wicket:for="activityType">Тип</label>
+            <select wicket:id="activityType" class="form-control"></select>
+        </div>
+    </wicket:fragment>
+
+    <wicket:fragment wicket:id="teamsFormItemFragment">
+        <h3>Настройка команды</h3>
+        <div class="form-group">
+            <label wicket:for="teamName">Название</label>
+            <input wicket:id="teamName" class="form-control name-input" type="text">
+        </div>
+        <div class="form-group">
+            <label wicket:for="teamWebsiteLink">Ссылка</label>
+            <input wicket:id="teamWebsiteLink" class="form-control url-input" type="text">
+        </div>
+    </wicket:fragment>
+
+    <wicket:fragment wicket:id="teamMembersFormItemFragment">
+        <h3>Настройка участника</h3>
+        <div class="form-group">
+            <label wicket:for="nickname">Никнейм</label>
+            <input wicket:id="nickname" class="form-control name-input" type="text">
+        </div>
+        <div class="form-group">
+            <label wicket:for="team">Название команды</label>
+            <select wicket:id="team" class="form-control all_teams"></select>
+        </div>
+        <div class="form-group username-input">
+            <label wicket:for="userName">Пользователь</label>
+            <input wicket:id="userName" class="form-control typeahead" type="text">
+            <input wicket:id="userId" class="user-id-hidden" type="hidden">
+        </div>
+        <div class="form-group">
+            <label wicket:for="userRoles">Роли</label>
+            <select wicket:id="userRoles" class="form-control role-select" multiple></select>
+        </div>
+    </wicket:fragment>
+
     <script src="js/listgroup.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
     <!-- Скрипт загрузки -->

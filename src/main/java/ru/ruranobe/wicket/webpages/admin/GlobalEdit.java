@@ -6,10 +6,14 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
 import ru.ruranobe.mybatis.MybatisUtil;
@@ -20,10 +24,7 @@ import ru.ruranobe.mybatis.entities.tables.VolumeActivity;
 import ru.ruranobe.mybatis.mappers.*;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.components.admin.AdminAffixedListPanel;
-import ru.ruranobe.wicket.components.admin.formitems.ProjectFormItemPanel;
-import ru.ruranobe.wicket.components.admin.formitems.TeamFormItemPanel;
-import ru.ruranobe.wicket.components.admin.formitems.TeamMemberFormItemPanel;
-import ru.ruranobe.wicket.components.admin.formitems.VolumeActivityFormItemPanel;
+import ru.ruranobe.wicket.components.admin.BannerUploadComponent;
 import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
 
 import java.util.*;
@@ -146,9 +147,22 @@ public class GlobalEdit extends AdminLayoutPage
             }
 
             @Override
-            protected Component getFormItemLabelComponent(String id, IModel<Project> model)
+            protected Component getFormItemLabelComponent(String id, final IModel<Project> model)
             {
-                return new ProjectFormItemPanel(id, model);
+                return new Fragment(id, "projectsFormItemFragment", GlobalEdit.this, model)
+                {
+                    @Override
+                    protected void onInitialize()
+                    {
+                        super.onInitialize();
+                        add(new TextField<String>("url").setRequired(true).setLabel(Model.of("Ссылка")));
+                        add(new TextField<String>("title").setRequired(true).setLabel(Model.of("Заголовок")));
+                        add(new CheckBox("projectHidden"));
+                        add(new CheckBox("bannerHidden"));
+                        add(new BannerUploadComponent("image").setProject(model.getObject()));
+                        add(new BookmarkablePageLink("link", ProjectEdit.class, model.getObject().getUrlParameters()));
+                    }
+                };
             }
         }.setSortable(true));
 
@@ -201,7 +215,23 @@ public class GlobalEdit extends AdminLayoutPage
             @Override
             protected Component getFormItemLabelComponent(String id, IModel<VolumeActivity> model)
             {
-                return new VolumeActivityFormItemPanel(id, model);
+                return new Fragment(id, "activitiesFormItemFragment", GlobalEdit.this, model)
+                {
+                    @Override
+                    protected void onInitialize()
+                    {
+                        super.onInitialize();
+                        add(new TextField<String>("activityName").setRequired(true).setLabel(Model.of("Название")));
+                        add(new DropDownChoice<String>("activityType", Arrays.asList("text", "image"))
+                        {
+                            @Override
+                            protected boolean localizeDisplayValues()
+                            {
+                                return true;
+                            }
+                        }.setRequired(true));
+                    }
+                };
             }
 
         });
@@ -254,7 +284,16 @@ public class GlobalEdit extends AdminLayoutPage
             @Override
             protected Component getFormItemLabelComponent(String id, IModel<Team> model)
             {
-                return new TeamFormItemPanel(id, model);
+                return new Fragment(id, "teamsFormItemFragment", GlobalEdit.this, model)
+                {
+                    @Override
+                    protected void onInitialize()
+                    {
+                        super.onInitialize();
+                        add(new TextField<String>("teamName").setRequired(true).setLabel(Model.of("Название")));
+                        add(new TextField<String>("teamWebsiteLink"));
+                    }
+                };
             }
 
             @Override
@@ -332,7 +371,32 @@ public class GlobalEdit extends AdminLayoutPage
             @Override
             protected Component getFormItemLabelComponent(String id, IModel<TeamMember> model)
             {
-                return new TeamMemberFormItemPanel(id, model, teams, allRoles);
+                return new Fragment(id, "teamMembersFormItemFragment", GlobalEdit.this, model)
+                {
+                    @Override
+                    protected void onInitialize()
+                    {
+                        super.onInitialize();
+                        add(new TextField<String>("nickname").setRequired(true).setLabel(Model.of("Никнейм")));
+                        add(new DropDownChoice<>("team", teams).setNullValid(true)
+                                                               .setChoiceRenderer(new ChoiceRenderer<Team>("teamName", "teamId"))
+                                                               .setOutputMarkupId(true));
+                        add(new TextField<String>("userName"));
+                        add(new HiddenField<Integer>("userId"));
+                        add(new ListMultipleChoice<String>("userRoles", allRoles)
+                        {
+                            @Override
+                            protected void onComponentTag(ComponentTag tag)
+                            {
+                                super.onComponentTag(tag);
+                                if (getDefaultModelObject() == null)
+                                {
+                                    tag.getAttributes().put("disabled", "disabled");
+                                }
+                            }
+                        });
+                    }
+                };
             }
         });
 
