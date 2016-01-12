@@ -95,3 +95,7 @@ textarea.form-control {
         margin-top: 2px;
     }
 }
+
+#comments {
+    clear: left;
+}

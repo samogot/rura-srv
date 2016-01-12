@@ -9,8 +9,6 @@ import com.rometools.rome.io.SyndFeedOutput;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.request.Url;
-import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.wicketstuff.rest.annotations.ResourcePath;
@@ -18,7 +16,6 @@ import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.Update;
 import ru.ruranobe.mybatis.mappers.UpdatesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
-import ru.ruranobe.wicket.webpages.common.HomePage;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -72,9 +69,7 @@ public class RSSWebService extends AbstractResource
         feed.setFeedType("rss_2.0");
 
         feed.setTitle("Обновления RuRanobe");
-        RequestCycle requestCycle = RequestCycle.get();
-        UrlRenderer urlRenderer = requestCycle.getUrlRenderer();
-        feed.setLink(urlRenderer.renderFullUrl(Url.parse(requestCycle.urlFor(HomePage.class, null))));
+        feed.setLink("https://ruranobe.ru");
         feed.setDescription("Последние обновления переводов на проекте RuRanobe");
         List<SyndEntry> entries = new ArrayList<>();
         for (Update update : updateList)
@@ -87,7 +82,8 @@ public class RSSWebService extends AbstractResource
                 title += " - " + update.getChapterTitle();
             }
             entry.setTitle(title);
-            entry.setLink(urlRenderer.renderFullUrl(Url.parse(requestCycle.urlFor(update.getLinkClass(), update.getUrlParameters()))));
+            entry.setLink("https://ruranobe.ru" + RequestCycle.get().urlFor(update.getLinkClass(),
+                    update.getUrlParameters()).toString().substring(1));
             entry.setPublishedDate(update.getShowTime());
             entries.add(entry);
         }
