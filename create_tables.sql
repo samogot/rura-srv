@@ -30,25 +30,25 @@ CREATE TABLE users
   user_id                  INT(11) PRIMARY KEY AUTO_INCREMENT,
   username                 VARCHAR(64) UNIQUE NOT NULL,
   realname                 VARCHAR(255),
-  pass                     TINYBLOB           NOT NULL,
-  pass_version             INT(11) UNSIGNED   NOT NULL,
+  pass                     TINYBLOB          NOT NULL,
+  pass_version             INT(11) UNSIGNED  NOT NULL,
   pass_recovery_token      VARCHAR(255),
   pass_recovery_token_date DATETIME,
   email                    VARCHAR(255),
   email_token              VARCHAR(255),
   email_token_date         DATETIME,
-  email_activated          BOOL               NOT NULL,
-  registration_date        DATETIME           NOT NULL,
+  email_activated          BOOL              NOT NULL,
+  registration_date        DATETIME          NOT NULL,
   #--user_settings
   converter_type           ENUM('fb2',
                                 'docx',
-                                'epub') NOT NULL,
+                                'epub')      NOT NULL,
   navigation_type          ENUM('Главам',
-                                'Подглавам')  NOT NULL,
-  convert_with_imgs        BOOL               NOT NULL,
-  adult                    BOOL               NOT NULL,
-  prefer_colored_imgs      BOOL               NOT NULL,
-  convert_imgs_size        INT(11)            NOT NULL,
+                                'Подглавам') NOT NULL,
+  convert_with_imgs        BOOL              NOT NULL,
+  adult                    BOOL              NOT NULL,
+  prefer_colored_imgs      BOOL              NOT NULL,
+  convert_imgs_size        INT(11)           NOT NULL,
   forum_user_id            INT(11) UNSIGNED DEFAULT NULL
 );
 
@@ -58,7 +58,7 @@ CREATE TABLE texts
   text_wiki MEDIUMTEXT NOT NULL,
   text_html MEDIUMTEXT,
   footnotes MEDIUMTEXT,
-  contents MEDIUMTEXT
+  contents  MEDIUMTEXT
 );
 
 CREATE TABLE orphus_comments
@@ -80,7 +80,7 @@ CREATE TABLE projects
   parent_id          INT(11),
   image_id           INT(11),
   url                VARCHAR(32) UNIQUE,
-  title              VARCHAR(1023) NOT NULL,
+  title              VARCHAR(1023)     NOT NULL,
   name_jp            VARCHAR(255),
   name_en            VARCHAR(255),
   name_ru            VARCHAR(255),
@@ -89,16 +89,18 @@ CREATE TABLE projects
   illustrator        VARCHAR(255),
   original_design    VARCHAR(255),
   original_story     VARCHAR(255),
-  order_number       INT(11)       NOT NULL,
-  banner_hidden      BOOL          NOT NULL,
-  project_hidden     BOOL          NOT NULL,
-  onevolume          BOOL          NOT NULL,
+  order_number       INT(11)           NOT NULL,
+  banner_hidden      BOOL              NOT NULL,
+  project_hidden     BOOL              NOT NULL,
+  onevolume          BOOL              NOT NULL,
   franchise          TEXT,
   annotation         TEXT,
   forum_id           INT(11) UNSIGNED    DEFAULT NULL,
   issue_status       VARCHAR(255),
   translation_status VARCHAR(255),
-  status             ENUM('Выпускается', 'Окончен', 'Переведен')
+  status             ENUM('Выпускается',
+                          'Окончен',
+                          'Переведен') NOT NULL
 );
 
 CREATE TABLE volumes
@@ -110,8 +112,8 @@ CREATE TABLE volumes
   image_three        INT(11),
   image_four         INT(11),
   url                VARCHAR(32) UNIQUE  NOT NULL,
-  name_file          VARCHAR(255) NOT NULL,
-  name_title         VARCHAR(255) NOT NULL,
+  name_file          VARCHAR(255)        NOT NULL,
+  name_title         VARCHAR(255)        NOT NULL,
   name_jp            VARCHAR(255),
   name_en            VARCHAR(255),
   name_ru            VARCHAR(255),
@@ -148,11 +150,11 @@ CREATE TABLE volumes
     'proofread',
     -- опубликован
     'decor',
-    'done')                       NOT NULL,
+    'done')                              NOT NULL,
   volume_status_hint VARCHAR(255),
   adult              BOOL                NOT NULL,
   annotation         TEXT,
-  topic_id           INT(11) UNSIGNED DEFAULT NULL
+  topic_id           INT(11) UNSIGNED             DEFAULT NULL
 );
 
 CREATE TABLE volume_statuses
@@ -178,7 +180,7 @@ CREATE TABLE chapters
 
 CREATE TABLE chapter_images
 (
-  chapter_image_id INT(11) PRIMARY KEY AUTO_INCREMENT,
+  chapter_image_id     INT(11) PRIMARY KEY AUTO_INCREMENT,
   chapter_id           INT(11),
   volume_id            INT(11) NOT NULL,
   --  image_id int(11), NOT NULL
@@ -197,9 +199,9 @@ CREATE TABLE external_resources
   thumbnail     VARCHAR(511) NOT NULL,
   title         VARCHAR(255),
   uploaded_when DATETIME     NOT NULL,
-  width      INT,
-  height     INT,
-  history_id INT(11) NOT NULL
+  width         INT,
+  height        INT,
+  history_id    INT(11)      NOT NULL
 );
 
 CREATE TABLE external_resources_history
@@ -231,7 +233,7 @@ CREATE TABLE team_members
   member_id INT(11) PRIMARY KEY AUTO_INCREMENT,
   user_id   INT(11),
   team_id   INT(11),
-  nickname   VARCHAR(64) UNIQUE NOT NULL,
+  nickname  VARCHAR(64) UNIQUE NOT NULL,
   active    BOOLEAN            NOT NULL
 );
 
@@ -260,18 +262,18 @@ CREATE TABLE updates
 
 CREATE TABLE texts_history
 (
-  current_text_id INT(11) PRIMARY KEY AUTO_INCREMENT,
+  current_text_id  INT(11) PRIMARY KEY AUTO_INCREMENT,
   previous_text_id INT(11),
-  insertion_time  DATETIME NOT NULL
+  insertion_time   DATETIME NOT NULL
 );
 
 CREATE TABLE bookmarks
 (
   bookmark_id  INT(11) PRIMARY KEY AUTO_INCREMENT,
   chapter_id   INT(11),
-  user_id      INT(11)  NOT NULL,
+  user_id      INT(11)      NOT NULL,
   paragraph_id VARCHAR(255) NOT NULL,
-  created_when DATETIME NOT NULL
+  created_when DATETIME     NOT NULL
 );
 
 CREATE TABLE paragraphs
@@ -283,13 +285,13 @@ CREATE TABLE paragraphs
 
 CREATE TABLE user_groups
 (
-  user_id INT(11) NOT NULL,
+  user_id  INT(11) NOT NULL,
   group_id INT(11) NOT NULL
 );
 
 CREATE TABLE user_group_types
 (
-  group_id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  group_id   INT(11)      NOT NULL PRIMARY KEY AUTO_INCREMENT,
   group_name VARCHAR(255) NOT NULL
 );
 

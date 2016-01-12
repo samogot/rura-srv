@@ -201,7 +201,7 @@ INSERT IGNORE INTO users (user_id, username, realname, pass, pass_version, email
 
 UPDATE users usr INNER JOIN ruranobe_db.mw_user mw ON usr.user_id = mw.user_id
 SET
-  usr.pass = SUBSTRING(mw.user_password, 4),
+  usr.pass         = SUBSTRING(mw.user_password, 4),
   usr.pass_version = 1
 WHERE mw.user_password LIKE ":A:%";
 
@@ -211,7 +211,7 @@ UPDATE users usr
     ON
       usr.user_id = mw.user_id
 SET
-  usr.pass = SUBSTRING(mw.user_password, 4),
+  usr.pass         = SUBSTRING(mw.user_password, 4),
   usr.pass_version = 2
 WHERE
   mw.user_password LIKE ":B:%";
@@ -222,7 +222,7 @@ UPDATE users usr
     ON
       usr.user_id = mw.user_id
 SET
-  usr.pass = SUBSTRING(mw.user_password, 9),
+  usr.pass         = SUBSTRING(mw.user_password, 9),
   usr.pass_version = 3
 WHERE
   mw.user_password LIKE ":pbkdf2:%";
@@ -402,7 +402,7 @@ SET name_jp = '盾の勇者の成り上がり', name_romaji = 'Tate no Yuusha no
 WHERE project_id = 34;
 UPDATE projects
 SET name_jp = '棺姫のチャイカ', name_en = 'Chaika - The Coffin Princess',
-  name_ru   = 'Чайка − принцесса с гробом'
+  name_ru   = 'Чайка − принцесса с гробом', status = 'Окончен'
 WHERE project_id = 35;
 UPDATE projects
 SET name_jp = 'マグダラで眠れ', name_en = 'May your soul rest in Magdala',
@@ -436,6 +436,15 @@ UPDATE projects
 SET name_jp   = '世界の終わりの世界録',
   name_romaji = 'Sekai no Owari no Encore', name_ru = NULL
 WHERE project_id = 49;
+
+UPDATE projects
+SET status = 'Выпускается';
+UPDATE projects
+SET status = 'Окончен'
+WHERE url IN ('onc', 'fmp', 'slyrs', 'haruhi', 'bb', 'snpnk', 'city', 'saw', 'ch2b', 'knk');
+UPDATE projects
+SET status = 'Переведен'
+WHERE url IN ('trdr', 'ssnts', 'unh', 'aynik', 'tnd', 'sd', 'inkid', 'ff7', 'az');
 
 
 CREATE TEMPORARY TABLE ch_text (
