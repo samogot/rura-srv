@@ -1,7 +1,10 @@
 package ru.ruranobe.mybatis.mappers.cacheable;
 
+import org.apache.ibatis.annotations.Param;
 import ru.ruranobe.mybatis.entities.tables.User;
 import ru.ruranobe.mybatis.mappers.UsersMapper;
+
+import java.util.Collection;
 
 public class UsersMapperCacheable implements UsersMapper
 {
@@ -19,7 +22,7 @@ public class UsersMapperCacheable implements UsersMapper
 
     public User getUserByEmail(String email)
     {
-        return  mapper.getUserByEmail(email);
+        return mapper.getUserByEmail(email);
     }
 
     public int registerUser(User user)
@@ -43,4 +46,15 @@ public class UsersMapperCacheable implements UsersMapper
         return mapper.getUserByEmailToken(token);
     }
 
+    @Override
+    public Collection<User> searchUsersByUsername(String query)
+    {
+        return searchUsersByUsernameWithCustomColumns(query, "*");
+    }
+
+    @Override
+    public Collection<User> searchUsersByUsernameWithCustomColumns(@Param("query") String query, @Param("columns") String columns)
+    {
+        return mapper.searchUsersByUsernameWithCustomColumns(query, columns);
+    }
 }

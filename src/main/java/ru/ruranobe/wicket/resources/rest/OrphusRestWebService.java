@@ -2,6 +2,7 @@ package ru.ruranobe.wicket.resources.rest;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.string.Strings;
 import org.wicketstuff.rest.annotations.MethodMapping;
 import org.wicketstuff.rest.annotations.ResourcePath;
@@ -101,5 +102,12 @@ public class OrphusRestWebService extends GsonRestResource
             session.commit();
         }
 
+    }
+
+    @Override
+    protected void handleException(WebResponse response, Exception exception)
+    {
+        super.handleException(response, exception);
+        exception.printStackTrace();
     }
 }

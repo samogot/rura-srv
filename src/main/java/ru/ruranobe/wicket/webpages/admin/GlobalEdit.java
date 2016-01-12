@@ -292,7 +292,10 @@ public class GlobalEdit extends AdminLayoutPage
                             if (item.getUserId() != null)
                             {
                                 rolesMapper.deleteUserGroupsByUserId(item.getUserId());
-                                rolesMapper.setUserGroupsByUserId(item.getUserId(), item.getUserRoles());
+                                if (!item.getUserRoles().isEmpty())
+                                {
+                                    rolesMapper.setUserGroupsByUserId(item.getUserId(), item.getUserRoles());
+                                }
                             }
                         }
                     }
@@ -301,6 +304,10 @@ public class GlobalEdit extends AdminLayoutPage
                         if (removedItem.getMemberId() != null)
                         {
                             mapper.deleteTeamMember(removedItem.getMemberId());
+                        }
+                        if (removedItem.getUserId() != null)
+                        {
+                            rolesMapper.deleteUserGroupsByUserId(removedItem.getUserId());
                         }
                     }
                     session.commit();

@@ -23,10 +23,7 @@ public class VolumeReleaseActivity implements Serializable
     public void setActivity(VolumeActivity activity)
     {
         this.activity = activity;
-        if (activity != null)
-        {
-            this.activityId = activity.getActivityId();
-        }
+        this.activityId = activity == null ? null : activity.getActivityId();
     }
 
     public TeamMember getMember()
@@ -37,10 +34,7 @@ public class VolumeReleaseActivity implements Serializable
     public void setMember(TeamMember member)
     {
         this.member = member;
-        if (member != null)
-        {
-            this.memberId = member.getMemberId();
-        }
+        this.memberId = member == null ? null : member.getMemberId();
     }
 
     public Integer getActivityId()

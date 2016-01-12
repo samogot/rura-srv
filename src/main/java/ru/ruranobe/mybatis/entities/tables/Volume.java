@@ -22,10 +22,7 @@ public class Volume extends PageRepresentable implements Serializable, Cloneable
     public void setProject(Project project)
     {
         this.project = project;
-        if (project != null)
-        {
-            projectId = project.getProjectId();
-        }
+        projectId = project == null ? null : project.getProjectId();
     }
 
     public String getOriginalStory()
@@ -74,7 +71,7 @@ public class Volume extends PageRepresentable implements Serializable, Cloneable
     private String subProjectName;
     private transient Project project;
 
-	  private Integer topicId;
+    private Integer topicId;
 
     public Volume()
     {
@@ -448,15 +445,17 @@ public class Volume extends PageRepresentable implements Serializable, Cloneable
         return prevUrl;
     }
 
-	public Integer getTopicId() {
-		return topicId;
-	}
+    public Integer getTopicId()
+    {
+        return topicId;
+    }
 
-	public void setTopicId(Integer topicId) {
-		this.topicId = topicId;
-	}
+    public void setTopicId(Integer topicId)
+    {
+        this.topicId = topicId;
+    }
 
-	@Override
+    @Override
     public String toString()
     {
         return "Volume{" + "volumeId=" + volumeId + ", projectId=" + projectId + ", url=" + url + ", nameFile=" + nameFile + ", nameTitle=" + nameTitle + ", nameJp=" + nameJp + ", nameEn=" + nameEn + ", nameRu=" + nameRu + ", nameShort=" + nameShort + ", sequenceNumber=" + sequenceNumber + ", author=" + author + ", illustrator=" + illustrator + ", releaseDate=" + releaseDate + ", isbn=" + isbn + ", externalUrl=" + externalUrl + ", annotation=" + annotation + ", volumeStatus=" + volumeStatus + ", volumeType=" + volumeType + ", adult=" + adult + '}';

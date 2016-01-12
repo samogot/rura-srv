@@ -1,7 +1,7 @@
 package ru.ruranobe.wicket.resources.rest;
 
 import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.wicket.request.http.WebResponse;
 import org.wicketstuff.rest.annotations.MethodMapping;
 import org.wicketstuff.rest.annotations.ResourcePath;
 import org.wicketstuff.rest.resource.gson.GsonRestResource;
@@ -17,11 +17,17 @@ public class PeopleRestWebService extends GsonRestResource
     @MethodMapping("")
     public Collection<String> getPeople()
     {
-        SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-        try (SqlSession session = sessionFactory.openSession())
+        try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
         {
             ProjectsMapper projectsMapper = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
             return projectsMapper.getAllPeople();
         }
+    }
+
+    @Override
+    protected void handleException(WebResponse response, Exception exception)
+    {
+        super.handleException(response, exception);
+        exception.printStackTrace();
     }
 }

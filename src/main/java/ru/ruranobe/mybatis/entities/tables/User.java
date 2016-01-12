@@ -16,13 +16,13 @@ public class User implements Serializable
     private String email;
     private String emailToken;
     private Date emailTokenDate;
-    private boolean emailActivated;
+    private Boolean emailActivated;
     private Date registrationDate;
     private String converterType;
     private String navigationType;
-    private boolean convertWithImgs;
-    private boolean adult;
-    private boolean preferColoredImgs;
+    private Boolean convertWithImgs;
+    private Boolean adult;
+    private Boolean preferColoredImgs;
     private Integer convertImgsSize;
 
     public User()
@@ -138,7 +138,7 @@ public class User implements Serializable
         this.emailTokenDate = emailTokenDate;
     }
 
-    public boolean isEmailActivated()
+    public Boolean isEmailActivated()
     {
         return emailActivated;
     }
@@ -178,7 +178,7 @@ public class User implements Serializable
         this.passRecoveryTokenDate = passRecoveryTokenDate;
     }
 
-    public boolean isAdult()
+    public Boolean isAdult()
     {
         return adult;
     }
@@ -212,7 +212,7 @@ public class User implements Serializable
         this.navigationType = navigationType;
     }
 
-    public boolean isConvertWithImgs() {
+    public Boolean isConvertWithImgs() {
         return convertWithImgs;
     }
 
@@ -220,7 +220,7 @@ public class User implements Serializable
         this.convertWithImgs = convertWithImgs;
     }
 
-    public boolean isPreferColoredImgs() {
+    public Boolean isPreferColoredImgs() {
         return preferColoredImgs;
     }
 

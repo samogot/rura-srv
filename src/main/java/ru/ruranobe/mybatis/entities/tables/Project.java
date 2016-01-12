@@ -20,10 +20,7 @@ public class Project extends PageRepresentable implements Serializable
     public void setImage(ExternalResource image)
     {
         this.image = image;
-        if (image != null)
-        {
-            imageId = image.getResourceId();
-        }
+        this.imageId = image == null ? null : image.getResourceId();
     }
 
     public String getOriginalDesign()

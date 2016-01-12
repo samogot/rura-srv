@@ -25,8 +25,11 @@
 
     <insert id="insertTeamMember" parameterType="ru.ruranobe.mybatis.entities.tables.TeamMember" keyProperty="memberId"
             useGeneratedKeys="true">
-        INSERT INTO team_members (team_id, nickname, active)
-        VALUES (#{teamId}, #{nickname}, #{active})
+        INSERT INTO team_members
+        SET team_id = #{teamId},
+        nickname = #{nickname},
+        active = #{active},
+        user_id = #{userId}
     </insert>
 
     <delete id="deleteTeamMember" parameterType="int">
@@ -36,7 +39,10 @@
 
     <update id="updateTeamMember" parameterType="ru.ruranobe.mybatis.entities.tables.TeamMember">
         UPDATE team_members
-        SET team_id = #{teamId}, nickname = #{nickname}, active = #{active}
+        SET team_id = #{teamId},
+        nickname = #{nickname},
+        active = #{active},
+        user_id = #{userId}
         WHERE member_id = #{memberId}
     </update>
 

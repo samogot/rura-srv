@@ -18,11 +18,8 @@ public class Update extends PageRepresentable implements Serializable, Comparabl
     public void setChapter(Chapter chapter)
     {
         this.chapter = chapter;
-        if (chapter != null)
-        {
-            this.chapterId = chapter.getChapterId();
-            this.chapterTitle = chapter.getTitle();
-        }
+        this.chapterId = chapter == null ? null : chapter.getChapterId();
+        this.chapterTitle = chapter == null ? null : chapter.getTitle();
     }
 
     public PageParameters getUrlParameters()
@@ -147,7 +144,7 @@ public class Update extends PageRepresentable implements Serializable, Comparabl
     public String getChapterShortTitle()
     {
         //todo supchapter
-        return chapterTitle != null ? chapterTitle.replaceFirst(SHORT_TITLE_REGEX, "") : null;
+        return chapterTitle == null ? null : chapterTitle.replaceFirst(SHORT_TITLE_REGEX, "");
     }
 
     public Integer getProjectId()

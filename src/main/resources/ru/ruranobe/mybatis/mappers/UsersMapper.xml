@@ -24,6 +24,12 @@
         WHERE username = #{username}
     </select>
 
+    <select id="searchUsersByUsernameWithCustomColumns" parameterType="map" resultMap="UserResult">
+        SELECT ${columns}
+        FROM users
+        WHERE username LIKE concat('%', #{query}, '%')
+    </select>
+
     <select id="getUserByPassRecoveryToken" parameterType="String" resultMap="UserResult">
         SELECT *
         FROM users
@@ -40,44 +46,44 @@
             useGeneratedKeys="true">
         INSERT INTO users
         SET
-        username = #{username},
-        realname = #{realname},
-        pass = #{pass},
-        pass_recovery_token = #{passRecoveryToken},
-        pass_recovery_token_date = #{passRecoveryTokenDate},
-        pass_version = #{passVersion},
-        email = #{email},
-        email_token = #{emailToken},
-        email_token_date = #{emailTokenDate},
-        email_activated = #{emailActivated},
-        registration_date = #{registrationDate},
-        converter_type = #{converterType},
-        navigation_type = #{navigationType},
-        convert_with_imgs = #{convertWithImgs},
-        adult = #{adult},
-        prefer_colored_imgs = #{preferColoredImgs},
-        convert_imgs_size = #{convertImgsSize}
+            username = #{username},
+            realname = #{realname},
+            pass = #{pass},
+            pass_recovery_token = #{passRecoveryToken},
+            pass_recovery_token_date = #{passRecoveryTokenDate},
+            pass_version = #{passVersion},
+            email = #{email},
+            email_token = #{emailToken},
+            email_token_date = #{emailTokenDate},
+            email_activated = #{emailActivated},
+            registration_date = #{registrationDate},
+            converter_type = #{converterType},
+            navigation_type = #{navigationType},
+            convert_with_imgs = #{convertWithImgs},
+            adult = #{adult},
+            prefer_colored_imgs = #{preferColoredImgs},
+            convert_imgs_size = #{convertImgsSize}
     </insert>
 
     <update id="updateUser" parameterType="ru.ruranobe.mybatis.entities.tables.User">
         UPDATE users
         SET
-        username = #{username},
-        realname = #{realname},
-        pass = #{pass},
-        pass_recovery_token = #{passRecoveryToken},
-        pass_recovery_token_date = #{passRecoveryTokenDate},
-        email = #{email},
-        email_token = #{emailToken},
-        email_token_date = #{emailTokenDate},
-        email_activated = #{emailActivated},
-        registration_date = #{registrationDate},
-        converter_type = #{converterType},
-        navigation_type = #{navigationType},
-        convert_with_imgs = #{convertWithImgs},
-        adult = #{adult},
-        prefer_colored_imgs = #{preferColoredImgs},
-        convert_imgs_size = #{convertImgsSize}
+            username = #{username},
+            realname = #{realname},
+            pass = #{pass},
+            pass_recovery_token = #{passRecoveryToken},
+            pass_recovery_token_date = #{passRecoveryTokenDate},
+            email = #{email},
+            email_token = #{emailToken},
+            email_token_date = #{emailTokenDate},
+            email_activated = #{emailActivated},
+            registration_date = #{registrationDate},
+            converter_type = #{converterType},
+            navigation_type = #{navigationType},
+            convert_with_imgs = #{convertWithImgs},
+            adult = #{adult},
+            prefer_colored_imgs = #{preferColoredImgs},
+            convert_imgs_size = #{convertImgsSize}
         WHERE user_id = #{userId}
     </update>
 

@@ -1,6 +1,9 @@
 package ru.ruranobe.mybatis.mappers;
 
+import org.apache.ibatis.annotations.Param;
 import ru.ruranobe.mybatis.entities.tables.User;
+
+import java.util.Collection;
 
 public interface UsersMapper
 {
@@ -15,4 +18,8 @@ public interface UsersMapper
     User getUserByPassRecoveryToken(String passRecoveryToken);
 
     User getUserByEmailToken(String token);
+
+    Collection<User> searchUsersByUsername(String query);
+
+    Collection<User> searchUsersByUsernameWithCustomColumns(@Param("query") String query, @Param("columns") String columns);
 }

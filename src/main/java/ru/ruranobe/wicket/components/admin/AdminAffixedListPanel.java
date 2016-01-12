@@ -99,6 +99,8 @@ public abstract class AdminAffixedListPanel<T> extends AdminListPanel<T>
         target.add(selectorBlockListItem);
 
         target.appendJavaScript(String.format("$('#%s').click()", selectorBlockListItem.getMarkupId()));
+        target.appendJavaScript(String.format("$('#%s').trigger('addnewitem', { selector: '#%s', form: '#%s' })",
+                form.getMarkupId(), selectorBlockListItem.getMarkupId(), formBlockListItem.getMarkupId()));
         if (sortable)
         {
             target.appendJavaScript(String.format("$('#%s .list-group.select.sortable').trigger('sortupdate')", form.getMarkupId()));
