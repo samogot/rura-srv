@@ -11,14 +11,195 @@
     <div wicket:id="volumes"></div>
     <div wicket:id="subprojects"></div>
 
+    <wicket:fragment wicket:id="projectInfoFragment">
+        <div class="form-group">
+            <label wicket:for="url">Ссылка</label>
+            <input wicket:id="url" class="form-control url-input" type="text"/>
+        </div>
+        <div class="form-group">
+            <div class="form-group banner-upload" style="position: relative;">
+                <label wicket:for="image">Изображение</label>
+                <wicket:container wicket:id="image"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label wicket:for="title">Название для заголовков</label>
+            <input type="text" class="form-control name-input" wicket:id="title">
+        </div>
+        <div class="form-group">
+            <label wicket:for="nameJp">Название (яп.)</label>
+            <input type="text" class="form-control" wicket:id="nameJp">
+        </div>
+        <div class="form-group">
+            <label wicket:for="nameEn">Название (англ.)</label>
+            <input type="text" class="form-control" wicket:id="nameEn">
+        </div>
+        <div class="form-group">
+            <label wicket:for="nameRu">Название (рус.)</label>
+            <input type="text" class="form-control" wicket:id="nameRu">
+        </div>
+        <div class="form-group">
+            <label wicket:for="nameRomaji">Название (романдзи)</label>
+            <input type="text" class="form-control" wicket:id="nameRomaji">
+        </div>
+        <div class="form-group">
+            <label wicket:for="author">Автор</label>
+            <input class="form-control people-name-input typeahead" type="text" wicket:id="author">
+        </div>
+        <div class="form-group">
+            <label wicket:for="illustrator">Иллюстратор</label>
+            <input class="form-control people-name-input typeahead" type="text" wicket:id="illustrator">
+        </div>
+        <div class="form-group">
+            <label wicket:for="originalStory">Оригинальный сюжет</label>
+            <input class="form-control people-name-input typeahead" type="text" wicket:id="originalStory">
+        </div>
+        <div class="form-group">
+            <label wicket:for="originalDesign">Оригинальный дизайн</label>
+            <input class="form-control people-name-input typeahead" type="text" wicket:id="originalDesign">
+        </div>
+        <div class="form-group">
+            <div class="checkbox">
+                <label><input wicket:id="onevolume" type="checkbox"> Однотомник</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="checkbox">
+                <label><input wicket:id="projectHidden" type="checkbox"> Проект скрыт</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="checkbox">
+                <label><input wicket:id="bannerHidden" type="checkbox"> Баннер скрыт</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label wicket:for="issueStatus">Статус издания</label>
+            <input wicket:id="issueStatus" type="text" class="form-control">
+        </div>
+        <div class="form-group">
+            <label wicket:for="translationStatus">Статус перевода</label>
+            <input wicket:id="translationStatus" type="text" class="form-control">
+        </div>
+        <div class="form-group">
+            <label wicket:for="status">Общий статус</label>
+            <select wicket:id="status" class="form-control"></select>
+        </div>
+        <div class="form-group">
+            <label wicket:for="franchise">Описание франшизы</label>
+            <textarea class="form-control" wicket:id="franchise" rows="5"></textarea>
+        </div>
+        <div class="form-group">
+            <label wicket:for="annotation">Аннотация</label>
+            <textarea class="form-control" wicket:id="annotation" rows="15"></textarea>
+        </div>
+        <div class="form-group">
+            <label wicket:for="forumId">Форум</label>
+            <input type="number" class="form-control forum-id-input" wicket:id="forumId">
+        </div>
+    </wicket:fragment>
+
+    <wicket:fragment wicket:id="volumeTableRowFragment">
+        <td class="column-number-0">
+            <input type="text" class="form-control" placeholder="<пусто>" wicket:id="urlPart">
+        </td>
+        <td class="column-number-1">
+            <input type="text" class="form-control" placeholder="<пусто>" wicket:id="nameFile">
+        </td>
+        <td class="column-number-2">
+            <input type="text" class="form-control" placeholder="<пусто>" wicket:id="nameTitle">
+        </td>
+        <td class="column-number-3">
+            <input type="text" class="form-control" placeholder="<пусто>" wicket:id="nameJp">
+        </td>
+        <td class="column-number-4">
+            <input type="text" class="form-control" placeholder="<пусто>" wicket:id="nameEn">
+        </td>
+        <td class="column-number-5">
+            <input type="text" class="form-control" placeholder="<пусто>" wicket:id="nameRu">
+        </td>
+        <td class="column-number-6">
+            <input type="text" class="form-control" placeholder="<пусто>" wicket:id="nameRomaji">
+        </td>
+        <td class="column-number-7">
+            <input type="text" class="form-control" placeholder="<пусто>" wicket:id="nameShort">
+        </td>
+        <td class="column-number-8">
+            <select class="form-control" wicket:id="project"></select>
+        </td>
+        <td class="column-number-9">
+            <input type="text" class="form-control" placeholder="<пусто>" wicket:id="sequenceNumber">
+        </td>
+        <td class="column-number-10">
+            <input class="form-control typeahead author-name" type="text" placeholder="<пусто>" wicket:id="author">
+        </td>
+        <td class="column-number-11">
+            <input class="form-control typeahead illustrator-name" type="text" placeholder="<пусто>"
+                   wicket:id="illustrator">
+        </td>
+        <td class="column-number-12">
+            <input type="text" class="form-control" placeholder="<пусто>" wicket:id="releaseDate">
+        </td>
+        <td class="column-number-13">
+            <input type="text" class="form-control" placeholder="<пусто>" wicket:id="isbn">
+        </td>
+        <td class="column-number-14">
+            <select class="form-control" wicket:id="volumeType">
+                <option>Ранобэ</option>
+                <option>Побочные истории</option>
+                <option>Авторские додзинси</option>
+                <option>Другое</option>
+            </select>
+        </td>
+        <td class="column-number-15">
+            <select class="form-control" wicket:id="volumeStatus">
+                <wicket:container wicket:id="basic">
+                    <option wicket:id="option"></option>
+                </wicket:container>
+                <optgroup label="Сторонний перевод">
+                    <wicket:container wicket:id="external">
+                        <option wicket:id="option"></option>
+                    </wicket:container>
+                </optgroup>
+                <optgroup label="Не в работе">
+                    <wicket:container wicket:id="not_in_work">
+                        <option wicket:id="option"></option>
+                    </wicket:container>
+                </optgroup>
+                <optgroup label="В работе">
+                    <wicket:container wicket:id="in_work">
+                        <option wicket:id="option"></option>
+                    </wicket:container>
+                </optgroup>
+                <optgroup label="Опубликован">
+                    <wicket:container wicket:id="published">
+                        <option wicket:id="option"></option>
+                    </wicket:container>
+                </optgroup>
+            </select>
+        </td>
+        <td class="column-number-16">
+            <input type="text" class="form-control" placeholder="<пусто>" wicket:id="externalUrl">
+        </td>
+        <td class="column-number-17">
+            <textarea class="form-control" placeholder="<пусто>" wicket:id="annotation"></textarea>
+        </td>
+        <td class="column-number-18">
+            <input type="checkbox" wicket:id="adult">
+        </td>
+        <td class="column-number-19">
+            <a href="#" target="_blank" wicket:id="link">Править&nbsp;
+                <small class="fa fa-external-link"></small>
+            </a>
+        </td>
+    </wicket:fragment>
+
     <wicket:fragment wicket:id="subProjectFormItemFragment">
         <h3>Настройка подсерии</h3>
-
         <div class="form-group">
             <label wicket:for="title">Название</label>
             <input type="text" class="form-control name-input" wicket:id="title">
         </div>
-
         <div class="form-group">
             <label wicket:for="forumId">Форум</label>
             <input type="number" class="form-control forum-id-input" wicket:id="forumId">

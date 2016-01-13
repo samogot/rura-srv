@@ -7,10 +7,13 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.extensions.markup.html.form.DateTextField;
+import org.apache.wicket.extensions.markup.html.form.select.IOptionRenderer;
+import org.apache.wicket.extensions.markup.html.form.select.Select;
+import org.apache.wicket.extensions.markup.html.form.select.SelectOptions;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.NumberTextField;
-import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -28,12 +31,7 @@ import ru.ruranobe.mybatis.mappers.ProjectsMapper;
 import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.RuraConstants;
-import ru.ruranobe.wicket.components.admin.AdminAffixedListPanel;
-import ru.ruranobe.wicket.components.admin.AdminInfoFormPanel;
-import ru.ruranobe.wicket.components.admin.AdminTableListPanel;
-import ru.ruranobe.wicket.components.admin.AdminToolboxAjaxButton;
-import ru.ruranobe.wicket.components.admin.formitems.ProjectInfoPanel;
-import ru.ruranobe.wicket.components.admin.formitems.VolumeTableRowPanel;
+import ru.ruranobe.wicket.components.admin.*;
 import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
 
 import java.util.ArrayList;
@@ -45,50 +43,21 @@ import java.util.List;
 public class ProjectEdit extends AdminLayoutPage
 {
 
-    private final List<Project> subProjects;
-    private final List<Project> allProjects;
-    private final List<Volume> volumes;
-    private final Project project;
-    private static final List<String> VOLUMES_TABLE_COLUMNS = new ImmutableList.Builder<String>()
-            .add("Ссылка")
-            .add("Имя для файлов")
-            .add("Заголовок")
-            .add("Название (ориг.)")
-            .add("Название (англ.)")
-            .add("Название (рус.)")
-            .add("Название (романдзи)")
-            .add("Короткое название")
-            .add("Серия")
-            .add("Номер в серии")
-            .add("Автор")
-            .add("Иллюстратор")
-            .add("Дата публикации")
-            .add("ISBN")
-            .add("Тип релиза")
-            .add("Cтатус релиза")
-            .add("Внешняя ссылка")
-            .add("Аннотация")
-            .add("18+")
-            .add("Править")
-            .build();
-    private static final Comparator<Project> projectComparator = new Comparator<Project>()
+    private Project getProject(final PageParameters parameters)
     {
-        @Override
-        public int compare(Project o1, Project o2)
+        String projectUrl = parameters.get("project").toOptionalString();
+        try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
         {
-            int parentComp = ObjectUtils.compare(o1.getParentId(), o2.getParentId(), false);
-            return parentComp == 0 ? ObjectUtils.compare(o1.getOrderNumber(), o2.getOrderNumber(), true) : parentComp;
+            return CachingFacade.getCacheableMapper(session, ProjectsMapper.class).getProjectByUrl(projectUrl);
         }
-    };
-    private static final Comparator<Volume> volumeComparator = new Comparator<Volume>()
+    }
+
+    private void reinitAllProjects()
     {
-        @Override
-        public int compare(Volume o1, Volume o2)
-        {
-            int compProj = projectComparator.compare(o1.getProject(), o2.getProject());
-            return compProj == 0 ? ObjectUtils.compare(o1.getSequenceNumber(), o2.getSequenceNumber(), true) : compProj;
-        }
-    };
+        allProjects.clear();
+        allProjects.add(project);
+        allProjects.addAll(subProjects);
+    }
 
     public ProjectEdit(final PageParameters parameters)
     {
@@ -124,9 +93,9 @@ public class ProjectEdit extends AdminLayoutPage
         }
 
 
-        Collections.sort(subProjects, projectComparator);
-        Collections.sort(allProjects, projectComparator);
-        Collections.sort(volumes, volumeComparator);
+        Collections.sort(subProjects, PROJECT_COMPARATOR);
+        Collections.sort(allProjects, PROJECT_COMPARATOR);
+        Collections.sort(volumes, VOLUME_COMPARATOR);
 
         add(new Label("breadcrumbActive", project.getTitle()));
         add(new AdminInfoFormPanel<Project>("info", "Информация", new CompoundPropertyModel<>(project))
@@ -143,9 +112,36 @@ public class ProjectEdit extends AdminLayoutPage
             }
 
             @Override
-            protected Component getContentItemLabelComponent(String id, IModel<Project> model)
+            protected Component getContentItemLabelComponent(String id, final IModel<Project> model)
             {
-                return new ProjectInfoPanel(id, model);
+                return new Fragment(id, "projectInfoFragment", ProjectEdit.this, model)
+                {
+                    @Override
+                    protected void onInitialize()
+                    {
+                        super.onInitialize();
+                        add(new TextField<String>("url").setRequired(true).setLabel(Model.of("Ссылка")));
+                        add(new BannerUploadComponent("image").setProject(model.getObject()));
+                        add(new TextField<String>("title").setRequired(true).setLabel(Model.of("Заголовок")));
+                        add(new TextField<String>("nameJp"));
+                        add(new TextField<String>("nameEn"));
+                        add(new TextField<String>("nameRu"));
+                        add(new TextField<String>("nameRomaji"));
+                        add(new TextField<String>("author"));
+                        add(new TextField<String>("illustrator"));
+                        add(new TextField<String>("originalDesign"));
+                        add(new TextField<String>("originalStory"));
+                        add(new CheckBox("onevolume"));
+                        add(new CheckBox("projectHidden"));
+                        add(new CheckBox("bannerHidden"));
+                        add(new TextField<String>("issueStatus"));
+                        add(new TextField<String>("translationStatus"));
+                        add(new DropDownChoice<>("status", RuraConstants.PROJECT_STATUS_LIST));
+                        add(new TextArea<String>("franchise"));
+                        add(new TextArea<String>("annotation"));
+                        add(new NumberTextField<Integer>("forumId").setMinimum(1));
+                    }
+                };
             }
         });
 
@@ -219,9 +215,42 @@ public class ProjectEdit extends AdminLayoutPage
             }
 
             @Override
-            protected Component getRowComponent(String id, IModel<Volume> model)
+            protected Component getRowComponent(String id, final IModel<Volume> model)
             {
-                return new VolumeTableRowPanel(id, model, allProjects);
+                return new Fragment(id, "volumeTableRowFragment", ProjectEdit.this, model)
+                {
+                    @Override
+                    protected void onInitialize()
+                    {
+                        super.onInitialize();
+                        add(new TextField<String>("urlPart").setRequired(true).setLabel(Model.of("Ссылка")));
+                        add(new TextField<String>("nameFile").setRequired(true).setLabel(Model.of("Имя для файлов")));
+                        add(new TextField<String>("nameTitle").setRequired(true).setLabel(Model.of("Заголовок")));
+                        add(new TextField<String>("nameJp"));
+                        add(new TextField<String>("nameEn"));
+                        add(new TextField<String>("nameRu"));
+                        add(new TextField<String>("nameRomaji"));
+                        add(new TextField<String>("nameShort"));
+                        add(new DropDownChoice<>("project", allProjects).setChoiceRenderer(new ChoiceRenderer<Project>("title", "projectId"))
+                                                                        .setOutputMarkupId(true));
+                        add(new TextField<Float>("sequenceNumber"));
+                        add(new TextField<String>("author"));
+                        add(new TextField<String>("illustrator"));
+                        add(new DateTextField("releaseDate", "dd.MM.yyyy"));
+                        add(new TextField<String>("isbn"));
+                        add(new DropDownChoice<>("volumeType", RuraConstants.VOLUME_TYPE_LIST));
+                        add(new Select<String>("volumeStatus")
+                                .add(new SelectOptions<>("basic", RuraConstants.VOLUME_STATUS_BASIC_LIST, STATUS_OPTION_RENDERER))
+                                .add(new SelectOptions<>("external", RuraConstants.VOLUME_STATUS_EXTERNAL_LIST, STATUS_OPTION_RENDERER))
+                                .add(new SelectOptions<>("not_in_work", RuraConstants.VOLUME_STATUS_IN_WORK_LIST, STATUS_OPTION_RENDERER))
+                                .add(new SelectOptions<>("in_work", RuraConstants.VOLUME_STATUS_NOT_IN_WORK_LIST, STATUS_OPTION_RENDERER))
+                                .add(new SelectOptions<>("published", RuraConstants.VOLUME_STATUS_PUBLISHED_LIST, STATUS_OPTION_RENDERER)));
+                        add(new TextField<String>("externalUrl"));
+                        add(new TextArea<String>("annotation"));
+                        add(new CheckBox("adult"));
+                        add(new BookmarkablePageLink("link", VolumeEdit.class, model.getObject().getUrlParameters()));
+                    }
+                };
             }
 
         });
@@ -276,7 +305,7 @@ public class ProjectEdit extends AdminLayoutPage
             {
                 super.onAjaxProcess(target);
                 reinitAllProjects();
-                Collections.sort(allProjects, projectComparator);
+                Collections.sort(allProjects, PROJECT_COMPARATOR);
                 for (Component component : ((AbstractRepeater) ProjectEdit.this.get("volumes:form:rowRepeater")))
                 {
                     target.add(component.get("item:project"));
@@ -314,29 +343,69 @@ public class ProjectEdit extends AdminLayoutPage
                 };
             }
 
-//            @Override
-//            protected void onInitialize()
-//            {
-//                super.onInitialize();
-//                form.get("selectorBlock").add(new AttributeModifier("class", "col-xs-12 list-group select sortable"));
-//                form.get("formBlock").add(new AttributeModifier("class", "hidden-lg admin-affix"));
-//            }
         }.setSortable(true));
     }
 
-    private Project getProject(final PageParameters parameters)
-    {
-        String projectUrl = parameters.get("project").toOptionalString();
-        try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
-        {
-            return CachingFacade.getCacheableMapper(session, ProjectsMapper.class).getProjectByUrl(projectUrl);
-        }
-    }
+    private static final List<String> VOLUMES_TABLE_COLUMNS = new ImmutableList.Builder<String>()
+            .add("Ссылка")
+            .add("Имя для файлов")
+            .add("Заголовок")
+            .add("Название (ориг.)")
+            .add("Название (англ.)")
+            .add("Название (рус.)")
+            .add("Название (романдзи)")
+            .add("Короткое название")
+            .add("Серия")
+            .add("Номер в серии")
+            .add("Автор")
+            .add("Иллюстратор")
+            .add("Дата публикации")
+            .add("ISBN")
+            .add("Тип релиза")
+            .add("Cтатус релиза")
+            .add("Внешняя ссылка")
+            .add("Аннотация")
+            .add("18+")
+            .add("Править")
+            .build();
 
-    private void reinitAllProjects()
+    private static final Comparator<Project> PROJECT_COMPARATOR = new Comparator<Project>()
     {
-        allProjects.clear();
-        allProjects.add(project);
-        allProjects.addAll(subProjects);
-    }
+        @Override
+        public int compare(Project o1, Project o2)
+        {
+            int parentComp = ObjectUtils.compare(o1.getParentId(), o2.getParentId(), false);
+            return parentComp == 0 ? ObjectUtils.compare(o1.getOrderNumber(), o2.getOrderNumber(), true) : parentComp;
+        }
+    };
+
+    private static final Comparator<Volume> VOLUME_COMPARATOR = new Comparator<Volume>()
+    {
+        @Override
+        public int compare(Volume o1, Volume o2)
+        {
+            int compProj = PROJECT_COMPARATOR.compare(o1.getProject(), o2.getProject());
+            return compProj == 0 ? ObjectUtils.compare(o1.getSequenceNumber(), o2.getSequenceNumber(), true) : compProj;
+        }
+    };
+
+    private static final IOptionRenderer<String> STATUS_OPTION_RENDERER = new IOptionRenderer<String>()
+    {
+        @Override
+        public String getDisplayValue(String object)
+        {
+            return RuraConstants.VOLUME_STATUS_TO_FULL_TEXT.get(object);
+        }
+
+        @Override
+        public IModel<String> getModel(String value)
+        {
+            return Model.of(value);
+        }
+    };
+
+    private final List<Project> subProjects;
+    private final List<Project> allProjects;
+    private final List<Volume> volumes;
+    private final Project project;
 }
