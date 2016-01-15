@@ -233,8 +233,7 @@ CREATE TABLE team_members
   member_id INT(11) PRIMARY KEY AUTO_INCREMENT,
   user_id   INT(11),
   team_id   INT(11),
-  nickname  VARCHAR(64) UNIQUE NOT NULL,
-  active    BOOLEAN            NOT NULL
+  nickname  VARCHAR(64) UNIQUE NOT NULL
 );
 
 CREATE TABLE volume_release_activities
@@ -243,6 +242,7 @@ CREATE TABLE volume_release_activities
   volume_id           INT(11) NOT NULL,
   activity_id         INT(11) NOT NULL,
   member_id           INT(11) NOT NULL,
+  order_number        INT(11) NOT NULL,
   team_hidden         BOOLEAN NOT NULL
 );
 

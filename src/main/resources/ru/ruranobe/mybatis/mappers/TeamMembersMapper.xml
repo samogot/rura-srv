@@ -4,10 +4,10 @@
 
 <mapper namespace="ru.ruranobe.mybatis.mappers.TeamMembersMapper">
 
-    <select id="getTeamMemberById" parameterType="int" resultMap="TeamMemberResult">
-        SELECT *
+    <select id="getTeamMemberByIdWithCustomColumns" parameterType="map" resultMap="TeamMemberResult">
+        SELECT ${columns}
         FROM team_members
-        WHERE team_id = #{teamId}
+        WHERE member_id = #{memberId}
     </select>
 
     <select id="getAllTeamMembers" resultMap="TeamMemberResult">
@@ -16,11 +16,40 @@
         ORDER BY member_id ASC
     </select>
 
-    <select id="getAllTeamMembersWithUsernName" resultMap="TeamMemberResult">
+    <select id="getAllTeamMembersWithUserName" resultMap="TeamMemberResult">
         SELECT *
         FROM team_members
             LEFT JOIN users USING (user_id)
         ORDER BY team_id, nickname
+    </select>
+
+    <select id="searchTeamMembersByNicknameWithCustomColumns" parameterType="map" resultMap="TeamMemberResult">
+        SELECT ${columns}
+        FROM team_members
+        WHERE nickname LIKE concat('%', #{query}, '%')
+        <if test="activeOnly">
+            AND EXISTS (SELECT * FROM user_groups WHERE user_id = team_members.user_id)
+        </if>
+        ORDER BY nickname
+    </select>
+
+    <select id="getAllTeamMembersWithCustomColumns" parameterType="map" resultMap="TeamMemberResult">
+        SELECT ${columns}
+        FROM team_members
+        <if test="activeOnly">
+            WHERE EXISTS (SELECT * FROM user_groups WHERE user_id = team_members.user_id)
+        </if>
+        ORDER BY nickname
+    </select>
+
+    <select id="getTeamMembersByTeamIdWithCustomColumns" parameterType="map" resultMap="TeamMemberResult">
+        SELECT ${columns}
+        FROM team_members
+        WHERE team_id &lt;=&gt; #{teamId}
+        <if test="activeOnly">
+            AND EXISTS (SELECT * FROM user_groups WHERE user_id = team_members.user_id)
+        </if>
+        ORDER BY nickname
     </select>
 
     <insert id="insertTeamMember" parameterType="ru.ruranobe.mybatis.entities.tables.TeamMember" keyProperty="memberId"
@@ -28,8 +57,13 @@
         INSERT INTO team_members
         SET team_id = #{teamId},
         nickname = #{nickname},
-        active = #{active},
         user_id = #{userId}
+    </insert>
+
+    <insert id="insertIgnoreTeamMember" parameterType="string" useGeneratedKeys="true">
+        INSERT IGNORE INTO team_members
+        SET team_id  = 1,
+            nickname = #{nickname}
     </insert>
 
     <delete id="deleteTeamMember" parameterType="int">
@@ -41,7 +75,6 @@
         UPDATE team_members
         SET team_id = #{teamId},
         nickname = #{nickname},
-        active = #{active},
         user_id = #{userId}
         WHERE member_id = #{memberId}
     </update>
@@ -52,7 +85,6 @@
         <result property="userName" column="username"/>
         <result property="teamId" column="team_id"/>
         <result property="nickname" column="nickname"/>
-        <result property="active" column="active"/>
     </resultMap>
 
 </mapper>

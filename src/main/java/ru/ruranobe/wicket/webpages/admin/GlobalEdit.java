@@ -55,7 +55,7 @@ public class GlobalEdit extends AdminLayoutPage
             teams = teamsMapperCacheable.getAllTeams();
 
             TeamMembersMapper teamMembersMapperCacheable = CachingFacade.getCacheableMapper(session, TeamMembersMapper.class);
-            teamMembers = teamMembersMapperCacheable.getAllTeamMembersWithUsernName();
+            teamMembers = teamMembersMapperCacheable.getAllTeamMembersWithUserName();
 
             RolesMapper rolesMapperCacheable = CachingFacade.getCacheableMapper(session, RolesMapper.class);
             allRoles = rolesMapperCacheable.getAllUserGroups();
@@ -358,7 +358,6 @@ public class GlobalEdit extends AdminLayoutPage
             {
                 TeamMember teamMember = new TeamMember();
                 teamMember.setTeam(teams.get(0));
-                teamMember.setActive(true);
                 return teamMember;
             }
 

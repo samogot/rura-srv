@@ -6,34 +6,34 @@
 
     <select id="getLastUpdatesBy" parameterType="map" resultType="ru.ruranobe.mybatis.entities.tables.Update">
         SELECT
-            last_updates.update_id AS updateId,
-            last_updates.update_type AS updateType,
-            last_updates.project_id AS projectId,
-            last_updates.volume_id AS volumeId,
-            last_updates.chapter_id AS chapterId,
-            last_updates.show_time AS showTime,
-            last_updates.description AS description,
-            c.title AS chapterTitle,
-            v.name_title AS volumeTitle,
-            v.name_short AS volumeTitleShort,
-            c.url AS chapterUrl,
-            v.url AS volumeUrl
+        last_updates.update_id AS updateId,
+        last_updates.update_type AS updateType,
+        last_updates.project_id AS projectId,
+        last_updates.volume_id AS volumeId,
+        last_updates.chapter_id AS chapterId,
+        last_updates.show_time AS showTime,
+        last_updates.description AS description,
+        c.title AS chapterTitle,
+        v.name_title AS volumeTitle,
+        v.name_short AS volumeTitleShort,
+        c.url AS chapterUrl,
+        v.url AS volumeUrl
         FROM (SELECT *
-              FROM updates
-              WHERE show_time &lt; (now())
-              <if test="volumeId != null">
-                  AND volume_id = #{volumeId}
-              </if>
-              <if test="updateType != null">
-                  AND update_type = #{updateType}
-              </if>
-              <if test="projectId != null">
-                  AND project_id = coalesce((SELECT parent_id
-                                             FROM projects
-                                             WHERE project_id = #{projectId}), #{projectId})
-              </if>
-              ORDER BY show_time DESC
-              LIMIT #{limitFrom}, #{limitTo}) last_updates
+        FROM updates
+        WHERE show_time &lt; (now())
+        <if test="volumeId != null">
+            AND volume_id = #{volumeId}
+        </if>
+        <if test="updateType != null">
+            AND update_type = #{updateType}
+        </if>
+        <if test="projectId != null">
+            AND project_id = coalesce((SELECT parent_id
+            FROM projects
+            WHERE project_id = #{projectId}), #{projectId})
+        </if>
+        ORDER BY show_time DESC
+        LIMIT #{limitFrom}, #{limitTo}) last_updates
         LEFT JOIN chapters c ON last_updates.chapter_id = c.chapter_id
         LEFT JOIN volumes v ON last_updates.volume_id = v.volume_id
     </select>
@@ -42,37 +42,49 @@
         SELECT count(*)
         FROM updates
         WHERE (volume_id = #{volumeId} OR #{volumeId} IS NULL)
-              AND (project_id = #{projectId} OR #{projectId} IS NULL)
-              AND (update_type = #{updateType} OR #{updateType} IS NULL)
+        AND (project_id = #{projectId} OR #{projectId} IS NULL)
+        AND (update_type = #{updateType} OR #{updateType} IS NULL)
     </select>
 
     <select id="getUpdatesByVolumeId" resultType="ru.ruranobe.mybatis.entities.tables.Update">
-        select
-            updates.update_id AS updateId,
+        SELECT
+        updates.update_id AS updateId,
             updates.update_type AS updateType,
             updates.update_type AS updateType,
-            updates.project_id AS projectId,
-            updates.volume_id AS volumeId,
-            updates.chapter_id AS chapterId,
-            updates.show_time AS showTime,
+        updates.project_id AS projectId,
+        updates.volume_id AS volumeId,
+        updates.chapter_id AS chapterId,
+        updates.show_time AS showTime,
             updates.description AS description
-        from updates
-        where volume_id=#{volumeId}
+        FROM updates
+        WHERE volume_id =#{volumeId}
     </select>
 
-    <insert id="insertUpdate" parameterType="ru.ruranobe.mybatis.entities.tables.Update" keyProperty="updateId" useGeneratedKeys="true">
-        insert into updates (project_id, volume_id, chapter_id, update_type, show_time, description)
-        values (#{projectId}, #{volumeId}, #{chapterId}, #{updateType}, #{showType}, #{desciption})
+    <insert id="insertUpdate" parameterType="ru.ruranobe.mybatis.entities.tables.Update" keyProperty="updateId"
+            useGeneratedKeys="true">
+        INSERT INTO updates
+        SET project_id = #{projectId},
+        volume_id = #{volumeId},
+        chapter_id = #{chapterId},
+        update_type = #{updateType},
+        show_time = #{showTime},
+        description = #{description}
     </insert>
 
     <delete id="deleteUpdate" parameterType="int">
-        delete from updates where update_id=#{updateId}
+        DELETE FROM updates
+        WHERE update_id =#{updateId}
     </delete>
 
     <update id="updateUpdate" parameterType="ru.ruranobe.mybatis.entities.tables.Update">
-        update volume_activities set project_id = #{projectId}, volume_id=#{volumeId}, chapter_id = #{chapterId}, update_type=#{updateType},
-        show_time = #{showType}, description=#{description}
-        where update_id=#{updateId}
+        UPDATE updates
+        SET project_id = #{projectId},
+        volume_id = #{volumeId},
+        chapter_id = #{chapterId},
+        update_type = #{updateType},
+        show_time = #{showTime},
+        description = #{description}
+        WHERE update_id =#{updateId}
     </update>
 
     <!--TODO: add resultMap-->

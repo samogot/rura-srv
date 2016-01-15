@@ -13,13 +13,29 @@
             INNER JOIN volume_activities USING (activity_id)
             INNER JOIN team_members USING (member_id)
         WHERE volume_id = #{volumeId}
+        ORDER BY order_number
     </select>
+
+    <delete id="deleteVolumeReleaseActivitysByVolumeId" parameterType="int">
+        DELETE FROM volume_release_activities
+        WHERE volume_id = #{volumeId}
+    </delete>
+
+    <insert id="insertVolumeReleaseActivitysByVolumeId" parameterType="map">
+        INSERT INTO volume_release_activities(volume_id, activity_id, member_id, order_number, team_hidden) VALUES
+        <foreach collection="releaseActivities" item="activity" separator=",">
+            (#{volumeId}, #{activity.activity.activityId}, (SELECT member_id
+            FROM team_members
+            WHERE nickname = #{activity.memberName}), #{activity.orderNumber}, #{activity.teamHidden})
+        </foreach>
+    </insert>
 
     <resultMap type="ru.ruranobe.mybatis.entities.tables.VolumeReleaseActivity" id="VolumeReleaseActivityResult">
         <id property="releaseActivityId" column="release_activity_id"/>
         <result property="volumeId" column="volume_id"/>
         <result property="activityId" column="activity_id"/>
         <result property="memberId" column="member_id"/>
+        <result property="orderNumber" column="order_number"/>
         <result property="activityName" column="activity_name"/>
         <result property="memberName" column="nickname"/>
         <result property="teamHidden" column="team_hidden"/>

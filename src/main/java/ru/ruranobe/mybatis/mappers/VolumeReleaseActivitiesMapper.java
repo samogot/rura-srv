@@ -1,5 +1,6 @@
 package ru.ruranobe.mybatis.mappers;
 
+import org.apache.ibatis.annotations.Param;
 import ru.ruranobe.mybatis.entities.tables.VolumeReleaseActivity;
 
 import java.util.Collection;
@@ -8,9 +9,8 @@ public interface VolumeReleaseActivitiesMapper
 {
     Collection<VolumeReleaseActivity> getVolumeReleaseActivitiesByVolumeId(int volumeId);
 
-    void insertVolumeReleaseActivity(VolumeReleaseActivity volumeReleaseActivity);
+    void deleteVolumeReleaseActivitysByVolumeId(int volumeId);
 
-    void deleteVolumeReleaseActivity(int releaseActivityId);
-
-    void updateVolumeReleaseActivity(VolumeReleaseActivity volumeReleaseActivity);
+    void insertVolumeReleaseActivitysByVolumeId(@Param("volumeId") int volumeId,
+                                                @Param("releaseActivities") Collection<VolumeReleaseActivity> releaseActivities);
 }

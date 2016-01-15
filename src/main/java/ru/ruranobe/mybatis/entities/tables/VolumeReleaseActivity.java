@@ -26,17 +26,6 @@ public class VolumeReleaseActivity implements Serializable
         this.activityId = activity == null ? null : activity.getActivityId();
     }
 
-    public TeamMember getMember()
-    {
-        return member;
-    }
-
-    public void setMember(TeamMember member)
-    {
-        this.member = member;
-        this.memberId = member == null ? null : member.getMemberId();
-    }
-
     public Integer getActivityId()
     {
         return activityId;
@@ -133,5 +122,4 @@ public class VolumeReleaseActivity implements Serializable
     private String activityName;
     private String memberName;
     private VolumeActivity activity;
-    private TeamMember member;
 }

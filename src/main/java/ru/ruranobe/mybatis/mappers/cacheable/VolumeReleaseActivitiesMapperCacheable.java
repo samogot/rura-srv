@@ -1,7 +1,7 @@
 package ru.ruranobe.mybatis.mappers.cacheable;
 
-import ru.ruranobe.mybatis.mappers.VolumeReleaseActivitiesMapper;
 import ru.ruranobe.mybatis.entities.tables.VolumeReleaseActivity;
+import ru.ruranobe.mybatis.mappers.VolumeReleaseActivitiesMapper;
 
 import java.util.Collection;
 
@@ -21,20 +21,14 @@ public class VolumeReleaseActivitiesMapperCacheable implements VolumeReleaseActi
     }
 
     @Override
-    public void insertVolumeReleaseActivity(VolumeReleaseActivity volumeReleaseActivity)
+    public void deleteVolumeReleaseActivitysByVolumeId(int volumeId)
     {
-        mapper.insertVolumeReleaseActivity(volumeReleaseActivity);
+        mapper.deleteVolumeReleaseActivitysByVolumeId(volumeId);
     }
 
     @Override
-    public void deleteVolumeReleaseActivity(int releaseActivityId)
+    public void insertVolumeReleaseActivitysByVolumeId(int volumeId, Collection<VolumeReleaseActivity> releaseActivities)
     {
-        mapper.deleteVolumeReleaseActivity(releaseActivityId);
-    }
-
-    @Override
-    public void updateVolumeReleaseActivity(VolumeReleaseActivity volumeReleaseActivity)
-    {
-        mapper.updateVolumeReleaseActivity(volumeReleaseActivity);
+        mapper.insertVolumeReleaseActivitysByVolumeId(volumeId, releaseActivities);
     }
 }

@@ -5,13 +5,18 @@ $(document).on('keyup change', '.updates-input', function () {
     setNameLabelText($formItem, $dateInput.val().split(' ')[0] + ': ' + $chapterSelect.children(':selected').text().replace('　', ''));
 }).on('keyup change', '.member-input', function () {
     var $formItem = $(this).closest('.form-item');
-    var $memberInput = $formItem.find('input.member-input');
+    var $memberInput = $formItem.find('.tt-input');
     var $activitySelect = $formItem.find('select.member-input');
-    setNameLabelText($formItem, $memberInput.val() + ' - ' + $activitySelect.children(':selected').text());
+    setNameLabelText($formItem, $memberInput.typeahead('val') + ' - ' + $activitySelect.children(':selected').text());
 }).on('change', '.nested-checkbox', function () {
     var $input = $(this);
     var $formItem = $input.closest('.form-item');
-    findNameLabel($formItem).toggleClass('sub-chapter', $input.is(':checked'));
+    findNameLabel($formItem).toggleClass('sub-chapter', $input.prop('checked'));
+}).on('change', '.published-checkbox', function () {
+    var $input = $(this);
+    var $formItem = $input.closest('.form-item');
+    $formItem.find('.publish-date-group').hide().find('.form-control')
+        .data("DateTimePicker").date($input.prop('checked') ? moment() : null);
 });
 
 function setChapterOrderDictionary() {
@@ -93,15 +98,102 @@ $imagesSelect.on("sortupdate", function (event, ui) { // для списка и�
         }
     });
 });
-$('#chapters').find('.list-group.select').on("sortupdate", function (event, ui) {
+
+$(initImagesChapterLabels);
+$('#chapters').on('addnewitem', function (e, d) {
+    $(d.form).find('.publish-date-group').each(initPublishDateGroup);
+}).find('.list-group.select').on("sortupdate", function (event, ui) {
     setTimeout(function () {
         setChapterOrderDictionary();
         sortImagesSelectorItems();
     }, 100)
+}).data('toggle', 'multiple');
+$('.publish-date-group').each(initPublishDateGroup);
+
+function initPublishDateGroup() {
+    var $input = $(this).find('.form-control').datetimepicker({
+        format: 'DD.MM.YYYY HH:mm',
+        stepping: 10,
+        locale: 'ru',
+        icons: {
+            time: 'fa fa-clock-o',
+            date: 'fa fa-calendar',
+            up: 'fa fa-chevron-up',
+            down: 'fa fa-chevron-down',
+            previous: 'fa fa-chevron-left',
+            next: 'fa fa-chevron-right',
+            today: 'fa fa-calendar-check-o',
+            clear: 'fa fa-trash-o',
+            close: 'fa fa-close'
+        }
+    });
+    $(this).toggle(moment().isBefore($input.data("DateTimePicker").date()));
+}
+
+$(function () {
+    $('#datetimepicker-plan').datetimepicker({
+        format: 'DD.MM.YYYY HH:mm',
+        inline: true,
+        sideBySide: true,
+        minDate: moment(),
+        stepping: 10,
+        locale: 'ru',
+        icons: {
+            time: 'fa fa-clock-o',
+            date: 'fa fa-calendar',
+            up: 'fa fa-chevron-up',
+            down: 'fa fa-chevron-down',
+            previous: 'fa fa-chevron-left',
+            next: 'fa fa-chevron-right',
+            today: 'fa fa-calendar-check-o',
+            clear: 'fa fa-trash-o',
+            close: 'fa fa-close'
+        }
+    });
+});
+$('#publish-date-modal').find('.btn-primary').click(function () {
+    var createUpdates = $('#create-updates-checkbox').prop('checked');
+    window.addChapterUpdatesCount = $('#chapters').find('.list-group-item.active').each(function () {
+        var chapterFormItem = $($(this).attr('href'));
+        chapterFormItem.find('.published-checkbox').prop('checked', false);
+        chapterFormItem.find('.publish-date-group').show()
+            .find('.form-control').data("DateTimePicker")
+            .date($('#datetimepicker-plan').data("DateTimePicker").date());
+        if (createUpdates)
+            $('#updates').find('.btn-success').click();
+    }).length;
+    if (!createUpdates)
+        window.addChapterUpdatesCount = 0;
 });
 
-$(initImagesChapterLabels);
-
+$('#updates').on('addnewitem', function (e, d) {
+        var $updateFormItem = $(d.form);
+        if (window.addChapterUpdatesCount-- > 0) {
+            var $chapterFormItem = $($('#chapters').find('.list-group-item.active').eq(window.addChapterUpdatesCount).attr('href'));
+            $updateFormItem.find('select.updates-input').val($chapterFormItem.find('.chapter-id').val());
+            $updateFormItem.find('input.updates-input').val($chapterFormItem.find('.publish-date-group .form-control').val()).trigger('keyup');
+        }
+        $updateFormItem.find('.input.updates-input').each(initUpdateDateField);
+    })
+    .find('.input.updates-input').each(initUpdateDateField);
+function initUpdateDateField() {
+    var $input = $(this).datetimepicker({
+        format: 'DD.MM.YYYY HH:mm',
+        stepping: 10,
+        locale: 'ru',
+        icons: {
+            time: 'fa fa-clock-o',
+            date: 'fa fa-calendar',
+            up: 'fa fa-chevron-up',
+            down: 'fa fa-chevron-down',
+            previous: 'fa fa-chevron-left',
+            next: 'fa fa-chevron-right',
+            today: 'fa fa-calendar-check-o',
+            clear: 'fa fa-trash-o',
+            close: 'fa fa-close'
+        }
+    });
+}
 
 //upload
 
@@ -214,3 +306,51 @@ configFileUpload('#btn-image-add');
 $('.image-data-color, .image-data-main').each(function () {
     initFormItemFileUpload(this);
 });
+
+$(function () {
+    $('.issue-date-input').datetimepicker({
+        format: 'DD.MM.YYYY',
+        locale: 'ru',
+        icons: {
+            time: 'fa fa-clock-o',
+            date: 'fa fa-calendar',
+            up: 'fa fa-chevron-up',
+            down: 'fa fa-chevron-down',
+            previous: 'fa fa-chevron-left',
+            next: 'fa fa-chevron-right',
+            today: 'fa fa-calendar-check-o',
+            clear: 'fa fa-trash-o',
+            close: 'fa fa-close'
+        }
+    });
+});
+
+var members = new Bloodhound({
+    datumTokenizer: Bloodhound.tokenizers.obj.nonword('nickname'),
+    queryTokenizer: Bloodhound.tokenizers.whitespace,
+    prefetch: '/api/members/team/1?active=true',
+    remote: {
+        url: '/api/members/search?q=%QUERY',
+        wildcard: '%QUERY'
+    }
+});
+
+
+function initMemberTypehead() {
+    $(this).typeahead({
+        hint: true,
+        highlight: true,
+        minLength: 0
+    }, {
+        name: 'members',
+        display: 'nickname',
+        source: members,
+        limit: 50
+    });
+}
+
+$('#staff').on('addnewitem', function (e, d) {
+    $(d.form).find('.member-input.typeahead').each(initMemberTypehead);
+});
+$('.member-input.typeahead').each(initMemberTypehead);
+

@@ -4,8 +4,6 @@ var people = new Bloodhound({
     prefetch: '/api/people'
 });
 
-// passing in `null` for the `options` arguments will result in the default
-// options being used
 $('.people-name-input.typeahead').typeahead({
     hint: true,
     highlight: true,

@@ -78,7 +78,7 @@
         </div>
         <div class="form-group">
             <label wicket:for="releaseDate">Дата публикации</label>
-            <input wicket:id="releaseDate" type="text" class="form-control">
+            <input wicket:id="releaseDate" type="text" class="form-control issue-date-input">
         </div>
         <div class="form-group">
             <label wicket:for="isbn">ISBN</label>
@@ -140,7 +140,7 @@
 
         <div class="form-group">
             <label wicket:for="memberName">Участник</label>
-            <input wicket:id="memberName" class="form-control member-input" type="text">
+            <input wicket:id="memberName" class="form-control member-input typeahead" type="text">
         </div>
         <div class="form-group">
             <label wicket:for="activity">Роль</label>
@@ -170,6 +170,15 @@
         <div class="form-group">
             <label wicket:for="title">Заголовок</label>
             <input wicket:id="title" class="form-control name-input" type="text">
+        </div>
+        <div class="form-group">
+            <div class="checkbox">
+                <label><input wicket:id="published" type="checkbox" class="published-checkbox"> Опубликован</label>
+            </div>
+        </div>
+        <div class="form-group publish-date-group">
+            <label wicket:for="publishDate">Дата публикации</label>
+            <input wicket:id="publishDate" class="form-control" type="text">
         </div>
         <div class="form-group">
             <a href="#" target="_blank" wicket:id="link">Править&nbsp;
@@ -260,6 +269,30 @@
         </div>
     </wicket:fragment>
 
+    <div class="modal fade" tabindex="-1" role="dialog" id="publish-date-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Запланировать публикацию</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="datetimepicker-plan"></div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label><input type="checkbox" id="create-updates-checkbox"> Создать обновления</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Планировать</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="js/listgroup.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
     <!-- Скрипт загрузки -->
@@ -273,9 +306,9 @@
     <!-- moment.js -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.min.js"></script>
     <!-- DateTimePicker -->
-    <link rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.15.35/css/bootstrap-datetimepicker.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.15.35/js/bootstrap-datetimepicker.min.js"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css"
+          rel="stylesheet">
 
     <script src="js/ContentsModule.js"></script>
     <script src="js/AdminListPanel.js"></script>

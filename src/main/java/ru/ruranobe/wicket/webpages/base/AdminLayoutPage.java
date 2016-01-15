@@ -11,6 +11,12 @@ import java.util.List;
  */
 public class AdminLayoutPage extends SidebarLayoutPage
 {
+    public AdminLayoutPage()
+    {
+        super();
+        getSession().getClientInfo();
+    }
+
     public void addContentsItem(String href, String title)
     {
         contentsHolders.add(new ContentsHolder(href, title));

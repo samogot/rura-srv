@@ -1,21 +1,36 @@
 package ru.ruranobe.mybatis.mappers;
 
+import org.apache.ibatis.annotations.Param;
 import ru.ruranobe.mybatis.entities.tables.TeamMember;
 
+import java.util.Collection;
 import java.util.List;
 
-/**
- * Created by Samogot on 10.05.2015.
- */
 public interface TeamMembersMapper
 {
     TeamMember getTeamMemberById(int memberId);
 
+    TeamMember getTeamMemberByIdWithCustomColumns(@Param("memberId") int memberId,
+                                                  @Param("columns") String columns);
+
     List<TeamMember> getAllTeamMembers();
 
-    List<TeamMember> getAllTeamMembersWithUsernName();
+    List<TeamMember> getAllTeamMembersWithUserName();
+
+    Collection<TeamMember> searchTeamMembersByNicknameWithCustomColumns(@Param("query") String query,
+                                                                        @Param("columns") String columns,
+                                                                        @Param("activeOnly") boolean activeOnly);
+
+    Collection<TeamMember> getAllTeamMembersWithCustomColumns(@Param("columns") String columns,
+                                                              @Param("activeOnly") boolean activeOnly);
+
+    Collection<TeamMember> getTeamMembersByTeamIdWithCustomColumns(@Param("teamId") Integer teamId,
+                                                                   @Param("columns") String columns,
+                                                                   @Param("activeOnly") boolean activeOnly);
 
     void insertTeamMember(TeamMember teamMember);
+
+    void insertIgnoreTeamMember(@Param("nickname") String teamMemberName);
 
     void deleteTeamMember(int teamMemberId);
 

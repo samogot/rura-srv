@@ -27,13 +27,21 @@
         if (options.toggle)
             $element.attr('data-toggle', options.toggle);
 
-        $element.on('click', '.list-group-item', function () {
+        $element.on('click', '.list-group-item', function (e) {
             var $item = $(this);
 
             if (!$item.hasClass('disabled')) {
 
                 if ($element.data('toggle') == 'items')
                     $item.toggleClass('active');
+                else if ($element.data('toggle') == 'multiple' && e.ctrlKey)
+                    $item.addClass('active');
+                else if ($element.data('toggle') == 'multiple' && e.shiftKey) {
+                    if ($item.prevAll('.active').length)
+                        $item.prevUntil('.active').andSelf().addClass('active');
+                    else if ($item.nextAll('.active').length)
+                        $item.nextUntil('.active').andSelf().addClass('active');
+                }
                 else
                     me.unselect('*')
                       .select($item);
@@ -89,7 +97,7 @@
                 vals.push($(element).val());
             });
             values = vals;
-        } 
+        }
 
         this.$element.val(values)
                      .change();
@@ -118,7 +126,7 @@
 
         $select.find('option').each(function (i, item) {
             var $item = $(item);
-    
+
             var $new = $('<a>')
                         .attr('href', '#')
                         .addClass('list-group-item')
@@ -161,7 +169,7 @@
         return $listGroup;
     };
 
-    
+
     // LIST GROUP PLUGIN DEFINITION
     // =======================
     $.fn.listgroup = function (option) {

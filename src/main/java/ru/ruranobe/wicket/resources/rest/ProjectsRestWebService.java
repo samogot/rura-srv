@@ -2,6 +2,8 @@ package ru.ruranobe.wicket.resources.rest;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.wicket.request.http.WebResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wicketstuff.rest.annotations.MethodMapping;
 import org.wicketstuff.rest.annotations.ResourcePath;
 import org.wicketstuff.rest.annotations.parameters.RequestParam;
@@ -43,9 +45,10 @@ public class ProjectsRestWebService extends GsonRestResource
     protected void handleException(WebResponse response, Exception exception)
     {
         super.handleException(response, exception);
-        exception.printStackTrace();
+        LOG.error("Error in REST API call", exception);
     }
 
+    private static final Logger LOG = LoggerFactory.getLogger(ProjectsRestWebService.class);
     private static final List<String> ALLOWED_FIELD_LIST = Arrays.asList("parent_id", "image_id", "url",
             "name_jp", "name_en", "name_ru", "name_romaji", "author", "illustrator", "order_number",
             "banner_hidden", "onevolume", "franchise", "annotation", "title");
