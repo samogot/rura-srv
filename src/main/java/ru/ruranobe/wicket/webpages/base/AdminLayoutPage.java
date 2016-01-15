@@ -1,8 +1,11 @@
 package ru.ruranobe.wicket.webpages.base;
 
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import ru.ruranobe.wicket.components.ContentsHolder;
 import ru.ruranobe.wicket.components.sidebar.ContentsModule;
 
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,10 +14,12 @@ import java.util.List;
  */
 public class AdminLayoutPage extends SidebarLayoutPage
 {
-    public AdminLayoutPage()
+    @Override
+    public void renderHead(IHeaderResponse response)
     {
-        super();
-        getSession().getClientInfo();
+        super.renderHead(response);
+        response.render(JavaScriptHeaderItem.forScript(
+                String.format("window.serverTimeZone = '%s';", ZoneId.systemDefault()), "timezone"));
     }
 
     public void addContentsItem(String href, String title)

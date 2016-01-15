@@ -23,6 +23,7 @@ import ru.ruranobe.mybatis.entities.tables.TeamMember;
 import ru.ruranobe.mybatis.entities.tables.VolumeActivity;
 import ru.ruranobe.mybatis.mappers.*;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
+import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.components.admin.AdminAffixedListPanel;
 import ru.ruranobe.wicket.components.admin.BannerUploadComponent;
 import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
@@ -137,6 +138,7 @@ public class GlobalEdit extends AdminLayoutPage
                 project.setProjectHidden(true);
                 project.setOnevolume(false);
                 project.setUrl("");
+                project.setStatus(RuraConstants.PROJECT_STATUS_LIST.get(0));
                 return project;
             }
 

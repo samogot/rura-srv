@@ -319,6 +319,8 @@ public class ProjectEdit extends AdminLayoutPage
                 new_project.setParentId(project.getProjectId());
                 new_project.setBannerHidden(true);
                 new_project.setProjectHidden(true);
+                new_project.setOnevolume(false);
+                new_project.setStatus(RuraConstants.PROJECT_STATUS_LIST.get(0));
                 return new_project;
             }
 

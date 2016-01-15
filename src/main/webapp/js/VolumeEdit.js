@@ -16,7 +16,7 @@ $(document).on('keyup change', '.updates-input', function () {
     var $input = $(this);
     var $formItem = $input.closest('.form-item');
     $formItem.find('.publish-date-group').hide().find('.form-control')
-        .data("DateTimePicker").date($input.prop('checked') ? moment() : null);
+        .data("DateTimePicker").date($input.prop('checked') ? moment.tz(window.serverTimeZone).subtract(1, 'days') : null);
 });
 
 function setChapterOrderDictionary() {
@@ -127,7 +127,7 @@ function initPublishDateGroup() {
             close: 'fa fa-close'
         }
     });
-    $(this).toggle(moment().isBefore($input.data("DateTimePicker").date()));
+    $(this).toggle(moment.tz(window.serverTimeZone).isBefore($input.data("DateTimePicker").date()));
 }
 
 $(function () {
@@ -135,7 +135,7 @@ $(function () {
         format: 'DD.MM.YYYY HH:mm',
         inline: true,
         sideBySide: true,
-        minDate: moment(),
+        minDate: moment.tz(window.serverTimeZone).subtract(1, 'days'),
         stepping: 10,
         locale: 'ru',
         icons: {
