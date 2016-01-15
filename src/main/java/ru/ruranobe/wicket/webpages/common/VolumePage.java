@@ -1,6 +1,5 @@
 package ru.ruranobe.wicket.webpages.common;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.AttributeModifier;
@@ -12,6 +11,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import ru.ruranobe.misc.RuranobeUtils;
@@ -29,9 +29,7 @@ import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 import java.io.Serializable;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class VolumePage extends SidebarLayoutPage {
@@ -84,26 +82,26 @@ public class VolumePage extends SidebarLayoutPage {
 			ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.
 																							getCacheableMapper(session, ExternalResourcesMapper.class);
 			ExternalResource volumeCover;
-			List<SimpleEntry<String, String>> covers = new ArrayList<>();
+			List<SimpleEntry<String, ExternalResource>> covers = new ArrayList<>();
 			volumeCover = externalResourcesMapperCacheable.getExternalResourceById(volume.getImageOne());
 			if (volumeCover != null)
 			{
-				covers.add(new SimpleEntry<>("", volumeCover.getUrl()));
+				covers.add(new SimpleEntry<>("", volumeCover));
 			}
 			volumeCover = externalResourcesMapperCacheable.getExternalResourceById(volume.getImageTwo());
 			if (volumeCover != null)
 			{
-				covers.add(new SimpleEntry<>("", volumeCover.getUrl()));
+				covers.add(new SimpleEntry<>("", volumeCover));
 			}
 			volumeCover = externalResourcesMapperCacheable.getExternalResourceById(volume.getImageThree());
 			if (volumeCover != null)
 			{
-				covers.add(new SimpleEntry<>("", volumeCover.getUrl()));
+				covers.add(new SimpleEntry<>("", volumeCover));
 			}
 			volumeCover = externalResourcesMapperCacheable.getExternalResourceById(volume.getImageFour());
 			if (volumeCover != null)
 			{
-				covers.add(new SimpleEntry<>("", volumeCover.getUrl()));
+				covers.add(new SimpleEntry<>("", volumeCover));
 			}
 			add(new CoverCarousel("volumeCoverCarousel", covers));
 
@@ -119,6 +117,7 @@ public class VolumePage extends SidebarLayoutPage {
 			add(new LabelHideableOnNull("nameRu"));
 			add(new LabelHideableOnNull("author"));
 			add(new LabelHideableOnNull("illustrator"));
+			add(new LabelHideableOnNull("originalStory"));
 			add(new LabelHideableOnNull("originalDesign"));
 			add(new LabelHideableOnNull("releaseDate"));
 			add(new LabelHideableOnNull("fullStatus"));
@@ -136,37 +135,16 @@ public class VolumePage extends SidebarLayoutPage {
 
 			VolumeReleaseActivitiesMapper volumeReleaseActivitiesMapperCacheable =
 					CachingFacade.getCacheableMapper(session, VolumeReleaseActivitiesMapper.class);
-			List<VolumeReleaseActivity> volumeReleaseActivities = new ArrayList<>(
-					volumeReleaseActivitiesMapperCacheable.getVolumeReleaseActivitiesByVolumeId(volume.getVolumeId()));
+			List<VolumeReleaseActivity> groupedVolumeReleaseActivities = new ArrayList<>(
+					volumeReleaseActivitiesMapperCacheable.getGroupedVolumeReleaseActivitiesByVolumeId(volume.getVolumeId()));
 
-			final Map<String, ArrayList<String>> activityNameToMemberName = new HashMap<>();
-			for (VolumeReleaseActivity activity : volumeReleaseActivities)
-			{
-				String activityName = activity.getActivityName();
-				String memberName = activity.getMemberName();
-
-				if (activityNameToMemberName.get(activityName) == null)
-				{
-					ArrayList<String> temp = new ArrayList<>();
-					temp.add(memberName);
-					activityNameToMemberName.put(activityName, temp);
-				}
-				else
-				{
-					activityNameToMemberName.get(activityName).add(memberName);
-				}
-			}
-
-			List<String> activityNames = new ArrayList<>(activityNameToMemberName.keySet());
-			add(new ListView<String>("volumeReleaseActivitiesView", activityNames)
+			add(new PropertyListView<VolumeReleaseActivity>("volumeReleaseActivitiesView", groupedVolumeReleaseActivities)
 			{
 				@Override
-				protected void populateItem(ListItem<String> item)
+				protected void populateItem(ListItem<VolumeReleaseActivity> item)
 				{
-					String activityName = item.getModelObject();
-					item.add(new Label("activityName", activityName));
-					ArrayList<String> membersList = activityNameToMemberName.get(activityName);
-					item.add(new Label("memberName", StringUtils.join(membersList, ',')));
+					item.add(new Label("activityName"));
+					item.add(new Label("memberName"));
 				}
 
 				@Override
@@ -211,7 +189,7 @@ public class VolumePage extends SidebarLayoutPage {
 			}
 			else
 			{
-				readAllLink = new BookmarkablePageLink("readAllLink", ru.ruranobe.wicket.webpages.common.Text.class, volume.getUrlParameters())
+				readAllLink = new BookmarkablePageLink("readAllLink", TextPage.class, volume.getUrlParameters())
 				{
 					@Override
 					public boolean isVisible()

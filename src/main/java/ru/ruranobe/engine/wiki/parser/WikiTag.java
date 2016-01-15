@@ -4,6 +4,16 @@ import java.util.Map;
 
 public class WikiTag
 {
+    public String getImageThumbnail()
+    {
+        return imageThumbnail;
+    }
+
+    public void setImageThumbnail(String imageThumbnail)
+    {
+        this.imageThumbnail = imageThumbnail;
+    }
+
     public WikiTag(WikiTagType wikiTagType, int startPosition, String uniqueId, Map<String, String> attributeNameToValue)
     {
         this.wikiTagType = wikiTagType;
@@ -103,6 +113,7 @@ public class WikiTag
     private final Map<String, String> attributeNameToValue;
     private int listOrderNumber;
     private String imageUrl;
+    private String imageThumbnail;
     private int wikiTagLength;
     private Integer externalResourceId;
 

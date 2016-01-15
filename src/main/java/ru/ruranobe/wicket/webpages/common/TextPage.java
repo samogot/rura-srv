@@ -6,13 +6,17 @@ import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
+import ru.ruranobe.engine.wiki.parser.ChapterTextParser;
 import ru.ruranobe.engine.wiki.parser.ContentItem;
-import ru.ruranobe.engine.wiki.parser.FootnoteItem;
-import ru.ruranobe.engine.wiki.parser.WikiParser;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
-import ru.ruranobe.mybatis.entities.tables.*;
-import ru.ruranobe.mybatis.mappers.*;
+import ru.ruranobe.mybatis.entities.tables.Chapter;
+import ru.ruranobe.mybatis.entities.tables.Project;
+import ru.ruranobe.mybatis.entities.tables.Volume;
+import ru.ruranobe.mybatis.mappers.ChaptersMapper;
+import ru.ruranobe.mybatis.mappers.ProjectsMapper;
+import ru.ruranobe.mybatis.mappers.TextsMapper;
+import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.InstantiationSecurityCheck;
 import ru.ruranobe.wicket.LoginSession;
@@ -23,15 +27,17 @@ import ru.ruranobe.wicket.webpages.admin.Editor;
 import ru.ruranobe.wicket.webpages.admin.VolumeEdit;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
 
-public class Text extends SidebarLayoutPage implements InstantiationSecurityCheck
+public class TextPage extends SidebarLayoutPage implements InstantiationSecurityCheck
 {
-    public static final String DELIMITER = ",;,";
     protected String titleName;
     private Chapter chapter;
 
-    public Text(PageParameters parameters)
+    public TextPage(PageParameters parameters)
     {
         setStatelessHint(true);
 
@@ -175,100 +181,23 @@ public class Text extends SidebarLayoutPage implements InstantiationSecurityChec
                 }
             }
 
-            TextsMapper textsMapperCacheable = CachingFacade.getCacheableMapper(session, TextsMapper.class);
-            ChapterImagesMapper chapterImagesMapperCacheable = CachingFacade.getCacheableMapper(session, ChapterImagesMapper.class);
-            boolean committionNeeded = false;
+            TextsMapper textsMapper = CachingFacade.getCacheableMapper(session, TextsMapper.class);
+            boolean committingNeeded = false;
 
             for (Chapter chapter : allChapterList)
             {
                 if (chapter.isVisibleOnPage())
                 {
-                    Integer textId = chapter.getTextId();
-                    ru.ruranobe.mybatis.entities.tables.Text chapterText = null;
-                    String textHtml = "";
-                    String chapterFootnotes = "";
-                    if (textId != null)
-                    {
-                        chapterText = textsMapperCacheable.getHtmlInfoById(textId);
-                        textHtml = chapterText.getTextHtml();
-                        chapterFootnotes = chapterText.getFootnotes();
-                    }
-
-                    if (Strings.isEmpty(textHtml) && textId != null)
-                    {
-                        committionNeeded = true;
-
-                        chapterText = textsMapperCacheable.getTextById(textId);
-                        List<ChapterImage> chapterImages = chapterImagesMapperCacheable.getChapterImagesByChapterId(chapter.getChapterId());
-
-                        List<Map.Entry<Integer, String>> images = new ArrayList<>();
-                        for (ChapterImage chapterImage : chapterImages)
-                        {
-                            Map.Entry<Integer, String> image = new AbstractMap.SimpleEntry<>(-1, "unknownSource");
-                            ExternalResource coloredImage = chapterImage.getColoredImage();
-                            if (coloredImage != null && !Strings.isEmpty(coloredImage.getUrl()))
-                            {
-                                image = new AbstractMap.SimpleEntry<>
-                                        (
-                                                coloredImage.getResourceId(),
-                                                coloredImage.getUrl()
-                                        );
-                            }
-                            else
-                            {
-                                ExternalResource nonColoredImage = chapterImage.getNonColoredImage();
-                                if (nonColoredImage != null && !Strings.isEmpty(nonColoredImage.getUrl()))
-                                {
-                                    image = new AbstractMap.SimpleEntry<>
-                                            (
-                                                    nonColoredImage.getResourceId(),
-                                                    nonColoredImage.getUrl()
-                                            );
-                                }
-                            }
-                            images.add(image);
-                        }
-
-                        WikiParser wikiParser = new WikiParser(chapterText.getTextId(), chapter.getChapterId(), chapterText.getTextWiki());
-                        chapterText.setTextHtml(wikiParser.parseWikiText(images, true));
-
-                        StringBuilder contents = new StringBuilder();
-                        List<ContentItem> contentList = wikiParser.getContents();
-                        for (int i = 0; i < contentList.size(); ++i)
-                        {
-                            ContentItem contentItem = contentList.get(i);
-                            String s = ((i < contentList.size() - 1) ? DELIMITER : "");
-                            contents.append(contentItem.getTagName()).append(DELIMITER)
-                                    .append(contentItem.getTagId()).append(DELIMITER)
-                                    .append(contentItem.getTitle()).append(s);
-                        }
-                        chapterText.setContents(contents.toString());
-
-                        StringBuilder footnotes = new StringBuilder();
-                        List<FootnoteItem> footnoteList = wikiParser.getFootnotes();
-                        for (int i = 0; i < footnoteList.size(); ++i)
-                        {
-                            FootnoteItem footnoteItem = footnoteList.get(i);
-                            String s = ((i < footnoteList.size() - 1) ? DELIMITER : "");
-                            footnotes.append(footnoteItem.getFootnoteId()).append(DELIMITER)
-                                     .append(footnoteItem.getFootnoteText()).append(s);
-                        }
-                        chapterText.setFootnotes(footnotes.toString());
-
-                        textsMapperCacheable.updateText(chapterText);
-
-                        textHtml = chapterText.getTextHtml();
-                        chapterFootnotes = footnotes.toString();
-                    }
-                    chapter.setText(chapterText);
+                    committingNeeded = ChapterTextParser.getChapterText(chapter, session, textsMapper) || committingNeeded;
+                    String chapterFootnotes = chapter.getText().getFootnotes();
 
                     String headerTag = chapter.isNested() ? "h3" : "h2";
 
-                    textHtml = "<" + headerTag + " id=\"" + chapter.getUrlPart() + "\">" + chapter.getTitle() + "</" + headerTag + ">" + textHtml;
+                    String textHtml = "<" + headerTag + " id=\"" + chapter.getUrlPart() + "\">" + chapter.getTitle() + "</" + headerTag + ">" + chapter.getText().getTextHtml();
 
                     if (!Strings.isEmpty(chapterFootnotes))
                     {
-                        String[] footnotes = chapterFootnotes.split(DELIMITER);
+                        String[] footnotes = chapterFootnotes.split(ChapterTextParser.DELIMITER);
                         for (int i = 0; i < footnotes.length; i += 2)
                         {
                             volumeFootnotes.append("<li id=\"cite_note-").append(footnotes[i]).append("\">")
@@ -281,7 +210,7 @@ public class Text extends SidebarLayoutPage implements InstantiationSecurityChec
                 }
             }
 
-            if (committionNeeded)
+            if (committingNeeded)
             {
                 session.commit();
             }
@@ -354,7 +283,7 @@ public class Text extends SidebarLayoutPage implements InstantiationSecurityChec
         contentsHolders.add(holder);
         if (chapter.getText() != null && !Strings.isEmpty(chapter.getText().getContents()))
         {
-            String[] contents = chapter.getText().getContents().split(DELIMITER);
+            String[] contents = chapter.getText().getContents().split(ChapterTextParser.DELIMITER);
             List<ContentItem> chapterContents = new LinkedList<>();
             for (int i = 0; i < contents.length; i += 3)
             {

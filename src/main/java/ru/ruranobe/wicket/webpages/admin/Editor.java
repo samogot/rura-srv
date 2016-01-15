@@ -12,29 +12,23 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
-import ru.ruranobe.engine.wiki.parser.ContentItem;
-import ru.ruranobe.engine.wiki.parser.FootnoteItem;
-import ru.ruranobe.engine.wiki.parser.WikiParser;
+import ru.ruranobe.engine.wiki.parser.ChapterTextParser;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.Chapter;
-import ru.ruranobe.mybatis.entities.tables.ChapterImage;
-import ru.ruranobe.mybatis.entities.tables.ExternalResource;
+import ru.ruranobe.mybatis.entities.tables.Text;
 import ru.ruranobe.mybatis.entities.tables.TextHistory;
-import ru.ruranobe.mybatis.mappers.ChapterImagesMapper;
 import ru.ruranobe.mybatis.mappers.ChaptersMapper;
 import ru.ruranobe.mybatis.mappers.TextsHistoryMapper;
 import ru.ruranobe.mybatis.mappers.TextsMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
-import java.util.*;
+import java.util.Date;
 
 @AuthorizeInstantiation("ADMIN")
 public class Editor extends SidebarLayoutPage
 {
-    public static final String DELIMITER = ",;,";
-
     public Editor(PageParameters parameters)
     {
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
@@ -43,8 +37,8 @@ public class Editor extends SidebarLayoutPage
             Chapter chapter = getChapter(parameters, session);
             final Integer textId = chapter.getTextId();
 
-            final ru.ruranobe.mybatis.entities.tables.Text currentText = new ru.ruranobe.mybatis.entities.tables.Text();
-            ru.ruranobe.mybatis.entities.tables.Text prevText = null;
+            final Text currentText = new Text();
+            Text prevText = null;
             TextArea<String> editor = new TextArea<>("editor", new Model<String>()
             {
                 @Override
@@ -56,7 +50,7 @@ public class Editor extends SidebarLayoutPage
             if (textId != null)
             {
                 TextsMapper textsMapperCacheable = CachingFacade.getCacheableMapper(session, TextsMapper.class);
-                final ru.ruranobe.mybatis.entities.tables.Text previousText = textsMapperCacheable.getTextById(textId);
+                final Text previousText = textsMapperCacheable.getTextById(textId);
                 prevText = previousText;
                 editor.setModel(new Model<String>()
                 {
@@ -122,10 +116,11 @@ public class Editor extends SidebarLayoutPage
 
     private class SaveText extends AjaxButton
     {
-        private ru.ruranobe.mybatis.entities.tables.Text previousText;
-        private ru.ruranobe.mybatis.entities.tables.Text text;
+        private Text previousText;
+        private Text text;
         private Chapter chapter;
-        public SaveText(String name, Form form, ru.ruranobe.mybatis.entities.tables.Text text, Chapter chapter, ru.ruranobe.mybatis.entities.tables.Text previousText)
+
+        public SaveText(String name, Form form, Text text, Chapter chapter, Text previousText)
         {
             super(name, form);
             this.chapter = chapter;
@@ -139,69 +134,10 @@ public class Editor extends SidebarLayoutPage
             SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
             try (SqlSession session = sessionFactory.openSession())
             {
-                TextsMapper textsMapperCacheable = CachingFacade.getCacheableMapper(session, TextsMapper.class);
-                textsMapperCacheable.insertText(text);
-
-                ChapterImagesMapper chapterImagesMapperCacheable = CachingFacade.getCacheableMapper(session, ChapterImagesMapper.class);
-                List<ChapterImage> chapterImages = chapterImagesMapperCacheable.getChapterImagesByChapterId(chapter.getChapterId());
-
-                List<Map.Entry<Integer, String>> images = new ArrayList<>();
-                for (ChapterImage chapterImage : chapterImages)
-                {
-                    Map.Entry<Integer, String> image = new AbstractMap.SimpleEntry<>(-1, "unknownSource");
-                    ExternalResource coloredImage = chapterImage.getColoredImage();
-                    if (coloredImage != null && !Strings.isEmpty(coloredImage.getUrl()))
-                    {
-                        image = new AbstractMap.SimpleEntry<>
-                                (
-                                        coloredImage.getResourceId(),
-                                        coloredImage.getUrl()
-                                );
-                    }
-                    else
-                    {
-                        ExternalResource nonColoredImage = chapterImage.getNonColoredImage();
-                        if (nonColoredImage != null && !Strings.isEmpty(nonColoredImage.getUrl()))
-                        {
-                            image = new AbstractMap.SimpleEntry<>
-                                    (
-                                            nonColoredImage.getResourceId(),
-                                            nonColoredImage.getUrl()
-                                    );
-                        }
-                    }
-                    images.add(image);
-                }
-
-                WikiParser wikiParser = new WikiParser(text.getTextId(), chapter.getChapterId(), text.getTextWiki());
-                text.setTextHtml(wikiParser.parseWikiText(images, true));
-
-                StringBuilder contents = new StringBuilder();
-                List<ContentItem> contentList = wikiParser.getContents();
-                for (int i = 0; i < contentList.size(); ++i)
-                {
-                    ContentItem contentItem = contentList.get(i);
-                    String s = ((i < contentList.size() - 1) ? DELIMITER : "");
-                    contents.append(contentItem.getTagName()).append(DELIMITER)
-                            .append(contentItem.getTagId()).append(DELIMITER)
-                            .append(contentItem.getTitle()).append(s);
-                }
-                text.setContents(contents.toString());
-
-                StringBuilder footnotes = new StringBuilder();
-                List<FootnoteItem> footnoteList = wikiParser.getFootnotes();
-                for (int i = 0; i < footnoteList.size(); ++i)
-                {
-                    FootnoteItem footnoteItem = footnoteList.get(i);
-                    String s = ((i < footnoteList.size() - 1) ? DELIMITER : "");
-                    footnotes.append(footnoteItem.getFootnoteId()).append(DELIMITER)
-                             .append(footnoteItem.getFootnoteText()).append(s);
-                }
-                text.setFootnotes(footnotes.toString());
-
-                textsMapperCacheable.updateText(text);
-
-                chapter.setTextId(text.getTextId());
+                TextsMapper textsMapper = CachingFacade.getCacheableMapper(session, TextsMapper.class);
+                textsMapper.insertText(text);
+                chapter.setText(text);
+                ChapterTextParser.parseChapterText(chapter, session, textsMapper);
 
                 ChaptersMapper chaptersMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
                 chaptersMapperCacheable.updateChapter(chapter);

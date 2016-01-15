@@ -9,6 +9,8 @@ public interface VolumeReleaseActivitiesMapper
 {
     Collection<VolumeReleaseActivity> getVolumeReleaseActivitiesByVolumeId(int volumeId);
 
+    Collection<VolumeReleaseActivity> getGroupedVolumeReleaseActivitiesByVolumeId(int volumeId);
+
     void deleteVolumeReleaseActivitysByVolumeId(int volumeId);
 
     void insertVolumeReleaseActivitysByVolumeId(@Param("volumeId") int volumeId,

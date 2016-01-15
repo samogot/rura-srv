@@ -5,23 +5,30 @@
 
 <wicket:extend>
 
-    <h1 wicket:id="projectTitle"></h1>
+    <h1 wicket:id="title"></h1>
 
     <div wicket:id="projectCoverCarousel" class="releaseImg pull-left"></div>
     <div class="aboutRelease">
         <h2>Информация</h2>
 
-        <div><strong>Название: </strong><span wicket:id="projectName"></span></div>
-        <div><strong>Автор: </strong><span wicket:id="projectAuthor"></span></div>
-        <div><strong>Иллюстратор: </strong><span wicket:id="projectIllustrator"></span></div>
-        <h2>Франшиза</h2>
-
-        <div wicket:id="projectFranchise"></div>
-        <!--<div class="h4">Другие материалы</div>
-        <div><a href="#">Хронология событий</a></div>-->
-        <h2>Описание</h2>
-
-        <div class="annotation" wicket:id="projectAnnotation"></div>
+        <div wicket:enclosure=""><strong>Название (ориг.)</strong>: <span wicket:id="nameJp"></span></div>
+        <div wicket:enclosure=""><strong>Название (ромадзи)</strong>: <span wicket:id="nameRomaji"></span></div>
+        <div wicket:enclosure=""><strong>Название (англ.)</strong>: <span wicket:id="nameEn"></span></div>
+        <div wicket:enclosure=""><strong>Название (рус.)</strong>: <span wicket:id="nameRu"></span></div>
+        <div wicket:enclosure=""><strong>Автор</strong>: <span wicket:id="author"></span></div>
+        <div wicket:enclosure=""><strong>Иллюстратор</strong>: <span wicket:id="illustrator"></span></div>
+        <div wicket:enclosure=""><strong>Оригинальный сюжет</strong>: <span wicket:id="originalStory"></span></div>
+        <div wicket:enclosure=""><strong>Оригинальный дизайн</strong>: <span wicket:id="originalDesign"></span></div>
+        <div wicket:enclosure="issueStatus"><strong>Статус</strong>: Выпуск <span wicket:id="issueStatus"></span>,
+            перевод <span wicket:id="translationStatus"></span></div>
+        <wicket:enclosure>
+            <h2>Франшиза</h2>
+            <div wicket:id="franchiseParsed"></div>
+        </wicket:enclosure>
+        <wicket:enclosure>
+            <h2>Описание</h2>
+            <div class="annotation" wicket:id="annotationParsed"></div>
+        </wicket:enclosure>
     </div>
 
     <wicket:container wicket:id="volumeTypeRepeater">
@@ -40,6 +47,12 @@
             </wicket:container>
         </div>
     </wicket:container>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.0.6/jquery.mousewheel.min.js"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet"
+          type="text/css" media="screen"/>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+    <script src="js/fancyboxStarter.js"></script>
 </wicket:extend>
 
 </body>

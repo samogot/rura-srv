@@ -1,6 +1,5 @@
 package ru.ruranobe.wicket.webpages.admin;
 
-import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.ibatis.session.SqlSession;
@@ -34,10 +33,7 @@ import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.components.admin.*;
 import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @AuthorizeInstantiation("ADMIN")
 public class ProjectEdit extends AdminLayoutPage
@@ -350,28 +346,10 @@ public class ProjectEdit extends AdminLayoutPage
         }.setSortable(true));
     }
 
-    private static final List<String> VOLUMES_TABLE_COLUMNS = new ImmutableList.Builder<String>()
-            .add("Ссылка")
-            .add("Имя для файлов")
-            .add("Заголовок")
-            .add("Название (ориг.)")
-            .add("Название (англ.)")
-            .add("Название (рус.)")
-            .add("Название (романдзи)")
-            .add("Короткое название")
-            .add("Серия")
-            .add("Номер в серии")
-            .add("Автор")
-            .add("Иллюстратор")
-            .add("Дата публикации")
-            .add("ISBN")
-            .add("Тип релиза")
-            .add("Cтатус релиза")
-            .add("Внешняя ссылка")
-            .add("Аннотация")
-            .add("18+")
-            .add("Править")
-            .build();
+    private static final List<String> VOLUMES_TABLE_COLUMNS = Arrays.asList("Ссылка", "Имя для файлов", "Заголовок",
+            "Название (ориг.)", "Название (англ.)", "Название (рус.)", "Название (романдзи)", "Короткое название",
+            "Серия", "Номер в серии", "Автор", "Иллюстратор", "Дата публикации", "ISBN", "Тип релиза", "Cтатус релиза",
+            "Внешняя ссылка", "Аннотация", "18+", "Править");
 
     private static final Comparator<Project> PROJECT_COMPARATOR = new Comparator<Project>()
     {

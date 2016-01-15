@@ -21,6 +21,12 @@ public class VolumeReleaseActivitiesMapperCacheable implements VolumeReleaseActi
     }
 
     @Override
+    public Collection<VolumeReleaseActivity> getGroupedVolumeReleaseActivitiesByVolumeId(int volumeId)
+    {
+        return mapper.getGroupedVolumeReleaseActivitiesByVolumeId(volumeId);
+    }
+
+    @Override
     public void deleteVolumeReleaseActivitysByVolumeId(int volumeId)
     {
         mapper.deleteVolumeReleaseActivitysByVolumeId(volumeId);

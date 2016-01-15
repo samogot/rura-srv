@@ -21,6 +21,11 @@ public class ExternalResource implements Serializable
         return thumbnail;
     }
 
+    public String getThumbnail(int width)
+    {
+        return String.format(thumbnail, width);
+    }
+
     public void setThumbnail(String thumbnail)
     {
         this.thumbnail = thumbnail;
@@ -38,6 +43,13 @@ public class ExternalResource implements Serializable
 
     public ExternalResource()
     {
+    }
+
+    public ExternalResource(int resourceId, String url, String thumbnail)
+    {
+        this.resourceId = resourceId;
+        this.url = url;
+        this.thumbnail = thumbnail;
     }
 
     public ExternalResource(int userId, String mimeType, String url, String title, Date uploadedWhen)

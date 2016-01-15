@@ -21,12 +21,13 @@
         <h2>Информация</h2>
 
         <div><strong>Серия</strong>: <a wicket:id="projectUrl"><span wicket:id="subProjectName"></span></a></div>
-        <div wicket:enclosure=""><strong>Название (яп.)</strong>: <span wicket:id="nameJp"></span></div>
+        <div wicket:enclosure=""><strong>Название (ориг.)</strong>: <span wicket:id="nameJp"></span></div>
         <div wicket:enclosure=""><strong>Название (ромадзи)</strong>: <span wicket:id="nameRomaji"></span></div>
         <div wicket:enclosure=""><strong>Название (англ.)</strong>: <span wicket:id="nameEn"></span></div>
         <div wicket:enclosure=""><strong>Название (рус.)</strong>: <span wicket:id="nameRu"></span></div>
         <div wicket:enclosure=""><strong>Автор</strong>: <span wicket:id="author"></span></div>
         <div wicket:enclosure=""><strong>Иллюстратор</strong>: <span wicket:id="illustrator"></span></div>
+        <div wicket:enclosure=""><strong>Оригинальный сюжет</strong>: <span wicket:id="originalStory"></span></div>
         <div wicket:enclosure=""><strong>Оригинальный дизайн</strong>: <span wicket:id="originalDesign"></span></div>
         <div wicket:enclosure=""><strong>Дата публикации</strong>: <span wicket:id="releaseDate"></span></div>
         <div wicket:enclosure=""><strong>ISBN</strong>: <a wicket:id="isbn"></a></div>
@@ -64,8 +65,14 @@
         </div>
     </wicket:enclosure>
     <wicket:fragment wicket:id="comments"/>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.0.6/jquery.mousewheel.min.js"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet"
+          type="text/css" media="screen"/>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+    <script src="js/fancyboxStarter.js"></script>
     <script src="js/jsrender.min.js"></script>
     <script src="js/CommentsPanel.js"></script>
     <link rel="stylesheet" href="css/CommentsPanel.css">

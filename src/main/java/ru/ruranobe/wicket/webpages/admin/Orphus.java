@@ -25,7 +25,7 @@ import ru.ruranobe.mybatis.mappers.ProjectsMapper;
 import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.webpages.base.BaseLayoutPage;
-import ru.ruranobe.wicket.webpages.common.Text;
+import ru.ruranobe.wicket.webpages.common.TextPage;
 
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
@@ -120,7 +120,7 @@ public class Orphus extends BaseLayoutPage
                 item.add(projectTitle);
 
                 PageParameters chapterPageParameters = Chapter.makeUrlParameters(orphusComment.getChapterUrl().split("/", -1));
-                BookmarkablePageLink orphusChapterUrl = new BookmarkablePageLink("orphusChapterUrl", Text.class, chapterPageParameters)
+                BookmarkablePageLink orphusChapterUrl = new BookmarkablePageLink("orphusChapterUrl", TextPage.class, chapterPageParameters)
                 {
                     @Override
                     protected CharSequence getURL()

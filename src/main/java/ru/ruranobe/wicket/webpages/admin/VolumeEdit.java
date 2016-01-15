@@ -580,12 +580,12 @@ public class VolumeEdit extends AdminLayoutPage
                     protected void onInitialize()
                     {
                         super.onInitialize();
-                        add(new WebMarkupContainer("nonColoredImage.url")
+                        add(new WebMarkupContainer("nonColoredImage.thumbnail")
                         {
                             @Override
                             protected void onComponentTag(ComponentTag tag)
                             {
-                                tag.getAttributes().put("src", getDefaultModelObjectAsString());
+                                tag.getAttributes().put("src", String.format(getDefaultModelObjectAsString(), 50));
                             }
                         });
                         add(new Label("nonColoredImage.title"));
@@ -605,12 +605,12 @@ public class VolumeEdit extends AdminLayoutPage
                         super.onInitialize();
                         WebMarkupContainer coloredImageTrigger, coloredImageAddButton;
                         add(new HiddenField<Integer>("chapterId"));
-                        add(new WebMarkupContainer("nonColoredImage.url")
+                        add(new WebMarkupContainer("nonColoredImage.thumbnail")
                         {
                             @Override
                             protected void onComponentTag(ComponentTag tag)
                             {
-                                tag.getAttributes().put("src", getDefaultModelObjectAsString());
+                                tag.getAttributes().put("src", String.format(getDefaultModelObjectAsString(), 280));
                             }
                         });
                         add(new TextField<String>("nonColoredImage.title"));
@@ -648,12 +648,12 @@ public class VolumeEdit extends AdminLayoutPage
                                 }
                             }
                         });
-                        coloredImageTrigger.add(new WebMarkupContainer("coloredImage.url")
+                        coloredImageTrigger.add(new WebMarkupContainer("coloredImage.thumbnail")
                         {
                             @Override
                             protected void onComponentTag(ComponentTag tag)
                             {
-                                tag.getAttributes().put("src", getDefaultModelObjectAsString());
+                                tag.getAttributes().put("src", String.format(getDefaultModelObjectAsString(), 280));
                             }
                         });
                         coloredImageTrigger.add(new TextField<String>("coloredImage.title"));

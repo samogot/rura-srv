@@ -1,6 +1,7 @@
 package ru.ruranobe.engine.wiki.parser;
 
 import ru.ruranobe.misc.RuranobeUtils;
+import ru.ruranobe.mybatis.entities.tables.ExternalResource;
 
 import java.util.*;
 
@@ -11,10 +12,10 @@ import java.util.*;
 public class WikiParser
 {
 
-    public String parseWikiText(List<Map.Entry<Integer, String>> images, boolean appendExtraImagesAtTheEnd)
+    public String parseWikiText(List<ExternalResource> images, boolean appendExtraImagesAtTheEnd)
     {
         fillWikiTags();
-        Iterator<Map.Entry<Integer, String>> imagesIterator = images.iterator();
+        Iterator<ExternalResource> imagesIterator = images.iterator();
         connectWikiTags(imagesIterator);
 
         StringBuilder additionalTags = new StringBuilder("line-no=\"");
@@ -137,7 +138,7 @@ public class WikiParser
     }
 
     // Connect related special tags together. Determine tag's end position in text.
-    private void connectWikiTags(Iterator<Map.Entry<Integer, String>> imagesIterator)
+    private void connectWikiTags(Iterator<ExternalResource> imagesIterator)
     {
         List<HashMap.SimpleEntry<Integer, Integer>> preParsingBoundaries = new ArrayList<>();
 
@@ -204,14 +205,16 @@ public class WikiParser
             {
                 if (imagesIterator.hasNext())
                 {
-                    Map.Entry<Integer, String> imageEntry = imagesIterator.next();
-                    image.setExternalResourceId(imageEntry.getKey());
-                    image.setImageUrl(imageEntry.getValue());
+                    ExternalResource imageEntry = imagesIterator.next();
+                    image.setExternalResourceId(imageEntry.getResourceId());
+                    image.setImageUrl(imageEntry.getUrl());
+                    image.setImageThumbnail(imageEntry.getThumbnail(900));
                 }
                 else
                 {
                     image.setExternalResourceId(-1);
                     image.setImageUrl("unknown source");
+                    image.setImageThumbnail("unknown source");
                 }
                 startPositionToReplacement.put(image.getStartPosition(),
                         new Replacement(image));
@@ -266,7 +269,7 @@ public class WikiParser
         for (HashMap.SimpleEntry<Integer, Integer> entry : preParsingBoundaries)
         {
             StringBuilder footnote = new StringBuilder();
-            parseWikiTextToHtmlText(entry.getKey(), entry.getValue(), footnote, (new ArrayList<Map.Entry<Integer,String>>()).iterator(), false);
+            parseWikiTextToHtmlText(entry.getKey(), entry.getValue(), footnote, Collections.<ExternalResource>emptyListIterator(), false);
             this.footnotes.add(new FootnoteItem(footnoteParsingBoundariesToFootnoteId.get(entry), footnote.toString()));
 
             Replacement footnoteReplacement = footnoteParsingBoundariesToFootnoteReplacement.get(entry);
@@ -400,7 +403,7 @@ public class WikiParser
     }
 
     // Form output html text
-    private void parseWikiTextToHtmlText(int start, int end, StringBuilder htmlText, Iterator<Map.Entry<Integer, String>> imagesIterator, boolean appendExtraImagesAtTheEnd)
+    private void parseWikiTextToHtmlText(int start, int end, StringBuilder htmlText, Iterator<ExternalResource> imagesIterator, boolean appendExtraImagesAtTheEnd)
     {
         for (int i = start; i < end; )
         {
@@ -421,10 +424,10 @@ public class WikiParser
         {
             while (imagesIterator.hasNext())
             {
-                Map.Entry<Integer, String> imageEntry = imagesIterator.next();
+                ExternalResource imageEntry = imagesIterator.next();
                 htmlText.append(String.format("<div class=\"center illustration\"><a class=\"fancybox\" rel=\"group\" href=\"%s\">" +
-                                              "<img src=\"%s\" data-resource-id=\"%s\" alt=\"\" class=\"img-responsive img-thumbnail\"/>" +
-                                              "</a></div>", imageEntry.getValue(), imageEntry.getValue(), imageEntry.getKey().toString()));
+                                              "<img src=\"%s\" data-resource-id=\"%d\" alt=\"\" class=\"img-responsive img-thumbnail\"/>" +
+                                              "</a></div>", imageEntry.getUrl(), imageEntry.getThumbnail(900), imageEntry.getResourceId()));
             }
         }
     }

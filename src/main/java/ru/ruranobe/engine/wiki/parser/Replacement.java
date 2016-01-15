@@ -139,7 +139,7 @@ public class Replacement
         }
         else if (tag.getWikiTagType() == IMAGE)
         {
-            this.replacementText = String.format(replacementText, tag.getImageUrl(), tag.getImageUrl(), tag.getExternalResourceId().toString());
+            this.replacementText = String.format(replacementText, tag.getImageUrl(), tag.getImageThumbnail(), tag.getExternalResourceId().toString());
         }
         else if (tag.getWikiTagType() == NEW_LINE)
         {
@@ -180,7 +180,7 @@ public class Replacement
                     put(NEW_LINE, "</p><p id=\"%s\" %s>");
                     put(FOOTNOTE, "<span id=\"cite_ref-%s\" data-content=\"%s\" class=\"reference\"><a href=\"%s\">*</a></span>");
                     put(IMAGE, "<div class=\"center illustration\"><a class=\"fancybox\" rel=\"group\" href=\"%s\">" +
-                               "<img src=\"%s\" data-resource-id=\"%s\" alt=\"\" class=\"img-responsive img-thumbnail\"/>" +
+                               "<img src=\"%s\" data-resource-id=\"%d\" alt=\"\" class=\"img-responsive img-thumbnail\"/>" +
                                "</a></div>");
                 }
             };

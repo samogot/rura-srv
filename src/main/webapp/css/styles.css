@@ -1972,3 +1972,8 @@ form.admin-block {
     color: #fff;
     background-color: #0097cf;
 }
+
+.carousel-inner .item {
+    height: 343px;
+    overflow: hidden;
+}

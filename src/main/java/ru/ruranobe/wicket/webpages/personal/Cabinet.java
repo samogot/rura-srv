@@ -28,7 +28,7 @@ import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 import ru.ruranobe.wicket.webpages.common.ProjectPage;
-import ru.ruranobe.wicket.webpages.common.Text;
+import ru.ruranobe.wicket.webpages.common.TextPage;
 import ru.ruranobe.wicket.webpages.common.VolumePage;
 
 import java.util.Arrays;
@@ -118,7 +118,7 @@ public class Cabinet extends SidebarLayoutPage
                     bookmarkForm.add(volumeUrl);
 
                     PageParameters chapterPageParameters = Chapter.makeUrlParameters(chapterUrlDetails.getChapterUrl().split("/", -1));
-                    BookmarkablePageLink chapterUrl = new BookmarkablePageLink("chapterUrl", ru.ruranobe.wicket.webpages.common.Text.class,
+                    BookmarkablePageLink chapterUrl = new BookmarkablePageLink("chapterUrl", TextPage.class,
                             chapterPageParameters);
                     Label chapterUrlText = new Label("chapterUrlText", chapterUrlDetails.getChapterTitle());
                     chapterUrlText.setRenderBodyOnly(true);
@@ -129,7 +129,7 @@ public class Cabinet extends SidebarLayoutPage
                     bookmarkForm.add(bookmarkText);
 
                     final String paragraphId = bookmark.getParagraphId();
-                    BookmarkablePageLink bookmarkUrl = new BookmarkablePageLink("bookmarkUrl", Text.class,
+                    BookmarkablePageLink bookmarkUrl = new BookmarkablePageLink("bookmarkUrl", TextPage.class,
                             Chapter.makeUrlParameters(chapterUrlDetails.getChapterUrl().split("/", -1)))
                     {
                         @Override

@@ -21,7 +21,7 @@
         url = #{url},
         thumbnail = #{thumbnail},
         title = #{title},
-        uploaded_when = #{uploadedWhen};
+        uploaded_when = #{uploadedWhen}
     </insert>
 
     <select id="getExternalResourceById" parameterType="int" resultMap="ExternalResourceResult">

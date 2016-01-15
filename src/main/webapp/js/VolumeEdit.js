@@ -281,7 +281,7 @@ $('#btn-image-add').fileupload({
     dataType: 'json',
     acceptFileTypes: /(\.|\/)(jpe?g|png)$/i,
     previewMaxHeight: 180,
-    previewMaxWidth: 260,
+    previewMaxWidth: 280,
     imageQuality: 100,
     dropZone: $imagesSelect
 }).on('fileuploadadd', function (e, data) { // при добавлении файла сразу создаем елемент в #imageselect

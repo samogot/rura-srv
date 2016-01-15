@@ -16,6 +16,21 @@
         ORDER BY order_number
     </select>
 
+    <select id="getGroupedVolumeReleaseActivitiesByVolumeId" parameterType="int"
+            resultMap="VolumeReleaseActivityResult">
+        SELECT
+            vra.volume_id,
+            vra.activity_id,
+            activity_name,
+            group_concat(DISTINCT nickname ORDER BY order_number SEPARATOR ', ') AS nickname
+        FROM volume_release_activities vra
+            INNER JOIN volume_activities USING (activity_id)
+            INNER JOIN team_members USING (member_id)
+        WHERE volume_id = #{volumeId}
+        GROUP BY volume_id, activity_id
+        ORDER BY min(order_number)
+    </select>
+
     <delete id="deleteVolumeReleaseActivitysByVolumeId" parameterType="int">
         DELETE FROM volume_release_activities
         WHERE volume_id = #{volumeId}

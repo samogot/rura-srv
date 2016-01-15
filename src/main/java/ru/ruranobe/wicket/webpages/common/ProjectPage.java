@@ -10,10 +10,12 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
+import ru.ruranobe.mybatis.entities.tables.ExternalResource;
 import ru.ruranobe.mybatis.entities.tables.Project;
 import ru.ruranobe.mybatis.entities.tables.Volume;
 import ru.ruranobe.mybatis.mappers.ExternalResourcesMapper;
@@ -22,6 +24,7 @@ import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.components.CoverCarousel;
+import ru.ruranobe.wicket.components.LabelHideableOnNull;
 import ru.ruranobe.wicket.components.sidebar.ActionsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
@@ -81,27 +84,23 @@ public class ProjectPage extends SidebarLayoutPage {
 
 			VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
 
-			Label projectTitle = new Label("projectTitle", mainProject.getTitle());
-			add(projectTitle);
+            ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.getCacheableMapper(session, ExternalResourcesMapper.class);
 
-			final ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.
-																								  getCacheableMapper(session, ExternalResourcesMapper.class);
+            setDefaultModel(new CompoundPropertyModel<>(mainProject));
 
-			Label projectName = new Label("projectName", mainProject.getTitle());
-			add(projectName);
-
-			Label projectAuthor = new Label("projectAuthor", mainProject.getAuthor());
-			add(projectAuthor);
-
-			Label projectIllustrator = new Label("projectIllustrator", mainProject.getIllustrator());
-			add(projectIllustrator);
-
-			Label projectFranchise = new Label("projectFranchise", mainProject.getFranchise());
-			projectFranchise.setEscapeModelStrings(false);
-			add(projectFranchise);
-
-			Label projectAnnotation = new Label("projectAnnotation", mainProject.getAnnotation());
-			add(projectAnnotation);
+            add(new Label("title"));
+            add(new LabelHideableOnNull("nameJp"));
+            add(new LabelHideableOnNull("nameRomaji"));
+            add(new LabelHideableOnNull("nameEn"));
+            add(new LabelHideableOnNull("nameRu"));
+            add(new LabelHideableOnNull("author"));
+            add(new LabelHideableOnNull("illustrator"));
+            add(new LabelHideableOnNull("originalStory"));
+            add(new LabelHideableOnNull("originalDesign"));
+            add(new LabelHideableOnNull("issueStatus"));
+            add(new LabelHideableOnNull("translationStatus"));
+            add(new Label("franchiseParsed").setEscapeModelStrings(false));
+            add(new Label("annotationParsed").setEscapeModelStrings(false));
 
 			ArrayList<Volume> mainProjectFirstCovers = new ArrayList<>();
 			ArrayList<Volume> mainProjectActiveCovers = new ArrayList<>();
@@ -302,14 +301,13 @@ public class ProjectPage extends SidebarLayoutPage {
 			}
 			ArrayList<Volume> allCovers = new ArrayList<>(allCoversSet);
 			Collections.sort(allCovers, COMPARATOR);
-			ArrayList<SimpleEntry<String, String>> allCoverIds = new ArrayList<>();
-			for (Volume volume : allCovers)
+            ArrayList<SimpleEntry<String, ExternalResource>> allCoverIds = new ArrayList<>();
+            for (Volume volume : allCovers)
 			{
 				allCoverIds.add(new SimpleEntry<>(volume.getNameTitle(),
 						externalResourcesMapperCacheable
-								.getExternalResourceById(volume.getImageOne())
-								.getUrl()));
-			}
+                                .getExternalResourceById(volume.getImageOne())));
+            }
 
 			add(new CoverCarousel("projectCoverCarousel", allCoverIds));
 

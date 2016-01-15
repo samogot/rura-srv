@@ -2,6 +2,7 @@ package ru.ruranobe.mybatis.entities.tables;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
+import ru.ruranobe.wicket.webpages.common.TextPage;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class Chapter extends PageRepresentable implements Serializable
 
     public Class getLinkClass()
     {
-        return ru.ruranobe.wicket.webpages.common.Text.class;
+        return TextPage.class;
     }
 
     public PageParameters getUrlParameters()

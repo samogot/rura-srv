@@ -1,7 +1,6 @@
 package ru.ruranobe.wicket;
 
 import com.google.common.collect.ImmutableBiMap;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 import java.util.Arrays;
@@ -19,12 +18,8 @@ public class RuraConstants
     public static final String UPDATE_TYPE_TRANSLATE = "Обновлен перевод";
     public static final String UPDATE_TYPE_PROOFREAD = "Глобальная редактура";
     public static final String UPDATE_TYPE_IMAGES = "Обновление иллюстраций";
-    public static final List<String> UPDATE_TYPE_LIST = new ImmutableList.Builder<String>()
-            .add(RuraConstants.UPDATE_TYPE_PUBLISH)
-            .add(RuraConstants.UPDATE_TYPE_TRANSLATE)
-            .add(RuraConstants.UPDATE_TYPE_PROOFREAD)
-            .add(RuraConstants.UPDATE_TYPE_IMAGES)
-            .build();
+    public static final List<String> UPDATE_TYPE_LIST = Arrays.asList(RuraConstants.UPDATE_TYPE_PUBLISH,
+            RuraConstants.UPDATE_TYPE_TRANSLATE, RuraConstants.UPDATE_TYPE_PROOFREAD, RuraConstants.UPDATE_TYPE_IMAGES);
 
     public static final Map<String, String> UPDATE_TYPE_TO_ICON_CLASS =
             new ImmutableMap.Builder<String, String>()
@@ -39,12 +34,8 @@ public class RuraConstants
     public static final String VOLUME_TYPE_DOUJINSHI = "Авторские додзинси";
     public static final String VOLUME_TYPE_OTHER = "Другое";
 
-    public static final List<String> VOLUME_TYPE_LIST = new ImmutableList.Builder<String>()
-            .add(RuraConstants.VOLUME_TYPE_RANOBE)
-            .add(RuraConstants.VOLUME_TYPE_SIDESTORY)
-            .add(RuraConstants.VOLUME_TYPE_DOUJINSHI)
-            .add(RuraConstants.VOLUME_TYPE_OTHER)
-            .build();
+    public static final List<String> VOLUME_TYPE_LIST = Arrays.asList(RuraConstants.VOLUME_TYPE_RANOBE,
+            RuraConstants.VOLUME_TYPE_SIDESTORY, RuraConstants.VOLUME_TYPE_DOUJINSHI, RuraConstants.VOLUME_TYPE_OTHER);
 
     public static final String VOLUME_STATUS_HIDDEN = "hidden";
     @SuppressWarnings("unused")
@@ -97,31 +88,17 @@ public class RuraConstants
                     .put(RuraConstants.VOLUME_STATUS_DONE, "завершен")
                     .build();
 
-
-    public static final List<String> VOLUME_STATUS_BASIC_LIST = new ImmutableList.Builder<String>()
-            .add(RuraConstants.VOLUME_STATUS_HIDDEN)
-//            .add(RuraConstants.VOLUME_STATUS_AUTO)
-            .build();
-    public static final List<String> VOLUME_STATUS_EXTERNAL_LIST = new ImmutableList.Builder<String>()
-            .add(RuraConstants.VOLUME_STATUS_EXTERNAL_DROPPED)
-            .add(RuraConstants.VOLUME_STATUS_EXTERNAL_ACTIVE)
-            .add(RuraConstants.VOLUME_STATUS_EXTERNAL_DONE)
-            .build();
-    public static final List<String> VOLUME_STATUS_IN_WORK_LIST = new ImmutableList.Builder<String>()
-            .add(RuraConstants.VOLUME_STATUS_NO_ENG)
-            .add(RuraConstants.VOLUME_STATUS_FREEZE)
-            .add(RuraConstants.VOLUME_STATUS_ON_HOLD)
-            .add(RuraConstants.VOLUME_STATUS_QUEUE)
-            .build();
-    public static final List<String> VOLUME_STATUS_NOT_IN_WORK_LIST = new ImmutableList.Builder<String>()
-            .add(RuraConstants.VOLUME_STATUS_ONGOING)
-            .add(RuraConstants.VOLUME_STATUS_TRANSLATING)
-            .add(RuraConstants.VOLUME_STATUS_PROOFREAD)
-            .build();
-    public static final List<String> VOLUME_STATUS_PUBLISHED_LIST = new ImmutableList.Builder<String>()
-            .add(RuraConstants.VOLUME_STATUS_DECOR)
-            .add(RuraConstants.VOLUME_STATUS_DONE)
-            .build();
+    @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
+    public static final List<String> VOLUME_STATUS_BASIC_LIST = Arrays.asList(RuraConstants.VOLUME_STATUS_HIDDEN/*,
+            RuraConstants.VOLUME_STATUS_AUTO*/);
+    public static final List<String> VOLUME_STATUS_EXTERNAL_LIST = Arrays.asList(RuraConstants.VOLUME_STATUS_EXTERNAL_DROPPED,
+            RuraConstants.VOLUME_STATUS_EXTERNAL_ACTIVE, RuraConstants.VOLUME_STATUS_EXTERNAL_DONE);
+    public static final List<String> VOLUME_STATUS_IN_WORK_LIST = Arrays.asList(RuraConstants.VOLUME_STATUS_NO_ENG,
+            RuraConstants.VOLUME_STATUS_FREEZE, RuraConstants.VOLUME_STATUS_ON_HOLD, RuraConstants.VOLUME_STATUS_QUEUE);
+    public static final List<String> VOLUME_STATUS_NOT_IN_WORK_LIST = Arrays.asList(RuraConstants.VOLUME_STATUS_ONGOING,
+            RuraConstants.VOLUME_STATUS_TRANSLATING, RuraConstants.VOLUME_STATUS_PROOFREAD);
+    public static final List<String> VOLUME_STATUS_PUBLISHED_LIST = Arrays.asList(RuraConstants.VOLUME_STATUS_DECOR,
+            RuraConstants.VOLUME_STATUS_DONE);
 
     public static final String NO_COVER_IMAGE = "https://ruranobe.ru/images/thumb/a/ad/nopic.png/300px-nopic.png";
 
@@ -130,4 +107,5 @@ public class RuraConstants
     }
 
     public static final List<String> PROJECT_STATUS_LIST = Arrays.asList("Выпускается", "Окончен", "Переведен");
+    public static final String UNKNOWN_IMAGE = "https://ruranobe.ru/images/thumb/a/ad/nopic.png/900px-nopic.png";
 }

@@ -7,12 +7,10 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.util.string.Strings;
-import ru.ruranobe.engine.wiki.parser.WikiParser;
+import ru.ruranobe.engine.wiki.parser.ChapterTextParser;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.Chapter;
-import ru.ruranobe.mybatis.entities.tables.Text;
 import ru.ruranobe.mybatis.entities.tables.Volume;
 import ru.ruranobe.mybatis.mappers.ChaptersMapper;
 import ru.ruranobe.mybatis.mappers.TextsMapper;
@@ -29,7 +27,6 @@ import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,25 +54,23 @@ public class Diary extends SidebarLayoutPage
             ChaptersMapper chaptersMapper = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
             diaryChapters = chaptersMapper.getChaptersByVolumeId(diaryVolume.getVolumeId());
 
+            boolean committingNeeded = false;
             TextsMapper textsMapper = CachingFacade.getCacheableMapper(session, TextsMapper.class);
             for (Chapter diaryChapter : diaryChapters)
             {
-                Integer textId = diaryChapter.getTextId();
-                if (textId != null)
+                committingNeeded = ChapterTextParser.getChapterText(diaryChapter, session, textsMapper) || committingNeeded;
+                if (diaryChapter.getText().getTextWiki() == null)
                 {
-                    Text text = textsMapper.getTextById(diaryChapter.getTextId());
-                    if (Strings.isEmpty(text.getTextHtml()))
-                    {
-                        WikiParser wikiParser = new WikiParser(textId, diaryChapter.getChapterId(), text.getTextWiki());
-                        text.setTextHtml(wikiParser.parseWikiText(new ArrayList<Map.Entry<Integer, String>>(), true));
-                        textsMapper.updateText(text);
-                    }
-                    diaryChapter.setText(text);
-                    ContentsHolder holder = new ContentsHolder("#" + diaryChapter.getUrlPart(), diaryChapter.getTitle());
-                    contentsHolders.add(holder);
+                    diaryChapter.getText().setTextWiki(textsMapper.getTextById(diaryChapter.getTextId()).getTextWiki());
                 }
+                ContentsHolder holder = new ContentsHolder("#" + diaryChapter.getUrlPart(), diaryChapter.getTitle());
+                contentsHolders.add(holder);
             }
 
+            if (committingNeeded)
+            {
+                session.commit();
+            }
         }
 
         add(new ListView<Chapter>("commentsRepeater", diaryChapters)

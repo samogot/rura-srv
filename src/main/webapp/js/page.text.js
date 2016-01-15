@@ -1,52 +1,13 @@
-$(document).ready(function () {
-    $(".fancybox")
-        .attr('rel', 'gallery')
-        .fancybox({
-            mouseWheel: false,
-            padding: 0,
-            margin: 5,
-            scrolling: 'no',
-            autoResize: false,
-            fitToView: true,
-            afterLoad: function () {
-                var fancy = this;
-                this.outer.mousewheel(function (e, a1) {
-                    fancy.wrap.css('width', 'auto');
-                    var d = Math.pow(1.1, a1);
-                    var x = e.pageX - fancy.inner.offset().left;
-                    var y = e.pageY - fancy.inner.offset().top;
-                    fancy.inner.width(fancy.inner.width() * d);
-                    fancy.inner.height(fancy.inner.height() * d);
-                    fancy.wrap.css('left', fancy.wrap.position().left + x * (1 - d));
-                    fancy.wrap.css('top', fancy.wrap.position().top + y * (1 - d));
-                    return false;
-                });
-                this.wrap.draggable();
-            }
-        });
-});
-
 /* AFFIX */
-function reinitAffix() {
-    $(window).off('.affix');
-    $('.controlText>div').removeData('bs.affix').removeClass('affix affix-top affix-bottom')
-        .css('top', '').affix({
-            offset: {
-                top: ($('.controlText > div').offset().top - 40)<0 ? 126:$('.controlText > div').offset().top - 40,
-                bottom: $(document).height() - $('.text').offset().top - $('.text').outerHeight(true)
-            }
-        });
-    $('#contents-module>div').removeData('bs.affix').removeClass('affix affix-top affix-bottom')
-        .css('top', '').affix({
-            offset: {
-                top: $('#contents-module > div').offset().top - 20,
-                bottom: $('footer').outerHeight(true)
-            }
-        })
-}
-$(window).resize(reinitAffix);
-$(document).ready(function () {
-    reinitAffix();
+$(window).on('reinitAffix', function () {
+    var $controlText = $('.controlText').children('div');
+    var $text = $('.text');
+    $controlText.removeData('bs.affix').removeClass('affix affix-top affix-bottom').css('top', '').affix({
+        offset: {
+            top: ($controlText.offset().top - 40) < 0 ? 126 : $controlText.offset().top - 40,
+            bottom: $(document).height() - $text.offset().top - $text.outerHeight(true)
+        }
+    });
 });
 /* AFFIX */
 
@@ -166,26 +127,26 @@ $(function () {
 /* MOBILE */
 
 /*
-      $(function(){
-      var lastScrollTop = 0, delta = 5;
-      $(window).scroll(function(event){
-         var st = $(this).scrollTop();
-         if(Math.abs(lastScrollTop - st) <= delta)
-            return;
+ $(function(){
+ var lastScrollTop = 0, delta = 5;
+ $(window).scroll(function(event){
+ var st = $(this).scrollTop();
+ if(Math.abs(lastScrollTop - st) <= delta)
+ return;
 
-         if (st < lastScrollTop){
-            // upscroll code
-            $('.navbar-static-top').addClass('active')
-            $('.navbar-lower').addClass('active')
-         } else {
-             // downscroll code
-            $('.navbar-static-top').removeClass('active')
-            $('.navbar-lower').removeClass('active')
-         }
-         lastScrollTop = st;
-      });
-      })
-*/
+ if (st < lastScrollTop){
+ // upscroll code
+ $('.navbar-static-top').addClass('active')
+ $('.navbar-lower').addClass('active')
+ } else {
+ // downscroll code
+ $('.navbar-static-top').removeClass('active')
+ $('.navbar-lower').removeClass('active')
+ }
+ lastScrollTop = st;
+ });
+ })
+ */
 
 /* НАСТРОЙКИ */
 $('.options-button .font').click(function () {
@@ -383,11 +344,15 @@ $('div.mistake').on('hidden.bs.modal', function (e) {
     $('body').css('padding', 0)
 });
 $('.btn.mistake-button').click(function () {
-    getText(function(data){
+    getText(function (data) {
         var Parameters = getOrphusParameters();
-        if (!Parameters) {alert('Выделите только один параграф!'); return false; } else {
-        var callbackUrl = '';
-        showOrphusDialog(Parameters.chapterId, Parameters.paragraph, Parameters.startOffset, Parameters.originalText, Parameters.fullText, Parameters.textId, callbackUrl)}
+        if (!Parameters) {
+            alert('Выделите только один параграф!');
+            return false;
+        } else {
+            var callbackUrl = '';
+            showOrphusDialog(Parameters.chapterId, Parameters.paragraph, Parameters.startOffset, Parameters.originalText, Parameters.fullText, Parameters.textId, callbackUrl)
+        }
     })
 });
 /* MODAL */
@@ -434,7 +399,7 @@ function showOrphusDialog(chapterId, paragraph, startOffset, originalText, fullT
                     $.ajax({
                         type: "POST",
                         url: '/api/orphus',
-                        data: '{'+
+                        data: '{' +
                         'chapterId:' + chapterId +
                         ',paragraph:' + paragraph +
                         ',startOffset:' + startOffset +

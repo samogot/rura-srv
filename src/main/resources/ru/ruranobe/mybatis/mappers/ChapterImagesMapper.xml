@@ -25,6 +25,7 @@
             non_colored.user_id       AS userId1,
             non_colored.mime_type     AS mimeType1,
             non_colored.url           AS url1,
+        non_colored.thumbnail AS thumbnail1,
             non_colored.title         AS title1,
             non_colored.uploaded_when AS uploadedWhen1,
 
@@ -32,6 +33,7 @@
             colored.user_id           AS userId2,
             colored.mime_type         AS mimeType2,
             colored.url               AS url2,
+        colored.thumbnail AS thumbnail2,
             colored.title             AS title2,
             colored.uploaded_when     AS uploadedWhen2
         FROM chapter_images
@@ -55,6 +57,7 @@
             non_colored.user_id       AS userId1,
             non_colored.mime_type     AS mimeType1,
             non_colored.url           AS url1,
+        non_colored.thumbnail AS thumbnail1,
             non_colored.title         AS title1,
             non_colored.uploaded_when AS uploadedWhen1,
 
@@ -62,6 +65,7 @@
             colored.user_id           AS userId2,
             colored.mime_type         AS mimeType2,
             colored.url               AS url2,
+        colored.thumbnail AS thumbnail2,
             colored.title             AS title2,
             colored.uploaded_when     AS uploadedWhen2
         FROM chapter_images
@@ -72,15 +76,16 @@
         WHERE chapter_id = #{chapterId}
     </select>
 
-    <insert id="insertChapterImage" parameterType="ru.ruranobe.mybatis.entities.tables.ChapterImage" keyProperty="chapterImageId"
+    <insert id="insertChapterImage" parameterType="ru.ruranobe.mybatis.entities.tables.ChapterImage"
+            keyProperty="chapterImageId"
             useGeneratedKeys="true">
         INSERT INTO chapter_images
-        SET volume_id            = #{volumeId},
-            chapter_id           = #{chapterId},
-            non_colored_image_id = #{nonColoredImage.resourceId},
-            colored_image_id     = #{coloredImage.resourceId},
-            order_number         = #{orderNumber},
-            adult                = #{adult}
+        SET volume_id = #{volumeId},
+        chapter_id = #{chapterId},
+        non_colored_image_id = #{nonColoredImage.resourceId},
+        colored_image_id = #{coloredImage.resourceId},
+        order_number = #{orderNumber},
+        adult = #{adult}
     </insert>
 
     <delete id="deleteChapterImage" parameterType="int">
@@ -90,12 +95,12 @@
 
     <update id="updateChapterImage" parameterType="ru.ruranobe.mybatis.entities.tables.ChapterImage">
         UPDATE chapter_images
-        SET volume_id            = #{volumeId},
-            chapter_id           = #{chapterId},
-            non_colored_image_id = #{nonColoredImage.resourceId},
-            colored_image_id     = #{coloredImage.resourceId},
-            order_number         = #{orderNumber},
-            adult                = #{adult}
+        SET volume_id = #{volumeId},
+        chapter_id = #{chapterId},
+        non_colored_image_id = #{nonColoredImage.resourceId},
+        colored_image_id = #{coloredImage.resourceId},
+        order_number = #{orderNumber},
+        adult = #{adult}
         WHERE chapter_image_id = #{chapterImageId}
     </update>
 
@@ -118,6 +123,7 @@
             <result property="userId" column="userId1"/>
             <result property="mimeType" column="mimeType1"/>
             <result property="url" column="url1"/>
+            <result property="thumbnail" column="thumbnail1"/>
             <result property="title" column="title1"/>
             <result property="uploadedWhen" column="uploadedWhen1"/>
         </association>
@@ -127,6 +133,7 @@
             <result property="userId" column="userId2"/>
             <result property="mimeType" column="mimeType2"/>
             <result property="url" column="url2"/>
+            <result property="thumbnail" column="thumbnail2"/>
             <result property="title" column="title2"/>
             <result property="uploadedWhen" column="uploadedWhen2"/>
         </association>

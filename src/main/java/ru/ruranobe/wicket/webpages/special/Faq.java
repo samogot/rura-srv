@@ -7,12 +7,10 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.util.string.Strings;
-import ru.ruranobe.engine.wiki.parser.WikiParser;
+import ru.ruranobe.engine.wiki.parser.ChapterTextParser;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.Chapter;
-import ru.ruranobe.mybatis.entities.tables.Text;
 import ru.ruranobe.mybatis.entities.tables.Volume;
 import ru.ruranobe.mybatis.mappers.ChaptersMapper;
 import ru.ruranobe.mybatis.mappers.TextsMapper;
@@ -27,7 +25,6 @@ import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class Faq extends SidebarLayoutPage
 {
@@ -74,26 +71,20 @@ public class Faq extends SidebarLayoutPage
             List<Chapter> faqChapters = chaptersMapper.getChaptersByVolumeId(faqVolume.getVolumeId());
 
             int questionNumber = 0;
+            boolean committingNeeded = false;
             TextsMapper textsMapper = CachingFacade.getCacheableMapper(session, TextsMapper.class);
             for (Chapter faqChapter : faqChapters)
             {
-                Integer textId = faqChapter.getTextId();
-                if (textId != null)
+                if (faqChapter.getTextId() != null)
                 {
-                    Text text = textsMapper.getTextById(faqChapter.getTextId());
-                    if (Strings.isEmpty(text.getTextHtml()))
-                    {
-                        WikiParser wikiParser = new WikiParser(textId, faqChapter.getChapterId(), text.getTextWiki());
-                        text.setTextHtml(wikiParser.parseWikiText(new ArrayList<Map.Entry<Integer, String>>(), true));
-                        textsMapper.updateText(text);
-                    }
-
-                    questions.add(new Question(++questionNumber, faqChapter.getTitle(), text.getTextHtml()));
-
-                   /* String chapterLink = "#" + diaryChapter.getUrlPart();
-                    ContentsHolder holder = new ContentsHolder(chapterLink, diaryChapter.getTitle());
-                    contentsHolders.add(holder);*/
+                    committingNeeded = ChapterTextParser.getChapterText(faqChapter, session, textsMapper) || committingNeeded;
+                    questions.add(new Question(++questionNumber, faqChapter.getTitle(), faqChapter.getText().getTextHtml()));
                 }
+            }
+
+            if (committingNeeded)
+            {
+                session.commit();
             }
         }
 
