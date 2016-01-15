@@ -1,7 +1,7 @@
 $(document).ready(function() {
     $('.module_name').click(function() {
         $(this).children('.fa').toggleClass("fa-chevron-right fa-chevron-down").end()
-            .toggleClass("opened").next('.actions').slideToggle($('#contents-module').length ? reinitAffix : undefined);
+            .toggleClass("opened").next('.actions').slideToggle(reinitAffix);
     });
 
     $('.ellipses-left').trimLeft();
@@ -18,7 +18,7 @@ $(document).ready(function() {
             $('#all-projects-module .banners').append('<span class="more moreprojects">Больше</span>');
             $('.moreprojects').click(function() {
                 $(this).remove();
-                $('#all-projects-module .banners a:hidden').slideDown($('#contents-module').length ? reinitAffix : undefined);
+                $('#all-projects-module .banners a:hidden').slideDown(reinitAffix);
             });
         }
     }

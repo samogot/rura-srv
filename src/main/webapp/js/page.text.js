@@ -4,8 +4,10 @@ $(window).on('reinitAffix', function () {
     var $text = $('.text');
     $controlText.removeData('bs.affix').removeClass('affix affix-top affix-bottom').css('top', '').affix({
         offset: {
-            top: ($controlText.offset().top - 40) < 0 ? 126 : $controlText.offset().top - 40,
-            bottom: $(document).height() - $text.offset().top - $text.outerHeight(true)
+            top: $controlText.offset().top - 40,
+            bottom: function () {
+                return $(document).height() - $text.offset().top - $text.outerHeight(true);
+            }
         }
     });
 });

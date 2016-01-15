@@ -93,6 +93,7 @@ public class TextPage extends SidebarLayoutPage implements InstantiationSecurity
                     {
                         this.chapter = chapter;
                         doInstantiationSecurityCheck();
+                        chapter.setVisibleOnPage(true);
                     }
                     else if (chapter.isPublished())
                     {

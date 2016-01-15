@@ -3,10 +3,13 @@
  */
 $(window).on('reinitAffix', function () {
     $('.admin-header').each(function () {
-        $(this).removeData('bs.affix').removeClass('affix affix-top affix-bottom').css('top', '').affix({
+        var $this = $(this);
+        $this.removeData('bs.affix').removeClass('affix affix-top affix-bottom').css('top', '').affix({
             offset: {
-                top: $(this).offset().top,
-                bottom: $(document).height() - $(this).closest('form').offset().top - $(this).closest('form').outerHeight() + $(this).outerHeight() + 75
+                top: $this.offset().top,
+                bottom: function(){
+                    return $(document).height() - $this.closest('form').offset().top - $this.closest('form').outerHeight() + $this.outerHeight() + 75
+                }
             }
         });
     });
