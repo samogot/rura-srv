@@ -30,26 +30,30 @@ CREATE TABLE users
   user_id                  INT(11) PRIMARY KEY AUTO_INCREMENT,
   username                 VARCHAR(64) UNIQUE NOT NULL,
   realname                 VARCHAR(255),
-  pass                     TINYBLOB          NOT NULL,
-  pass_version             INT(11) UNSIGNED  NOT NULL,
+  pass                     TINYBLOB           NOT NULL,
+  pass_version             INT(11) UNSIGNED   NOT NULL,
   pass_recovery_token      VARCHAR(255),
   pass_recovery_token_date DATETIME,
   email                    VARCHAR(255),
   email_token              VARCHAR(255),
   email_token_date         DATETIME,
-  email_activated          BOOL              NOT NULL,
-  registration_date        DATETIME          NOT NULL,
+  email_activated          BOOL               NOT NULL,
+  registration_date        DATETIME           NOT NULL,
   #--user_settings
   converter_type           ENUM('fb2',
                                 'docx',
-                                'epub')      NOT NULL,
+                                'epub')       NOT NULL,
   navigation_type          ENUM('Главам',
-                                'Подглавам') NOT NULL,
-  convert_with_imgs        BOOL              NOT NULL,
-  adult                    BOOL              NOT NULL,
-  prefer_colored_imgs      BOOL              NOT NULL,
-  convert_imgs_size        INT(11)           NOT NULL,
-  forum_user_id            INT(11) UNSIGNED DEFAULT NULL
+                                'Подглавам')  NOT NULL,
+  convert_with_imgs        BOOL               NOT NULL,
+  adult                    BOOL               NOT NULL,
+  prefer_colored_imgs      BOOL               NOT NULL,
+  convert_imgs_size        INT(11)            NOT NULL,
+  forum_user_id            INT(11) UNSIGNED    DEFAULT NULL,
+  INDEX (username),
+  INDEX (email),
+  INDEX (pass_recovery_token),
+  INDEX (email_token)
 );
 
 CREATE TABLE texts
@@ -71,7 +75,9 @@ CREATE TABLE orphus_comments
   optional_comment VARCHAR(255),
   user_id          INT(11),
   user_ip          VARCHAR(15),
-  created_when     DATETIME     NOT NULL
+  created_when     DATETIME     NOT NULL,
+  INDEX (created_when),
+  INDEX (chapter_id, created_when)
 );
 
 CREATE TABLE projects
@@ -100,7 +106,9 @@ CREATE TABLE projects
   translation_status VARCHAR(255),
   status             ENUM('Выпускается',
                           'Окончен',
-                          'Переведен') NOT NULL
+                          'Переведен') NOT NULL,
+  INDEX (url),
+  INDEX (order_number)
 );
 
 CREATE TABLE volumes
@@ -154,7 +162,9 @@ CREATE TABLE volumes
   volume_status_hint VARCHAR(255),
   adult              BOOL                NOT NULL,
   annotation         TEXT,
-  topic_id           INT(11) UNSIGNED             DEFAULT NULL
+  topic_id           INT(11) UNSIGNED             DEFAULT NULL,
+  INDEX (url),
+  INDEX (project_id, sequence_number)
 );
 
 CREATE TABLE volume_statuses
@@ -175,7 +185,9 @@ CREATE TABLE chapters
   title        VARCHAR(1023) NOT NULL,
   order_number INT(11)       NOT NULL,
   publish_date DATETIME,
-  nested       BOOL          NOT NULL
+  nested       BOOL          NOT NULL,
+  INDEX (url),
+  INDEX (volume_id, order_number)
 );
 
 CREATE TABLE chapter_images
@@ -233,7 +245,8 @@ CREATE TABLE team_members
   member_id INT(11) PRIMARY KEY AUTO_INCREMENT,
   user_id   INT(11),
   team_id   INT(11),
-  nickname  VARCHAR(64) UNIQUE NOT NULL
+  nickname  VARCHAR(64) UNIQUE NOT NULL,
+  INDEX (team_id, nickname)
 );
 
 CREATE TABLE volume_release_activities
@@ -243,7 +256,9 @@ CREATE TABLE volume_release_activities
   activity_id         INT(11) NOT NULL,
   member_id           INT(11) NOT NULL,
   order_number        INT(11) NOT NULL,
-  team_hidden         BOOLEAN NOT NULL
+  team_hidden         BOOLEAN NOT NULL,
+  INDEX (volume_id, order_number),
+  INDEX (volume_id, activity_id, order_number)
 );
 
 CREATE TABLE updates
@@ -257,7 +272,11 @@ CREATE TABLE updates
                    'Глобальная редактура',
                    'Обновление иллюстраций') NOT NULL,
   show_time   DATETIME                       NOT NULL,
-  description VARCHAR(255)
+  description VARCHAR(255),
+  INDEX (project_id, show_time),
+  INDEX (show_time),
+  INDEX (update_type),
+  INDEX (update_type, show_time)
 );
 
 CREATE TABLE texts_history
@@ -291,8 +310,8 @@ CREATE TABLE user_groups
 
 CREATE TABLE user_group_types
 (
-  group_id   INT(11)      NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  group_name VARCHAR(255) NOT NULL
+  group_id   INT(11)             NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  group_name VARCHAR(255) UNIQUE NOT NULL
 );
 
 INSERT INTO user_group_types VALUES (1, 'ADMIN');
@@ -381,20 +400,3 @@ ALTER TABLE user_groups ADD CONSTRAINT fk_ug_group_id FOREIGN KEY (group_id) REF
  * Do MySQL and MariaDB index foreign key columns automatically?
  * @See http://stackoverflow.com/questions/304317/does-mysql-index-foreign-key-columns-automatically  
  */
--- ALTER TABLE updates ADD INDEX (project_id);
-
-ALTER TABLE updates ADD INDEX (project_id, show_time);
-ALTER TABLE updates ADD INDEX (show_time);
-ALTER TABLE updates ADD INDEX (update_type);
-ALTER TABLE updates ADD INDEX (update_type, show_time);
-
-ALTER TABLE chapters ADD INDEX (url);
-
-ALTER TABLE projects ADD INDEX (url);
-
-ALTER TABLE users ADD INDEX (username);
-ALTER TABLE users ADD INDEX (email);
-ALTER TABLE users ADD INDEX (pass_recovery_token);
-ALTER TABLE users ADD INDEX (email_token);
-
-ALTER TABLE volumes ADD INDEX (url);

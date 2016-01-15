@@ -22,7 +22,7 @@
             vra.volume_id,
             vra.activity_id,
             activity_name,
-            group_concat(DISTINCT nickname ORDER BY order_number SEPARATOR ', ') AS nickname
+        group_concat(nickname ORDER BY order_number SEPARATOR ', ') AS nickname
         FROM volume_release_activities vra
             INNER JOIN volume_activities USING (activity_id)
             INNER JOIN team_members USING (member_id)
