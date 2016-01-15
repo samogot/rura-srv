@@ -55,6 +55,7 @@ $(function () {
 
     var $right = $('#contents-module');
     var $center = $('.leftColumn');
+    var $content = $('.content');
     var $left = $('.controlText > div');
 
 //     $center.click(function(){
@@ -67,13 +68,19 @@ $(function () {
         $right.removeClass("active");
         $right.children('div').removeClass("active");
         $center.removeClass("activeRight");
+        $content.off('click', CloseAll);
     }
 
     function CloseLeft() {
         $left.removeClass("active");
         $center.removeClass("activeLeft");
         $('.controlText .btn.options-button').removeClass('activated');
+        $content.off('click', CloseAll);
+    }
 
+    function CloseAll() {
+        CloseRight();
+        CloseLeft();
     }
 
     function OpenRight() {
@@ -83,6 +90,7 @@ $(function () {
             $right.addClass("active");
             $right.children('div').addClass("active");
             $center.addClass("activeRight");
+            $content.on('click', CloseAll);
         }
     }
 
@@ -92,6 +100,7 @@ $(function () {
         } else {
             $left.addClass("active");
             $center.addClass("activeLeft");
+            $content.on('click', CloseAll);
         }
     }
 
@@ -111,6 +120,7 @@ $(function () {
             OpenLeft()
         },
         threshold: 100,
+        maxTimeThreshold: 500,
         excludedElements: $.fn.swipe.defaults.excludedElements
     });
     $('#nav').click(function () {
@@ -126,29 +136,6 @@ $(function () {
         $(this).toggleClass('activated');
     });
 });
-/* MOBILE */
-
-/*
- $(function(){
- var lastScrollTop = 0, delta = 5;
- $(window).scroll(function(event){
- var st = $(this).scrollTop();
- if(Math.abs(lastScrollTop - st) <= delta)
- return;
-
- if (st < lastScrollTop){
- // upscroll code
- $('.navbar-static-top').addClass('active')
- $('.navbar-lower').addClass('active')
- } else {
- // downscroll code
- $('.navbar-static-top').removeClass('active')
- $('.navbar-lower').removeClass('active')
- }
- lastScrollTop = st;
- });
- })
- */
 
 /* НАСТРОЙКИ */
 $('.options-button .font').click(function () {
