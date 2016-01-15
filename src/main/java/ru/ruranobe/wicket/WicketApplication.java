@@ -44,6 +44,7 @@ public class WicketApplication extends AuthenticatedWebApplication
     public void init()
     {
         super.init();
+        getRequestCycleSettings().setGatherExtendedBrowserInfo(true);
         getFrameworkSettings().setSerializer(new KryoSerializer());
         WicketSource.configure(this);
 

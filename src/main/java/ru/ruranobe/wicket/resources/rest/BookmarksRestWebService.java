@@ -4,6 +4,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wicketstuff.rest.annotations.MethodMapping;
 import org.wicketstuff.rest.annotations.ResourcePath;
 import org.wicketstuff.rest.annotations.parameters.RequestBody;
@@ -91,7 +93,8 @@ public class BookmarksRestWebService extends GsonRestResource
     protected void handleException(WebResponse response, Exception exception)
     {
         super.handleException(response, exception);
-        exception.printStackTrace();
+        LOG.error("Error in REST API call", exception);
     }
 
+    private static final Logger LOG = LoggerFactory.getLogger(BookmarksRestWebService.class);
 }

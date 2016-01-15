@@ -74,15 +74,15 @@
             </div>
         </div>
         <div class="form-group">
-            <label wicket:for="issueStatus">Статус издания</label>
-            <input wicket:id="issueStatus" type="text" class="form-control">
+            <label wicket:for="issueStatus">Выпуск</label>
+            <input wicket:id="issueStatus" type="text" class="form-control" placeholder="напр. активен">
         </div>
         <div class="form-group">
-            <label wicket:for="translationStatus">Статус перевода</label>
-            <input wicket:id="translationStatus" type="text" class="form-control">
+            <label wicket:for="translationStatus">Перевод</label>
+            <input wicket:id="translationStatus" type="text" class="form-control" placeholder="напр. активен">
         </div>
         <div class="form-group">
-            <label wicket:for="status">Общий статус</label>
+            <label wicket:for="status">Статус</label>
             <select wicket:id="status" class="form-control"></select>
         </div>
         <div class="form-group">
@@ -138,7 +138,7 @@
                    wicket:id="illustrator">
         </td>
         <td class="column-number-12">
-            <input type="text" class="form-control" placeholder="<пусто>" wicket:id="releaseDate">
+            <input type="text" class="form-control issue-date-input" placeholder="<пусто>" wicket:id="releaseDate">
         </td>
         <td class="column-number-13">
             <input type="text" class="form-control" placeholder="<пусто>" wicket:id="isbn">
@@ -227,7 +227,14 @@
           href="//cdn.rawgit.com/dobtco/jquery-resizable-columns/gh-pages/dist/jquery.resizableColumns.css">
     <script src="//cdn.rawgit.com/dobtco/jquery-resizable-columns/gh-pages/dist/jquery.resizableColumns.min.js"></script>
     <script src="//cdn.rawgit.com/samogot/colResizable/master/source/colResizable-1.5.source.js"></script>
-    <script src="//cdn.rawgit.com/marcuswestin/store.js/blob/master/store.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/store.js/1.3.20/store.min.js"></script>
+
+    <!-- datetimepicker -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css"
+          rel="stylesheet">
+
 
     <script src="js/ContentsModule.js"></script>
     <script src="js/AdminListPanel.js"></script>
@@ -242,6 +249,7 @@
     <script src="js/BannerUploaderComponent.js"></script>
     <script src="js/ForumIdDropdownChoice.js"></script>
     <script src="js/PeopleTypeaheadTextField.js"></script>
+    <script src="js/ProjectEdit.js"></script>
 </wicket:extend>
 </body>
 </html>

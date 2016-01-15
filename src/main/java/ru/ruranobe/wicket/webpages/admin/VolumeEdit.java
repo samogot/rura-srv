@@ -53,6 +53,7 @@ import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.components.admin.AdminAffixedListPanel;
 import ru.ruranobe.wicket.components.admin.AdminInfoFormPanel;
+import ru.ruranobe.wicket.components.admin.AdminToolboxModalButton;
 import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
 
 import javax.servlet.http.HttpServletRequest;
@@ -87,12 +88,9 @@ public class VolumeEdit extends AdminLayoutPage
         }
     };
     private final Chapter stubСhapter;
-    private final Map<String, Integer> memberNickToId = new HashMap<>();
     private Volume volume;
     private List<Project> projects;
-    private List<VolumeReleaseActivity> volumeReleaseActivities;
     private List<VolumeActivity> activities;
-    private List<TeamMember> teamMembers;
     private List<Chapter> chapters;
     private List<Chapter> allChapters = new ArrayList<>();
     private List<Update> updates;
@@ -109,6 +107,7 @@ public class VolumeEdit extends AdminLayoutPage
 
         String volumeUrl = projectName + "/" + volumeName;
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
+        final List<VolumeReleaseActivity> volumeReleaseActivities;
         try (SqlSession session = sessionFactory.openSession())
         {
             VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
@@ -124,9 +123,6 @@ public class VolumeEdit extends AdminLayoutPage
 
             VolumeActivitiesMapper activitiesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumeActivitiesMapper.class);
             activities = activitiesMapperCacheable.getAllVolumeActivities();
-
-            TeamMembersMapper teamMembersMapperCacheable = CachingFacade.getCacheableMapper(session, TeamMembersMapper.class);
-            teamMembers = teamMembersMapperCacheable.getAllTeamMembers();
 
             ChaptersMapper chaptersMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
             chapters = chaptersMapperCacheable.getChaptersByVolumeId(volume.getVolumeId());
@@ -217,17 +213,12 @@ public class VolumeEdit extends AdminLayoutPage
         {
             volumeReleaseActivity.setActivity(activityIdToActivity.get(volumeReleaseActivity.getActivityId()));
         }
-        for (TeamMember member : teamMembers)
-        {
-            memberNickToId.put(member.getNickname(), member.getMemberId());
-        }
 
         stubСhapter = new Chapter();
         stubСhapter.setOrderNumber(-1);
         stubСhapter.setTitle("Весь том");
         Collections.sort(chapters, chapterComparator);
         reinitAllChapters();
-//        final Dataset teamMembersDataset = new Dataset("teamMembers").withLocal(teamMembers).withValueKey("nickname");
 
         add(new BookmarkablePageLink("breadcrumbProject", ProjectEdit.class, volume.getProject().getUrlParameters())
                 .setBody(Model.of(volume.getProject().getTitle())));
@@ -297,27 +288,23 @@ public class VolumeEdit extends AdminLayoutPage
             {
                 try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
-                    VolumeReleaseActivitiesMapper mapper = CachingFacade.getCacheableMapper(session, VolumeReleaseActivitiesMapper.class);
-                    for (VolumeReleaseActivity item : model.getObject())
+                    VolumeReleaseActivitiesMapper volumeReleaseActivitiesMapper = CachingFacade.getCacheableMapper(session, VolumeReleaseActivitiesMapper.class);
+                    TeamMembersMapper membersMapper = CachingFacade.getCacheableMapper(session, TeamMembersMapper.class);
+
+                    volumeReleaseActivitiesMapper.deleteVolumeReleaseActivitysByVolumeId(volume.getVolumeId());
+
+                    if (!volumeReleaseActivities.isEmpty())
                     {
-                        if (!removed.contains(item))
+                        ArrayList<VolumeReleaseActivity> filteredVolumeReleaseActivities = new ArrayList<>(volumeReleaseActivities.size());
+                        for (VolumeReleaseActivity volumeReleaseActivity : volumeReleaseActivities)
                         {
-                            if (item.getActivityId() != null)
+                            if (!removed.contains(volumeReleaseActivity))
                             {
-                                mapper.updateVolumeReleaseActivity(item);
-                            }
-                            else
-                            {
-                                mapper.insertVolumeReleaseActivity(item);
+                                membersMapper.insertIgnoreTeamMember(volumeReleaseActivity.getMemberName());
+                                filteredVolumeReleaseActivities.add(volumeReleaseActivity);
                             }
                         }
-                    }
-                    for (VolumeReleaseActivity removedItem : removed)
-                    {
-                        if (removedItem.getActivityId() != null)
-                        {
-                            mapper.deleteVolumeReleaseActivity(removedItem.getActivityId());
-                        }
+                        volumeReleaseActivitiesMapper.insertVolumeReleaseActivitysByVolumeId(volume.getVolumeId(), filteredVolumeReleaseActivities);
                     }
                     session.commit();
                 }
@@ -415,9 +402,19 @@ public class VolumeEdit extends AdminLayoutPage
                         add(new CheckBox("nested"));
                         add(new TextField<String>("urlPart").setRequired(true).setLabel(Model.of("Ссылка")));
                         add(new TextField<String>("title").setRequired(true).setLabel(Model.of("Заголовок")));
+                        add(new CheckBox("published", Model.of(model.getObject().isPublished())));
+                        add(new DateTextField("publishDate", "dd.MM.yyyy HH:mm"));
                         add(new BookmarkablePageLink("link", Editor.class, model.getObject().getUrlParameters()));
                     }
                 };
+            }
+
+            @Override
+            protected void onInitialize()
+            {
+                super.onInitialize();
+                toolbarButtons.add(toolbarButtons.size() - 1,
+                        new AdminToolboxModalButton("Таймер", "#publish-date-modal", "info", "clock-o"));
             }
         }.setSortable(true));
 
@@ -458,6 +455,8 @@ public class VolumeEdit extends AdminLayoutPage
             protected Update makeItem()
             {
                 Update new_update = new Update();
+                new_update.setProjectId(volume.getProjectId());
+                new_update.setVolumeId(volume.getVolumeId());
                 new_update.setShowTime(new Date());
                 new_update.setUpdateType(RuraConstants.UPDATE_TYPE_PUBLISH);
                 return new_update;
@@ -710,8 +709,8 @@ public class VolumeEdit extends AdminLayoutPage
                             target.add(selectorBlockItem);
                             target.appendJavaScript(String.format(
                                     "$('#%s .list-group.select.sortable').trigger('sortupdate');" +
-                                    "$('#%s').click();" +
-                                    "initFormItemFileUpload('#%s .image-data-main');" +
+                                    "$('#%s').click();"                                           +
+                                    "initFormItemFileUpload('#%s .image-data-main');"             +
                                     "initFormItemFileUpload('#%s .image-data-color');",
                                     form.getMarkupId(), selectorBlockItem.getMarkupId(),
                                     formBlockItem.getMarkupId(), formBlockItem.getMarkupId()));

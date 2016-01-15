@@ -1883,10 +1883,6 @@ table.rc-table-resizing thead > th > a {
     width: calc(100% - 30px);
     display: inline-block;
 }
-.panel .row {
-    width: calc(100% - 30px);
-    margin-left: 15px;
-}
 /*   table   */
 /*              PROJECT EDIT                 */
 

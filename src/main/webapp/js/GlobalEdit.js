@@ -43,7 +43,6 @@ function initUserTypeahead() {
 }
 
 $('#teamMembers').on('addnewitem', function (e, d) {
-    console.log(e, d);
     $(d.form).find('.username-input').each(initUserTypeahead);
 });
 

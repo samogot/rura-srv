@@ -13,7 +13,6 @@ public class TeamMember implements Serializable
     private Integer userId;
     private Integer teamId;
     private String nickname;
-    private boolean active;
     //Optional
     private Team team;
     private List<String> userRoles;
@@ -68,16 +67,6 @@ public class TeamMember implements Serializable
     public void setNickname(String nickname)
     {
         this.nickname = nickname;
-    }
-
-    public boolean isActive()
-    {
-        return active;
-    }
-
-    public void setActive(boolean active)
-    {
-        this.active = active;
     }
 
     public List<String> getUserRoles()

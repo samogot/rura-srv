@@ -68,6 +68,8 @@ public abstract class AdminTableListPanel<T> extends AdminListPanel<T>
         target.prependJavaScript(String.format(";addAdminTableRowStub('%s', '%s');", rowListItem.get("item").getMarkupId(), form.getMarkupId()));
         target.add(rowListItem.get("item"));
         target.appendJavaScript(String.format(";$('#%s').click();", rowListItem.get("item").getMarkupId()));
+        target.appendJavaScript(String.format("$('#%s').trigger('addnewitem', { row: '#%s' })",
+                form.getMarkupId(), rowListItem.get("item").getMarkupId()));
     }
 
     @Override

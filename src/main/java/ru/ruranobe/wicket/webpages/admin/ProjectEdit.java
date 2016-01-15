@@ -196,6 +196,10 @@ public class ProjectEdit extends AdminLayoutPage
                             Volume new_volume = SerializationUtils.clone(selectedItem);
                             new_volume.setProject(selectedItem.getProject());
                             new_volume.setVolumeId(null);
+                            new_volume.setImageOne(null);
+                            new_volume.setImageTwo(null);
+                            new_volume.setImageThree(null);
+                            new_volume.setImageFour(null);
                             model.getObject().add(new_volume);
                             onAddItem(new_volume, target, form);
                         }
