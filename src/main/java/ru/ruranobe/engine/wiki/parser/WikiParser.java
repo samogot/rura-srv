@@ -437,7 +437,7 @@ public class WikiParser
     {
         this.chapterId = chapterId;
         this.textId = textId;
-        this.wikiText = wikiText;
+        this.wikiText = SimpleHtmlSanitizer.apply(wikiText);
     }
 
     //private StringBuilder footnotes = new StringBuilder();
