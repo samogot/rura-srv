@@ -164,7 +164,7 @@ CREATE TABLE volumes
   annotation         TEXT,
   topic_id           INT(11) UNSIGNED             DEFAULT NULL,
   INDEX (url),
-  INDEX (project_id, sequence_number)
+  UNIQUE (project_id, sequence_number)
 );
 
 CREATE TABLE volume_statuses

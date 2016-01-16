@@ -26,7 +26,7 @@ import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
 import java.util.Date;
 
-@AuthorizeInstantiation("ADMIN")
+@AuthorizeInstantiation({"ADMIN", "TEAM MEMBER"})
 public class Editor extends SidebarLayoutPage
 {
     public Editor(PageParameters parameters)

@@ -49,7 +49,7 @@ public class Volume extends PageRepresentable implements Serializable, Cloneable
     private String nameRu;
     private String nameRomaji;
     private String nameShort;
-    private Integer sequenceNumber;
+    private Float sequenceNumber;
     private String author;
     private String illustrator;
     private String originalDesign;
@@ -77,7 +77,7 @@ public class Volume extends PageRepresentable implements Serializable, Cloneable
     }
 
 
-    public Volume(Volume toClone, Integer sequenceNumber)
+    public Volume(Volume toClone, Float sequenceNumber)
     {
         this.projectId = toClone.projectId;
         this.imageOne = toClone.imageOne;
@@ -107,7 +107,7 @@ public class Volume extends PageRepresentable implements Serializable, Cloneable
 
     public Volume(Integer projectId, String url, String nameFile, String nameTitle,
                   String nameJp, String nameEn, String nameRu, String nameShort,
-                  Integer sequenceNumber, String author, String illustrator, Date releaseDate,
+                  Float sequenceNumber, String author, String illustrator, Date releaseDate,
                   String isbn, String externalUrl, String annotation)
     {
         this.projectId = projectId;
@@ -262,12 +262,12 @@ public class Volume extends PageRepresentable implements Serializable, Cloneable
         this.nameTitle = nameTitle;
     }
 
-    public Integer getSequenceNumber()
+    public Float getSequenceNumber()
     {
         return sequenceNumber;
     }
 
-    public void setSequenceNumber(Integer sequenceNumber)
+    public void setSequenceNumber(Float sequenceNumber)
     {
         this.sequenceNumber = sequenceNumber;
     }

@@ -35,7 +35,7 @@ import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
 
 import java.util.*;
 
-@AuthorizeInstantiation("ADMIN")
+@AuthorizeInstantiation({"ADMIN", "TEAM MEMBER"})
 public class ProjectEdit extends AdminLayoutPage
 {
 

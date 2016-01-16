@@ -61,7 +61,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-@AuthorizeInstantiation("ADMIN")
+@AuthorizeInstantiation({"ADMIN", "TEAM MEMBER"})
 public class VolumeEdit extends AdminLayoutPage
 {
 
