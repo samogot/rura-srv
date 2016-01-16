@@ -20,6 +20,8 @@
         mime_type = #{mimeType},
         url = #{url},
         thumbnail = #{thumbnail},
+        width = #{width},
+        height = #{height},
         title = #{title},
         uploaded_when = #{uploadedWhen}
     </insert>
@@ -37,6 +39,8 @@
         <result property="mimeType" column="mime_type"/>
         <result property="url" column="url"/>
         <result property="thumbnail" column="thumbnail"/>
+        <result property="width" column="width"/>
+        <result property="height" column="height"/>
         <result property="title" column="title"/>
         <result property="uploadedWhen" column="uploaded_when"/>
     </resultMap>

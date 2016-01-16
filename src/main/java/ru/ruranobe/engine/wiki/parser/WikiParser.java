@@ -2,6 +2,7 @@ package ru.ruranobe.engine.wiki.parser;
 
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.entities.tables.ExternalResource;
+import ru.ruranobe.wicket.RuraConstants;
 
 import java.util.*;
 
@@ -213,8 +214,8 @@ public class WikiParser
                 else
                 {
                     image.setExternalResourceId(-1);
-                    image.setImageUrl("unknown source");
-                    image.setImageThumbnail("unknown source");
+                    image.setImageUrl(RuraConstants.UNKNOWN_IMAGE);
+                    image.setImageThumbnail(RuraConstants.UNKNOWN_IMAGE);
                 }
                 startPositionToReplacement.put(image.getStartPosition(),
                         new Replacement(image));

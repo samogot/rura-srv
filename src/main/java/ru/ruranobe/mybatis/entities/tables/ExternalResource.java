@@ -23,7 +23,7 @@ public class ExternalResource implements Serializable
 
     public String getThumbnail(int width)
     {
-        return String.format(thumbnail, width);
+        return width < getWidth() ? String.format(thumbnail, width) : getUrl();
     }
 
     public void setThumbnail(String thumbnail)
@@ -31,10 +31,32 @@ public class ExternalResource implements Serializable
         this.thumbnail = thumbnail;
     }
 
+    public int getWidth()
+    {
+        return width;
+    }
+
+    public void setWidth(int width)
+    {
+        this.width = width;
+    }
+
+    public int getHeight()
+    {
+        return height;
+    }
+
+    public void setHeight(int height)
+    {
+        this.height = height;
+    }
+
     private static final long serialVersionUID = 1L;
     private int resourceId;
     private int userId;
     private int historyId;
+    private int width;
+    private int height;
     private String mimeType;
     private String url;
     private String thumbnail;

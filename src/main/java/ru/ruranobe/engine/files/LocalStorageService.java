@@ -53,7 +53,7 @@ public class LocalStorageService
             toUpload.setPathOnImageServiceSystem(StorageService.LOCAL_STORAGE, LOCAL_STORAGE_PUBLIC_FOLDER + fullFileName);
             String fullFileNameEscaped = fullFileName.replaceAll("%", "%%");
             toUpload.setThumbnailPathOnImageServiceSystem(StorageService.LOCAL_STORAGE,
-                    LOCAL_STORAGE_PUBLIC_FOLDER + "/thumb" + fullFileNameEscaped + "/%spx-" + fullFileNameEscaped);
+                    LOCAL_STORAGE_PUBLIC_FOLDER + "/thumb" + fullFileNameEscaped + "/%dpx-" + fullFileNameEscaped);
         }
         catch (IOException ex)
         {
