@@ -169,6 +169,15 @@ public class RegistrationPanel extends Panel
                         user.setRegistrationDate(new Date(System.currentTimeMillis()));
                         user.setPassRecoveryToken(null);
                         user.setPassRecoveryTokenDate(null);
+                        user.setPassRecoveryToken(null);
+                        user.setPassRecoveryTokenDate(null);
+                        user.setConverterType("fb2");
+                        user.setNavigationType("Главам");
+                        user.setPreferColoredImgs(true);
+                        user.setConvertWithImgs(true);
+                        user.setConvertImgsSize(1080);
+                        user.setEmailActivated(false);
+                        user.setAdult(false);
                         usersMapper.registerUser(user);
 
                         if (!Strings.isEmpty(email))
