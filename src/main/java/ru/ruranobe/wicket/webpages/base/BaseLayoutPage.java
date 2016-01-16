@@ -5,7 +5,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import ru.ruranobe.wicket.components.LoginPanel;
 import ru.ruranobe.wicket.components.UserActionsPanel;
 
-import java.util.Date;
+import java.util.Calendar;
 
 public abstract class BaseLayoutPage extends WebPage
 {
@@ -30,7 +30,7 @@ public abstract class BaseLayoutPage extends WebPage
             add(userActionsPanelAndroidView = new UserActionsPanel("userActionsPanelAndroidView", true));
         }
         add(new Label("pageTitle", getPageTitle()));
-        add(new Label("currentYear", new Date().getYear()));
+        add(new Label("currentYear", Calendar.getInstance().get(Calendar.YEAR)));
         super.onInitialize();
     }
 
