@@ -1,5 +1,10 @@
 package ru.ruranobe.engine.wiki.parser;
 
+/**
+ * TODO: this is not a correct implementation. e.g. text "<sup>" will not be escaped
+ *       while it should. The text "<sup></sup>" should not be escaped. Also it will
+ *       think that <---> is correct tag combination. But nah... Good enough.
+ */
 public class SimpleHtmlSanitizer
 {
     public static String apply(String text)
@@ -19,11 +24,11 @@ public class SimpleHtmlSanitizer
                 {
                     case "<sub>":
                         result.append(temp);
-                        i+=temp.length();
+                        i+=temp.length()-1;
                         continue;
                     case "<sup>":
                         result.append(temp);
-                        i+=temp.length();
+                        i+=temp.length()-1;
                         continue;
                 }
 
@@ -32,11 +37,11 @@ public class SimpleHtmlSanitizer
                 {
                     case "</sub>":
                         result.append(temp);
-                        i+=temp.length();
+                        i+=temp.length()-1;
                         continue;
                     case "</sup>":
                         result.append(temp);
-                        i+=temp.length();
+                        i+=temp.length()-1;
                         continue;
                 }
 
@@ -44,7 +49,7 @@ public class SimpleHtmlSanitizer
                 if (temp.equals("<!--"))
                 {
                     result.append(temp);
-                    i+=temp.length();
+                    i+=temp.length()-1;
                     continue;
                 }
 
