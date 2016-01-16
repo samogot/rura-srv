@@ -28,6 +28,7 @@ public class Chapter extends PageRepresentable implements Serializable
     private List<Chapter> childChapters;
     private boolean visibleOnPage = false;
     private Text text;
+
     public Chapter()
     {
     }
@@ -235,6 +236,7 @@ public class Chapter extends PageRepresentable implements Serializable
     public void setText(Text text)
     {
         this.text = text;
+        this.textId = text == null ? null : text.getTextId();
     }
 
 }

@@ -26,6 +26,23 @@
     <meta name="theme-color" content="#60A9D4">
     <link rel="alternate" type="application/rss+xml" title="Обновления РуРанобэ"
           href="https://feeds.feedburner.com/ruranobe"/>
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                        (i[r].q = i[r].q || []).push(arguments)
+                    }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-40837511-2', 'auto');
+        ga('send', 'pageview');
+
+    </script>
 </head>
 <body data-spy="scroll" data-target=".scrollspy" data-color="">
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel"
@@ -76,13 +93,13 @@
                     <li><a href="../special/Faq.html">FAQ</a></li>
                     <li><a href="../special/AboutUs.html">О нас</a></li>
                     <li><a href="../special/Diary.html">Дневник Руйки</a></li>
-                    <li><a href="../special/Help.html">Помощь</a></li>
-                    <li><a href="../special/Contact.html">Связь</a></li>
                     <li><a href="/f">Форум</a></li>
                 </wicket:link>
             </ul>
             <form class="navbar-form navbar-right">
                 <!--<a href="#" class="btn btn-danger">Трансляции</a>-->
+                <a href="#" class="btn btn-primary" disabled="disabled"><i class="fa fa-facebook"></i></a>
+                <a href="https://twitter.com/RuRa_team" class="btn btn-primary"><i class="fa fa-twitter"></i></a>
                 <a href="https://vk.com/ru.ranobe" class="btn btn-primary"><i class="fa fa-vk"></i></a>
                 <a href="https://feeds.feedburner.com/ruranobe" class="btn btn-primary"><i class="fa fa-rss"></i></a>
                 <a href="#" class="btn btn-primary daynight-button"><i class="fa fa-sun-o"></i></a>
@@ -105,12 +122,11 @@
                 <a href="../special/Faq.html">FAQ</a>
                 <a href="../special/AboutUs.html">О нас</a>
                 <a href="../special/Diary.html">Дневник Руйки</a>
-                <a href="../special/Help.html">Помощь</a>
-                <a href="../special/Contact.html">Связь</a>
                 <a href="/f">Форум</a>
             </wicket:link>
         </div>
-        <div class="copyright text-center">&copy; Проект <span class="bold">&laquo;РуРанобэ&raquo; </span>2015</div>
+        <div class="copyright text-center">&copy; Проект <span class="bold">&laquo;РуРанобэ&raquo; </span>2014-<span
+                wicket:id="currentYear"></span></div>
     </footer>
 </div>
 
