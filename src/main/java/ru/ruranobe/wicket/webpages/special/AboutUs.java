@@ -35,7 +35,7 @@ public class AboutUs extends SidebarLayoutPage
                 throw RuranobeUtils.getRedirectTo404Exception(this);
             }
 
-            boolean committingNeeded = ChapterTextParser.getChapterText(chapter, session);
+            boolean committingNeeded = ChapterTextParser.getChapterText(chapter, session, false);
             textHtml = chapter.getText().getTextHtml();
 
             if (committingNeeded)

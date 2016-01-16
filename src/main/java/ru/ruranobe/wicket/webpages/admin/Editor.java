@@ -137,7 +137,7 @@ public class Editor extends SidebarLayoutPage
                 TextsMapper textsMapper = CachingFacade.getCacheableMapper(session, TextsMapper.class);
                 textsMapper.insertText(text);
                 chapter.setText(text);
-                ChapterTextParser.parseChapterText(chapter, session, textsMapper);
+                ChapterTextParser.parseChapterText(chapter, session, textsMapper, !chapter.getUrl().startsWith("system/"));
 
                 ChaptersMapper chaptersMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
                 chaptersMapperCacheable.updateChapter(chapter);

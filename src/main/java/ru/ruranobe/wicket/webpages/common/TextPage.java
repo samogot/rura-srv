@@ -189,7 +189,7 @@ public class TextPage extends SidebarLayoutPage implements InstantiationSecurity
             {
                 if (chapter.isVisibleOnPage())
                 {
-                    committingNeeded = ChapterTextParser.getChapterText(chapter, session, textsMapper) || committingNeeded;
+                    committingNeeded = ChapterTextParser.getChapterText(chapter, session, textsMapper, true) || committingNeeded;
                     String chapterFootnotes = chapter.getText() != null ? chapter.getText().getFootnotes() : null;
 
                     String headerTag = chapter.isNested() ? "h3" : "h2";

@@ -47,12 +47,12 @@ public class ChapterTextParser
         return images;
     }
 
-    public static void parseChapterText(Chapter chapter, SqlSession session, TextsMapper textsMapper)
+    public static void parseChapterText(Chapter chapter, SqlSession session, TextsMapper textsMapper, boolean sanitize)
     {
         List<ExternalResource> images = ChapterTextParser.getChapterExternalResources(chapter, session);
 
         Text chapterText = chapter.getText();
-        WikiParser wikiParser = new WikiParser(chapterText.getTextId(), chapter.getChapterId(), chapterText.getTextWiki());
+        WikiParser wikiParser = new WikiParser(chapterText.getTextId(), chapter.getChapterId(), chapterText.getTextWiki(), sanitize);
         chapterText.setTextHtml(wikiParser.parseWikiText(images, true));
 
         StringBuilder contents = new StringBuilder();
@@ -81,13 +81,13 @@ public class ChapterTextParser
         textsMapper.updateText(chapterText);
     }
 
-    public static boolean getChapterText(Chapter chapter, SqlSession session)
+    public static boolean getChapterText(Chapter chapter, SqlSession session, boolean sanitize)
     {
         TextsMapper textsMapper = CachingFacade.getCacheableMapper(session, TextsMapper.class);
-        return getChapterText(chapter, session, textsMapper);
+        return getChapterText(chapter, session, textsMapper, sanitize);
     }
 
-    public static boolean getChapterText(Chapter chapter, SqlSession session, TextsMapper textsMapper)
+    public static boolean getChapterText(Chapter chapter, SqlSession session, TextsMapper textsMapper, boolean sanitize)
     {
         if (chapter.getTextId() != null)
         {
@@ -96,7 +96,7 @@ public class ChapterTextParser
         if (chapter.getText() != null && Strings.isEmpty(chapter.getText().getTextHtml()))
         {
             chapter.setText(textsMapper.getTextById(chapter.getTextId()));
-            ChapterTextParser.parseChapterText(chapter, session, textsMapper);
+            ChapterTextParser.parseChapterText(chapter, session, textsMapper, sanitize);
             return true;
         }
         return false;

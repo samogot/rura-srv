@@ -434,11 +434,19 @@ public class WikiParser
     }
 
     // textId and chapterId can be nullable
-    public WikiParser(Integer textId, Integer chapterId, String wikiText)
+    public WikiParser(Integer textId, Integer chapterId, String wikiText, boolean sanitize)
     {
+
         this.chapterId = chapterId;
         this.textId = textId;
-        this.wikiText = SimpleHtmlSanitizer.apply(wikiText);
+        if (sanitize)
+        {
+            this.wikiText = SimpleHtmlSanitizer.apply(wikiText);
+        }
+        else
+        {
+            this.wikiText = wikiText;
+        }
     }
 
     //private StringBuilder footnotes = new StringBuilder();
