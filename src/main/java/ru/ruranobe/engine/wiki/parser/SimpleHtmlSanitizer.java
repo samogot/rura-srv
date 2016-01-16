@@ -6,7 +6,7 @@ public class SimpleHtmlSanitizer
     {
         StringBuilder result = new StringBuilder();
 
-        String beginAndEnd = "abracadabra";
+        String beginAndEnd = "abracadabraabracadabraabracadabraabracadabraabracadabraabracadabraabracadabraabracadabra";
         text = beginAndEnd + text + beginAndEnd;
 
         for (int i = beginAndEnd.length(); i < text.length()-beginAndEnd.length(); ++i)
@@ -64,7 +64,7 @@ public class SimpleHtmlSanitizer
             else if (c == '&')
             {
                 StringBuilder temp = new StringBuilder("&");
-                for (int j = i+1; j < i+100; ++j)
+                for (int j = i+1; j < i+beginAndEnd.length(); ++j)
                 {
                     if (text.charAt(j) == ';')
                     {
