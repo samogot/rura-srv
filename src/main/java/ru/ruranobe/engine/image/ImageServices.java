@@ -16,12 +16,57 @@ import ru.ruranobe.mybatis.mappers.ExternalResourcesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.LoginSession;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.FileImageInputStream;
+import javax.imageio.stream.ImageInputStream;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
+import java.util.List;
 
 import static ru.ruranobe.engine.files.StorageService.*;
 
 public class ImageServices
 {
+    /**
+     * Gets image dimensions for given file
+     *
+     * @param imgFile image file
+     * @return dimensions of image
+     * @throws IOException if the file is not a known image
+     */
+    public static Dimension getImageDimension(File imgFile) throws IOException
+    {
+        int pos = imgFile.getName().lastIndexOf(".");
+        if (pos == -1)
+        {
+            throw new IOException("No extension for file: " + imgFile.getAbsolutePath());
+        }
+        String suffix = imgFile.getName().substring(pos + 1);
+        Iterator<ImageReader> iter = ImageIO.getImageReadersBySuffix(suffix);
+        if (iter.hasNext())
+        {
+            ImageReader reader = iter.next();
+            try (ImageInputStream stream = new FileImageInputStream(imgFile))
+            {
+                int width;
+                int height;
+                reader.setInput(stream);
+                width = reader.getWidth(reader.getMinIndex());
+                height = reader.getHeight(reader.getMinIndex());
+                return new Dimension(width, height);
+            }
+            finally
+            {
+                reader.dispose();
+            }
+        }
+
+        throw new IOException("Not a known image file: " + imgFile.getAbsolutePath());
+    }
+
     public static List<ExternalResource> uploadImage(RuraImage toUpload, List<ImageStorage> imageStorageList, ExternalResourceHistory externalResourceHistory, Map<String, String> pageContextVariables)
     {
         if (imageStorageList == null || imageStorageList.isEmpty())
@@ -34,6 +79,16 @@ public class ImageServices
         nameContextVariables.put("ext", toUpload.getExtension());
         nameContextVariables.put("fullname", toUpload.getTitle());
         nameContextVariables.put("name", FilenameUtils.getBaseName(toUpload.getTitle()));
+
+        Dimension imageDimension;
+        try
+        {
+            imageDimension = getImageDimension(toUpload.getImageFile());
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException("Cannot get image dimension", e);
+        }
 
         List<ExternalResource> externalResources = new ArrayList<>();
         try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
@@ -60,6 +115,8 @@ public class ImageServices
                 resource.setMimeType(toUpload.getMimeType());
                 resource.setUploadedWhen(externalResourceHistory.getUploadedWhen());
                 resource.setHistoryId(externalResourceHistory.getHistoryId());
+                resource.setWidth(imageDimension.width);
+                resource.setHeight(imageDimension.height);
 
                 if (storagePath.contains("${") || storageFileName.contains("${"))
                 {

@@ -26,6 +26,8 @@
             non_colored.mime_type     AS mimeType1,
             non_colored.url           AS url1,
         non_colored.thumbnail AS thumbnail1,
+        non_colored.width AS width1,
+        non_colored.height AS height1,
             non_colored.title         AS title1,
             non_colored.uploaded_when AS uploadedWhen1,
 
@@ -34,6 +36,8 @@
             colored.mime_type         AS mimeType2,
             colored.url               AS url2,
         colored.thumbnail AS thumbnail2,
+        colored.width AS width2,
+        colored.height AS height2,
             colored.title             AS title2,
             colored.uploaded_when     AS uploadedWhen2
         FROM chapter_images
@@ -58,6 +62,8 @@
             non_colored.mime_type     AS mimeType1,
             non_colored.url           AS url1,
         non_colored.thumbnail AS thumbnail1,
+        non_colored.width AS width1,
+        non_colored.height AS height1,
             non_colored.title         AS title1,
             non_colored.uploaded_when AS uploadedWhen1,
 
@@ -66,6 +72,8 @@
             colored.mime_type         AS mimeType2,
             colored.url               AS url2,
         colored.thumbnail AS thumbnail2,
+        colored.width AS width2,
+        colored.height AS height2,
             colored.title             AS title2,
             colored.uploaded_when     AS uploadedWhen2
         FROM chapter_images
@@ -124,6 +132,8 @@
             <result property="mimeType" column="mimeType1"/>
             <result property="url" column="url1"/>
             <result property="thumbnail" column="thumbnail1"/>
+            <result property="width" column="width1"/>
+            <result property="height" column="height1"/>
             <result property="title" column="title1"/>
             <result property="uploadedWhen" column="uploadedWhen1"/>
         </association>
@@ -134,6 +144,8 @@
             <result property="mimeType" column="mimeType2"/>
             <result property="url" column="url2"/>
             <result property="thumbnail" column="thumbnail2"/>
+            <result property="width" column="width2"/>
+            <result property="height" column="height2"/>
             <result property="title" column="title2"/>
             <result property="uploadedWhen" column="uploadedWhen2"/>
         </association>

@@ -580,12 +580,15 @@ public class VolumeEdit extends AdminLayoutPage
                     protected void onInitialize()
                     {
                         super.onInitialize();
-                        add(new WebMarkupContainer("nonColoredImage.thumbnail")
+                        add(new WebMarkupContainer("nonColoredImage")
                         {
                             @Override
                             protected void onComponentTag(ComponentTag tag)
                             {
-                                tag.getAttributes().put("src", String.format(getDefaultModelObjectAsString(), 50));
+                                if (getDefaultModelObject() != null && getDefaultModelObject() instanceof ExternalResource)
+                                {
+                                    tag.getAttributes().put("src", ((ExternalResource) getDefaultModelObject()).getThumbnail(50));
+                                }
                             }
                         });
                         add(new Label("nonColoredImage.title"));
@@ -605,12 +608,15 @@ public class VolumeEdit extends AdminLayoutPage
                         super.onInitialize();
                         WebMarkupContainer coloredImageTrigger, coloredImageAddButton;
                         add(new HiddenField<Integer>("chapterId"));
-                        add(new WebMarkupContainer("nonColoredImage.thumbnail")
+                        add(new WebMarkupContainer("nonColoredImage")
                         {
                             @Override
                             protected void onComponentTag(ComponentTag tag)
                             {
-                                tag.getAttributes().put("src", String.format(getDefaultModelObjectAsString(), 280));
+                                if (getDefaultModelObject() != null && getDefaultModelObject() instanceof ExternalResource)
+                                {
+                                    tag.getAttributes().put("src", ((ExternalResource) getDefaultModelObject()).getThumbnail(280));
+                                }
                             }
                         });
                         add(new TextField<String>("nonColoredImage.title"));
@@ -648,12 +654,15 @@ public class VolumeEdit extends AdminLayoutPage
                                 }
                             }
                         });
-                        coloredImageTrigger.add(new WebMarkupContainer("coloredImage.thumbnail")
+                        coloredImageTrigger.add(new WebMarkupContainer("coloredImage")
                         {
                             @Override
                             protected void onComponentTag(ComponentTag tag)
                             {
-                                tag.getAttributes().put("src", String.format(getDefaultModelObjectAsString(), 280));
+                                if (getDefaultModelObject() != null && getDefaultModelObject() instanceof ExternalResource)
+                                {
+                                    tag.getAttributes().put("src", ((ExternalResource) getDefaultModelObject()).getThumbnail(280));
+                                }
                             }
                         });
                         coloredImageTrigger.add(new TextField<String>("coloredImage.title"));

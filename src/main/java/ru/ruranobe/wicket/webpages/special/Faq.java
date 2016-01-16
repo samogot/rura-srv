@@ -77,7 +77,7 @@ public class Faq extends SidebarLayoutPage
             {
                 if (faqChapter.getTextId() != null)
                 {
-                    committingNeeded = ChapterTextParser.getChapterText(faqChapter, session, textsMapper) || committingNeeded;
+                    committingNeeded = ChapterTextParser.getChapterText(faqChapter, session, textsMapper, false) || committingNeeded;
                     questions.add(new Question(++questionNumber, faqChapter.getTitle(), faqChapter.getText().getTextHtml()));
                 }
             }

@@ -33,7 +33,7 @@
             <input wicket:id="nameTitle" type="text" class="form-control">
         </div>
         <div class="form-group">
-            <label wicket:for="nameJp">Название (яп.)</label>
+            <label wicket:for="nameJp">Название (ориг.)</label>
             <input wicket:id="nameJp" type="text" class="form-control">
         </div>
         <div class="form-group">
@@ -211,7 +211,7 @@
 
     <wicket:fragment wicket:id="imageSelectorItemFragment">
         <center>
-            <img wicket:id="nonColoredImage.thumbnail">
+            <img wicket:id="nonColoredImage">
         </center>
         <span wicket:id="nonColoredImage.title" class="hidden-sm hidden-xs"></span>
     </wicket:fragment>
@@ -228,7 +228,7 @@
                 </h3>
                 <div class="btn-image-replace">
                     <input type="file" class='fileupload'>
-                    <img wicket:id="nonColoredImage.thumbnail" class="img-responsive">
+                    <img wicket:id="nonColoredImage" class="img-responsive">
                 </div>
                 <div class="form-group">
                     <label>Дата загрузки</label>
@@ -252,7 +252,7 @@
                 <div class="image-data-color-trigger" wicket:id="coloredImageTrigger">
                     <center class="btn-image-replace">
                         <input type="file" class='fileupload'>
-                        <img wicket:id="coloredImage.thumbnail" class="img-responsive">
+                        <img wicket:id="coloredImage" class="img-responsive">
                     </center>
                     <div class="form-group">
                         <label>Дата загрузки</label>

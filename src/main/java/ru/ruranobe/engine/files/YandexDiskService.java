@@ -76,7 +76,7 @@ public class YandexDiskService
                 image.setPathOnImageServiceSystem(StorageService.YANDEX_DISK,
                         previewUrl.replace("/preview/", "/disk/"));
                 image.setThumbnailPathOnImageServiceSystem(StorageService.YANDEX_DISK,
-                        previewUrl.replaceAll("%", "%%").replace("&size=S&", "&size=%sx99999&"));
+                        previewUrl.replaceAll("%", "%%").replace("&size=S&", "&size=%dx99999&"));
             }
             catch (UnsupportedEncodingException e)
             {

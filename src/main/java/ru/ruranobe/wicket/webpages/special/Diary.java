@@ -58,7 +58,7 @@ public class Diary extends SidebarLayoutPage
             TextsMapper textsMapper = CachingFacade.getCacheableMapper(session, TextsMapper.class);
             for (Chapter diaryChapter : diaryChapters)
             {
-                committingNeeded = ChapterTextParser.getChapterText(diaryChapter, session, textsMapper) || committingNeeded;
+                committingNeeded = ChapterTextParser.getChapterText(diaryChapter, session, textsMapper, false) || committingNeeded;
                 if (diaryChapter.getText().getTextWiki() == null)
                 {
                     diaryChapter.getText().setTextWiki(textsMapper.getTextById(diaryChapter.getTextId()).getTextWiki());

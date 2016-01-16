@@ -502,7 +502,7 @@ public class Volume extends PageRepresentable implements Serializable, Cloneable
 
     public String getAnnotationParsed()
     {
-        WikiParser wikiParser = new WikiParser(null, null, annotation);
+        WikiParser wikiParser = new WikiParser(null, null, annotation, false);
         return annotation == null ? null : wikiParser.parseWikiText(Collections.<ExternalResource>emptyList(), false);
     }
 }

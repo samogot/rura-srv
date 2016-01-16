@@ -2,6 +2,7 @@ package ru.ruranobe.engine.wiki.parser;
 
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.entities.tables.ExternalResource;
+import ru.ruranobe.wicket.RuraConstants;
 
 import java.util.*;
 
@@ -213,8 +214,8 @@ public class WikiParser
                 else
                 {
                     image.setExternalResourceId(-1);
-                    image.setImageUrl("unknown source");
-                    image.setImageThumbnail("unknown source");
+                    image.setImageUrl(RuraConstants.UNKNOWN_IMAGE);
+                    image.setImageThumbnail(RuraConstants.UNKNOWN_IMAGE);
                 }
                 startPositionToReplacement.put(image.getStartPosition(),
                         new Replacement(image));
@@ -433,11 +434,19 @@ public class WikiParser
     }
 
     // textId and chapterId can be nullable
-    public WikiParser(Integer textId, Integer chapterId, String wikiText)
+    public WikiParser(Integer textId, Integer chapterId, String wikiText, boolean sanitize)
     {
+
         this.chapterId = chapterId;
         this.textId = textId;
-        this.wikiText = SimpleHtmlSanitizer.apply(wikiText);
+        if (sanitize)
+        {
+            this.wikiText = SimpleHtmlSanitizer.apply(wikiText);
+        }
+        else
+        {
+            this.wikiText = wikiText;
+        }
     }
 
     //private StringBuilder footnotes = new StringBuilder();
