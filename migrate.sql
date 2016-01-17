@@ -614,6 +614,14 @@ SET image_one = resource_id;
 
 DROP TEMPORARY TABLE ch_text;
 
+INSERT IGNORE INTO texts_history (current_text_id, insertion_time)
+  SELECT
+    old_id,
+    rev_timestamp
+  FROM ruranobe_db.mw_text
+    INNER JOIN texts ON (old_id = text_id)
+    INNER JOIN ruranobe_db.mw_revision
+      ON (old_id = rev_text_id);
 
 UPDATE texts
 SET text_wiki = replace(text_wiki, '\n\n', '\n');
