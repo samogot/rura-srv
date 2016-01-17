@@ -8,7 +8,7 @@ import ru.ruranobe.wicket.webpages.base.BaseLayoutPage;
 public class HomePage extends BaseLayoutPage
 {
     private static final int COUNT_OF_PROJECTS_ON_PAGE = 12;
-    private static final int COUNT_OF_UPDATES_ON_PAGE = 10;
+    private static final int COUNT_OF_UPDATES_ON_PAGE = 20;
 
     @Override
     protected void onInitialize()
