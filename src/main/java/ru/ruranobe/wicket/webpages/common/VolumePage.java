@@ -14,7 +14,6 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.*;
 import ru.ruranobe.mybatis.mappers.*;
@@ -26,7 +25,6 @@ import ru.ruranobe.wicket.components.sidebar.*;
 import ru.ruranobe.wicket.webpages.admin.VolumeEdit;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
-import java.io.Serializable;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +72,7 @@ public class VolumePage extends SidebarLayoutPage
             add(nextUrl);
 
             ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.
-                                                                                            getCacheableMapper(session, ExternalResourcesMapper.class);
+                    getCacheableMapper(session, ExternalResourcesMapper.class);
             ExternalResource volumeCover;
             List<SimpleEntry<String, ExternalResource>> covers = new ArrayList<>();
             volumeCover = externalResourcesMapperCacheable.getExternalResourceById(volume.getImageOne());
@@ -198,6 +196,11 @@ public class VolumePage extends SidebarLayoutPage
             }
             add(readAllLink);
 
+            add(new ExternalLink("mobilefb2pic", "/d/fb2/" + volumeUrl));
+            add(new ExternalLink("mobilefb2nopic", "/d/fb2/" + volumeUrl + "?pic=0"));
+            add(new ExternalLink("mobiledocx", "/d/docx/" + volumeUrl));
+            add(new ExternalLink("mobileepub", "/d/epub/" + volumeUrl));
+
             add(new CommentsPanel("comments", volume.getTopicId()));
             sidebarModules.add(new DownloadsSidebarModule(volume.getUrlParameters()));
             sidebarModules.add(new ActionsSidebarModule(VolumeEdit.class, volume.getUrlParameters()));
@@ -211,28 +214,5 @@ public class VolumePage extends SidebarLayoutPage
     protected String getPageTitle()
     {
         return titleName != null ? titleName + " - РуРанобэ" : super.getPageTitle();
-    }
-
-    private class VolumeReleaseActivityExtended implements Serializable
-    {
-
-        private String assigneeTeamMember;
-        private String activityName;
-
-        public VolumeReleaseActivityExtended(String assigneeTeamMember, String activityName)
-        {
-            this.assigneeTeamMember = assigneeTeamMember;
-            this.activityName = activityName;
-        }
-
-        public String getActivityName()
-        {
-            return activityName;
-        }
-
-        public String getAssigneeTeamMember()
-        {
-            return assigneeTeamMember;
-        }
     }
 }
