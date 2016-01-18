@@ -59,10 +59,7 @@ public class ProjectEdit extends AdminLayoutPage
     {
         project = getProject(parameters);
 
-        if (project == null)
-        {
-            throw RuranobeUtils.getRedirectTo404Exception(this);
-        }
+        redirectTo404IfArgumentIsNull(project);
 
         try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
         {

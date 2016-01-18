@@ -43,10 +43,7 @@ public class Cabinet extends SidebarLayoutPage
         setStatelessHint(true);
 
         final User user = LoginSession.get().getUser();
-        if (user == null)
-        {
-            throw RuranobeUtils.getRedirectTo404Exception(this);
-        }
+        redirectTo404IfArgumentIsNull(user);
 
         setDefaultModel(new CompoundPropertyModel<>(user));
 

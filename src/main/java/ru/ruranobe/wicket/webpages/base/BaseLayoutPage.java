@@ -3,6 +3,7 @@ package ru.ruranobe.wicket.webpages.base;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
+import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.wicket.components.EmailPasswordRecoveryPanel;
 import ru.ruranobe.wicket.components.LoginPanel;
 import ru.ruranobe.wicket.components.UserActionsPanel;
@@ -38,6 +39,24 @@ public abstract class BaseLayoutPage extends WebPage
         add(new Label("pageTitle", getPageTitle()));
         add(new Label("currentYear", Calendar.getInstance().get(Calendar.YEAR)));
         super.onInitialize();
+    }
+
+    protected void redirectTo404()
+    {
+        throw RuranobeUtils.getRedirectTo404Exception(this);
+    }
+
+    protected void redirectTo404(boolean expression)
+    {
+        if (expression)
+        {
+            redirectTo404();
+        }
+    }
+
+    protected void redirectTo404IfArgumentIsNull(Object argument)
+    {
+        redirectTo404(argument==null);
     }
 
     protected String getPageTitle()

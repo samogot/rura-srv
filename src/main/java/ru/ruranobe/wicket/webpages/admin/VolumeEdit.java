@@ -100,10 +100,7 @@ public class VolumeEdit extends AdminLayoutPage
     {
         String projectName = parameters.get("project").toOptionalString();
         String volumeName = parameters.get("volume").toOptionalString();
-        if (Strings.isEmpty(projectName) || Strings.isEmpty(volumeName))
-        {
-            throw RuranobeUtils.getRedirectTo404Exception(this);
-        }
+        redirectTo404(Strings.isEmpty(projectName) || Strings.isEmpty(volumeName));
 
         String volumeUrl = projectName + "/" + volumeName;
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
@@ -113,10 +110,7 @@ public class VolumeEdit extends AdminLayoutPage
             VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
             volume = volumesMapperCacheable.getVolumeByUrl(volumeUrl);
 
-            if (volume == null)
-            {
-                throw RuranobeUtils.getRedirectTo404Exception(this);
-            }
+            redirectTo404IfArgumentIsNull(volume);
 
             VolumeReleaseActivitiesMapper volumeReleaseActivitiesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumeReleaseActivitiesMapper.class);
             volumeReleaseActivities = Lists.newArrayList(volumeReleaseActivitiesMapperCacheable.getVolumeReleaseActivitiesByVolumeId(volume.getVolumeId()));

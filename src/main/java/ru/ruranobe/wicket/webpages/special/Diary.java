@@ -45,11 +45,7 @@ public class Diary extends SidebarLayoutPage
         {
             VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
             diaryVolume = volumesMapperCacheable.getVolumeByUrl("system/diary");
-            if (diaryVolume == null)
-            {
-                throw RuranobeUtils.getRedirectTo404Exception(this);
-            }
-
+            redirectTo404IfArgumentIsNull(diaryVolume);
 
             ChaptersMapper chaptersMapper = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
             diaryChapters = chaptersMapper.getChaptersByVolumeId(diaryVolume.getVolumeId());

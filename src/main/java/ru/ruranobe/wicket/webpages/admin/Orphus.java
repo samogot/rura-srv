@@ -214,10 +214,7 @@ public class Orphus extends BaseLayoutPage
                     {
                         ChaptersMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
                         Chapter chapter = volumesMapperCacheable.getChapterByUrl(fullUrl.toString());
-                        if (chapter == null)
-                        {
-                            throw RuranobeUtils.getRedirectTo404Exception(this);
-                        }
+                        redirectTo404IfArgumentIsNull(chapter);
                         chapterId = chapter.getChapterId();
                     }
                 }
@@ -227,10 +224,7 @@ public class Orphus extends BaseLayoutPage
                     {
                         VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
                         Volume volume = volumesMapperCacheable.getVolumeByUrl(fullUrl.toString());
-                        if (volume == null)
-                        {
-                            throw RuranobeUtils.getRedirectTo404Exception(this);
-                        }
+                        redirectTo404IfArgumentIsNull(volume);
                         volumeId = volume.getVolumeId();
                     }
                 }
@@ -241,10 +235,7 @@ public class Orphus extends BaseLayoutPage
                 {
                     ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
                     Project project = projectsMapperCacheable.getProjectByUrl(fullUrl.toString());
-                    if (project == null)
-                    {
-                        throw RuranobeUtils.getRedirectTo404Exception(this);
-                    }
+                    redirectTo404IfArgumentIsNull(project);
                     projectId = project.getProjectId();
                 }
             }

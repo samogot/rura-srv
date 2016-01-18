@@ -88,16 +88,10 @@ public class Editor extends SidebarLayoutPage
         Chapter chapter = null;
 
         String projectUrl = parameters.get("project").toString();
-        if (Strings.isEmpty(projectUrl))
-        {
-            throw RuranobeUtils.getRedirectTo404Exception(this);
-        }
+        redirectTo404(Strings.isEmpty(projectUrl));
 
         String volumeUrl = parameters.get("volume").toString();
-        if (Strings.isEmpty(volumeUrl))
-        {
-            throw RuranobeUtils.getRedirectTo404Exception(this);
-        }
+        redirectTo404(Strings.isEmpty(volumeUrl));
 
         String chapterUrl = parameters.get("chapter").toString();
         if (!Strings.isEmpty(chapterUrl))
@@ -105,10 +99,7 @@ public class Editor extends SidebarLayoutPage
             ChaptersMapper chaptersMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
             chapter = chaptersMapperCacheable.getChapterByUrl(projectUrl + "/" + volumeUrl + "/" + chapterUrl);
 
-            if (chapter == null)
-            {
-                throw RuranobeUtils.getRedirectTo404Exception(this);
-            }
+            redirectTo404IfArgumentIsNull(chapter);
         }
 
         return chapter;

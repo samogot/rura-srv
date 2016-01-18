@@ -30,10 +30,7 @@ public class AboutUs extends SidebarLayoutPage
             ChaptersMapper chaptersMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
             chapter = chaptersMapperCacheable.getChapterByUrl("system/aboutus/text");
 
-            if (chapter == null)
-            {
-                throw RuranobeUtils.getRedirectTo404Exception(this);
-            }
+            redirectTo404IfArgumentIsNull(chapter);
 
             boolean committingNeeded = ChapterTextParser.getChapterText(chapter, session, false);
             textHtml = chapter.getText().getTextHtml();

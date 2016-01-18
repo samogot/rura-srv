@@ -51,33 +51,22 @@ public class TextPage extends SidebarLayoutPage implements InstantiationSecurity
         try (SqlSession session = sessionFactory.openSession())
         {
             String projectUrl = parameters.get("project").toString();
-            if (Strings.isEmpty(projectUrl))
-            {
-                throw RuranobeUtils.getRedirectTo404Exception(this);
-            }
+            redirectTo404(Strings.isEmpty(projectUrl));
 
             String volumeUrl = parameters.get("volume").toString();
-            if (Strings.isEmpty(volumeUrl))
-            {
-                throw RuranobeUtils.getRedirectTo404Exception(this);
-            }
+            redirectTo404(Strings.isEmpty(volumeUrl));
 
             ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
             Project project = projectsMapperCacheable.getProjectByUrl(projectUrl);
 
-            if (project == null || project.isProjectHidden())
-            {
-                throw RuranobeUtils.getRedirectTo404Exception(this);
-            }
+            redirectTo404(project == null || project.isProjectHidden());
 
             ChaptersMapper chaptersMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
             VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
             volume = volumesMapperCacheable.getVolumeByUrl(projectUrl + "/" + volumeUrl);
 
-            if (volume == null)
-            {
-                throw RuranobeUtils.getRedirectTo404Exception(this);
-            }
+            redirectTo404IfArgumentIsNull(volume);
+
             titleName = volume.getNameTitle();
 
             allChapterList = chaptersMapperCacheable.getChaptersByVolumeId(volume.getVolumeId());
@@ -163,10 +152,7 @@ public class TextPage extends SidebarLayoutPage implements InstantiationSecurity
                     }
                 }
 
-                if (currentChapter == null)
-                {
-                    throw RuranobeUtils.getRedirectTo404Exception(this);
-                }
+                redirectTo404IfArgumentIsNull(currentChapter);
 
                 currentChapter.setVisibleOnPage(true);
                 if (currentChapter.hasChildChapters())

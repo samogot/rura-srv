@@ -26,11 +26,9 @@ import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.components.CoverCarousel;
 import ru.ruranobe.wicket.components.LabelHideableOnNull;
-import ru.ruranobe.wicket.components.sidebar.ActionsSidebarModule;
-import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
-import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
-import ru.ruranobe.wicket.components.sidebar.UpdatesSidebarModule;
+import ru.ruranobe.wicket.components.sidebar.*;
 import ru.ruranobe.wicket.webpages.admin.ProjectEdit;
+import ru.ruranobe.wicket.webpages.admin.VolumeEdit;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
 import java.util.AbstractMap.SimpleEntry;
@@ -62,10 +60,7 @@ public class ProjectPage extends SidebarLayoutPage
     public ProjectPage(PageParameters parameters)
     {
         String projectUrl = parameters.get("project").toString();
-        if (projectUrl == null)
-        {
-            throw RuranobeUtils.getRedirectTo404Exception(this);
-        }
+        redirectTo404IfArgumentIsNull(projectUrl);
 
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
 
@@ -75,10 +70,8 @@ public class ProjectPage extends SidebarLayoutPage
 
             final Project mainProject = projectsMapperCacheable.getProjectByUrl(projectUrl);
 
-            if (mainProject == null)
-            {
-                throw RuranobeUtils.getRedirectTo404Exception(this);
-            }
+            redirectTo404IfArgumentIsNull(mainProject);
+
             titleName = mainProject.getTitle();
             Collection<Project> subProjects =
                     projectsMapperCacheable.getSubProjectsByParentProjectId(mainProject.getProjectId());

@@ -61,11 +61,7 @@ public class Faq extends SidebarLayoutPage
         {
             VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
             faqVolume = volumesMapperCacheable.getVolumeByUrl("system/faq");
-            if (faqVolume == null)
-            {
-                throw RuranobeUtils.getRedirectTo404Exception(this);
-            }
-
+            redirectTo404IfArgumentIsNull(faqVolume);
 
             ChaptersMapper chaptersMapper = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
             List<Chapter> faqChapters = chaptersMapper.getChaptersByVolumeId(faqVolume.getVolumeId());

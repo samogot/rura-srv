@@ -34,18 +34,12 @@ public class Recruit extends SidebarLayoutPage
         {
             VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
             recruitVolume = volumesMapperCacheable.getVolumeByUrl("system/recruit");
-            if (recruitVolume == null)
-            {
-                throw RuranobeUtils.getRedirectTo404Exception(this);
-            }
+            redirectTo404IfArgumentIsNull(recruitVolume);
 
             ChaptersMapper chaptersMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
             chapter = chaptersMapperCacheable.getChapterByUrl("system/recruit/text");
 
-            if (chapter == null)
-            {
-                throw RuranobeUtils.getRedirectTo404Exception(this);
-            }
+            redirectTo404IfArgumentIsNull(chapter);
 
             boolean committingNeeded = ChapterTextParser.getChapterText(chapter, session, false);
             textHtml = chapter.getText().getTextHtml();

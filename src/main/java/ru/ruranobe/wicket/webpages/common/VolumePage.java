@@ -42,10 +42,7 @@ public class VolumePage extends SidebarLayoutPage
         setStatelessHint(true);
         final String projectUrlValue = parameters.get("project").toString();
         String volumeShortUrl = parameters.get("volume").toString();
-        if (volumeShortUrl == null || projectUrlValue == null)
-        {
-            throw RuranobeUtils.getRedirectTo404Exception(this);
-        }
+        redirectTo404(volumeShortUrl == null || projectUrlValue == null);
 
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
 
@@ -54,19 +51,13 @@ public class VolumePage extends SidebarLayoutPage
             ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
             Project project = projectsMapperCacheable.getProjectByUrl(projectUrlValue);
 
-            if (project == null || project.isProjectHidden())
-            {
-                throw RuranobeUtils.getRedirectTo404Exception(this);
-            }
+            redirectTo404(project == null || project.isProjectHidden());
 
             VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
             String volumeUrl = projectUrlValue + "/" + volumeShortUrl;
             final Volume volume = volumesMapperCacheable.getVolumeNextPrevByUrl(volumeUrl);
 
-            if (volume == null)
-            {
-                throw RuranobeUtils.getRedirectTo404Exception(this);
-            }
+            redirectTo404IfArgumentIsNull(volume);
 
             setDefaultModel(new CompoundPropertyModel<>(volume));
             titleName = volume.getNameTitle();
