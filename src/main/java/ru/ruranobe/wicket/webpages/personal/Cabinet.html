@@ -30,9 +30,6 @@
                     <b>Настоящее имя:</b> <div wicket:id="realname"/>
                 </p>
             </wicket:enclosure>
-            <!--p>
-                <b>Группа:</b> Читатели
-            </p-->
             <wicket:enclosure>
                 <p style="margin: 0 0 25px;">
                     <b>E-mail:</b> <div wicket:id="email"/>
@@ -44,9 +41,6 @@
             <p>
                 <b>Дата регистрации:</b> <div wicket:id="registrationDate"/>
             </p>
-            <!--p>
-                <b>Последнее посещение:</b> 17 января 2015
-            </p-->
         </div>
     </div>
     <wicket:enclosure child='userBookmarksRepeater'>
@@ -63,7 +57,6 @@
                                 Диаметр самого нижнего уровня составлял километров десять – там мог бы поместиться весь Сэтагая-ку[1]; группе привередливых ремесленников понадобился месяц, чтобы облазить его весь. А дальше возвышалась еще сотня уровней, один над другим; размер сооружения был просто невероятен...
                             </div>
                             <div class="bookmarkbuttons">
-                                <!--button type="button" class="btn btn-default btn-sm"><i class="fa fa-comment-o"></i> Комментарий</button-->
                                 <a wicket:id="bookmarkUrl"><button type="button" class="btn btn-default btn-sm"><i class="fa fa-reply fa-flip-horizontal"></i> Перейти</button></a>
                                 <button wicket:id="deleteBookmark" type="submit" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i> Удалить</button>
                             </div>
@@ -82,7 +75,18 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidtimes;></span></button>
                     <h4 class="modal-title" id="settingsPassLabel">Сменить пароль</h4>
                 </div>
-                <span wicket:id="emailPasswordRecoveryPanel"/>
+                <form wicket:id="changePassword" class="form-inline" align="center">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            Для смены пароля на ваш электронный адрес будет отослано письмо.<br> Следуйте инструкциям из письма.
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Отменить</button>
+                        <button type="submit" class="btn btn-primary">Отправить письмо</button>
+                    </div>
+                </form>
+                <div wicket:id="feedback"></div>
             </div>
         </div>
     </div>

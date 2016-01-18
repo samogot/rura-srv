@@ -7,6 +7,7 @@ import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -31,6 +32,7 @@ import ru.ruranobe.wicket.webpages.common.ProjectPage;
 import ru.ruranobe.wicket.webpages.common.TextPage;
 import ru.ruranobe.wicket.webpages.common.VolumePage;
 
+import javax.mail.MessagingException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -278,7 +280,43 @@ public class Cabinet extends SidebarLayoutPage
         };
         emailForm.add(updateEmail);
 
-        add(new EmailPasswordRecoveryPanel("emailPasswordRecoveryPanel"));
+        add(new StatelessForm<Cabinet>("changePassword")
+        {
+            @Override
+            public final void onSubmit()
+            {
+                try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
+                {
+                    User user = LoginSession.get().getUser();
+                    if (!user.isEmailActivated())
+                    {
+                        error("Электронный адрес пользователя не был подтвержден.");
+                    }
+                    else if (user.getPassRecoveryToken() != null
+                            && user.getPassRecoveryTokenDate().getTime() > System.currentTimeMillis())
+                    {
+                        error("На указанный электронной адрес уже было отправлено письмо.");
+                    }
+                    else
+                    {
+                        Token token = Token.valueOf(user.getUserId(), EXPIRATION_TIME_6_HOURS);
+                        user.setPassRecoveryToken(token.getTokenValue());
+                        user.setPassRecoveryTokenDate(token.getTokenExpirationDate());
+                        CachingFacade.getCacheableMapper(session, UsersMapper.class).updateUser(user);
+                        try
+                        {
+                            Email.sendPasswordRecoveryMessage(user.getEmail(), user.getPassRecoveryToken());
+                            session.commit();
+                        }
+                        catch (MessagingException ex)
+                        {
+                            error("Отправка сообщения на указанный электронный адрес не удалась. Свяжитесь, пожалуйста, с администрацией сайта.");
+                        }
+                    }
+                }
+            }
+        });
+        add(new FeedbackPanel("feedback"));
 
         sidebarModules.add(new ProjectsSidebarModule());
         sidebarModules.add(new FriendsSidebarModule());
@@ -313,4 +351,6 @@ public class Cabinet extends SidebarLayoutPage
             this.newEmail = newEmail;
         }
     }
+
+    private static final long EXPIRATION_TIME_6_HOURS = 21600000L;
 }

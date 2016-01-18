@@ -27,18 +27,15 @@ public class PasswordRecoveryPage extends WebPage
             throw RuranobeUtils.getRedirectTo404Exception(this);
         }
 
-        SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-        try (SqlSession session = sessionFactory.openSession())
+        try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
         {
-            UsersMapper usersMapper = CachingFacade.getCacheableMapper(session, UsersMapper.class);
-            User user = usersMapper.getUserByPassRecoveryToken(passRecoveryToken);
+            User user = CachingFacade.getCacheableMapper(session, UsersMapper.class).
+                    getUserByPassRecoveryToken(passRecoveryToken);
             if (user == null)
             {
                 throw RuranobeUtils.getRedirectTo404Exception(this);
             }
             add(new PasswordRecoveryPanel("passwordRecoveryPanel", user));
         }
-
-
     }
 }

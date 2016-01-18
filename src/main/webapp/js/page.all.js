@@ -146,6 +146,13 @@ $('.daynight-button').on('click', function(e) {
     }
     $(this).children('.fa').toggleClass('fa-sun-o fa-moon-o');
 });
+$('.changePass').click(function(){
+    $('#loginModal').modal('hide');
+    $('body').addClass('modal-open')
+});
+$('#changePassModal').on('hidden.bs.modal', function (e) {
+    $('body').css('padding-right','0')
+});
 
 
 
