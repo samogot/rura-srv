@@ -49,9 +49,15 @@
                         <button wicket:id="saveTextAjax" type="button" class="btn btn-primary" title="Сохранить"><i
                                 class="fa fa-floppy-o"></i></button>
                     </div>
+
+                    <div role="group" aria-label="Предварительный просмотр">
+                        <button wicket:id="preview" type="button" class="btn btn-primary" title="Предварительный просмотр"><i
+                                class="fa fa-search"></i></button>
+                    </div>
                 </div>
-                <textarea wicket:id="editor" class="form-control" id="textarea" name="textarea" cols="30" rows="50"
+                <textarea wicket:id="editor" class="form-control" name="textarea" cols="30" rows="50"
                           style="min-height:400px;"></textarea>
+                <div class="text" wicket:id="previewText"/>
             </form>
         </main>
     </div>

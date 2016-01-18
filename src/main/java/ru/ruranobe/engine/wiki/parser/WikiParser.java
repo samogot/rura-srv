@@ -436,7 +436,6 @@ public class WikiParser
     // textId and chapterId can be nullable
     public WikiParser(Integer textId, Integer chapterId, String wikiText, boolean sanitize)
     {
-
         this.chapterId = chapterId;
         this.textId = textId;
         if (sanitize)

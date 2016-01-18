@@ -1,7 +1,6 @@
 package ru.ruranobe.wicket.webpages.admin;
 
 import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
@@ -13,7 +12,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
 import ru.ruranobe.engine.wiki.parser.ChapterTextParser;
-import ru.ruranobe.misc.RuranobeUtils;
+import ru.ruranobe.engine.wiki.parser.FootnoteItem;
+import ru.ruranobe.engine.wiki.parser.WikiParser;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.Chapter;
 import ru.ruranobe.mybatis.entities.tables.Text;
@@ -31,27 +31,29 @@ public class Editor extends SidebarLayoutPage
 {
     public Editor(PageParameters parameters)
     {
-        SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-        try (SqlSession session = sessionFactory.openSession())
+        try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
         {
             Chapter chapter = getChapter(parameters, session);
-            final Integer textId = chapter.getTextId();
+            Integer textId = chapter.getTextId();
 
-            final Text currentText = new Text();
             Text prevText = null;
-            TextArea<String> editor = new TextArea<>("editor", new Model<String>()
+            final Text currentText = new Text();
+            TextArea<String> editor = new TextArea<>("editor");
+            if (textId == null)
             {
-                @Override
-                public void setObject(String wikiText)
+                editor.setModel(new Model<String>()
                 {
-                    currentText.setTextWiki(wikiText);
-                }
-            });
-            if (textId != null)
+                    @Override
+                    public void setObject(String wikiText)
+                    {
+                        currentText.setTextWiki(wikiText);
+                    }
+                });
+            }
+            else
             {
-                TextsMapper textsMapperCacheable = CachingFacade.getCacheableMapper(session, TextsMapper.class);
-                final Text previousText = textsMapperCacheable.getTextById(textId);
-                prevText = previousText;
+                final Text previousText = CachingFacade.getCacheableMapper(session, TextsMapper.class)
+                        .getTextById(textId);
                 editor.setModel(new Model<String>()
                 {
                     @Override
@@ -66,21 +68,23 @@ public class Editor extends SidebarLayoutPage
                         currentText.setTextWiki(wikiText);
                     }
                 });
+                prevText = previousText;
             }
 
-            Form editorForm = new Form("editorForm");
-            AjaxButton saveTextAjax = new SaveText("saveTextAjax", editorForm, currentText, chapter, prevText);
-            editorForm.add(saveTextAjax);
-            editorForm.add(editor);
+            Label previewText = new Label("previewText");
 
-            add(editorForm);
+            Form editorForm = new Form("editorForm");
+            editorForm.add(new SaveText("saveTextAjax", editorForm, currentText, chapter, prevText));
+            editorForm.add(new Preview("preview", previewText, editor, editorForm, chapter));
+            editorForm.add(previewText.setEscapeModelStrings(false).setOutputMarkupId(true));
+            editorForm.add(editor.setEscapeModelStrings(true).setOutputMarkupId(true));
+
+            add(editorForm.setOutputMarkupId(true));
 
             add(new BookmarkablePageLink("breadcrumbProject", ProjectEdit.class, chapter.getUrlParameters().remove("vhapter").remove("volume")));
             add(new BookmarkablePageLink("breadcrumbVolume", ProjectEdit.class, chapter.getUrlParameters().remove("vhapter")));
             add(new Label("breadcrumbActive", chapter.getTitle()));
         }
-
-
     }
 
     public Chapter getChapter(PageParameters parameters, SqlSession session)
@@ -122,18 +126,15 @@ public class Editor extends SidebarLayoutPage
         @Override
         protected void onSubmit(AjaxRequestTarget target, Form<?> form)
         {
-            SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-            try (SqlSession session = sessionFactory.openSession())
+            try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
             {
                 TextsMapper textsMapper = CachingFacade.getCacheableMapper(session, TextsMapper.class);
                 textsMapper.insertText(text);
                 chapter.setText(text);
                 ChapterTextParser.parseChapterText(chapter, session, textsMapper, !chapter.getUrl().startsWith("system/"));
 
-                ChaptersMapper chaptersMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
-                chaptersMapperCacheable.updateChapter(chapter);
+                CachingFacade.getCacheableMapper(session, ChaptersMapper.class).updateChapter(chapter);
 
-                TextsHistoryMapper textsHistoryMapperCacheable = CachingFacade.getCacheableMapper(session, TextsHistoryMapper.class);
                 TextHistory textHistory = new TextHistory();
                 textHistory.setCurrentTextId(text.getTextId());
                 if (previousText != null)
@@ -141,10 +142,70 @@ public class Editor extends SidebarLayoutPage
                     textHistory.setPreviousTextId(previousText.getTextId());
                 }
                 textHistory.setInsertionTime(new Date());
-                textsHistoryMapperCacheable.insertTextHistory(textHistory);
+                CachingFacade.getCacheableMapper(session, TextsHistoryMapper.class).insertTextHistory(textHistory);
 
                 session.commit();
             }
+        }
+    }
+
+    private class Preview extends AjaxButton
+    {
+        private Chapter chapter;
+        private TextArea<String> editor;
+        private Label previewText;
+
+        public Preview(String name, Label previewText, TextArea<String> editor, Form form, Chapter chapter)
+        {
+            super(name, form);
+            this.chapter = chapter;
+            this.editor = editor;
+            this.previewText = previewText;
+        }
+
+        @Override
+        protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+        {
+            if (editor.isVisible())
+            {
+                try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
+                {
+                    String wikiText = editor.getModelObject();
+                    WikiParser parser = new WikiParser(null, null, wikiText, true);
+
+                    String headerTag = chapter.isNested() ? "h3" : "h2";
+                    String textHtml = "<" + headerTag + " id=\"" + chapter.getUrlPart() + "\">" + chapter.getTitle() +
+                            "</" + headerTag + ">" + parser.parseWikiText(ChapterTextParser.getChapterExternalResources(chapter, session), true);
+
+                    StringBuilder footnotes = new StringBuilder();
+                    for (FootnoteItem footnoteItem : parser.getFootnotes())
+                    {
+                        footnotes.append("<li id=\"cite_note-").append(footnoteItem.getFootnoteId()).append("\">")
+                                .append("<a href=\"#cite_ref-").append(footnoteItem.getFootnoteId()).append("\">↑</a> <span class=\"reference-text\">")
+                                .append(footnoteItem.getFootnoteText()).append("</span></li>");
+                    }
+
+                    if (footnotes.length() != 0)
+                    {
+                        footnotes.insert(0, "<h2 id=\"footnotes\">Примечания</h2><ol class=\"references\">");
+                        footnotes.append("</ol>");
+                    }
+
+                    previewText.setDefaultModel(Model.of(textHtml + footnotes.toString()));
+
+                    editor.setVisible(false);
+                    previewText.setVisible(true);
+                }
+            }
+            else
+            {
+                editor.setVisible(true);
+                previewText.setVisible(false);
+            }
+
+            target.add(form);
+            target.add(previewText);
+            target.add(editor);
         }
     }
 }
