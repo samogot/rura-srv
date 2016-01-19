@@ -16,6 +16,7 @@ import ru.ruranobe.wicket.components.CommentsPanel;
 import ru.ruranobe.wicket.components.sidebar.ActionsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
+import ru.ruranobe.wicket.components.sidebar.RequisitesSidebarModule;
 import ru.ruranobe.wicket.webpages.admin.Editor;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
@@ -61,6 +62,7 @@ public class Recruit extends SidebarLayoutPage
         }
 
         sidebarModules.add(new ActionsSidebarModule(Editor.class, chapter.getUrlParameters()));
+        sidebarModules.add(new RequisitesSidebarModule());
         sidebarModules.add(new ProjectsSidebarModule());
         sidebarModules.add(new FriendsSidebarModule());
     }

@@ -18,10 +18,7 @@ import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.components.CommentsPanel;
 import ru.ruranobe.wicket.components.ContentsHolder;
-import ru.ruranobe.wicket.components.sidebar.ActionsSidebarModule;
-import ru.ruranobe.wicket.components.sidebar.ContentsModule;
-import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
-import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
+import ru.ruranobe.wicket.components.sidebar.*;
 import ru.ruranobe.wicket.webpages.admin.VolumeEdit;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
@@ -103,6 +100,7 @@ public class Diary extends SidebarLayoutPage
         }
 
         sidebarModules.add(new ActionsSidebarModule(VolumeEdit.class, diaryVolume.getUrlParameters()));
+        sidebarModules.add(new RequisitesSidebarModule());
         sidebarModules.add(new ProjectsSidebarModule());
         sidebarModules.add(new FriendsSidebarModule());
         sidebarModules.add(new ContentsModule(contentsHolders));

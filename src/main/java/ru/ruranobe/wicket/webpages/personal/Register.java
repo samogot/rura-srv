@@ -1,7 +1,6 @@
 package ru.ruranobe.wicket.webpages.personal;
 
 import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.markup.html.form.TextField;
@@ -83,9 +82,7 @@ public class Register extends SidebarLayoutPage
             }
             else
             {
-                SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-
-                try (SqlSession session = sessionFactory.openSession())
+                try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
                     UsersMapper usersMapper = CachingFacade.getCacheableMapper(session, UsersMapper.class);
                     if (usersMapper.getUserByUsername(username) != null)
@@ -126,6 +123,7 @@ public class Register extends SidebarLayoutPage
                             {
                                 Email.sendEmailActivationMessage(user.getEmail(), user.getEmailToken());
                                 usersMapper.updateUser(user);
+                                setResponsePage(getApplication().getHomePage());
                             }
                             catch (Exception ex)
                             {

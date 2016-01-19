@@ -260,6 +260,7 @@ public class TextPage extends SidebarLayoutPage implements InstantiationSecurity
             sidebarModules.add(new ActionsSidebarModule(VolumeEdit.class, volume.getUrlParameters()));
         }
         sidebarModules.add(new UpdatesSidebarModule(volume.getProjectId()));
+        sidebarModules.add(new RequisitesSidebarModule());
         sidebarModules.add(new ProjectsSidebarModule());
         sidebarModules.add(new FriendsSidebarModule());
         sidebarModules.add(new ContentsModule(contentsHolders));

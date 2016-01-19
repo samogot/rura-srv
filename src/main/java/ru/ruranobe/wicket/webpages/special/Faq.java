@@ -20,6 +20,7 @@ import ru.ruranobe.wicket.components.CommentsPanel;
 import ru.ruranobe.wicket.components.sidebar.ActionsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
+import ru.ruranobe.wicket.components.sidebar.RequisitesSidebarModule;
 import ru.ruranobe.wicket.webpages.admin.VolumeEdit;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
@@ -123,6 +124,7 @@ public class Faq extends SidebarLayoutPage
         }
 
         sidebarModules.add(new ActionsSidebarModule(VolumeEdit.class, faqVolume.getUrlParameters()));
+        sidebarModules.add(new RequisitesSidebarModule());
         sidebarModules.add(new ProjectsSidebarModule());
         sidebarModules.add(new FriendsSidebarModule());
         //   sidebarModules.add(new ContentsModule("sidebarModule", contentsHolders));

@@ -27,6 +27,7 @@ import ru.ruranobe.wicket.components.EmailPasswordRecoveryPanel;
 import ru.ruranobe.wicket.components.LabelHideableOnNull;
 import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
+import ru.ruranobe.wicket.components.sidebar.RequisitesSidebarModule;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 import ru.ruranobe.wicket.webpages.common.ProjectPage;
 import ru.ruranobe.wicket.webpages.common.TextPage;
@@ -315,6 +316,7 @@ public class Cabinet extends SidebarLayoutPage
         });
         add(new FeedbackPanel("feedback"));
 
+        sidebarModules.add(new RequisitesSidebarModule());
         sidebarModules.add(new ProjectsSidebarModule());
         sidebarModules.add(new FriendsSidebarModule());
     }

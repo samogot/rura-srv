@@ -17,6 +17,7 @@ import ru.ruranobe.wicket.components.UpdatesWideList;
 import ru.ruranobe.wicket.components.sidebar.ActionsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
+import ru.ruranobe.wicket.components.sidebar.RequisitesSidebarModule;
 import ru.ruranobe.wicket.webpages.admin.GlobalEdit;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
@@ -94,6 +95,7 @@ public class Updates extends SidebarLayoutPage
         addPaginator("paginator2", searchType, page, volumeId, projectId, numberOfPages);
 
         sidebarModules.add(new ActionsSidebarModule(GlobalEdit.class, null));
+        sidebarModules.add(new RequisitesSidebarModule());
         sidebarModules.add(new ProjectsSidebarModule());
         sidebarModules.add(new FriendsSidebarModule());
     }

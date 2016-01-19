@@ -13,6 +13,7 @@ import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.components.sidebar.ActionsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.FriendsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.ProjectsSidebarModule;
+import ru.ruranobe.wicket.components.sidebar.RequisitesSidebarModule;
 import ru.ruranobe.wicket.webpages.admin.Editor;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
@@ -45,6 +46,7 @@ public class Help extends SidebarLayoutPage
         add(new Label("htmlText", textHtml).setEscapeModelStrings(false));
 
         sidebarModules.add(new ActionsSidebarModule(Editor.class, chapter.getUrlParameters()));
+        sidebarModules.add(new RequisitesSidebarModule());
         sidebarModules.add(new ProjectsSidebarModule());
         sidebarModules.add(new FriendsSidebarModule());
     }

@@ -205,6 +205,7 @@ public class VolumePage extends SidebarLayoutPage
             sidebarModules.add(new DownloadsSidebarModule(volume.getUrlParameters()));
             sidebarModules.add(new ActionsSidebarModule(VolumeEdit.class, volume.getUrlParameters()));
             sidebarModules.add(new UpdatesSidebarModule(volume.getProjectId()));
+            sidebarModules.add(new RequisitesSidebarModule());
             sidebarModules.add(new ProjectsSidebarModule());
             sidebarModules.add(new FriendsSidebarModule());
         }
