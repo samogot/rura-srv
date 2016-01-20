@@ -41,6 +41,8 @@ import org.apache.wicket.request.resource.ByteArrayResource;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.util.string.Strings;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.ruranobe.config.ApplicationContext;
 import ru.ruranobe.engine.Webpage;
 import ru.ruranobe.engine.image.ImageServices;
@@ -814,6 +816,7 @@ public class VolumeEdit extends AdminLayoutPage
             }
             catch (Exception ex)
             {
+                LOG.error("Error uploading image", ex);
                 responseString.put("error", ex.toString());
             }
 
@@ -830,4 +833,6 @@ public class VolumeEdit extends AdminLayoutPage
         allChapters.add(stubСhapter);
         Collections.sort(allChapters, chapterComparator);
     }
+
+    private static final Logger LOG = LoggerFactory.getLogger(VolumeEdit.class);
 }

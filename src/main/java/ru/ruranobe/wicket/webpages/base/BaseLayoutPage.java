@@ -8,7 +8,7 @@ import ru.ruranobe.wicket.components.modals.ModalEmailPasswordRecoveryPanel;
 import ru.ruranobe.wicket.components.modals.ModalLoginPanel;
 import ru.ruranobe.wicket.components.UserActionsPanel;
 
-import java.util.Calendar;
+import java.time.Year;
 
 public abstract class BaseLayoutPage extends WebPage
 {
@@ -37,7 +37,7 @@ public abstract class BaseLayoutPage extends WebPage
             add(resetPasswordPanel = new ModalEmailPasswordRecoveryPanel("resetPasswordPanelModal"));
         }
         add(new Label("pageTitle", getPageTitle()));
-        add(new Label("currentYear", Calendar.getInstance().get(Calendar.YEAR)));
+        add(new Label("currentYear", Year.now()));
         super.onInitialize();
     }
 
@@ -56,7 +56,7 @@ public abstract class BaseLayoutPage extends WebPage
 
     protected void redirectTo404IfArgumentIsNull(Object argument)
     {
-        redirectTo404(argument==null);
+        redirectTo404(argument == null);
     }
 
     protected String getPageTitle()

@@ -37,14 +37,14 @@ public class ImageServices
      * @return dimensions of image
      * @throws IOException if the file is not a known image
      */
-    public static Dimension getImageDimension(File imgFile) throws IOException
+    public static Dimension getImageDimension(File imgFile, String localFileName) throws IOException
     {
-        int pos = imgFile.getName().lastIndexOf(".");
+        int pos = localFileName.lastIndexOf(".");
         if (pos == -1)
         {
             throw new IOException("No extension for file: " + imgFile.getAbsolutePath());
         }
-        String suffix = imgFile.getName().substring(pos + 1);
+        String suffix = localFileName.substring(pos + 1);
         Iterator<ImageReader> iter = ImageIO.getImageReadersBySuffix(suffix);
         if (iter.hasNext())
         {
@@ -83,7 +83,7 @@ public class ImageServices
         Dimension imageDimension;
         try
         {
-            imageDimension = getImageDimension(toUpload.getImageFile());
+            imageDimension = getImageDimension(toUpload.getImageFile(), toUpload.getTitle());
         }
         catch (IOException e)
         {

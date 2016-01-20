@@ -2,11 +2,17 @@ package ru.ruranobe.engine.files;
 
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
+import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.ruranobe.engine.image.ImageStorage;
 import ru.ruranobe.engine.image.RuraImage;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -67,7 +73,8 @@ public class YandexDiskService
             int responseCode = connection.getResponseCode();
             if (responseCode != 201)
             {
-                throw new RuntimeException("Uploading failed. Received response code " + responseCode);
+                String response = IOUtils.toString(connection.getInputStream(), null);
+                throw new RuntimeException("Uploading failed. Received response code " + responseCode + " received while sending GET to " + url + ". Response is: \n" + response);
             }
             try
             {
@@ -136,21 +143,11 @@ public class YandexDiskService
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Authorization", YANDEX_DISK_ACCESS_TOKEN);
         int responseCode = connection.getResponseCode();
+        String response = IOUtils.toString(connection.getInputStream(), null);
 
         if (responseCode == 200)
         {
-            BufferedReader input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-            String inputLine;
-            StringBuilder response = new StringBuilder();
-            while ((inputLine = input.readLine()) != null)
-            {
-                response.append(inputLine);
-            }
-            input.close();
-
-
-            JSONObject jsonResponse = new JSONObject(response.toString());
+            JSONObject jsonResponse = new JSONObject(response);
             if (jsonResponse.has("preview"))
             {
                 return jsonResponse.getString("preview");
@@ -166,7 +163,8 @@ public class YandexDiskService
         }
         else
         {
-            throw new RuntimeException("Irregular response code " + responseCode + " received while sending GET to " + url);
+
+            throw new RuntimeException("Irregular response code " + responseCode + " received while sending GET to " + url + ". Response is: \n" + response);
         }
     }
 
@@ -183,28 +181,20 @@ public class YandexDiskService
         connection.setRequestProperty("Authorization", YANDEX_DISK_ACCESS_TOKEN);
         int responseCode = connection.getResponseCode();
 
+        String response = IOUtils.toString(connection.getInputStream(), null);
         if (responseCode == 200)
         {
-            BufferedReader input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-            String inputLine;
-            StringBuilder response = new StringBuilder();
-            while ((inputLine = input.readLine()) != null)
-            {
-                response.append(inputLine);
-            }
-            input.close();
-
-            JSONObject jsonResponse = new JSONObject(response.toString());
+            JSONObject jsonResponse = new JSONObject(response);
             return jsonResponse.getString("href");
         }
         else
         {
-            throw new RuntimeException("Irregular response code " + responseCode + " received while sending GET to " + url);
+            throw new RuntimeException("Irregular response code " + responseCode + " received while sending GET to " + url + ". Response is: \n" + response);
         }
     }
 
     public static String YANDEX_DISK_UPLOAD_DIR;
     public static String YANDEX_DISK_PUBLIC_FOLDER;
     public static String YANDEX_DISK_ACCESS_TOKEN;
+    private static final Logger LOG = LoggerFactory.getLogger(YandexDiskService.class);
 }
