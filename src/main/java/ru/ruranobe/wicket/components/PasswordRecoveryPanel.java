@@ -17,13 +17,6 @@ import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 
 public class PasswordRecoveryPanel extends Panel
 {
-
-    private static final String PASSWORD_RECOVERY_FORM = "passwordRecoveryForm";
-    private static final long serialVersionUID = 1L;
-    private final User user;
-    private String password;
-    private String confirmPassword;
-
     public PasswordRecoveryPanel(String id, User user)
     {
         super(id);
@@ -54,9 +47,6 @@ public class PasswordRecoveryPanel extends Panel
 
     public final class PasswordRecoveryForm extends StatelessForm<PasswordRecoveryPanel>
     {
-
-        private static final long serialVersionUID = 1L;
-
         public PasswordRecoveryForm(final String id)
         {
             super(id);
@@ -90,18 +80,21 @@ public class PasswordRecoveryPanel extends Panel
             }
             else
             {
-                SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-
-                try (SqlSession session = sessionFactory.openSession())
+                try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
-                    UsersMapper usersMapper = CachingFacade.getCacheableMapper(session, UsersMapper.class);
-
                     user.setPass(MD5.crypt(password));
-                    usersMapper.updateUser(user);
+                    CachingFacade.getCacheableMapper(session, UsersMapper.class).updateUser(user);
                     session.commit();
                     info("Пароль был успешно изменен.");
                 }
             }
         }
+        private static final long serialVersionUID = 1L;
     }
+
+    private static final String PASSWORD_RECOVERY_FORM = "passwordRecoveryForm";
+    private static final long serialVersionUID = 1L;
+    private final User user;
+    private String password;
+    private String confirmPassword;
 }

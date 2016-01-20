@@ -4,8 +4,8 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import ru.ruranobe.misc.RuranobeUtils;
-import ru.ruranobe.wicket.components.EmailPasswordRecoveryPanel;
-import ru.ruranobe.wicket.components.LoginPanel;
+import ru.ruranobe.wicket.components.modals.ModalEmailPasswordRecoveryPanel;
+import ru.ruranobe.wicket.components.modals.ModalLoginPanel;
 import ru.ruranobe.wicket.components.UserActionsPanel;
 
 import java.util.Calendar;
@@ -22,7 +22,7 @@ public abstract class BaseLayoutPage extends WebPage
     {
         if (loginPanel == null)
         {
-            add(loginPanel = new LoginPanel("loginPanel"));
+            add(loginPanel = new ModalLoginPanel("loginPanelModal"));
         }
         if (userActionsPanel == null)
         {
@@ -34,7 +34,7 @@ public abstract class BaseLayoutPage extends WebPage
         }
         if (resetPasswordPanel == null)
         {
-            add(resetPasswordPanel = new EmailPasswordRecoveryPanel("resetPasswordPanel"));
+            add(resetPasswordPanel = new ModalEmailPasswordRecoveryPanel("resetPasswordPanelModal"));
         }
         add(new Label("pageTitle", getPageTitle()));
         add(new Label("currentYear", Calendar.getInstance().get(Calendar.YEAR)));

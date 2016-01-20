@@ -2,6 +2,7 @@ package ru.ruranobe.wicket.components;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -27,7 +28,7 @@ public class EmailPasswordRecoveryPanel extends Panel
     public EmailPasswordRecoveryPanel(String id)
     {
         super(id);
-        add(new FeedbackPanel("feedback"));
+        add(new FeedbackPanel("feedback").setFilter(new ContainerFeedbackMessageFilter(this)));
         add(new EmailPasswordRecoveryForm(EMAIL_PASSWORD_RECOVERY_FORM));
     }
 
@@ -39,6 +40,16 @@ public class EmailPasswordRecoveryPanel extends Panel
     public void setEmailOrLogin(String emailOrLogin)
     {
         this.emailOrLogin = emailOrLogin;
+    }
+
+    protected void onSuccess(String message)
+    {
+        info(message);
+    }
+
+    protected void onFail(String message)
+    {
+        error(message);
     }
 
     public final class EmailPasswordRecoveryForm extends StatelessForm<EmailPasswordRecoveryPanel>
@@ -59,11 +70,11 @@ public class EmailPasswordRecoveryPanel extends Panel
         {
             if (Strings.isEmpty(emailOrLogin))
             {
-                error("Укажите, пожалуйста, электронный адрес или логин.");
+                onFail("Укажите, пожалуйста, электронный адрес или логин.");
             }
             else if (emailOrLogin.length() > 255)
             {
-                error("Длина электронного адреса или логина не должна превышать 255 символов.");
+                onFail("Длина электронного адреса или логина не должна превышать 255 символов.");
             }
             else
             {
@@ -77,18 +88,18 @@ public class EmailPasswordRecoveryPanel extends Panel
                     }
                     if (user == null)
                     {
-                        error("Пользователя с таким логином или электронным адресом не существует.");
+                        onFail("Пользователя с таким логином или электронным адресом не существует.");
                     }
                     else
                     {
                         if (!user.isEmailActivated())
                         {
-                            error("Электронный адрес пользователя не был подтвержден.");
+                            onFail("Электронный адрес пользователя не был подтвержден.");
                         }
                         else if (user.getPassRecoveryToken() != null
                                 && user.getPassRecoveryTokenDate().getTime() > System.currentTimeMillis())
                         {
-                            error("На указанный электронной адрес уже было отправлено письмо.");
+                            onFail("На указанный электронной адрес уже было отправлено письмо.");
                         }
                         else
                         {
@@ -100,10 +111,11 @@ public class EmailPasswordRecoveryPanel extends Panel
                             {
                                 Email.sendPasswordRecoveryMessage(user.getEmail(), user.getPassRecoveryToken());
                                 session.commit();
+                                onSuccess("");
                             }
                             catch (MessagingException ex)
                             {
-                                error("Отправка сообщения на указанный электронный адрес не удалась. Свяжитесь, пожалуйста, с администрацией сайта.");
+                                onFail("Отправка сообщения на указанный электронный адрес не удалась. Свяжитесь, пожалуйста, с администрацией сайта.");
                             }
                         }
                     }

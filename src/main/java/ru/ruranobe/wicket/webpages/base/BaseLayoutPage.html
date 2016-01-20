@@ -45,32 +45,10 @@
     </script>
 </head>
 <body data-spy="scroll" data-target=".scrollspy" data-color="">
-<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть"><span
-                        aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="loginModalLabel">Вход</h4>
-            </div>
-            <div class="modal-body">
-                <span wicket:id="loginPanel"/>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="changePassModal" tabindex="-1" role="dialog" aria-labelledby="changePassLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidtimes;></span></button>
-                <h4 class="modal-title" id="changePassLabel">Сменить пароль</h4>
-            </div>
-            <span wicket:id="resetPasswordPanel"/>
-        </div>
-    </div>
-</div>
+
+<div wicket:id="loginPanelModal" class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true"/>
+<div wicket:id="resetPasswordPanelModal"  class="modal fade" id="changePassModal" tabindex="-1" role="dialog" aria-labelledby="changePassLabel"/>
+
 <div class="modal-backdrop" style="display:none"></div>
 <nav class="navbar navbar-default navbar-top navbar-static-top" role="navigation">
     <div class="container">

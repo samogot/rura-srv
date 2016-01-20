@@ -1,6 +1,7 @@
 package ru.ruranobe.wicket.components;
 
 import org.apache.wicket.authentication.IAuthenticationStrategy;
+import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.StatelessForm;
@@ -17,7 +18,7 @@ public class LoginPanel extends Panel
     public LoginPanel(final String id)
     {
         super(id);
-        add(new FeedbackPanel("feedback"));
+        add(new FeedbackPanel("feedback").setFilter(new ContainerFeedbackMessageFilter(this)));
         add(new LoginForm(LOGIN_FORM));
     }
 
@@ -121,9 +122,6 @@ public class LoginPanel extends Panel
 
     public final class LoginForm extends StatelessForm<LoginPanel>
     {
-
-        private static final long serialVersionUID = 1L;
-
         public LoginForm(String id)
         {
             super(id);
@@ -161,6 +159,8 @@ public class LoginPanel extends Panel
                 strategy.remove();
             }
         }
+
+        private static final long serialVersionUID = 1L;
     }
 
     private boolean rememberMe = true;

@@ -4,7 +4,7 @@ $(document).ready(function() {
             .toggleClass("opened").next('.actions').slideToggle(reinitAffix);
     });
 
-    $('.ellipses-left').trimLeft();
+    //$('.ellipses-left').trimLeft();
 
     var banH = $('#all-projects-module .banners a').height();
     if ($('.module').length != 0) {
@@ -153,7 +153,9 @@ $('.changePass').click(function(){
 $('#changePassModal').on('hidden.bs.modal', function (e) {
     $('body').css('padding-right','0')
 });
-
+$(document).ready(function () {
+    $('.modal[data-show]').modal();
+});
 
 
 
