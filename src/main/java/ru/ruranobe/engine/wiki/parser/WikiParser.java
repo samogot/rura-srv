@@ -204,19 +204,10 @@ public class WikiParser
         {
             for (WikiTag image : images)
             {
-                if (imagesIterator.hasNext())
-                {
-                    ExternalResource imageEntry = imagesIterator.next();
-                    image.setExternalResourceId(imageEntry.getResourceId());
-                    image.setImageUrl(imageEntry.getUrl());
-                    image.setImageThumbnail(imageEntry.getThumbnail(900));
-                }
-                else
-                {
-                    image.setExternalResourceId(-1);
-                    image.setImageUrl(RuraConstants.UNKNOWN_IMAGE);
-                    image.setImageThumbnail(RuraConstants.UNKNOWN_IMAGE);
-                }
+                ExternalResource imageEntry = imagesIterator.hasNext() ? imagesIterator.next() : RuraConstants.UNKNOWN_IMAGE;
+                image.setExternalResourceId(imageEntry.getResourceId());
+                image.setImageUrl(imageEntry.getUrl());
+                image.setImageThumbnail(imageEntry.getThumbnail(900));
                 startPositionToReplacement.put(image.getStartPosition(),
                         new Replacement(image));
             }

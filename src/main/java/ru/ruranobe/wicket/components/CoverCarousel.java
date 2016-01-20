@@ -8,6 +8,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import ru.ruranobe.mybatis.entities.tables.ExternalResource;
+import ru.ruranobe.wicket.RuraConstants;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
@@ -20,6 +21,10 @@ public class CoverCarousel extends Panel
     public CoverCarousel(String id, List<SimpleEntry<String, ExternalResource>> coversList)
     {
         super(id);
+        if (coversList.isEmpty())
+        {
+            coversList.add(new SimpleEntry<String, ExternalResource>("Нет обложки", RuraConstants.NO_COVER_IMAGE));
+        }
         setOutputMarkupId(true);
         final String markupId = getMarkupId();
         add(new AttributeAppender("class", " carousel slide"));
@@ -33,6 +38,7 @@ public class CoverCarousel extends Panel
                 slideIndicator.add(new AttributeModifier("data-target", "#" + markupId));
                 slideIndicator.add(new AttributeModifier("data-slide-to", item.getIndex()));
                 slideIndicator.add(new AttributeModifier("title", item.getModelObject().getKey()));
+                slideIndicator.setVisible(coversList.size() > 1);
                 if (item.getIndex() == 0)
                 {
                     slideIndicator.add(new AttributeAppender("class", " active"));
@@ -53,7 +59,16 @@ public class CoverCarousel extends Panel
                     slideContainer.add(new AttributeAppender("class", " active"));
                 }
                 item.add(slideContainer);
-                ExternalLink slideImageLink = new ExternalLink("slideImageLink", item.getModelObject().getValue().getUrl());
+                WebMarkupContainer slideImageLink;
+                if (item.getModelObject().getValue() != RuraConstants.NO_COVER_IMAGE)
+                {
+                    slideImageLink = new ExternalLink("slideImageLink", item.getModelObject().getValue().getUrl());
+                }
+                else
+                {
+                    slideImageLink = new WebMarkupContainer("slideImageLink");
+                    slideImageLink.add(new AttributeModifier("class", ""));
+                }
                 WebMarkupContainer slideImage = new WebMarkupContainer("slideImage");
                 slideImage.add(new AttributeModifier("src", item.getModelObject().getValue().getThumbnail(240)));
                 slideImage.add(new AttributeModifier("alt", item.getModelObject().getKey()));

@@ -220,19 +220,22 @@ function initFormItemFileUpload(formItem) {
         headers: {'Wicket-Ajax': true, 'Wicket-Ajax-BaseURL': Wicket.Ajax.baseUrl, 'Accept': 'application/json'},
         dataType: 'json',
         acceptFileTypes: /(\.|\/)(jpe?g|png)$/i,
+        formData: null,
         previewMaxHeight: 180,
         previewMaxWidth: 260,
         maxNumberOfFiles: 1,
-        dropZone: $formItem
-    }).on('fileuploadadd', function (e, data) {
-        if (data.files.length == 1) {
-            var file = data.files[0];
-            file.$selectorItem = $images.find('.list-group.select .active');
-            file.ctype = $formItem.hasClass('image-data-main') ? 'main' : 'color';
-            initFileData(file);
-            data.formData = {ctype: file.ctype, index: file.index};
-            $images.find('.progress').collapse('show'); // показываем прогресбар
-            data.submit(); // начинаем загрузку
+        dropZone: $formItem,
+        add: function (e, data) {
+            if (data.files.length == 1) {
+                var file = data.files[0];
+                file.$selectorItem = $images.find('.list-group.select .active');
+                file.ctype = $formItem.hasClass('image-data-main') ? 'main' : 'color';
+                initFileData(file);
+                data.formData = {ctype: file.ctype, index: file.index};
+                $images.find('.progress').collapse('show'); // показываем прогресбар
+                console.log('Wicket.Ajax.post add-url coh', data);
+                data.submit(); // начинаем загрузку
+            }
         }
     });
     configFileUpload($fileupload);
@@ -250,7 +253,9 @@ function showPreviewIfReady(file) {
 }
 
 function configFileUpload(element) {
-    $(element).on('fileuploadprocessalways', function (e, data) {
+    $(element).on('fileuploadsubmit', function (e, data) {
+        console.log('fileuploadsubmit', data);
+    }).on('fileuploadprocessalways', function (e, data) {
         console.log('fileuploadprocessalways', data);
         var file = data.files[data.index];
         showPreviewIfReady(file);
@@ -280,25 +285,28 @@ $('#btn-image-add').fileupload({
     headers: {'Wicket-Ajax': true, 'Wicket-Ajax-BaseURL': Wicket.Ajax.baseUrl, 'Accept': 'application/json'},
     dataType: 'json',
     acceptFileTypes: /(\.|\/)(jpe?g|png)$/i,
+    formData: null,
     previewMaxHeight: 180,
     previewMaxWidth: 280,
     imageQuality: 100,
-    dropZone: $imagesSelect
-}).on('fileuploadadd', function (e, data) { // при добавлении файла сразу создаем елемент в #imageselect
-    console.log('fileuploadadd', data);
-    if (data.files.length == 1) {
-        var file = data.files[0];
-        Wicket.Ajax.post({
-            u: $images.data('add-url'),
-            coh: [function () {
-                file.$selectorItem = $images.find('.list-group.select .active');
-                file.ctype = 'main';
-                initFileData(file);
-                data.formData = {ctype: file.ctype, index: file.index};
-                data.submit(); // начинаем загрузку
-            }]
-        });
-        $images.find('.progress').collapse('show'); // показываем прогресбар
+    dropZone: $imagesSelect,
+    add: function (e, data) { // при добавлении файла сразу создаем елемент в #imageselect
+        console.log('fileuploadadd', data);
+        if (data.files.length == 1) {
+            var file = data.files[0];
+            Wicket.Ajax.post({
+                u: $images.data('add-url'),
+                coh: [function () {
+                    file.$selectorItem = $images.find('.list-group.select .active');
+                    file.ctype = 'main';
+                    initFileData(file);
+                    data.formData = {ctype: file.ctype, index: file.index};
+                    console.log('Wicket.Ajax.post add-url coh', data);
+                    data.submit(); // начинаем загрузку
+                }]
+            });
+            $images.find('.progress').collapse('show'); // показываем прогресбар
+        }
     }
 });
 

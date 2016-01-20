@@ -67,6 +67,15 @@ public class ExternalResource implements Serializable
     {
     }
 
+    public ExternalResource(String url, String thumbnail, int width, int height)
+    {
+        this.resourceId = -1;
+        this.url = url;
+        this.thumbnail = thumbnail;
+        this.width = width;
+        this.height = height;
+    }
+
     public ExternalResource(int resourceId, String url, String thumbnail)
     {
         this.resourceId = resourceId;

@@ -129,13 +129,13 @@ public class YandexDiskService
     }
 
     private static String getPreviewUrl(String path)
-            throws IOException, JSONException
+            throws IOException, JSONException, InterruptedException
     {
         return getPreviewUrl(path, 2);
     }
 
     private static String getPreviewUrl(String path, int count)
-            throws IOException, JSONException
+            throws IOException, JSONException, InterruptedException
     {
         URL url = new URL("https://cloud-api.yandex.net/v1/disk/public/resources/?public_key=" + YANDEX_DISK_PUBLIC_FOLDER
                           + "&fields=preview&path=" + URLEncoder.encode(path, "UTF-8"));
@@ -154,6 +154,7 @@ public class YandexDiskService
             }
             else if (count > 0)
             {
+                Thread.sleep(200);
                 return getPreviewUrl(path, --count);
             }
             else

@@ -491,7 +491,10 @@ public class VolumeEdit extends AdminLayoutPage
                 try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
                     ChapterImagesMapper mapper = CachingFacade.getCacheableMapper(session, ChapterImagesMapper.class);
-                    boolean coversEdit = false;
+                    volume.setImageOne(null);
+                    volume.setImageTwo(null);
+                    volume.setImageThree(null);
+                    volume.setImageFour(null);
                     for (ChapterImage item : model.getObject())
                     {
                         if (!removed.contains(item))
@@ -501,19 +504,15 @@ public class VolumeEdit extends AdminLayoutPage
                                 switch (item.getOrderNumber())
                                 {
                                     case 1:
-                                        coversEdit = true;
                                         volume.setImageOne(item.getNonColoredImage().getResourceId());
                                         break;
                                     case 2:
-                                        coversEdit = true;
                                         volume.setImageTwo(item.getNonColoredImage().getResourceId());
                                         break;
                                     case 3:
-                                        coversEdit = true;
                                         volume.setImageThree(item.getNonColoredImage().getResourceId());
                                         break;
                                     case 4:
-                                        coversEdit = true;
                                         volume.setImageFour(item.getNonColoredImage().getResourceId());
                                         break;
                                     default:
@@ -533,11 +532,8 @@ public class VolumeEdit extends AdminLayoutPage
                             }
                         }
                     }
-                    if (coversEdit)
-                    {
-                        VolumesMapper volumesMapper = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
-                        volumesMapper.updateVolumeCovers(volume);
-                    }
+                    VolumesMapper volumesMapper = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
+                    volumesMapper.updateVolumeCovers(volume);
                     for (ChapterImage removedItem : removed)
                     {
                         if (removedItem.getChapterImageId() != null)

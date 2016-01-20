@@ -40,7 +40,7 @@ public class ChapterTextParser
             }
             else
             {
-                image = new ExternalResource(-1, RuraConstants.UNKNOWN_IMAGE, RuraConstants.UNKNOWN_IMAGE);
+                image = RuraConstants.UNKNOWN_IMAGE;
             }
             images.add(image);
         }

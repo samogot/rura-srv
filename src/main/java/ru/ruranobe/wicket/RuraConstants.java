@@ -2,6 +2,7 @@ package ru.ruranobe.wicket;
 
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableMap;
+import ru.ruranobe.mybatis.entities.tables.ExternalResource;
 
 import java.util.Arrays;
 import java.util.List;
@@ -100,12 +101,14 @@ public class RuraConstants
     public static final List<String> VOLUME_STATUS_PUBLISHED_LIST = Arrays.asList(RuraConstants.VOLUME_STATUS_DECOR,
             RuraConstants.VOLUME_STATUS_DONE);
 
-    public static final String NO_COVER_IMAGE = "https://ruranobe.ru/images/thumb/a/ad/nopic.png/300px-nopic.png";
+    public static final ExternalResource NO_COVER_IMAGE = new ExternalResource("https://ruranobe.ru/images/a/ad/nopic.png",
+            "https://ruranobe.ru/images/thumb/a/ad/nopic.png/%dpx-nopic.png", 350, 500);
+    public static final ExternalResource UNKNOWN_IMAGE = new ExternalResource("https://ruranobe.ru/images/a/ad/nopic.png",
+            "https://ruranobe.ru/images/thumb/a/ad/nopic.png/%dpx-nopic.png", 350, 500);
 
     private RuraConstants()
     {
     }
 
     public static final List<String> PROJECT_STATUS_LIST = Arrays.asList("Выпускается", "Окончен", "Переведен");
-    public static final String UNKNOWN_IMAGE = "https://ruranobe.ru/images/thumb/a/ad/nopic.png/900px-nopic.png";
 }
