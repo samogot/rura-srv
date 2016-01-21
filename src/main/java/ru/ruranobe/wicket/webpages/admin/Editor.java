@@ -9,6 +9,8 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
 import ru.ruranobe.engine.wiki.parser.ChapterTextParser;
@@ -24,6 +26,7 @@ import ru.ruranobe.mybatis.mappers.TextsMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 
 @AuthorizeInstantiation({"ADMIN", "TEAM MEMBER"})
@@ -31,6 +34,12 @@ public class Editor extends SidebarLayoutPage
 {
     public Editor(PageParameters parameters)
     {
+        HttpSession httpSession = ((ServletWebRequest) RequestCycle.get().getRequest()).getContainerRequest().getSession();
+        if (httpSession != null)
+        {
+            int sixHours = 60*60*6;
+            httpSession.setMaxInactiveInterval(sixHours);
+        }
         try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
         {
             Chapter chapter = getChapter(parameters, session);
@@ -75,7 +84,7 @@ public class Editor extends SidebarLayoutPage
 
             Form editorForm = new Form("editorForm");
             editorForm.add(new SaveText("saveTextAjax", editorForm, currentText, chapter, prevText));
-            editorForm.add(new Preview("preview", previewText, editor, editorForm, chapter));
+            editorForm.add(new Preview("preview", previewText, editor, editorForm, chapter, currentText));
             editorForm.add(previewText.setEscapeModelStrings(false).setOutputMarkupId(true));
             editorForm.add(editor.setEscapeModelStrings(true).setOutputMarkupId(true));
 
@@ -154,13 +163,15 @@ public class Editor extends SidebarLayoutPage
         private Chapter chapter;
         private TextArea<String> editor;
         private Label previewText;
+        private Text text;
 
-        public Preview(String name, Label previewText, TextArea<String> editor, Form form, Chapter chapter)
+        public Preview(String name, Label previewText, TextArea<String> editor, Form form, Chapter chapter, Text text)
         {
             super(name, form);
             this.chapter = chapter;
             this.editor = editor;
             this.previewText = previewText;
+            this.text = text;
         }
 
         @Override
@@ -170,7 +181,7 @@ public class Editor extends SidebarLayoutPage
             {
                 try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
-                    String wikiText = editor.getModelObject();
+                    String wikiText = text.getTextWiki();
                     WikiParser parser = new WikiParser(null, null, wikiText, true);
 
                     String headerTag = chapter.isNested() ? "h3" : "h2";
