@@ -53,9 +53,15 @@ public class Editor extends SidebarLayoutPage
                 editor.setModel(new Model<String>()
                 {
                     @Override
+                    public String getObject()
+                    {
+                        return currentText.getTextWiki() == null ? "" : currentText.getTextWiki();
+                    }
+
+                    @Override
                     public void setObject(String wikiText)
                     {
-                        currentText.setTextWiki(wikiText);
+                        currentText.setTextWiki(wikiText == null ? "" : wikiText);
                     }
                 });
             }
@@ -68,13 +74,15 @@ public class Editor extends SidebarLayoutPage
                     @Override
                     public String getObject()
                     {
-                        return previousText.getTextWiki();
+                        return currentText.getTextWiki() == null
+                               ? previousText.getTextWiki()
+                               : currentText.getTextWiki();
                     }
 
                     @Override
                     public void setObject(String wikiText)
                     {
-                        currentText.setTextWiki(wikiText);
+                        currentText.setTextWiki(wikiText == null ? "" : wikiText);
                     }
                 });
                 prevText = previousText;
@@ -84,7 +92,7 @@ public class Editor extends SidebarLayoutPage
 
             Form editorForm = new Form("editorForm");
             editorForm.add(new SaveText("saveTextAjax", editorForm, currentText, chapter, prevText));
-            editorForm.add(new Preview("preview", previewText, editor, editorForm, chapter, currentText));
+            editorForm.add(new Preview("preview", previewText, editor, editorForm, chapter));
             editorForm.add(previewText.setEscapeModelStrings(false).setOutputMarkupId(true));
             editorForm.add(editor.setEscapeModelStrings(true).setOutputMarkupId(true));
 
@@ -163,15 +171,13 @@ public class Editor extends SidebarLayoutPage
         private Chapter chapter;
         private TextArea<String> editor;
         private Label previewText;
-        private Text text;
 
-        public Preview(String name, Label previewText, TextArea<String> editor, Form form, Chapter chapter, Text text)
+        public Preview(String name, Label previewText, TextArea<String> editor, Form form, Chapter chapter)
         {
             super(name, form);
             this.chapter = chapter;
             this.editor = editor;
             this.previewText = previewText;
-            this.text = text;
         }
 
         @Override
@@ -181,7 +187,7 @@ public class Editor extends SidebarLayoutPage
             {
                 try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
-                    String wikiText = text.getTextWiki();
+                    String wikiText = editor.getModelObject();
                     WikiParser parser = new WikiParser(null, null, wikiText, true);
 
                     String headerTag = chapter.isNested() ? "h3" : "h2";
