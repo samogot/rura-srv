@@ -38,6 +38,7 @@ function sortImagesSelectorItems($listGroup) {
 function initImagesChapterLabels() {
     window.chapterOrderDictionary = {'-1': -1};
     var $listGroup = $('#images').find('.list-group.select');
+    $listGroup.find('.heading').detach();
     var $coversHeading = $('<a class="list-group-item heading" data-chapter-id="-1" data-order-number="-1"><span class="move">Обложки</span></a>');
     $listGroup.prepend($coversHeading);
     $('#chapters').find('.form-item').each(function () {

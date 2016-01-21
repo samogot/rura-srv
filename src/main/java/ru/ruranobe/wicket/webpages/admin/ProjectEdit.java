@@ -21,7 +21,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import ru.ruranobe.misc.RuranobeUtils;
+import org.apache.wicket.util.string.Strings;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.Project;
 import ru.ruranobe.mybatis.entities.tables.Volume;
@@ -94,7 +94,7 @@ public class ProjectEdit extends AdminLayoutPage
         add(new AdminInfoFormPanel<Project>("info", "Информация", new CompoundPropertyModel<>(project))
         {
             @Override
-            public void onSubmit()
+            public boolean onSubmit()
             {
                 try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
@@ -102,6 +102,7 @@ public class ProjectEdit extends AdminLayoutPage
                     mapper.updateProject(project);
                     session.commit();
                 }
+                return true;
             }
 
             @Override
@@ -141,7 +142,7 @@ public class ProjectEdit extends AdminLayoutPage
         add(new AdminTableListPanel<Volume>("volumes", "Все тома", new ListModel<>(volumes), VOLUMES_TABLE_COLUMNS)
         {
             @Override
-            public void onSubmit()
+            public boolean onSubmit()
             {
                 try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
@@ -169,6 +170,7 @@ public class ProjectEdit extends AdminLayoutPage
                     }
                     session.commit();
                 }
+                return true;
             }
 
             @Override
@@ -245,7 +247,20 @@ public class ProjectEdit extends AdminLayoutPage
                         add(new TextField<String>("externalUrl"));
                         add(new TextArea<String>("annotation"));
                         add(new CheckBox("adult"));
-                        add(new BookmarkablePageLink("link", VolumeEdit.class, model.getObject().getUrlParameters()));
+                        add(new BookmarkablePageLink("link", VolumeEdit.class)
+                        {
+                            @Override
+                            public PageParameters getPageParameters()
+                            {
+                                return model.getObject().getUrlParameters();
+                            }
+
+                            @Override
+                            public boolean isVisible()
+                            {
+                                return !Strings.isEmpty(model.getObject().getUrlPart());
+                            }
+                        });
                     }
                 };
             }
@@ -255,7 +270,7 @@ public class ProjectEdit extends AdminLayoutPage
         add(new AdminAffixedListPanel<Project>("subprojects", "Подсерии", new ListModel<>(subProjects))
         {
             @Override
-            public void onSubmit()
+            public boolean onSubmit()
             {
                 try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
@@ -295,10 +310,11 @@ public class ProjectEdit extends AdminLayoutPage
                     }
                     session.commit();
                 }
+                return true;
             }
 
             @Override
-            protected void onAjaxProcess(AjaxRequestTarget target)
+            protected void onAjaxSubmit(AjaxRequestTarget target)
             {
                 super.onAjaxProcess(target);
                 reinitAllProjects();
@@ -350,24 +366,14 @@ public class ProjectEdit extends AdminLayoutPage
             "Серия", "Номер в серии", "Автор", "Иллюстратор", "Дата публикации", "ISBN", "Тип релиза", "Cтатус релиза",
             "Внешняя ссылка", "Аннотация", "18+", "Править");
 
-    private static final Comparator<Project> PROJECT_COMPARATOR = new Comparator<Project>()
-    {
-        @Override
-        public int compare(Project o1, Project o2)
-        {
-            int parentComp = ObjectUtils.compare(o1.getParentId(), o2.getParentId(), false);
-            return parentComp == 0 ? ObjectUtils.compare(o1.getOrderNumber(), o2.getOrderNumber(), true) : parentComp;
-        }
+    private static final Comparator<Project> PROJECT_COMPARATOR = (o1, o2) -> {
+        int parentComp = ObjectUtils.compare(o1.getParentId(), o2.getParentId(), false);
+        return parentComp == 0 ? ObjectUtils.compare(o1.getOrderNumber(), o2.getOrderNumber(), true) : parentComp;
     };
 
-    private static final Comparator<Volume> VOLUME_COMPARATOR = new Comparator<Volume>()
-    {
-        @Override
-        public int compare(Volume o1, Volume o2)
-        {
-            int compProj = PROJECT_COMPARATOR.compare(o1.getProject(), o2.getProject());
-            return compProj == 0 ? ObjectUtils.compare(o1.getSequenceNumber(), o2.getSequenceNumber(), true) : compProj;
-        }
+    private static final Comparator<Volume> VOLUME_COMPARATOR = (o1, o2) -> {
+        int compProj = PROJECT_COMPARATOR.compare(o1.getProject(), o2.getProject());
+        return compProj == 0 ? ObjectUtils.compare(o1.getSequenceNumber(), o2.getSequenceNumber(), true) : compProj;
     };
 
     private static final IOptionRenderer<String> STATUS_OPTION_RENDERER = new IOptionRenderer<String>()

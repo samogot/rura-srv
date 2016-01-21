@@ -17,7 +17,10 @@ import ru.ruranobe.mybatis.mappers.ProjectsMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 
 import java.util.AbstractMap.SimpleEntry;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by Samogot on 04.05.2015.
@@ -52,14 +55,7 @@ public class ProjectBannersList extends Panel
                     projectsList.add(new SimpleEntry<>(project, image));
                 }
             }
-            Collections.sort(projectsList, new Comparator<SimpleEntry<Project, ExternalResource>>()
-            {
-                @Override
-                public int compare(SimpleEntry<Project, ExternalResource> o1, SimpleEntry<Project, ExternalResource> o2)
-                {
-                    return o1.getKey().getOrderNumber() - o2.getKey().getOrderNumber();
-                }
-            });
+            Collections.sort(projectsList, (o1, o2) -> o1.getKey().getOrderNumber() - o2.getKey().getOrderNumber());
             if (limit != null && projectsList.size() > limit)
             {
                 projectsList.subList(limit, projectsList.size()).clear();

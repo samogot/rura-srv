@@ -1,6 +1,7 @@
 package ru.ruranobe.engine.image;
 
 import com.sun.nio.sctp.IllegalUnbindException;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 import org.apache.ibatis.session.SqlSession;
@@ -121,8 +122,15 @@ public class ImageServices
                 if (storagePath.contains("${") || storageFileName.contains("${"))
                 {
                     StrSubstitutor sub = new StrSubstitutor(nameContextVariables);
-                    storagePath = sub.replace(storagePath);
                     storageFileName = sub.replace(storageFileName);
+                    if (storagePath.contains("${md5_"))
+                    {
+                        String md5 = DigestUtils.md5Hex(storageFileName);
+                        nameContextVariables.put("md5_1", md5.substring(0, 1));
+                        nameContextVariables.put("md5_2", md5.substring(0, 2));
+                        nameContextVariables.put("md5_3", md5.substring(0, 3));
+                    }
+                    storagePath = sub.replace(storagePath);
                 }
                 if (storagePath.contains("${") || storageFileName.contains("${"))
                 {
