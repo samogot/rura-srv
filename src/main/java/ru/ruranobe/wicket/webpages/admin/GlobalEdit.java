@@ -16,6 +16,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.string.Strings;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.Project;
 import ru.ruranobe.mybatis.entities.tables.Team;
@@ -78,14 +80,7 @@ public class GlobalEdit extends AdminLayoutPage
             }
         }
 
-        Collections.sort(projects, new Comparator<Project>()
-        {
-            @Override
-            public int compare(Project o1, Project o2)
-            {
-                return o1.getOrderNumber() - o2.getOrderNumber();
-            }
-        });
+        Collections.sort(projects, (o1, o2) -> o1.getOrderNumber() - o2.getOrderNumber());
 
         HashMap<Integer, Team> teamIdToTeamMap = new HashMap<>();
         for (Team team : teams)
@@ -100,7 +95,7 @@ public class GlobalEdit extends AdminLayoutPage
         add(new AdminAffixedListPanel<Project>("projects", "Серии", new ListModel<>(projects))
         {
             @Override
-            public void onSubmit()
+            public boolean onSubmit()
             {
                 try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
@@ -128,6 +123,7 @@ public class GlobalEdit extends AdminLayoutPage
                     }
                     session.commit();
                 }
+                return true;
             }
 
             @Override
@@ -162,7 +158,21 @@ public class GlobalEdit extends AdminLayoutPage
                         add(new CheckBox("projectHidden"));
                         add(new CheckBox("bannerHidden"));
                         add(new BannerUploadComponent("image").setProject(model.getObject()));
-                        add(new BookmarkablePageLink("link", ProjectEdit.class, model.getObject().getUrlParameters()));
+                        add(new BookmarkablePageLink("link", ProjectEdit.class)
+                        {
+
+                            @Override
+                            public PageParameters getPageParameters()
+                            {
+                                return model.getObject().getUrlParameters();
+                            }
+
+                            @Override
+                            public boolean isVisible()
+                            {
+                                return !Strings.isEmpty(model.getObject().getUrl());
+                            }
+                        });
                     }
                 };
             }
@@ -172,7 +182,7 @@ public class GlobalEdit extends AdminLayoutPage
         {
 
             @Override
-            public void onSubmit()
+            public boolean onSubmit()
             {
                 try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
@@ -200,6 +210,7 @@ public class GlobalEdit extends AdminLayoutPage
                     }
                     session.commit();
                 }
+                return true;
             }
 
             @Override
@@ -241,7 +252,7 @@ public class GlobalEdit extends AdminLayoutPage
         add(teamsAdminAffixedListPanel = new AdminAffixedListPanel<Team>("teams", "Команды", new ListModel<>(teams))
         {
             @Override
-            public void onSubmit()
+            public boolean onSubmit()
             {
                 try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
@@ -269,6 +280,7 @@ public class GlobalEdit extends AdminLayoutPage
                     }
                     session.commit();
                 }
+                return true;
             }
 
             @Override
@@ -299,8 +311,9 @@ public class GlobalEdit extends AdminLayoutPage
             }
 
             @Override
-            protected void onRefresh(AjaxRequestTarget target, Form<?> form)
+            protected void onAjaxSubmit(AjaxRequestTarget target)
             {
+                super.onAjaxSubmit(target);
                 for (Component component : ((AbstractRepeater) GlobalEdit.this.get("teamMembers:form:formBlock:repeater")))
                 {
                     target.add(component.get("item:label:team"));
@@ -311,7 +324,7 @@ public class GlobalEdit extends AdminLayoutPage
         add(new AdminAffixedListPanel<TeamMember>("teamMembers", "Члены команд", new ListModel<>(teamMembers))
         {
             @Override
-            public void onSubmit()
+            public boolean onSubmit()
             {
                 teamsAdminAffixedListPanel.onSubmit();
                 try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
@@ -353,6 +366,7 @@ public class GlobalEdit extends AdminLayoutPage
                     }
                     session.commit();
                 }
+                return true;
             }
 
             @Override

@@ -81,9 +81,9 @@ public class YandexDiskService
 
                 String previewUrl = URLDecoder.decode(getPreviewUrl(image.getPath() + "/" + image.getFilename()), "UTF-8");
                 image.setPathOnImageServiceSystem(StorageService.YANDEX_DISK,
-                        previewUrl.replace("/preview/", "/disk/"));
+                                                  previewUrl.replace("/preview/", "/disk/"));
                 image.setThumbnailPathOnImageServiceSystem(StorageService.YANDEX_DISK,
-                        previewUrl.replaceAll("%", "%%").replace("&size=S&", "&size=%dx99999&"));
+                                                           previewUrl.replaceAll("%", "%%").replace("&size=S&", "&size=%dx99999&"));
             }
             catch (UnsupportedEncodingException e)
             {

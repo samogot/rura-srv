@@ -79,6 +79,20 @@ public abstract class AdminTableListPanel<T> extends AdminListPanel<T>
         rowRepeater.get(model.getObject().indexOf(removedItem)).setVisible(false);
     }
 
+    @Override
+    protected void onAjaxSubmit(AjaxRequestTarget target)
+    {
+        super.onAjaxSubmit(target);
+        for (Component component : rowRepeater)
+        {
+            target.add(component.get("item"));
+            if (component.getDefaultModelObject().equals(selectedItem))
+            {
+                target.appendJavaScript(String.format("$('#%s').click()", component.get("item").getMarkupId()));
+            }
+        }
+    }
+
     private void initializeRowListItem(final ListItem<T> item)
     {
         Component rowComponent = getRowComponent("item", item.getModel());

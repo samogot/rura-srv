@@ -100,7 +100,7 @@ public abstract class AdminAffixedListPanel<T> extends AdminListPanel<T>
 
         target.appendJavaScript(String.format("$('#%s').click()", selectorBlockListItem.getMarkupId()));
         target.appendJavaScript(String.format("$('#%s').trigger('addnewitem', { selector: '#%s', form: '#%s' })",
-                form.getMarkupId(), selectorBlockListItem.getMarkupId(), formBlockListItem.getMarkupId()));
+                                              form.getMarkupId(), selectorBlockListItem.getMarkupId(), formBlockListItem.getMarkupId()));
         if (sortable)
         {
             target.appendJavaScript(String.format("$('#%s .list-group.select.sortable').trigger('sortupdate')", form.getMarkupId()));
@@ -114,6 +114,24 @@ public abstract class AdminAffixedListPanel<T> extends AdminListPanel<T>
         target.appendJavaScript(String.format(";removeAdminAffixItem('%s');", form.getMarkupId()));
         formBlockItemRepeater.get(model.getObject().indexOf(removedItem)).setVisible(false);
         selectorBlockItemRepeater.get(model.getObject().indexOf(removedItem)).setVisible(false);
+    }
+
+    @Override
+    protected void onAjaxSubmit(AjaxRequestTarget target)
+    {
+        super.onAjaxSubmit(target);
+        for (Component component : formBlockItemRepeater)
+        {
+            target.add(component);
+        }
+        for (Component component : selectorBlockItemRepeater)
+        {
+            target.add(component);
+            if (component.getDefaultModelObject().equals(selectedItem))
+            {
+                target.appendJavaScript(String.format("$('#%s').click()", component.getMarkupId()));
+            }
+        }
     }
 
     protected void initializeSelectorBlockListItem(final ListItem<T> item)
@@ -171,6 +189,7 @@ public abstract class AdminAffixedListPanel<T> extends AdminListPanel<T>
     }
 
     private boolean sortable;
-    protected PropertyListView<T> formBlockItemRepeater;
+    protected PropertyListView<T>
+            formBlockItemRepeater;
     protected PropertyListView<T> selectorBlockItemRepeater;
 }

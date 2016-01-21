@@ -10,6 +10,8 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
 
 import java.util.ArrayList;
@@ -26,7 +28,7 @@ public abstract class AdminFormPanel extends Panel
         return form;
     }
 
-    public abstract void onSubmit();
+    public abstract boolean onSubmit();
 
     protected void onRefresh(AjaxRequestTarget target, Form<?> form)
     {
@@ -56,12 +58,21 @@ public abstract class AdminFormPanel extends Panel
         setMarkupId(id);
         add(form = new Form("form")
         {
-
             @Override
             protected void onSubmit()
             {
-                AdminFormPanel.this.onSubmit();
-                success(title + " сохранены успешно");
+                try
+                {
+                    if (AdminFormPanel.this.onSubmit())
+                    {
+                        success(title + " сохранены успешно");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    error("При сохранении произошла ошибка. Сообщите администратору что вы пытались поменять");
+                    LOG.error("Error on ajax submit", ex);
+                }
             }
         });
         form.add(new Label("heading", title));
@@ -78,12 +89,14 @@ public abstract class AdminFormPanel extends Panel
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form)
             {
+                onAjaxSubmit(target);
                 onAjaxProcess(target);
             }
 
             @Override
             protected void onError(AjaxRequestTarget target, Form<?> form)
             {
+                onAjaxError(target);
                 onAjaxProcess(target);
             }
         };
@@ -94,12 +107,21 @@ public abstract class AdminFormPanel extends Panel
         feedbackPanel.setOutputMarkupId(true);
     }
 
+    protected void onAjaxSubmit(AjaxRequestTarget target)
+    {
+    }
+
+    protected void onAjaxError(AjaxRequestTarget target)
+    {
+    }
+
     protected void onAjaxProcess(AjaxRequestTarget target)
     {
         target.add(feedbackPanel);
         target.appendJavaScript(String.format(";updateFeedbackPanelTimeout('#%s');", feedbackPanel.getMarkupId()));
     }
 
+    private static final Logger LOG = LoggerFactory.getLogger(AdminFormPanel.class);
     protected List<Component> toolbarButtons = new ArrayList<>();
     protected Form form;
     private String title;

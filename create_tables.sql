@@ -345,7 +345,8 @@ ALTER TABLE external_resources ADD CONSTRAINT fk_history_id FOREIGN KEY (history
 
 ALTER TABLE external_resources_history ADD CONSTRAINT fk_history_project_id FOREIGN KEY (project_id) REFERENCES projects (project_id);
 ALTER TABLE external_resources_history ADD CONSTRAINT fk_history_volume_id FOREIGN KEY (volume_id) REFERENCES volumes (volume_id);
-ALTER TABLE external_resources_history ADD CONSTRAINT fk_history_chapter_image_id FOREIGN KEY (chapter_image_id) REFERENCES chapter_images (chapter_image_id);
+ALTER TABLE external_resources_history ADD CONSTRAINT fk_history_chapter_image_id FOREIGN KEY (chapter_image_id) REFERENCES chapter_images (chapter_image_id)
+  ON DELETE SET NULL;
 
 ALTER TABLE chapters ADD CONSTRAINT fk_volume_id2 FOREIGN KEY (volume_id) REFERENCES volumes (volume_id)
   ON DELETE CASCADE;
