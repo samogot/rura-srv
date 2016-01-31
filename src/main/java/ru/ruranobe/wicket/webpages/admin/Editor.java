@@ -150,7 +150,7 @@ public class Editor extends SidebarLayoutPage
                 chapter.setText(text);
                 ChapterTextParser.parseChapterText(chapter, session, textsMapper, !chapter.getUrl().startsWith("system/"));
 
-                CachingFacade.getCacheableMapper(session, ChaptersMapper.class).updateChapter(chapter);
+                CachingFacade.getCacheableMapper(session, ChaptersMapper.class).updateChapterText(chapter);
 
                 TextHistory textHistory = new TextHistory();
                 textHistory.setCurrentTextId(text.getTextId());

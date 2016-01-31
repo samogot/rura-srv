@@ -72,8 +72,14 @@
     </select>
 
     <insert id="insertChapter" parameterType="ru.ruranobe.mybatis.entities.tables.Chapter" keyProperty="chapterId" useGeneratedKeys="true">
-        insert into chapters (volume_id, text_id, url, title, order_number, publish_date, nested)
-        values (#{volumeId}, #{textId}, #{url}, #{title}, #{orderNumber}, #{publishDate}, #{nested})
+        insert into chapters
+        set volume_id = #{volumeId},
+        text_id = #{textId},
+        url = #{url},
+        title = #{title},
+        order_number = #{orderNumber},
+        publish_date = #{publishDate},
+        nested = #{nested}
     </insert>
 
     <delete id="deleteChapter" parameterType="int">
@@ -81,9 +87,32 @@
     </delete>
 
     <update id="updateChapter" parameterType="ru.ruranobe.mybatis.entities.tables.Chapter">
-        update chapters set volume_id = #{volumeId}, text_id=#{textId}, url=#{url}, title = #{title}, order_number=#{orderNumber},
-        publish_date=#{publishDate}, nested=#{nested}
-        where chapter_id=#{chapterId}
+        update chapters
+        set volume_id = #{volumeId},
+        text_id = #{textId},
+        url = #{url},
+        title = #{title},
+        order_number = #{orderNumber},
+        publish_date = #{publishDate},
+        nested = #{nested}
+        where chapter_id = #{chapterId}
+    </update>
+
+    <update id="updateChapterText" parameterType="ru.ruranobe.mybatis.entities.tables.Chapter">
+        UPDATE chapters
+        SET text_id = #{textId}
+        WHERE chapter_id = #{chapterId}
+    </update>
+
+    <update id="updateChapterNoText" parameterType="ru.ruranobe.mybatis.entities.tables.Chapter">
+        UPDATE chapters
+        SET volume_id = #{volumeId},
+        url = #{url},
+        title = #{title},
+        order_number = #{orderNumber},
+        publish_date = #{publishDate},
+        nested = #{nested}
+        WHERE chapter_id = #{chapterId}
     </update>
 
     <resultMap type="ru.ruranobe.mybatis.entities.tables.Chapter" id="ChaptersResult">

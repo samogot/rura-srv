@@ -56,4 +56,16 @@ public class ChaptersMapperCacheable implements ChaptersMapper
     {
         mapper.updateChapter(chapter);
     }
+
+    @Override
+    public void updateChapterText(Chapter chapter)
+    {
+        mapper.updateChapterText(chapter);
+    }
+
+    @Override
+    public void updateChapterNoText(Chapter chapter)
+    {
+        mapper.updateChapterNoText(chapter);
+    }
 }

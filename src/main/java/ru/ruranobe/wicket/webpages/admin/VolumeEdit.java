@@ -341,7 +341,7 @@ public class VolumeEdit extends AdminLayoutPage
                         {
                             if (item.getChapterId() != null)
                             {
-                                mapper.updateChapter(item);
+                                mapper.updateChapterNoText(item);
                             }
                             else
                             {
