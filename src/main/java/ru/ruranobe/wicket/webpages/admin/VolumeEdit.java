@@ -538,7 +538,10 @@ public class VolumeEdit extends AdminLayoutPage
                                     default:
                                         warn("Нельзя сохранить больше 4 обложек");
                                 }
-                                removed.add(item);
+                                if (item.getChapterImageId() != null)
+                                {
+                                    mapper.deleteChapterImage(item.getChapterImageId());
+                                }
                             }
                             else
                             {
