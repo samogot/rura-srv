@@ -101,10 +101,10 @@ public class RuraConstants
     public static final List<String> VOLUME_STATUS_PUBLISHED_LIST = Arrays.asList(RuraConstants.VOLUME_STATUS_DECOR,
             RuraConstants.VOLUME_STATUS_DONE);
 
-    public static final ExternalResource NO_COVER_IMAGE = new ExternalResource("https://ruranobe.ru/images/a/ad/nopic.png",
-            "https://ruranobe.ru/images/thumb/a/ad/nopic.png/%dpx-nopic.png", 350, 500);
-    public static final ExternalResource UNKNOWN_IMAGE = new ExternalResource("https://ruranobe.ru/images/a/ad/nopic.png",
-            "https://ruranobe.ru/images/thumb/a/ad/nopic.png/%dpx-nopic.png", 350, 500);
+    public static final ExternalResource NO_COVER_IMAGE = new ExternalResource("http://ruranobe.ru/images/a/ad/nopic.png",
+            "http://ruranobe.ru/images/thumb/a/ad/nopic.png/%dpx-nopic.png", 350, 500);
+    public static final ExternalResource UNKNOWN_IMAGE = new ExternalResource("http://ruranobe.ru/images/a/ad/nopic.png",
+            "http://ruranobe.ru/images/thumb/a/ad/nopic.png/%dpx-nopic.png", 350, 500);
 
     private RuraConstants()
     {
