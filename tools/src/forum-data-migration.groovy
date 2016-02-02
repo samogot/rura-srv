@@ -3,11 +3,6 @@
 @Grab(group = 'mysql', module = 'mysql-connector-java', version = '5.1.36')
 @Grab(group = 'org.codehaus.groovy.modules.http-builder', module = 'http-builder', version = '0.7.1')
 @GrabExclude(group = 'xerces', module = 'xercesImpl')
-import groovy.sql.Sql
-@GrabConfig(systemClassLoader = true)
-@Grab(group = 'mysql', module = 'mysql-connector-java', version = '5.1.36')
-@Grab(group = 'org.codehaus.groovy.modules.http-builder', module = 'http-builder', version = '0.7.1')
-@GrabExclude(group = 'xerces', module = 'xercesImpl')
 
 import groovy.sql.Sql
 import groovyx.net.http.ContentType
@@ -27,11 +22,11 @@ class forumDataMigration {
     static void main(args) {
         def forumRootId = 317;
         def avatarsCount = 286;
-        def forumUserSecret = '342950507aede02cf327383dc6652cd99f40cf0f9b2649da';
-        def forumApi = new RESTClient('https://beta.ruranobe.ru/f/api/', ContentType.JSON)
-        def mw = connect('localhost', 'ruranobe_db', 'root', 'SankaReaz3');
-        def site = connect('localhost', 'ruranobe', 'root', 'SankaReaz3');
-        def forum = connect('localhost', 'ruranobe_forum', 'root', 'SankaReaz3');
+        def forumUserSecret = '123';
+        def forumApi = new RESTClient('https://ruranobe.ru/f/api/', ContentType.JSON)
+        def mw = connect('localhost', 'ruranobe_db', 'ruranobe_db', '123');
+        def site = connect('localhost', 'ruranobe', 'ruranobe', '123');
+        def forum = connect('localhost', 'ruranobe_forum', 'ruranobe_forum', '123');
         def migrationTool = new forumDataMigration(mw, site, forum, forumApi);
         println("Migrating projects")
         migrationTool.migrateProjects(forumRootId);
@@ -41,6 +36,10 @@ class forumDataMigration {
         migrationTool.migrateUsers(avatarsCount)
         println("Migrating comments")
         migrationTool.migrateComments()
+        println("Update volumes texts")
+        migrationTool.updateVolumeTexts();
+        println("Update converter caches")
+        migrationTool.updateConverterCaches();
         println("Migration completed")
     }
 
@@ -207,6 +206,61 @@ VALUES
       post_text: comment.text, post_checksum: post_checksum])
                     }
                 }
+            }
+        }
+    }
+
+    def updateVolumeTexts() {
+        site.eachRow("""
+SELECT
+    vol.volume_id AS volume_id, vol.url AS url, vol.name_title AS name_title
+FROM
+    volumes vol
+ORDER BY
+    vol.project_id, vol.sequence_number;
+""") { volume ->
+            println(volume.name_title)
+            "https://ruranobe.ru/r/${volume.url}/text".toURL().text
+        }
+    }
+
+    def download(String address, String filename)
+    {
+        def file = new FileOutputStream(filename)
+        def out = new BufferedOutputStream(file)
+        out << new URL(address).openStream()
+        out.close()
+    }
+
+    def updateConverterCaches() {
+        site.eachRow("""
+SELECT
+    vol.volume_id AS volume_id, vol.url AS url, vol.name_title AS name_title, vol.name_file AS name_file
+FROM
+    volumes vol
+ORDER BY
+    vol.project_id, vol.sequence_number;
+""") { volume ->
+            println(volume.name_title)
+            try {
+                download("https://ruranobe.ru/d/fb2/${volume.url}".toString(), volume.name_file + ".fb2")
+            } catch (IOException e) {
+                println e.getMessage()
+            }
+            try {
+                download("https://ruranobe.ru/d/fb2/${volume.url}?pic=0".toString(), volume.name_file + "_nopic.fb2")
+            } catch (IOException e) {
+                println e.getMessage()
+            }
+            try {
+                download("https://ruranobe.ru/d/docx/${volume.url}".toString(), volume.name_file + ".docx")
+            } catch (IOException e) {
+                println e.getMessage()
+            }
+            try {
+                download("https://ruranobe.ru/d/epub/${volume.url}".toString(), volume.name_file + ".epub")
+            } catch (IOException e) {
+                println e.getMessage()
             }
         }
     }
