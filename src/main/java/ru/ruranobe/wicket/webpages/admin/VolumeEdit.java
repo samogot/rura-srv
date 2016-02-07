@@ -565,6 +565,7 @@ public class VolumeEdit extends AdminLayoutPage
                             mapper.deleteChapterImage(removedItem.getChapterImageId());
                         }
                     }
+                    volumesMapper.resetVolumeTextCache(volume.getVolumeId()); // TODO: correctly recache. textId must be fetched from DB exactly before recache
                     session.commit();
                 }
                 return true;

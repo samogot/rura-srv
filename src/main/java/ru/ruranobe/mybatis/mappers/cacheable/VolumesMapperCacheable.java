@@ -1,10 +1,9 @@
 package ru.ruranobe.mybatis.mappers.cacheable;
 
-import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.entities.tables.Volume;
+import ru.ruranobe.mybatis.mappers.VolumesMapper;
 
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class VolumesMapperCacheable implements VolumesMapper
 {
@@ -61,5 +60,11 @@ public class VolumesMapperCacheable implements VolumesMapper
     public void deleteVolume(Integer volumeId)
     {
         mapper.deleteVolume(volumeId);
+    }
+
+    @Override
+    public void resetVolumeTextCache(Integer volumeId)
+    {
+        mapper.resetVolumeTextCache(volumeId);
     }
 }
