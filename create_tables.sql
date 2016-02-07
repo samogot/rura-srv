@@ -37,19 +37,20 @@ CREATE TABLE users
   email                    VARCHAR(255),
   email_token              VARCHAR(255),
   email_token_date         DATETIME,
-  email_activated          BOOL               NOT NULL,
-  registration_date        DATETIME           NOT NULL,
+  email_activated     BOOL                   NOT NULL,
+  registration_date   DATETIME               NOT NULL,
   #--user_settings
-  converter_type           ENUM('fb2',
+  converter_type      ENUM('fb2',
                                 'docx',
-                                'epub')       NOT NULL,
-  navigation_type          ENUM('Главам',
-                                'Подглавам')  NOT NULL,
-  convert_with_imgs        BOOL               NOT NULL,
-  adult                    BOOL               NOT NULL,
-  prefer_colored_imgs      BOOL               NOT NULL,
-  convert_imgs_size        INT(11)            NOT NULL,
-  forum_user_id            INT(11) UNSIGNED    DEFAULT NULL,
+                                'epub')      NOT NULL,
+  navigation_type     ENUM('Главам',
+                                'Подглавам') NOT NULL,
+  convert_with_imgs   BOOL                   NOT NULL,
+  adult               BOOL                   NOT NULL,
+  prefer_colored_imgs BOOL                   NOT NULL,
+  show_hidden_content BOOL                   NOT NULL,
+  convert_imgs_size   INT(11)                NOT NULL,
+  forum_user_id       INT(11) UNSIGNED    DEFAULT NULL,
   INDEX (username),
   INDEX (email),
   INDEX (pass_recovery_token),
@@ -99,6 +100,7 @@ CREATE TABLE projects
   banner_hidden      BOOL              NOT NULL,
   project_hidden     BOOL              NOT NULL,
   onevolume          BOOL              NOT NULL,
+  incubator          BOOL              NOT NULL,
   franchise          TEXT,
   annotation         TEXT,
   forum_id           INT(11) UNSIGNED    DEFAULT NULL,
@@ -316,6 +318,7 @@ CREATE TABLE user_group_types
 
 INSERT INTO user_group_types VALUES (1, 'ADMIN');
 INSERT INTO user_group_types VALUES (2, 'TEAM MEMBER');
+INSERT INTO user_group_types VALUES (3, 'INCUBATOR');
 
 ALTER TABLE paragraphs ADD CONSTRAINT fk_paragraph_text_id FOREIGN KEY (text_id) REFERENCES texts (text_id);
 

@@ -3,7 +3,7 @@ package ru.ruranobe.wicket.webpages.admin;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
@@ -24,20 +24,34 @@ import ru.ruranobe.mybatis.mappers.ChaptersMapper;
 import ru.ruranobe.mybatis.mappers.TextsHistoryMapper;
 import ru.ruranobe.mybatis.mappers.TextsMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
+import ru.ruranobe.wicket.InstantiationSecurityCheck;
+import ru.ruranobe.wicket.LoginSession;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
 import javax.servlet.http.HttpSession;
 import java.util.Date;
 
-@AuthorizeInstantiation({"ADMIN", "TEAM MEMBER"})
-public class Editor extends SidebarLayoutPage
+public class Editor extends SidebarLayoutPage implements InstantiationSecurityCheck
 {
+    @Override
+    public void doInstantiationSecurityCheck()
+    {
+        if (!LoginSession.get().isProjectEditAllowedByUser(projectUrl))
+        {
+            throw new UnauthorizedInstantiationException(this.getClass());
+        }
+    }
+
+    private String projectUrl;
+
     public Editor(PageParameters parameters)
     {
+        projectUrl = parameters.get("project").toString();
+        doInstantiationSecurityCheck();
         HttpSession httpSession = ((ServletWebRequest) RequestCycle.get().getRequest()).getContainerRequest().getSession();
         if (httpSession != null)
         {
-            int sixHours = 60*60*6;
+            int sixHours = 60 * 60 * 6;
             httpSession.setMaxInactiveInterval(sixHours);
         }
         try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
@@ -68,7 +82,7 @@ public class Editor extends SidebarLayoutPage
             else
             {
                 final Text previousText = CachingFacade.getCacheableMapper(session, TextsMapper.class)
-                        .getTextById(textId);
+                                                       .getTextById(textId);
                 editor.setModel(new Model<String>()
                 {
                     @Override
@@ -192,14 +206,14 @@ public class Editor extends SidebarLayoutPage
 
                     String headerTag = chapter.isNested() ? "h3" : "h2";
                     String textHtml = "<" + headerTag + " id=\"" + chapter.getUrlPart() + "\">" + chapter.getTitle() +
-                            "</" + headerTag + ">" + parser.parseWikiText(ChapterTextParser.getChapterExternalResources(chapter, session), true);
+                                      "</" + headerTag + ">" + parser.parseWikiText(ChapterTextParser.getChapterExternalResources(chapter, session), true);
 
                     StringBuilder footnotes = new StringBuilder();
                     for (FootnoteItem footnoteItem : parser.getFootnotes())
                     {
                         footnotes.append("<li id=\"cite_note-").append(footnoteItem.getFootnoteId()).append("\">")
-                                .append("<a href=\"#cite_ref-").append(footnoteItem.getFootnoteId()).append("\">↑</a> <span class=\"reference-text\">")
-                                .append(footnoteItem.getFootnoteText()).append("</span></li>");
+                                 .append("<a href=\"#cite_ref-").append(footnoteItem.getFootnoteId()).append("\">↑</a> <span class=\"reference-text\">")
+                                 .append(footnoteItem.getFootnoteText()).append("</span></li>");
                     }
 
                     if (footnotes.length() != 0)

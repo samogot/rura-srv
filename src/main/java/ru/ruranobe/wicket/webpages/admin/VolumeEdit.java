@@ -14,7 +14,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.markup.html.form.DateTextField;
@@ -53,6 +53,8 @@ import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.*;
 import ru.ruranobe.mybatis.mappers.*;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
+import ru.ruranobe.wicket.InstantiationSecurityCheck;
+import ru.ruranobe.wicket.LoginSession;
 import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.components.admin.AdminAffixedListPanel;
 import ru.ruranobe.wicket.components.admin.AdminInfoFormPanel;
@@ -64,9 +66,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-@AuthorizeInstantiation({"ADMIN", "TEAM MEMBER"})
-public class VolumeEdit extends AdminLayoutPage
+public class VolumeEdit extends AdminLayoutPage implements InstantiationSecurityCheck
 {
+    @Override
+    public void doInstantiationSecurityCheck()
+    {
+        if (!LoginSession.get().isProjectEditAllowedByUser(volume.getUrlParameters().get("project").toString()))
+        {
+            throw new UnauthorizedInstantiationException(this.getClass());
+        }
+    }
 
     private final static IOptionRenderer<String> optionRenderer = new IOptionRenderer<String>()
     {
@@ -107,6 +116,7 @@ public class VolumeEdit extends AdminLayoutPage
             volume = volumesMapperCacheable.getVolumeByUrl(volumeUrl);
 
             redirectTo404IfArgumentIsNull(volume);
+            doInstantiationSecurityCheck();
 
             VolumeReleaseActivitiesMapper volumeReleaseActivitiesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumeReleaseActivitiesMapper.class);
             volumeReleaseActivities = Lists.newArrayList(volumeReleaseActivitiesMapperCacheable.getVolumeReleaseActivitiesByVolumeId(volume.getVolumeId()));
@@ -185,7 +195,7 @@ public class VolumeEdit extends AdminLayoutPage
             else
             {
                 int parentComp = ObjectUtils.compare(projectIdToProject.get(p1.getParentId()).getOrderNumber(),
-                                                     projectIdToProject.get(p2.getParentId()).getOrderNumber(), true);
+                        projectIdToProject.get(p2.getParentId()).getOrderNumber(), true);
                 return parentComp == 0 ? ObjectUtils.compare(p1.getOrderNumber(), p2.getOrderNumber(), true) : parentComp;
             }
         });
@@ -206,7 +216,7 @@ public class VolumeEdit extends AdminLayoutPage
         reinitAllChapters();
 
         add(new BookmarkablePageLink("breadcrumbProject", ProjectEdit.class, volume.getProject().getUrlParameters())
-                    .setBody(Model.of(volume.getProject().getTitle())));
+                .setBody(Model.of(volume.getProject().getTitle())));
         add(new Label("breadcrumbActive", volume.getNameTitle()));
 
         add(new AdminInfoFormPanel<Volume>("info", "Информация", new CompoundPropertyModel<>(volume))
@@ -242,7 +252,7 @@ public class VolumeEdit extends AdminLayoutPage
                         add(new TextField<String>("nameRomaji"));
                         add(new TextField<String>("nameShort"));
                         add(new DropDownChoice<>("project", projects).setChoiceRenderer(new ChoiceRenderer<Project>("title", "projectId"))
-                                    .setOutputMarkupId(true));
+                                                                     .setOutputMarkupId(true));
                         add(new TextField<Float>("sequenceNumber"));
                         add(new TextField<String>("author"));
                         add(new TextField<String>("illustrator"));
@@ -252,11 +262,11 @@ public class VolumeEdit extends AdminLayoutPage
                         add(new TextField<String>("isbn"));
                         add(new DropDownChoice<>("volumeType", RuraConstants.VOLUME_TYPE_LIST));
                         add(new Select<String>("volumeStatus")
-                                    .add(new SelectOptions<>("basic", RuraConstants.VOLUME_STATUS_BASIC_LIST, optionRenderer))
-                                    .add(new SelectOptions<>("external", RuraConstants.VOLUME_STATUS_EXTERNAL_LIST, optionRenderer))
-                                    .add(new SelectOptions<>("not_in_work", RuraConstants.VOLUME_STATUS_IN_WORK_LIST, optionRenderer))
-                                    .add(new SelectOptions<>("in_work", RuraConstants.VOLUME_STATUS_NOT_IN_WORK_LIST, optionRenderer))
-                                    .add(new SelectOptions<>("published", RuraConstants.VOLUME_STATUS_PUBLISHED_LIST, optionRenderer)));
+                                .add(new SelectOptions<>("basic", RuraConstants.VOLUME_STATUS_BASIC_LIST, optionRenderer))
+                                .add(new SelectOptions<>("external", RuraConstants.VOLUME_STATUS_EXTERNAL_LIST, optionRenderer))
+                                .add(new SelectOptions<>("not_in_work", RuraConstants.VOLUME_STATUS_IN_WORK_LIST, optionRenderer))
+                                .add(new SelectOptions<>("in_work", RuraConstants.VOLUME_STATUS_NOT_IN_WORK_LIST, optionRenderer))
+                                .add(new SelectOptions<>("published", RuraConstants.VOLUME_STATUS_PUBLISHED_LIST, optionRenderer)));
                         add(new TextField<String>("externalUrl"));
                         add(new TextArea<String>("annotation"));
                         add(new CheckBox("adult"));
@@ -320,7 +330,7 @@ public class VolumeEdit extends AdminLayoutPage
                         super.onInitialize();
                         add(new TextField<String>("memberName").setRequired(true).setLabel(Model.of("Участник")).setOutputMarkupId(true));
                         add(new DropDownChoice<>("activity", activities)
-                                    .setChoiceRenderer(new ChoiceRenderer<VolumeActivity>("activityName", "activityId")));
+                                .setChoiceRenderer(new ChoiceRenderer<VolumeActivity>("activityName", "activityId")));
                         add(new CheckBox("teamHidden"));
                     }
                 };
@@ -428,7 +438,7 @@ public class VolumeEdit extends AdminLayoutPage
             {
                 super.onInitialize();
                 toolbarButtons.add(toolbarButtons.size() - 1,
-                                   new AdminToolboxModalButton("Таймер", "#publish-date-modal", "info", "clock-o"));
+                        new AdminToolboxModalButton("Таймер", "#publish-date-modal", "info", "clock-o"));
             }
         }.setSortable(true));
 
@@ -494,8 +504,8 @@ public class VolumeEdit extends AdminLayoutPage
                         super.onInitialize();
                         add(new DropDownChoice<>("updateType", RuraConstants.UPDATE_TYPE_LIST));
                         add(new DropDownChoice<>("chapter", allChapters)
-                                    .setChoiceRenderer(new ChoiceRenderer<Chapter>("leveledTitle", "chapterId"))
-                                    .setOutputMarkupId(true));
+                                .setChoiceRenderer(new ChoiceRenderer<Chapter>("leveledTitle", "chapterId"))
+                                .setOutputMarkupId(true));
                         add(new DateTextField("showTime", "dd.MM.yyyy HH:mm"));
                         add(new TextField<String>("description"));
                     }
@@ -706,7 +716,7 @@ public class VolumeEdit extends AdminLayoutPage
                         replaceComponentTagBody(markupStream, openTag, "<i class=\"fa fa-plus\"></i><input type=\"file\" class=\"fileupload\" multiple=\"\">");
                     }
                 }.add(new AttributeAppender("class", Model.of("btn-success"), " "), new AttributeModifier("title", "Загрузить"))
-                        .setMarkupId("btn-image-add"));
+                 .setMarkupId("btn-image-add"));
 
                 toolbarButtons.get(1).add(new AttributeModifier("style", "display:none"));
 
@@ -741,8 +751,8 @@ public class VolumeEdit extends AdminLayoutPage
                             target.add(selectorBlockItem);
                             target.appendJavaScript(String.format(
                                     "$('#%s .list-group.select.sortable').trigger('sortupdate');" +
-                                    "$('#%s').click();" +
-                                    "initFormItemFileUpload('#%s .image-data-main');" +
+                                    "$('#%s').click();"                                           +
+                                    "initFormItemFileUpload('#%s .image-data-main');"             +
                                     "initFormItemFileUpload('#%s .image-data-color');",
                                     form.getMarkupId(), selectorBlockItem.getMarkupId(),
                                     formBlockItem.getMarkupId(), formBlockItem.getMarkupId()));
@@ -819,10 +829,10 @@ public class VolumeEdit extends AdminLayoutPage
                 Webpage webpage = context.getWebpageByPageClass(this.getPage().getClass().getName());
                 RuraImage image = new RuraImage(imageTempFile, uploadingFileExtension, filename);
                 List<ExternalResource> externalResources = ImageServices.uploadImage(image, webpage.getImageStorages(),
-                                                                                     externalResourceHistory, new ImmutableMap.Builder<String, String>()
-                                                                                             .put("project", volume.getUrl().split("/", -1)[0])
-                                                                                             .put("volume", volume.getUrl().split("/", -1)[1])
-                                                                                             .build());
+                        externalResourceHistory, new ImmutableMap.Builder<String, String>()
+                                .put("project", volume.getUrl().split("/", -1)[0])
+                                .put("volume", volume.getUrl().split("/", -1)[1])
+                                .build());
                 ExternalResource externalResource = externalResources.iterator().next();
                 if (Strings.isEqual(multipartParameters.get("ctype"), "main"))
                 {

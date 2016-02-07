@@ -1,19 +1,25 @@
 package ru.ruranobe.wicket.components.sidebar;
 
-import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeAction;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import ru.ruranobe.wicket.LoginSession;
 import ru.ruranobe.wicket.webpages.admin.Orphus;
 
-@AuthorizeAction(action = "RENDER", roles = {"ADMIN", "TEAM MEMBER"})
 public class ActionsSidebarModule extends SidebarModuleBase
 {
-    private static final int UPDATES_BY_PROJECT_ON_PAGE = 5;
+    private String project = null;
 
     public ActionsSidebarModule(Class editClass, PageParameters pageParameters)
     {
         super("sidebarModule", "actions", "Действия");
+        project = pageParameters.get("project").toString();
         moduleBody.add(new BookmarkablePageLink("edit", editClass, pageParameters));
         moduleBody.add(new BookmarkablePageLink("orphus", Orphus.class, pageParameters));
+    }
+
+    @Override
+    public boolean isVisible()
+    {
+        return LoginSession.get().isProjectEditAllowedByUser(project);
     }
 }

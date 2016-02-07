@@ -5,7 +5,7 @@ import org.apache.commons.lang3.SerializationUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 import org.apache.wicket.extensions.markup.html.form.DateTextField;
 import org.apache.wicket.extensions.markup.html.form.select.IOptionRenderer;
 import org.apache.wicket.extensions.markup.html.form.select.Select;
@@ -29,15 +29,24 @@ import ru.ruranobe.mybatis.mappers.ExternalResourcesMapper;
 import ru.ruranobe.mybatis.mappers.ProjectsMapper;
 import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
+import ru.ruranobe.wicket.InstantiationSecurityCheck;
+import ru.ruranobe.wicket.LoginSession;
 import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.components.admin.*;
 import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
 
 import java.util.*;
 
-@AuthorizeInstantiation({"ADMIN", "TEAM MEMBER"})
-public class ProjectEdit extends AdminLayoutPage
+public class ProjectEdit extends AdminLayoutPage implements InstantiationSecurityCheck
 {
+    @Override
+    public void doInstantiationSecurityCheck()
+    {
+        if (!LoginSession.get().isProjectEditAllowedByUser(project.getUrl()))
+        {
+            throw new UnauthorizedInstantiationException(this.getClass());
+        }
+    }
 
     private Project getProject(final PageParameters parameters)
     {
@@ -60,6 +69,8 @@ public class ProjectEdit extends AdminLayoutPage
         project = getProject(parameters);
 
         redirectTo404IfArgumentIsNull(project);
+
+        doInstantiationSecurityCheck();
 
         try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
         {
@@ -128,6 +139,7 @@ public class ProjectEdit extends AdminLayoutPage
                         add(new CheckBox("onevolume"));
                         add(new CheckBox("projectHidden"));
                         add(new CheckBox("bannerHidden"));
+                        add(new CheckBox("incubator"));
                         add(new TextField<String>("issueStatus"));
                         add(new TextField<String>("translationStatus"));
                         add(new DropDownChoice<>("status", RuraConstants.PROJECT_STATUS_LIST));
@@ -333,6 +345,7 @@ public class ProjectEdit extends AdminLayoutPage
                 new_project.setBannerHidden(true);
                 new_project.setProjectHidden(true);
                 new_project.setOnevolume(false);
+                new_project.setIncubator(false);
                 new_project.setStatus(RuraConstants.PROJECT_STATUS_LIST.get(0));
                 return new_project;
             }

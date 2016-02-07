@@ -18,6 +18,8 @@ import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.*;
 import ru.ruranobe.mybatis.mappers.*;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
+import ru.ruranobe.wicket.LoginSession;
+import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.components.CommentsPanel;
 import ru.ruranobe.wicket.components.CoverCarousel;
 import ru.ruranobe.wicket.components.LabelHideableOnNull;
@@ -49,13 +51,15 @@ public class VolumePage extends SidebarLayoutPage
             ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
             Project project = projectsMapperCacheable.getProjectByUrl(projectUrlValue);
 
-            redirectTo404(project == null || project.isProjectHidden());
+            redirectTo404IfArgumentIsNull(project);
 
             VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
             String volumeUrl = projectUrlValue + "/" + volumeShortUrl;
             final Volume volume = volumesMapperCacheable.getVolumeNextPrevByUrl(volumeUrl);
 
             redirectTo404IfArgumentIsNull(volume);
+            redirectTo404((project.isProjectHidden() || volume.getVolumeStatus().equals(RuraConstants.VOLUME_STATUS_HIDDEN))
+                          && !LoginSession.get().isProjectEditAllowedByUser(projectUrlValue));
 
             setDefaultModel(new CompoundPropertyModel<>(volume));
             titleName = volume.getNameTitle();
@@ -72,7 +76,7 @@ public class VolumePage extends SidebarLayoutPage
             add(nextUrl);
 
             ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.
-                    getCacheableMapper(session, ExternalResourcesMapper.class);
+                                                                                            getCacheableMapper(session, ExternalResourcesMapper.class);
             ExternalResource volumeCover;
             List<SimpleEntry<String, ExternalResource>> covers = new ArrayList<>();
             volumeCover = externalResourcesMapperCacheable.getExternalResourceById(volume.getImageOne());
@@ -155,13 +159,16 @@ public class VolumePage extends SidebarLayoutPage
                 {
                     Chapter chapter = item.getModelObject();
                     WebMarkupContainer chapterLink;
-                    if (chapter.isPublished())
+                    if (chapter.isPublished() || LoginSession.get().isProjectShowHiddenAllowedByUser(projectUrlValue))
                     {
                         chapterLink = chapter.makeBookmarkablePageLink("chapterLink");
                     }
                     else
                     {
                         chapterLink = new WebMarkupContainer("chapterLink");
+                    }
+                    if (!chapter.isPublished())
+                    {
                         chapterLink.add(new AttributeModifier("class", "unpublished"));
                     }
                     if (chapter.isNested())

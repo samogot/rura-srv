@@ -5,6 +5,16 @@ import java.util.Date;
 
 public class User implements Serializable
 {
+    public Boolean isShowHiddenContent()
+    {
+        return showHiddenContent;
+    }
+
+    public void setShowHiddenContent(Boolean showHiddenContent)
+    {
+        this.showHiddenContent = showHiddenContent;
+    }
+
     private static final long serialVersionUID = 2L;
     private Integer userId;
     private String username;
@@ -23,6 +33,7 @@ public class User implements Serializable
     private Boolean convertWithImgs;
     private Boolean adult;
     private Boolean preferColoredImgs;
+    private Boolean showHiddenContent;
     private Integer convertImgsSize;
 
     public User()

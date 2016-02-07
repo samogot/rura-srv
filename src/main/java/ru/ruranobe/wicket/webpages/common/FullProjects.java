@@ -39,7 +39,7 @@ public class FullProjects extends BaseLayoutPage
 
             for (Project project : projects)
             {
-                if (!project.isProjectHidden())
+                if (!project.isProjectHidden() && !project.isIncubator())
                 {
                     ExternalResource image = (project.getImageId() != null) ? externalResourcesMapperCacheable.getExternalResourceById(project.getImageId())
                                                                             : null;

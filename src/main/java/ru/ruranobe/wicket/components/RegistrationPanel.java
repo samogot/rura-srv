@@ -174,6 +174,7 @@ public class RegistrationPanel extends Panel
                         user.setConverterType("fb2");
                         user.setNavigationType("Главам");
                         user.setPreferColoredImgs(true);
+                        user.setShowHiddenContent(false);
                         user.setConvertWithImgs(true);
                         user.setConvertImgsSize(1080);
                         user.setEmailActivated(false);

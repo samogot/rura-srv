@@ -56,6 +56,7 @@
             banner_hidden   = #{bannerHidden},
             project_hidden  = #{projectHidden},
             onevolume       = #{onevolume},
+        incubator = #{incubator},
             franchise       = #{franchise},
             annotation      = #{annotation},
         forum_id = #{forumId},
@@ -82,6 +83,7 @@
             banner_hidden   = #{bannerHidden},
             project_hidden  = #{projectHidden},
             onevolume       = #{onevolume},
+        incubator = #{incubator},
             franchise       = #{franchise},
             annotation      = #{annotation},
         forum_id = #{forumId},
@@ -139,6 +141,7 @@
         <result property="bannerHidden" column="banner_hidden" javaType="java.lang.Boolean"/>
         <result property="projectHidden" column="project_hidden" javaType="java.lang.Boolean"/>
         <result property="onevolume" column="onevolume" javaType="java.lang.Boolean"/>
+        <result property="incubator" column="incubator" javaType="java.lang.Boolean"/>
         <result property="franchise" column="franchise"/>
         <result property="annotation" column="annotation"/>
         <result property="forumId" column="forum_id"/>
