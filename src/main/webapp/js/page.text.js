@@ -274,10 +274,10 @@ $('.controlText .btn.bookmark-button').click(function () {
                 type: "POST",
                 url: '/api/bookmarks',
                 data: '{' +
-                'chapterId:' + $(this).attr('chapter-id') +
+                'chapterId:' + $(this).data('chapter-id') +
                 ',paragraphId:\"' + $(this).attr('id') + '\"' +
                 ',fullText:\"' + $(this).text() + '\"' +
-                ',textId:\"' + $(this).attr('text-id') + '\"' +
+                ',textId:\"' + $(this).data('text-id') + '\"' +
                 '}',
                 contentType: 'text/plain',
                 success: function (data, textStatus, jqXHR) {
@@ -462,8 +462,8 @@ function getOrphusParameters() {
     return {
         paragraph: p.id,
         fullText: $(p).text(),
-        chapterId: $(p).attr('chapter-id'),
-        textId: $(p).attr('text-id'),
+        chapterId: $(p).data('chapter-id'),
+        textId: $(p).data('text-id'),
         startOffset: offset - range.toString().length,
         originalText: range.toString()
     };
