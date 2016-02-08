@@ -19,9 +19,7 @@ public class WikiParser
         Iterator<ExternalResource> imagesIterator = images.iterator();
         connectWikiTags(imagesIterator);
 
-        StringBuilder additionalTags = new StringBuilder("data-line-no=\"");
-        additionalTags.append(Integer.toString(paragraphOrderNumber));
-        additionalTags.append("\" ");
+        StringBuilder additionalTags = new StringBuilder("data-line-no=\"").append(Integer.toString(paragraphOrderNumber)).append("\" ");
         if (textId != null)
         {
             additionalTags.append("data-text-id=\"").append(textId.toString()).append("\" ");
@@ -38,7 +36,38 @@ public class WikiParser
 
         parseWikiTextToHtmlText(0, wikiText.length(), htmlText, imagesIterator, appendExtraImagesAtTheEnd);
         htmlText.append("</p>");
-        return htmlText.toString();
+
+        // parse quotes inside <p> tags
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < htmlText.length(); )
+        {
+            StringBuilder startTag = new StringBuilder();
+            if (htmlText.codePointAt(i) == '<'
+                && htmlText.codePointAt(i+1) == 'p'
+                && htmlText.codePointAt(i+2) == ' ')
+            {
+                while (htmlText.codePointAt(i) != '>')
+                {
+                    startTag.appendCodePoint(htmlText.codePointAt(i));
+                    i++;
+                }
+                startTag.append('>');
+                i++;
+                StringBuilder paragraph = new StringBuilder();
+                while (htmlText.codePointAt(i) != '<'
+                       && htmlText.codePointAt(i+1) != '/'
+                       && htmlText.codePointAt(i+2) != 'p'
+                       && htmlText.codePointAt(i+3) != '>')
+                {
+                    paragraph.appendCodePoint(htmlText.codePointAt(i));
+                    i++;
+                }
+
+                result.append(startTag).append(new QuoteParser().applyTo(paragraph.toString())).append("</p>");
+            }
+            i++;
+        }
+        return result.toString();
     }
 
     public List<FootnoteItem> getFootnotes()
@@ -55,82 +84,59 @@ public class WikiParser
     // The order is important
     private void fillWikiTags()
     {
-        WikiTagType tagType;
         for (int i = 0; i < wikiText.length(); )
         {
             int curI = i;
             if (wikiText.codePointAt(i) == '{')
             {
-                tagType = WikiTagType.resolve("{{Подзаголовок|");
-                if (curI != (i = addWikiTagIfMetToMap(wikiText, i, tagType)))
+                if (curI != (i = addWikiTagIfMetToMap(wikiText, i, WikiTagType.resolve("{{Подзаголовок|"))))
                 {
                     continue;
                 }
 
-                tagType = WikiTagType.resolve("{{Иллюстрация}}");
-                if (curI != (i = addWikiTagIfMetToMap(wikiText, i, tagType)))
+                if (curI != (i = addWikiTagIfMetToMap(wikiText, i, WikiTagType.resolve("{{Иллюстрация}}"))))
                 {
                     continue;
                 }
 
-                tagType = WikiTagType.resolve("{{ref|");
-                if (curI != (i = addWikiTagIfMetToMap(wikiText, i, tagType)))
+                if (curI != (i = addWikiTagIfMetToMap(wikiText, i, WikiTagType.resolve("{{ref|"))))
                 {
                     continue;
                 }
             }
             if (wikiText.codePointAt(i) == '=')
             {
-                tagType = WikiTagType.resolve("====");
-                if (curI != (i = addWikiTagIfMetToMap(wikiText, i, tagType)))
-                {
-                    continue;
-                }
-                tagType = WikiTagType.resolve("===");
-                if (curI != (i = addWikiTagIfMetToMap(wikiText, i, tagType)))
-                {
-                    continue;
-                }
-                tagType = WikiTagType.resolve("==");
-                if (curI != (i = addWikiTagIfMetToMap(wikiText, i, tagType)))
-                {
-                    continue;
-                }
-            }
-            if (wikiText.codePointAt(i) == '\'')
-            {
-                tagType = WikiTagType.resolve("\'\'\'");
-                if (curI != (i = addWikiTagIfMetToMap(wikiText, i, tagType)))
+                if (curI != (i = addWikiTagIfMetToMap(wikiText, i, WikiTagType.resolve("===="))))
                 {
                     continue;
                 }
 
-                tagType = WikiTagType.resolve("\'\'");
-                if (curI != (i = addWikiTagIfMetToMap(wikiText, i, tagType)))
+                if (curI != (i = addWikiTagIfMetToMap(wikiText, i, WikiTagType.resolve("==="))))
+                {
+                    continue;
+                }
+
+                if (curI != (i = addWikiTagIfMetToMap(wikiText, i, WikiTagType.resolve("=="))))
                 {
                     continue;
                 }
             }
             if (wikiText.codePointAt(i) == '}')
             {
-                tagType = WikiTagType.resolve("}}");
-                if (curI != (i = addWikiTagIfMetToMap(wikiText, i, tagType)))
+                if (curI != (i = addWikiTagIfMetToMap(wikiText, i, WikiTagType.resolve("}}"))))
                 {
                     continue;
                 }
             }
-            tagType = WikiTagType.resolve("\n");
-            if (curI != (i = addWikiTagIfMetToMap(wikiText, i, tagType)))
+            if (curI != (i = addWikiTagIfMetToMap(wikiText, i, WikiTagType.resolve("\n"))))
             {
                 continue;
             }
-            tagType = WikiTagType.resolve("]");
-            if (curI != (i = addWikiTagIfMetToMap(wikiText, i, tagType)))
+            if (curI != (i = addWikiTagIfMetToMap(wikiText, i, WikiTagType.resolve("]"))))
             {
                 continue;
             }
-            tagType = WikiTagType.resolve("[http");
-            if (curI != (i = addWikiTagIfMetToMap(wikiText, i, tagType)))
+            if (curI != (i = addWikiTagIfMetToMap(wikiText, i, WikiTagType.resolve("[http"))))
             {
                 continue;
             }
@@ -192,7 +198,6 @@ public class WikiParser
                             footnoteParsingBoundariesToFootnoteId.put(entry, footnote.getUniqueId());
                             startPositionToReplacement.put(replacement.getStartPosition(), replacement);
                         }
-
                         k++;
                     }
                 }
@@ -243,10 +248,8 @@ public class WikiParser
 
         // The order is important
         connectIdenticalTags(wikiTagTypeToWikiTags.get(WikiTagType.FOUR_EQUAL));
-        connectIdenticalTags(wikiTagTypeToWikiTags.get(WikiTagType.THREE_QUOTES));
         connectIdenticalTags(wikiTagTypeToWikiTags.get(WikiTagType.THREE_EQUAL));
         connectIdenticalTags(wikiTagTypeToWikiTags.get(WikiTagType.TWO_EQUAL));
-        connectIdenticalTags(wikiTagTypeToWikiTags.get(WikiTagType.TWO_QUOTES));
 
         List<WikiTag> newLines = wikiTagTypeToWikiTags.get(WikiTagType.NEW_LINE);
         if (newLines != null)
@@ -262,14 +265,18 @@ public class WikiParser
         {
             StringBuilder footnote = new StringBuilder();
             parseWikiTextToHtmlText(entry.getKey(), entry.getValue(), footnote, Collections.<ExternalResource>emptyListIterator(), false);
-            this.footnotes.add(new FootnoteItem(footnoteParsingBoundariesToFootnoteId.get(entry), footnote.toString()));
+
+            this.footnotes.add(new FootnoteItem(footnoteParsingBoundariesToFootnoteId.get(entry),
+                    new QuoteParser().applyTo(footnote.toString())));
 
             Replacement footnoteReplacement = footnoteParsingBoundariesToFootnoteReplacement.get(entry);
             //String replacementText = String.format(footnoteReplacement.getReplacementText(), footnote.toString());
 
             // add to data-content content without any tags
             String dataContent = "<p>" + footnote.toString().replaceAll("\"", "&quot;") + "</p>";
-            footnoteReplacement.setReplacementText(String.format(footnoteReplacement.getReplacementText(), dataContent));
+            footnoteReplacement.setReplacementText(
+                    String.format(footnoteReplacement.getReplacementText(),
+                            new QuoteParser().applyTo(dataContent)));
         }
     }
 
@@ -333,11 +340,9 @@ public class WikiParser
             WikiTag tag = null;
             Map<String, String> attributeNameToValue = null;
 
-            String textIdStr = textId == null ? "" : Integer.toString(textId);
-            String chapterIdStr = chapterId == null ? "" : Integer.toString(chapterId);
-            String orderNumberStr = Integer.toString(orderNumber);
-
-            String uniqueId = textIdStr + chapterIdStr + orderNumberStr;
+            String uniqueId = (textId == null ? "" : Integer.toString(textId))
+                    + (chapterId == null ? "" : Integer.toString(chapterId))
+                    + Integer.toString(orderNumber);
 
             if (tagType == WikiTagType.FOOTNOTE)
             {

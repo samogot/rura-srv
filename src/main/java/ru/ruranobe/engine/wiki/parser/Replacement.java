@@ -190,8 +190,6 @@ public class Replacement
             .put(new WikiTagPair(TWO_EQUAL, TWO_EQUAL), "<h2 id=\"h_id-%s\">")
             .put(new WikiTagPair(THREE_EQUAL, THREE_EQUAL), "<h3 id=\"h_id-%s\">")
             .put(new WikiTagPair(FOUR_EQUAL, FOUR_EQUAL), "<h4 id=\"h_id-%s\">")
-            .put(new WikiTagPair(TWO_QUOTES, TWO_QUOTES), "<i>")
-            .put(new WikiTagPair(THREE_QUOTES, THREE_QUOTES), "<b>")
             .put(new WikiTagPair(LINK, END_BRACKET), "<a href=\"%s\">")
             .build();
 
@@ -200,8 +198,6 @@ public class Replacement
             .put(new WikiTagPair(TWO_EQUAL, TWO_EQUAL), "</h2>")
             .put(new WikiTagPair(THREE_EQUAL, THREE_EQUAL), "</h3>")
             .put(new WikiTagPair(FOUR_EQUAL, FOUR_EQUAL), "</h4>")
-            .put(new WikiTagPair(TWO_QUOTES, TWO_QUOTES), "</i>")
-            .put(new WikiTagPair(THREE_QUOTES, THREE_QUOTES), "</b>")
             .put(new WikiTagPair(LINK, END_BRACKET), "</a>")
             .build();
 
