@@ -41,11 +41,11 @@ public class WikiParser
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < htmlText.length(); )
         {
-            StringBuilder startTag = new StringBuilder();
             if (htmlText.codePointAt(i) == '<'
                 && htmlText.codePointAt(i+1) == 'p'
                 && htmlText.codePointAt(i+2) == ' ')
             {
+                StringBuilder startTag = new StringBuilder();
                 while (htmlText.codePointAt(i) != '>')
                 {
                     startTag.appendCodePoint(htmlText.codePointAt(i));
@@ -55,9 +55,9 @@ public class WikiParser
                 i++;
                 StringBuilder paragraph = new StringBuilder();
                 while (htmlText.codePointAt(i) != '<'
-                       && htmlText.codePointAt(i+1) != '/'
-                       && htmlText.codePointAt(i+2) != 'p'
-                       && htmlText.codePointAt(i+3) != '>')
+                       || htmlText.codePointAt(i+1) != '/'
+                       || htmlText.codePointAt(i+2) != 'p'
+                       || htmlText.codePointAt(i+3) != '>')
                 {
                     paragraph.appendCodePoint(htmlText.codePointAt(i));
                     i++;
@@ -273,7 +273,7 @@ public class WikiParser
             //String replacementText = String.format(footnoteReplacement.getReplacementText(), footnote.toString());
 
             // add to data-content content without any tags
-            String dataContent = "<p>" + footnote.toString().replaceAll("\"", "&quot;") + "</p>";
+            String dataContent = "<p>" + footnote.toString().replaceAll("\"", "&quot;") + "</p >";
             footnoteReplacement.setReplacementText(
                     String.format(footnoteReplacement.getReplacementText(),
                             new QuoteParser().applyTo(dataContent)));
