@@ -5,6 +5,7 @@ import ru.ruranobe.mybatis.entities.tables.User;
 import ru.ruranobe.mybatis.mappers.UsersMapper;
 
 import java.util.Collection;
+import java.util.Set;
 
 public class UsersMapperCacheable implements UsersMapper
 {
@@ -44,6 +45,12 @@ public class UsersMapperCacheable implements UsersMapper
     public User getUserByEmailToken(String token)
     {
         return mapper.getUserByEmailToken(token);
+    }
+
+    @Override
+    public Set<String> getOwnProjectsByUser(int userId)
+    {
+        return mapper.getOwnProjectsByUser(userId);
     }
 
     @Override

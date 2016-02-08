@@ -2,13 +2,11 @@ package ru.ruranobe.wicket.webpages.common;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
 import ru.ruranobe.engine.wiki.parser.ChapterTextParser;
 import ru.ruranobe.engine.wiki.parser.ContentItem;
-import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.Chapter;
 import ru.ruranobe.mybatis.entities.tables.Project;
@@ -20,6 +18,7 @@ import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.InstantiationSecurityCheck;
 import ru.ruranobe.wicket.LoginSession;
+import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.components.CommentsPanel;
 import ru.ruranobe.wicket.components.ContentsHolder;
 import ru.ruranobe.wicket.components.sidebar.*;
@@ -59,13 +58,15 @@ public class TextPage extends SidebarLayoutPage implements InstantiationSecurity
             ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
             Project project = projectsMapperCacheable.getProjectByUrl(projectUrl);
 
-            redirectTo404(project == null || project.isProjectHidden());
+            redirectTo404IfArgumentIsNull(project);
 
             ChaptersMapper chaptersMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
             VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
             volume = volumesMapperCacheable.getVolumeByUrl(projectUrl + "/" + volumeUrl);
 
             redirectTo404IfArgumentIsNull(volume);
+            redirectTo404((project.isProjectHidden() || volume.getVolumeStatus().equals(RuraConstants.VOLUME_STATUS_HIDDEN))
+                          && !LoginSession.get().isProjectEditAllowedByUser(projectUrl));
 
             titleName = volume.getNameTitle();
 
@@ -84,7 +85,7 @@ public class TextPage extends SidebarLayoutPage implements InstantiationSecurity
                         doInstantiationSecurityCheck();
                         chapter.setVisibleOnPage(true);
                     }
-                    else if (chapter.isPublished())
+                    else if (chapter.isPublished() || LoginSession.get().isProjectShowHiddenAllowedByUser(projectUrl))
                     {
                         chapter.setVisibleOnPage(true);
                     }
@@ -154,6 +155,7 @@ public class TextPage extends SidebarLayoutPage implements InstantiationSecurity
 
                 redirectTo404IfArgumentIsNull(currentChapter);
 
+                //noinspection ConstantConditions
                 currentChapter.setVisibleOnPage(true);
                 if (currentChapter.hasChildChapters())
                 {
@@ -180,9 +182,9 @@ public class TextPage extends SidebarLayoutPage implements InstantiationSecurity
 
                     String headerTag = chapter.isNested() ? "h3" : "h2";
 
-	                String textHtml = "<" + headerTag + " id=\"" + chapter.getUrlPart() + "\">" + chapter.getTitle() +
-	                                  "</" + headerTag + ">" +
-	                                  (chapter.getText() != null ? chapter.getText().getTextHtml() : "");
+                    String textHtml = "<" + headerTag + " id=\"" + chapter.getUrlPart() + "\">" + chapter.getTitle() +
+                                      "</" + headerTag + ">" +
+                                      (chapter.getText() != null ? chapter.getText().getTextHtml() : "");
 
                     if (!Strings.isEmpty(chapterFootnotes))
                     {
@@ -321,9 +323,7 @@ public class TextPage extends SidebarLayoutPage implements InstantiationSecurity
     @Override
     public void doInstantiationSecurityCheck()
     {
-        if (!chapter.isPublished())
-        {
-            throw new UnauthorizedInstantiationException(this.getClass());
-        }
+        redirectTo404(!chapter.isPublished() && !LoginSession.get().isProjectEditAllowedByUser(
+                chapter.getUrlParameters().get("project").toString()));
     }
 }

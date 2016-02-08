@@ -9,6 +9,7 @@ import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.core.request.mapper.MountedMapper;
 import org.apache.wicket.core.util.file.WebApplicationPath;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebResponse;
 import org.apache.wicket.request.IRequestHandler;
@@ -153,5 +154,10 @@ public class WicketApplication extends AuthenticatedWebApplication
                 return super.mapHandler(requestHandler);
             }
         }
+    }
+
+    public static WicketApplication get()
+    {
+        return (WicketApplication) WebApplication.get();
     }
 }

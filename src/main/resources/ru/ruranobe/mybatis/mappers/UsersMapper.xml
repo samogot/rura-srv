@@ -36,6 +36,18 @@
         WHERE pass_recovery_token = #{passRecoveryToken}
     </select>
 
+    <select id="getOwnProjectsByUser" parameterType="int" resultType="string">
+        SELECT DISTINCT coalesce(p.url, pp.url)
+        FROM users
+            INNER JOIN team_members USING (user_id)
+            INNER JOIN volume_release_activities USING (member_id)
+            INNER JOIN volumes USING (volume_id)
+            INNER JOIN projects p USING (project_id)
+            LEFT JOIN projects pp ON p.parent_id = pp.project_id
+        WHERE (p.url IS NOT NULL OR pp.url IS NOT NULL)
+              AND user_id = #{userId}
+    </select>
+
     <select id="getUserByEmailToken" parameterType="String" resultMap="UserResult">
         SELECT *
         FROM users
@@ -62,6 +74,7 @@
             convert_with_imgs = #{convertWithImgs},
             adult = #{adult},
             prefer_colored_imgs = #{preferColoredImgs},
+        show_hidden_content = #{showHiddenContent},
             convert_imgs_size = #{convertImgsSize}
     </insert>
 
@@ -83,6 +96,7 @@
             convert_with_imgs = #{convertWithImgs},
             adult = #{adult},
             prefer_colored_imgs = #{preferColoredImgs},
+        show_hidden_content = #{showHiddenContent},
             convert_imgs_size = #{convertImgsSize}
         WHERE user_id = #{userId}
     </update>
@@ -105,6 +119,7 @@
         <result property="convertWithImgs" column="convert_with_imgs"/>
         <result property="adult" column="adult"/>
         <result property="preferColoredImgs" column="prefer_colored_imgs"/>
+        <result property="showHiddenContent" column="show_hidden_content"/>
         <result property="convertImgsSize" column="convert_imgs_size"/>
     </resultMap>
 

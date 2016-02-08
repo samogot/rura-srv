@@ -133,6 +133,7 @@ public class GlobalEdit extends AdminLayoutPage
                 project.setBannerHidden(true);
                 project.setProjectHidden(true);
                 project.setOnevolume(false);
+                project.setIncubator(false);
                 project.setUrl("");
                 project.setStatus(RuraConstants.PROJECT_STATUS_LIST.get(0));
                 return project;
@@ -157,6 +158,7 @@ public class GlobalEdit extends AdminLayoutPage
                         add(new TextField<String>("title").setRequired(true).setLabel(Model.of("Заголовок")));
                         add(new CheckBox("projectHidden"));
                         add(new CheckBox("bannerHidden"));
+                        add(new CheckBox("incubator"));
                         add(new BannerUploadComponent("image").setProject(model.getObject()));
                         add(new BookmarkablePageLink("link", ProjectEdit.class)
                         {
