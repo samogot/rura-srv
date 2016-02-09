@@ -23,7 +23,7 @@ class forumDataMigration {
         def forumRootId = 317;
         def avatarsCount = 286;
         def forumUserSecret = '123';
-        def forumApi = new RESTClient('https://ruranobe.ru/f/api/', ContentType.JSON)
+        def forumApi = new RESTClient('http://ruranobe.ru/f/api/', ContentType.JSON)
         def mw = connect('localhost', 'ruranobe_db', 'ruranobe_db', '123');
         def site = connect('localhost', 'ruranobe', 'ruranobe', '123');
         def forum = connect('localhost', 'ruranobe_forum', 'ruranobe_forum', '123');
@@ -220,7 +220,7 @@ ORDER BY
     vol.project_id, vol.sequence_number;
 """) { volume ->
             println(volume.name_title)
-            "https://ruranobe.ru/r/${volume.url}/text".toURL().text
+            "http://ruranobe.ru/r/${volume.url}/text".toURL().text
         }
     }
 
@@ -243,22 +243,22 @@ ORDER BY
 """) { volume ->
             println(volume.name_title)
             try {
-                download("https://ruranobe.ru/d/fb2/${volume.url}".toString(), volume.name_file + ".fb2")
+                download("http://ruranobe.ru/d/fb2/${volume.url}".toString(), volume.name_file + ".fb2")
             } catch (IOException e) {
                 println e.getMessage()
             }
             try {
-                download("https://ruranobe.ru/d/fb2/${volume.url}?pic=0".toString(), volume.name_file + "_nopic.fb2")
+                download("http://ruranobe.ru/d/fb2/${volume.url}?pic=0".toString(), volume.name_file + "_nopic.fb2")
             } catch (IOException e) {
                 println e.getMessage()
             }
             try {
-                download("https://ruranobe.ru/d/docx/${volume.url}".toString(), volume.name_file + ".docx")
+                download("http://ruranobe.ru/d/docx/${volume.url}".toString(), volume.name_file + ".docx")
             } catch (IOException e) {
                 println e.getMessage()
             }
             try {
-                download("https://ruranobe.ru/d/epub/${volume.url}".toString(), volume.name_file + ".epub")
+                download("http://ruranobe.ru/d/epub/${volume.url}".toString(), volume.name_file + ".epub")
             } catch (IOException e) {
                 println e.getMessage()
             }
