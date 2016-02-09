@@ -16,7 +16,7 @@ public class QuoteParser {
             if (text.codePointAt(i) == '\'')
             {
                 int j = i;
-                while (text.codePointAt(i) == '\'')
+                while (i < text.length() && text.codePointAt(i) == '\'')
                 {
                     i++;
                 }
@@ -172,7 +172,7 @@ public class QuoteParser {
             if (j < positions.size() && positions.get(j) == i)
             {
                 result.append(replacements.get(j));
-                while(text.codePointAt(i) == '\'')
+                while (i < text.length() && text.codePointAt(i) == '\'')
                 {
                     i++;
                 }

@@ -37,20 +37,20 @@ CREATE TABLE users
   email                    VARCHAR(255),
   email_token              VARCHAR(255),
   email_token_date         DATETIME,
-  email_activated     BOOL                   NOT NULL,
-  registration_date   DATETIME               NOT NULL,
+  email_activated          BOOL               NOT NULL,
+  registration_date        DATETIME           NOT NULL,
   #--user_settings
-  converter_type      ENUM('fb2',
+  converter_type           ENUM('fb2',
                                 'docx',
-                                'epub')      NOT NULL,
-  navigation_type     ENUM('Главам',
-                                'Подглавам') NOT NULL,
-  convert_with_imgs   BOOL                   NOT NULL,
-  adult               BOOL                   NOT NULL,
-  prefer_colored_imgs BOOL                   NOT NULL,
-  show_hidden_content BOOL                   NOT NULL,
-  convert_imgs_size   INT(11)                NOT NULL,
-  forum_user_id       INT(11) UNSIGNED    DEFAULT NULL,
+                                'epub')       NOT NULL,
+  navigation_type          ENUM('Главам',
+                                'Подглавам')  NOT NULL,
+  convert_with_imgs        BOOL               NOT NULL,
+  adult                    BOOL               NOT NULL,
+  prefer_colored_imgs      BOOL               NOT NULL,
+  show_hidden_content      BOOL               NOT NULL,
+  convert_imgs_size        INT(11)            NOT NULL,
+  forum_user_id            INT(11) UNSIGNED    DEFAULT NULL,
   INDEX (username),
   INDEX (email),
   INDEX (pass_recovery_token),
@@ -285,6 +285,8 @@ CREATE TABLE texts_history
 (
   current_text_id  INT(11) PRIMARY KEY AUTO_INCREMENT,
   previous_text_id INT(11),
+  user_id          INT(11)  NULL,
+  chapter_id       INT(11)  NULL,
   insertion_time   DATETIME NOT NULL
 );
 
@@ -331,6 +333,10 @@ ALTER TABLE bookmarks ADD CONSTRAINT fk_user_bookmark_id FOREIGN KEY (user_id) R
 ALTER TABLE texts_history ADD CONSTRAINT fk_current_text_id FOREIGN KEY (current_text_id) REFERENCES texts (text_id);
 
 ALTER TABLE texts_history ADD CONSTRAINT fk_previous_text_id FOREIGN KEY (previous_text_id) REFERENCES texts (text_id);
+
+ALTER TABLE texts_history ADD CONSTRAINT fk_texts_history_user_id FOREIGN KEY (user_id) REFERENCES users (user_id);
+
+ALTER TABLE texts_history ADD CONSTRAINT fk_texts_history_chapter_id FOREIGN KEY (chapter_id) REFERENCES chapters (chapter_id);
 
 ALTER TABLE chapter_images ADD CONSTRAINT fk_colored_image_id FOREIGN KEY (colored_image_id) REFERENCES external_resources (resource_id);
 

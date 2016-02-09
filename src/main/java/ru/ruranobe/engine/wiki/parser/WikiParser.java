@@ -266,17 +266,15 @@ public class WikiParser
             StringBuilder footnote = new StringBuilder();
             parseWikiTextToHtmlText(entry.getKey(), entry.getValue(), footnote, Collections.<ExternalResource>emptyListIterator(), false);
 
-            this.footnotes.add(new FootnoteItem(footnoteParsingBoundariesToFootnoteId.get(entry),
-                    new QuoteParser().applyTo(footnote.toString())));
+            String quotedFootnoteText = new QuoteParser().applyTo(footnote.toString());
+            this.footnotes.add(new FootnoteItem(footnoteParsingBoundariesToFootnoteId.get(entry), quotedFootnoteText));
 
             Replacement footnoteReplacement = footnoteParsingBoundariesToFootnoteReplacement.get(entry);
             //String replacementText = String.format(footnoteReplacement.getReplacementText(), footnote.toString());
 
             // add to data-content content without any tags
-            String dataContent = "<p>" + footnote.toString().replaceAll("\"", "&quot;") + "</p >";
-            footnoteReplacement.setReplacementText(
-                    String.format(footnoteReplacement.getReplacementText(),
-                            new QuoteParser().applyTo(dataContent)));
+            String dataContent = "<p>" + quotedFootnoteText.replaceAll("\"", "&quot;") + "</p >";
+            footnoteReplacement.setReplacementText(String.format(footnoteReplacement.getReplacementText(), dataContent));
         }
     }
 

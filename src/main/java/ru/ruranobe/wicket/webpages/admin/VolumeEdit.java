@@ -145,17 +145,17 @@ public class VolumeEdit extends AdminLayoutPage implements InstantiationSecurity
             if (volume.getImageTwo() != null)
             {
                 ExternalResource resource = externalResourcesMapperCacheable.getExternalResourceById(volume.getImageTwo());
-                volumeImages.add(1, new ChapterImage(null, -1, volume.getVolumeId(), null, resource, 2));
+                volumeImages.add(Math.min(1, volumeImages.size()), new ChapterImage(null, -1, volume.getVolumeId(), null, resource, 2));
             }
             if (volume.getImageThree() != null)
             {
                 ExternalResource resource = externalResourcesMapperCacheable.getExternalResourceById(volume.getImageThree());
-                volumeImages.add(2, new ChapterImage(null, -1, volume.getVolumeId(), null, resource, 3));
+                volumeImages.add(Math.min(2, volumeImages.size()), new ChapterImage(null, -1, volume.getVolumeId(), null, resource, 3));
             }
             if (volume.getImageFour() != null)
             {
                 ExternalResource resource = externalResourcesMapperCacheable.getExternalResourceById(volume.getImageFour());
-                volumeImages.add(3, new ChapterImage(null, -1, volume.getVolumeId(), null, resource, 4));
+                volumeImages.add(Math.min(3, volumeImages.size()), new ChapterImage(null, -1, volume.getVolumeId(), null, resource, 4));
             }
 
         }
