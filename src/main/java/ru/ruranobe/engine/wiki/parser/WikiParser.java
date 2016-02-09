@@ -15,10 +15,6 @@ public class WikiParser
 
     public String parseWikiText(List<ExternalResource> images, boolean appendExtraImagesAtTheEnd)
     {
-        fillWikiTags();
-        Iterator<ExternalResource> imagesIterator = images.iterator();
-        connectWikiTags(imagesIterator);
-
         StringBuilder additionalTags = new StringBuilder("data-line-no=\"").append(Integer.toString(paragraphOrderNumber)).append("\" ");
         if (textId != null)
         {
@@ -29,10 +25,12 @@ public class WikiParser
             additionalTags.append("data-chapter-id=\"").append(chapterId.toString()).append("\" ");
         }
         StringBuilder htmlText = new StringBuilder(String.format("<p id=\"%s\" %s>",
-                RuranobeUtils.paragraphIdOf(chapterId, textId, paragraphOrderNumber),
+                RuranobeUtils.paragraphIdOf(chapterId, textId, paragraphOrderNumber++),
                 additionalTags.toString()));
 
-        paragraphOrderNumber++;
+        fillWikiTags();
+        Iterator<ExternalResource> imagesIterator = images.iterator();
+        connectWikiTags(imagesIterator);
 
         parseWikiTextToHtmlText(0, wikiText.length(), htmlText, imagesIterator, appendExtraImagesAtTheEnd);
         htmlText.append("</p>");

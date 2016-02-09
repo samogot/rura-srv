@@ -2,8 +2,8 @@ package ru.ruranobe.engine.wiki.parser;
 
 /**
  * TODO: this is not a correct implementation. e.g. text "<sup>" will not be escaped
- *       while it should. The text "<sup></sup>" should not be escaped. Also it will
- *       think that <---> is correct tag combination. But nah... Good enough.
+ * while it should. The text "<sup></sup>" should not be escaped. Also it will
+ * think that <---> is correct tag combination. But nah... Good enough.
  */
 public class SimpleHtmlSanitizer
 {
@@ -13,43 +13,46 @@ public class SimpleHtmlSanitizer
 
         String beginAndEnd = "abracadabraabracadabraabracadabraabracadabraabracadabraabracadabraabracadabraabracadabra";
         text = beginAndEnd + text + beginAndEnd;
+        boolean ignoreInComment = false;
+        boolean commentInNewLine = false;
 
-        for (int i = beginAndEnd.length(); i < text.length()-beginAndEnd.length(); ++i)
+        for (int i = beginAndEnd.length(); i < text.length() - beginAndEnd.length(); ++i)
         {
             char c = text.charAt(i);
-            if (c == '<')
+            if (c == '<' && !ignoreInComment)
             {
-                String temp = text.substring(i, i+5);
+                String temp = text.substring(i, i + 5);
                 switch (temp)
                 {
                     case "<sub>":
                         result.append(temp);
-                        i+=temp.length()-1;
+                        i += temp.length() - 1;
                         continue;
                     case "<sup>":
                         result.append(temp);
-                        i+=temp.length()-1;
+                        i += temp.length() - 1;
                         continue;
                 }
 
-                temp = text.substring(i, i+6);
+                temp = text.substring(i, i + 6);
                 switch (temp)
                 {
                     case "</sub>":
                         result.append(temp);
-                        i+=temp.length()-1;
+                        i += temp.length() - 1;
                         continue;
                     case "</sup>":
                         result.append(temp);
-                        i+=temp.length()-1;
+                        i += temp.length() - 1;
                         continue;
                 }
 
-                temp = text.substring(i, i+4);
+                temp = text.substring(i, i + 4);
                 if (temp.equals("<!--"))
                 {
-                    result.append(temp);
-                    i+=temp.length()-1;
+                    ignoreInComment = true;
+                    commentInNewLine = text.codePointBefore(i) == '\n' || text.codePointBefore(i) == '\r';
+                    i += temp.length() - 1;
                     continue;
                 }
 
@@ -57,19 +60,29 @@ public class SimpleHtmlSanitizer
             }
             else if (c == '>')
             {
-                String temp = text.substring(i-2, i+1);
+                String temp = text.substring(i - 2, i + 1);
                 if (temp.equals("-->"))
                 {
-                    result.append('>');
+                    if (commentInNewLine && (text.codePointAt(i + 1) == '\n' || text.codePointAt(i + 1) == '\r'))
+                    {
+                        ++i;
+                    }
+                    if (commentInNewLine && (text.codePointAt(i + 1) == '\n' || text.codePointAt(i + 1) == '\r'))
+                    {
+                        ++i;
+                    }
+                    ignoreInComment = false;
                     continue;
                 }
-
-                result.append("&gt;");
+                if (!ignoreInComment)
+                {
+                    result.append("&gt;");
+                }
             }
-            else if (c == '&')
+            else if (c == '&' && !ignoreInComment)
             {
                 StringBuilder temp = new StringBuilder("&");
-                for (int j = i+1; j < i+beginAndEnd.length(); ++j)
+                for (int j = i + 1; j < i + beginAndEnd.length(); ++j)
                 {
                     if (text.charAt(j) == ';')
                     {
@@ -94,7 +107,7 @@ public class SimpleHtmlSanitizer
 
                 result.append("&amp;");
             }
-            else
+            else if (!ignoreInComment)
             {
                 result.append(c);
             }

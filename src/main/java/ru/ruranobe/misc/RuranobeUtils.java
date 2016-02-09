@@ -39,10 +39,9 @@ public class RuranobeUtils
 
     public static String paragraphIdOf(Integer chapterId, Integer textId, int lineNo)
     {
-        String r1 = "-" + (chapterId == null ? "" : chapterId.toString());
-        String r2 = "-" + (textId == null ? "" : textId.toString());
-        String r3 = "-" + lineNo;
-        return "p" + r1 + r2 + r3;
+        String r1 = (chapterId == null ? "" : "c" + chapterId.toString() + "-");
+        String r3 = "p" + lineNo;
+        return r1 + r3;
     }
 
     public static Url mergeParameters(final Url url, final PageParameters params)

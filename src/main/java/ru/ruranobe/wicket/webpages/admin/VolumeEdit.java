@@ -60,6 +60,7 @@ import ru.ruranobe.wicket.components.admin.AdminAffixedListPanel;
 import ru.ruranobe.wicket.components.admin.AdminInfoFormPanel;
 import ru.ruranobe.wicket.components.admin.AdminToolboxModalButton;
 import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
+import ru.ruranobe.wicket.webpages.common.VolumePage;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -106,6 +107,8 @@ public class VolumeEdit extends AdminLayoutPage implements InstantiationSecurity
         String projectName = parameters.get("project").toOptionalString();
         String volumeName = parameters.get("volume").toOptionalString();
         redirectTo404(Strings.isEmpty(projectName) || Strings.isEmpty(volumeName));
+
+        addContentsItem(urlFor(VolumePage.class, parameters).toString(), "Просмотр");
 
         String volumeUrl = projectName + "/" + volumeName;
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();

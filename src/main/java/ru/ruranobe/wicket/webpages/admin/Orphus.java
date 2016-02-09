@@ -134,6 +134,8 @@ public class Orphus extends BaseLayoutPage
                 orphusChapterUrl.add(orphusChapterName);
 
                 item.add(orphusChapterUrl);
+
+                item.add(new BookmarkablePageLink("orphusChapterEditUrl", Editor.class, chapterPageParameters));
             }
         };
 

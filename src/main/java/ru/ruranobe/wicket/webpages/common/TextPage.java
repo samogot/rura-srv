@@ -180,23 +180,10 @@ public class TextPage extends SidebarLayoutPage implements InstantiationSecurity
                     committingNeeded = ChapterTextParser.getChapterText(chapter, session, textsMapper, true) || committingNeeded;
                     String chapterFootnotes = chapter.getText() != null ? chapter.getText().getFootnotes() : null;
 
-                    String headerTag = chapter.isNested() ? "h3" : "h2";
-
-                    String textHtml = "<" + headerTag + " id=\"" + chapter.getUrlPart() + "\">" + chapter.getTitle() +
-                                      "</" + headerTag + ">" +
+                    String textHtml = ChapterTextParser.getChapterHeading(chapter) +
                                       (chapter.getText() != null ? chapter.getText().getTextHtml() : "");
 
-                    if (!Strings.isEmpty(chapterFootnotes))
-                    {
-                        String[] footnotes = chapterFootnotes.split(ChapterTextParser.DELIMITER);
-                        for (int i = 0; i < footnotes.length; i += 2)
-                        {
-                            volumeFootnotes.append("<li id=\"cite_note-").append(footnotes[i]).append("\">")
-                                           .append("<a href=\"#cite_ref-").append(footnotes[i]).append("\">↑</a> <span class=\"reference-text\">")
-                                           .append(footnotes[i + 1]).append("</span></li>");
-                        }
-                    }
-
+                    ChapterTextParser.addFootnotes(volumeFootnotes, chapterFootnotes);
                     volumeText.append(textHtml);
                 }
             }
@@ -207,12 +194,8 @@ public class TextPage extends SidebarLayoutPage implements InstantiationSecurity
             }
         }
 
-        if (!Strings.isEmpty(volumeFootnotes))
-        {
-            volumeFootnotes.insert(0, "<h2 id=\"footnotes\">Примечания</h2><ol class=\"references\">");
-            volumeFootnotes.append("</ol>");
-            volumeText.append(volumeFootnotes);
-        }
+        ChapterTextParser.endFootnotes(volumeFootnotes);
+        volumeText.append(volumeFootnotes);
 
         add(new Label("htmlText", volumeText.toString()).setEscapeModelStrings(false));
 

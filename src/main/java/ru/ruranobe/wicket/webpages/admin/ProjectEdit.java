@@ -34,6 +34,7 @@ import ru.ruranobe.wicket.LoginSession;
 import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.components.admin.*;
 import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
+import ru.ruranobe.wicket.webpages.common.ProjectPage;
 
 import java.util.*;
 
@@ -71,6 +72,8 @@ public class ProjectEdit extends AdminLayoutPage implements InstantiationSecurit
         redirectTo404IfArgumentIsNull(project);
 
         doInstantiationSecurityCheck();
+
+        addContentsItem(urlFor(ProjectPage.class, parameters).toString(), "Просмотр");
 
         try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
         {
