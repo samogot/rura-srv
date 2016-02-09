@@ -12,7 +12,7 @@ public class ActionsSidebarModule extends SidebarModuleBase
     public ActionsSidebarModule(Class editClass, PageParameters pageParameters)
     {
         super("sidebarModule", "actions", "Действия");
-        project = pageParameters.get("project").toString();
+        project = pageParameters.get("project").toOptionalString();
         moduleBody.add(new BookmarkablePageLink("edit", editClass, pageParameters));
         moduleBody.add(new BookmarkablePageLink("orphus", Orphus.class, pageParameters));
     }
