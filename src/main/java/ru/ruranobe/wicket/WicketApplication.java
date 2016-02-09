@@ -1,6 +1,7 @@
 package ru.ruranobe.wicket;
 
 import net.ftlines.wicketsource.WicketSource;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AnnotationsRoleAuthorizationStrategy;
@@ -9,6 +10,7 @@ import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.core.request.mapper.MountedMapper;
 import org.apache.wicket.core.util.file.WebApplicationPath;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebResponse;
 import org.apache.wicket.request.IRequestHandler;
@@ -152,6 +154,15 @@ public class WicketApplication extends AuthenticatedWebApplication
             {
                 return super.mapHandler(requestHandler);
             }
+        }
+    }
+
+    public static WicketApplication get() {
+        WebApplication application = WebApplication.get();
+        if (!(application instanceof WicketApplication)) {
+            throw new WicketRuntimeException("The web application attached to the current thread is not a " + WicketApplication.class.getSimpleName());
+        } else {
+            return (WicketApplication) application;
         }
     }
 }

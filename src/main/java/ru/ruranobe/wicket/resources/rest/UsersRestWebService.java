@@ -1,18 +1,16 @@
 package ru.ruranobe.wicket.resources.rest;
 
 import org.apache.ibatis.session.SqlSession;
-import org.apache.wicket.request.http.WebResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.wicketstuff.rest.annotations.MethodMapping;
 import org.wicketstuff.rest.annotations.ResourcePath;
 import org.wicketstuff.rest.annotations.parameters.RequestParam;
 import org.wicketstuff.rest.annotations.parameters.ValidatorKey;
-import org.wicketstuff.rest.resource.gson.GsonRestResource;
+import org.wicketstuff.rest.contenthandling.json.webserialdeserial.JsonWebSerialDeserial;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.User;
 import ru.ruranobe.mybatis.mappers.UsersMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
+import ru.ruranobe.wicket.resources.rest.base.GsonObjectRestResource;
 import ru.ruranobe.wicket.validators.AllowedFieldsValidator;
 
 import java.util.Arrays;
@@ -20,8 +18,12 @@ import java.util.Collection;
 import java.util.List;
 
 @ResourcePath("/api/users")
-public class UsersRestWebService extends GsonRestResource
+public class UsersRestWebService extends GsonObjectRestResource
 {
+
+    private static final List<String> ALLOWED_FIELD_LIST = Arrays.asList("user_id", "username", "realname", "email",
+            "registration_date", "converter_type", "navigation_type", "convert_with_imgs",
+            "adult", "prefer_colored_imgs", "convert_imgs_size");
 
     @MethodMapping("/search")
     public Collection<User> searchUsers(@RequestParam("q") String query,
@@ -36,21 +38,9 @@ public class UsersRestWebService extends GsonRestResource
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    protected void onInitialize(org.wicketstuff.rest.resource.gson.GsonSerialDeserial objSerialDeserial)
+    protected void onInitialize(JsonWebSerialDeserial objSerialDeserial)
     {
+        super.onInitialize(objSerialDeserial);
         registerValidator("fields_validator", new AllowedFieldsValidator(ALLOWED_FIELD_LIST).setParamName("fields"));
     }
-
-    @Override
-    protected void handleException(WebResponse response, Exception exception)
-    {
-        super.handleException(response, exception);
-        LOG.error("Error in REST API call", exception);
-    }
-
-    private static final Logger LOG = LoggerFactory.getLogger(UsersRestWebService.class);
-    private static final List<String> ALLOWED_FIELD_LIST = Arrays.asList("user_id", "username", "realname", "email",
-            "registration_date", "converter_type", "navigation_type", "convert_with_imgs",
-            "adult", "prefer_colored_imgs", "convert_imgs_size");
 }
