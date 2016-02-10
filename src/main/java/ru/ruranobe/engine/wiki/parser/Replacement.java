@@ -2,8 +2,8 @@ package ru.ruranobe.engine.wiki.parser;
 
 import com.google.common.collect.ImmutableMap;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -38,11 +38,12 @@ public class Replacement
             else if (startTag.getWikiTagType() == LINK)
             {
                 String href = startTag.getAttributeNameToValue().get("href");
+
                 try
                 {
-                    href = URLEncoder.encode(href, "UTF-8");
+                    href = new URI(href).toASCIIString();
                 }
-                catch (UnsupportedEncodingException ignored)
+                catch (URISyntaxException ignored)
                 {
                 }
                 replacementText = String.format(replacementText, href);
@@ -153,10 +154,10 @@ public class Replacement
             String imageThumbnail = tag.getImageThumbnail();
             try
             {
-                imageUrl = URLEncoder.encode(imageUrl, "UTF-8");
-                imageThumbnail = URLEncoder.encode(imageThumbnail, "UTF-8");
+                imageUrl = new URI(imageUrl).toASCIIString();
+                imageThumbnail = new URI(imageThumbnail).toASCIIString();
             }
-            catch (UnsupportedEncodingException ignored)
+            catch (URISyntaxException ignored)
             {
             }
             this.replacementText = String.format(replacementText, imageUrl, imageThumbnail, tag.getExternalResourceId().toString());

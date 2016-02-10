@@ -426,7 +426,7 @@ function isOrphusPreconditionsMet(attrs) {
             /* TODO: tag p must have associated 'id' attribute.
              *  Probably with special format like ch+chapterId+p+paragraph
              *  where paragraph is just порядковый номер абзаца :) */
-            return $(range.startContainer).closest('p').is($(range.endContainer).closest('p'));
+            return $(range.startContainer).closest('p,div').is($(range.endContainer).closest('p,div'));
         }
     }
     return false;
@@ -443,8 +443,8 @@ function getSelectionRange() {
 
 function getOrphusParameters() {
     var range = getSelectionRange();
-    var p = $(range.startContainer).closest('p').get(0);
-    var p1 = $(range.endContainer).closest('p').get(0);
+    var p = $(range.startContainer).closest('p,div').get(0);
+    var p1 = $(range.endContainer).closest('p,div').get(0);
     if (p.id != p1.id) return false;
     var offset = 0;
     if (range.cloneRange) {
@@ -476,5 +476,10 @@ function getOrphusParameters() {
 $(".reference").popover({
     trigger: 'hover',
     title: 'Примечание',
-    placement: 'bottom'
+    placement: 'bottom',
+    html: true,
+    delay: {show: 50, hide: 1000}
+});
+$(".reference a").each(function (i) {
+    $(this).empty().append('<sup>[' + (i + 1) + ']</sup>');
 });
