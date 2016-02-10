@@ -34,6 +34,11 @@ public class LoginSession extends AuthenticatedWebSession
         return isProjectEditAllowedByUser(project) && getUser().isShowHiddenContent();
     }
 
+    public boolean hasRole(String role)
+    {
+        return roles != null && roles.hasRole(role);
+    }
+
     private User user;
     private Roles roles = null;
     private Set<String> ownProjects = null;
