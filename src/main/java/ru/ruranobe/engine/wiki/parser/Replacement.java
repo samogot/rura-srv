@@ -2,6 +2,8 @@ package ru.ruranobe.engine.wiki.parser;
 
 import com.google.common.collect.ImmutableMap;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -35,7 +37,15 @@ public class Replacement
             }
             else if (startTag.getWikiTagType() == LINK)
             {
-                replacementText = String.format(replacementText, startTag.getAttributeNameToValue().get("href"));
+                String href = startTag.getAttributeNameToValue().get("href");
+                try
+                {
+                    href = URLEncoder.encode(href, "UTF-8");
+                }
+                catch (UnsupportedEncodingException ignored)
+                {
+                }
+                replacementText = String.format(replacementText, href);
             }
             replacements.add(new Replacement(startTag.getStartPosition(), startTag.getStartPosition() + startTag.getWikiTagLength(), replacementText, startTag));
             replacements.add(new Replacement(endTag.getStartPosition(), endTag.getStartPosition() + endTag.getWikiTagLength(), PAIR_TO_END_REPLACEMENT_TEXT.get(tagPair), startTag));
@@ -139,7 +149,17 @@ public class Replacement
         }
         else if (tag.getWikiTagType() == IMAGE)
         {
-            this.replacementText = String.format(replacementText, tag.getImageUrl(), tag.getImageThumbnail(), tag.getExternalResourceId().toString());
+            String imageUrl = tag.getImageUrl();
+            String imageThumbnail = tag.getImageThumbnail();
+            try
+            {
+                imageUrl = URLEncoder.encode(imageUrl, "UTF-8");
+                imageThumbnail = URLEncoder.encode(imageThumbnail, "UTF-8");
+            }
+            catch (UnsupportedEncodingException ignored)
+            {
+            }
+            this.replacementText = String.format(replacementText, imageUrl, imageThumbnail, tag.getExternalResourceId().toString());
         }
         else if (tag.getWikiTagType() == NEW_LINE)
         {

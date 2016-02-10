@@ -40,8 +40,8 @@ public class WikiParser
         for (int i = 0; i < htmlText.length(); )
         {
             if (htmlText.codePointAt(i) == '<'
-                && htmlText.codePointAt(i+1) == 'p'
-                && htmlText.codePointAt(i+2) == ' ')
+                && htmlText.codePointAt(i + 1) == 'p'
+                && htmlText.codePointAt(i + 2) == ' ')
             {
                 StringBuilder startTag = new StringBuilder();
                 while (htmlText.codePointAt(i) != '>')
@@ -53,15 +53,25 @@ public class WikiParser
                 i++;
                 StringBuilder paragraph = new StringBuilder();
                 while (htmlText.codePointAt(i) != '<'
-                       || htmlText.codePointAt(i+1) != '/'
-                       || htmlText.codePointAt(i+2) != 'p'
-                       || htmlText.codePointAt(i+3) != '>')
+                       || htmlText.codePointAt(i + 1) != '/'
+                       || htmlText.codePointAt(i + 2) != 'p'
+                       || htmlText.codePointAt(i + 3) != '>')
                 {
                     paragraph.appendCodePoint(htmlText.codePointAt(i));
                     i++;
                 }
 
-                result.append(startTag).append(new QuoteParser().applyTo(paragraph.toString())).append("</p>");
+                String quotedBody = new QuoteParser().applyTo(paragraph.toString());
+                quotedBody = quotedBody.replaceAll("<b></b>", "").replaceAll("<i></i>", "").replaceAll("<b></b>", "");
+                if (quotedBody.matches("^\\s*<div .*</div>\\s*$"))
+                {
+                    result.append("<div ").append(startTag.substring("<p ".length(), startTag.length() - 1))
+                          .append(quotedBody.substring("<div ".length()));
+                }
+                else
+                {
+                    result.append(startTag).append(quotedBody).append("</p>");
+                }
             }
             i++;
         }
@@ -271,7 +281,8 @@ public class WikiParser
             //String replacementText = String.format(footnoteReplacement.getReplacementText(), footnote.toString());
 
             // add to data-content content without any tags
-            String dataContent = "<p>" + quotedFootnoteText.replaceAll("\"", "&quot;") + "</p >";
+            String dataContent = "&lt;p&gt;" + quotedFootnoteText.replaceAll("<", "&lt;").replaceAll(">", "&gt;")
+                                                                 .replaceAll("\"", "&quot;") + "&lt;/p&gt;";
             footnoteReplacement.setReplacementText(String.format(footnoteReplacement.getReplacementText(), dataContent));
         }
     }
@@ -337,8 +348,8 @@ public class WikiParser
             Map<String, String> attributeNameToValue = null;
 
             String uniqueId = (textId == null ? "" : Integer.toString(textId))
-                    + (chapterId == null ? "" : Integer.toString(chapterId))
-                    + Integer.toString(orderNumber);
+                              + (chapterId == null ? "" : Integer.toString(chapterId))
+                              + Integer.toString(orderNumber);
 
             if (tagType == WikiTagType.FOOTNOTE)
             {
