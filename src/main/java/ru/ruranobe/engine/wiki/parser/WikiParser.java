@@ -5,6 +5,8 @@ import ru.ruranobe.mybatis.entities.tables.ExternalResource;
 import ru.ruranobe.wicket.RuraConstants;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * .substring(int beginIndex, int endIndex) complexity in Java 7 (or higher) is O(n)
@@ -62,11 +64,15 @@ public class WikiParser
                 }
 
                 String quotedBody = new QuoteParser().applyTo(paragraph.toString());
-                quotedBody = quotedBody.replaceAll("<b></b>", "").replaceAll("<i></i>", "").replaceAll("<b></b>", "");
-                if (quotedBody.matches("^\\s*<div .*</div>\\s*$"))
+                quotedBody = quotedBody.replaceAll("<b>(\\s*)</b>", "\\1")
+                                       .replaceAll("<i>(\\s*)</i>", "\\1")
+                                       .replaceAll("<b>(\\s*)</b>", "\\1");
+                // only <a> <b> <i> <span> <sub> <sup> and plain text are allowed in <p>
+                // discard <b> <i> around block tags
+                Matcher matcher = Pattern.compile("^\\s*(?:<[bi]>)*(<[^abis].*[^abinp]>)(?:</[bi]>)*\\s*$").matcher(quotedBody);
+                if (matcher.matches())
                 {
-                    result.append("<div ").append(startTag.substring("<p ".length(), startTag.length() - 1))
-                          .append(quotedBody.substring("<div ".length()));
+                    result.append(matcher.group(1));
                 }
                 else
                 {
@@ -169,45 +175,47 @@ public class WikiParser
                 WikiTag subtitle = null;
                 WikiTag footnote = null;
 
-                int startPosition = Integer.MAX_VALUE;
+                int startPosition = -1;
                 if (subtitles != null && j < subtitles.size())
                 {
                     subtitle = subtitles.get(j);
-                    startPosition = subtitle.getStartPosition();
+                    if (subtitle.getStartPosition() < doubleEndBracket.getStartPosition())
+                    {
+                        startPosition = subtitle.getStartPosition();
+                    }
                 }
                 if (footnotes != null && k < footnotes.size())
                 {
                     footnote = footnotes.get(k);
-                    startPosition = Math.min(startPosition, footnote.getStartPosition());
+                    if (footnote.getStartPosition() < doubleEndBracket.getStartPosition())
+                    {
+                        startPosition = Math.max(startPosition, footnote.getStartPosition());
+                    }
                 }
-
-                if (doubleEndBracket.getStartPosition() > startPosition)
+                if (subtitle != null && subtitle.getStartPosition() == startPosition)
                 {
-                    if (subtitle != null && subtitle.getStartPosition() == startPosition)
+                    List<Replacement> replacements = Replacement.getReplacementsForPair(subtitle, doubleEndBracket);
+                    for (Replacement replacement : replacements)
                     {
-                        List<Replacement> replacements = Replacement.getReplacementsForPair(subtitle, doubleEndBracket);
-                        for (Replacement replacement : replacements)
-                        {
-                            startPositionToReplacement.put(replacement.getStartPosition(), replacement);
-                        }
-                        j++;
+                        startPositionToReplacement.put(replacement.getStartPosition(), replacement);
                     }
-                    else if (footnote != null && footnote.getStartPosition() == startPosition)
-                    {
-                        footnote.setListOrderNumber(k);
-                        AbstractMap.SimpleEntry<Integer, Integer> entry = new AbstractMap.SimpleEntry<>
-                                (footnote.getStartPosition() + footnote.getWikiTagLength(), doubleEndBracket.getStartPosition());
-                        preParsingBoundaries.add(entry);
+                    j++;
+                }
+                else if (footnote != null && footnote.getStartPosition() == startPosition)
+                {
+                    footnote.setListOrderNumber(k);
+                    AbstractMap.SimpleEntry<Integer, Integer> entry = new AbstractMap.SimpleEntry<>
+                            (footnote.getStartPosition() + footnote.getWikiTagLength(), doubleEndBracket.getStartPosition());
+                    preParsingBoundaries.add(entry);
 
-                        List<Replacement> replacements = Replacement.getReplacementsForPair(footnote, doubleEndBracket);
-                        for (Replacement replacement : replacements)
-                        {
-                            footnoteParsingBoundariesToFootnoteReplacement.put(entry, replacement);
-                            footnoteParsingBoundariesToFootnoteId.put(entry, footnote.getUniqueId());
-                            startPositionToReplacement.put(replacement.getStartPosition(), replacement);
-                        }
-                        k++;
+                    List<Replacement> replacements = Replacement.getReplacementsForPair(footnote, doubleEndBracket);
+                    for (Replacement replacement : replacements)
+                    {
+                        footnoteParsingBoundariesToFootnoteReplacement.put(entry, replacement);
+                        footnoteParsingBoundariesToFootnoteId.put(entry, footnote.getUniqueId());
+                        startPositionToReplacement.put(replacement.getStartPosition(), replacement);
                     }
+                    k++;
                 }
             }
         }
@@ -376,15 +384,23 @@ public class WikiParser
             {
                 int j = i + tagLength;
                 //noinspection StatementWithEmptyBody
-                for (; j < s.length() && j < i + tagLength + 300 && s.charAt(j) != ' '; ++j) ;
-                String href = ((s.charAt(j) == ' ') ? ("http" + s.substring(i + tagLength, j)) : null);
+                for (; j < s.length() && j < i + tagLength + 300 && s.charAt(j) != ' ' && s.charAt(j) != ']'; ++j) ;
+                String href = ((s.charAt(j) == ' ' || s.charAt(j) == ']') ? ("http" + s.substring(i + tagLength, j)) : null);
                 if (href != null)
                 {
                     attributeNameToValue = new HashMap<>();
                     attributeNameToValue.put("href", href);
                     tag = new WikiTag(tagType, i, uniqueId, attributeNameToValue);
-                    tag.setWikiTagLength(j - i);
-                    i = j - tagLength;
+                    if (s.charAt(j) != ']')
+                    {
+                        tag.setWikiTagLength(j - i + 1);
+                        i = j - tagLength + 1;
+                    }
+                    else
+                    {
+                        tag.setWikiTagLength(1);
+                        i = i - tagLength + 1;
+                    }
                 }
             }
 
