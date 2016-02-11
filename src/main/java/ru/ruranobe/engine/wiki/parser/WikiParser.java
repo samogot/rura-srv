@@ -63,10 +63,9 @@ public class WikiParser
 
                 String quotedBody = new QuoteParser().applyTo(paragraph.toString());
                 quotedBody = quotedBody.replaceAll("<b></b>", "").replaceAll("<i></i>", "").replaceAll("<b></b>", "");
-                if (quotedBody.matches("^\\s*<div .*</div>\\s*$"))
+                if (quotedBody.matches("^\\s*<[^abis].*[^abinp]>\\s*$"))
                 {
-                    result.append("<div ").append(startTag.substring("<p ".length(), startTag.length() - 1))
-                          .append(quotedBody.substring("<div ".length()));
+                    result.append(quotedBody);
                 }
                 else
                 {
@@ -169,7 +168,7 @@ public class WikiParser
                 WikiTag subtitle = null;
                 WikiTag footnote = null;
 
-                int startPosition = Integer.MAX_VALUE;
+                int startPosition = -1;
                 if (subtitles != null && j < subtitles.size())
                 {
                     subtitle = subtitles.get(j);
@@ -178,7 +177,7 @@ public class WikiParser
                 if (footnotes != null && k < footnotes.size())
                 {
                     footnote = footnotes.get(k);
-                    startPosition = Math.min(startPosition, footnote.getStartPosition());
+                    startPosition = Math.max(startPosition, footnote.getStartPosition());
                 }
 
                 if (doubleEndBracket.getStartPosition() > startPosition)
