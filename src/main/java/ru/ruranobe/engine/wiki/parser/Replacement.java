@@ -1,7 +1,6 @@
 package ru.ruranobe.engine.wiki.parser;
 
 import com.google.common.collect.ImmutableMap;
-import org.apache.wicket.util.string.Strings;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -15,23 +14,21 @@ import static ru.ruranobe.engine.wiki.parser.WikiTagType.*;
 
 public class Replacement
 {
-    public static String escapeURLIllegalCharacters(String string) {
-        try {
-            Matcher matcher = Pattern.compile("([^:]+:)?(//[^/]+)?([^?]+)(\\?[^#]+)?(#.*)?").matcher(string);
-            if (!matcher.matches()) return string;
-            String scheme = Strings.isEmpty(matcher.group(1)) ? null : matcher.group(1).substring(0, -1);
-            String host = null;
-            String path = null;
-            String query = null;
-            String fragment = null;
-            if (string.contains("://")) scheme = string.split(":", 2)[0];
-            if (string.contains("//")) host = string.s
-            URI dec = new URI(string);
-            URI enc = new URI(dec.getScheme(), dec.getUserInfo(), dec.getHost(), dec.getPort(), dec.getPath(), dec.getQuery(), dec.getFragment());
-            return enc.toASCIIString();
-        } catch (Exception e) {
-            return string;
+    public static String escapeURLIllegalCharacters(String string)
+    {
+        try
+        {
+            Matcher matcher = Pattern.compile("(?:([^:]+):)?(?://([^/]+))?([^?]+)(?:\\?([^#]+))?(?:#(.*))?").matcher(string);
+            if (matcher.matches())
+            {
+                URI uri = new URI(matcher.group(1), matcher.group(2), matcher.group(3), matcher.group(4), matcher.group(5));
+                return uri.toASCIIString();
+            }
         }
+        catch (URISyntaxException ignored)
+        {
+        }
+        return string;
     }
 
     public static List<Replacement> getReplacementsForPair(WikiTag startTag, WikiTag endTag)
