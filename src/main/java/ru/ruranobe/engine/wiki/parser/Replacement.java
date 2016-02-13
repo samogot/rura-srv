@@ -3,6 +3,7 @@ package ru.ruranobe.engine.wiki.parser;
 import com.google.common.collect.ImmutableMap;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
