@@ -50,7 +50,7 @@ public class Diary extends SidebarLayoutPage
             TextsMapper textsMapper = CachingFacade.getCacheableMapper(session, TextsMapper.class);
             for (Chapter diaryChapter : diaryChapters)
             {
-                if (diaryChapter.isPublished() && diaryChapter.getText() != null)
+                if (diaryChapter.isPublished() && diaryChapter.getTextId() != null)
                 {
                     committingNeeded = ChapterTextParser.getChapterText(diaryChapter, session, textsMapper, false) || committingNeeded;
                     if (diaryChapter.getText().getTextWiki() == null)
@@ -75,6 +75,7 @@ public class Diary extends SidebarLayoutPage
             {
                 Chapter chapter = item.getModelObject();
                 item.setMarkupId(chapter.getUrlPart());
+                item.setVisible(chapter.isPublished());
                 item.add(new Label("htmlText", chapter.getText() == null ? "" : chapter.getText().getTextHtml()).setEscapeModelStrings(false));
                 item.add(new Label("date", chapter.getTitle()).add(new AttributeModifier("href", "#" + chapter.getUrlPart())));
                 WebMarkupContainer avatar = new WebMarkupContainer("avatar");
