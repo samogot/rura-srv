@@ -60,6 +60,16 @@ public class Diary extends SidebarLayoutPage
                 }
                 ContentsHolder holder = new ContentsHolder("#" + diaryChapter.getUrlPart(), diaryChapter.getTitle());
                 contentsHolders.add(holder);
+                if (diaryChapter.isPublished() && diaryChapter.getTextId() != null)
+                {
+                    committingNeeded = ChapterTextParser.getChapterText(diaryChapter, session, textsMapper, false) || committingNeeded;
+                    if (diaryChapter.getText().getTextWiki() == null)
+                    {
+                        diaryChapter.getText().setTextWiki(textsMapper.getTextById(diaryChapter.getTextId()).getTextWiki());
+                    }
+                    ContentsHolder holder = new ContentsHolder("#" + diaryChapter.getUrlPart(), diaryChapter.getTitle());
+                    contentsHolders.add(holder);
+                }
             }
 
             if (committingNeeded)
@@ -76,6 +86,8 @@ public class Diary extends SidebarLayoutPage
                 Chapter chapter = item.getModelObject();
                 item.setMarkupId(chapter.getUrlPart());
                 item.add(new Label("htmlText", chapter.getText().getTextHtml()).setEscapeModelStrings(false));
+                item.setVisible(chapter.isPublished());
+                item.add(new Label("htmlText", chapter.getText() == null ? "" : chapter.getText().getTextHtml()).setEscapeModelStrings(false));
                 item.add(new Label("date", chapter.getTitle()).add(new AttributeModifier("href", "#" + chapter.getUrlPart())));
                 WebMarkupContainer avatar = new WebMarkupContainer("avatar");
                 Pattern p = Pattern.compile("^\\s*<!--\\s*img(\\d+)\\s*-->");
