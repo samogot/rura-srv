@@ -8,7 +8,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import ru.ruranobe.engine.wiki.parser.ChapterTextParser;
-import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.Chapter;
 import ru.ruranobe.mybatis.entities.tables.Volume;
@@ -51,13 +50,16 @@ public class Diary extends SidebarLayoutPage
             TextsMapper textsMapper = CachingFacade.getCacheableMapper(session, TextsMapper.class);
             for (Chapter diaryChapter : diaryChapters)
             {
-                committingNeeded = ChapterTextParser.getChapterText(diaryChapter, session, textsMapper, false) || committingNeeded;
-                if (diaryChapter.getText().getTextWiki() == null)
+                if (diaryChapter.isPublished() && diaryChapter.getText() != null)
                 {
-                    diaryChapter.getText().setTextWiki(textsMapper.getTextById(diaryChapter.getTextId()).getTextWiki());
+                    committingNeeded = ChapterTextParser.getChapterText(diaryChapter, session, textsMapper, false) || committingNeeded;
+                    if (diaryChapter.getText().getTextWiki() == null)
+                    {
+                        diaryChapter.getText().setTextWiki(textsMapper.getTextById(diaryChapter.getTextId()).getTextWiki());
+                    }
+                    ContentsHolder holder = new ContentsHolder("#" + diaryChapter.getUrlPart(), diaryChapter.getTitle());
+                    contentsHolders.add(holder);
                 }
-                ContentsHolder holder = new ContentsHolder("#" + diaryChapter.getUrlPart(), diaryChapter.getTitle());
-                contentsHolders.add(holder);
             }
 
             if (committingNeeded)

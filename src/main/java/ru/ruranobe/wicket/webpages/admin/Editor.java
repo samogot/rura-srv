@@ -89,6 +89,10 @@ public class Editor extends AdminLayoutPage implements InstantiationSecurityChec
                 try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
                     TextsMapper textsMapper = CachingFacade.getCacheableMapper(session, TextsMapper.class);
+                    if (Strings.isEmpty(text.getTextWiki()))
+                    {
+                        text.setTextWiki("");
+                    }
                     textsMapper.insertText(text);
                     chapter.setText(text);
                     ChapterTextParser.parseChapterText(chapter, session, textsMapper, !projectUrl.equals("system"));
