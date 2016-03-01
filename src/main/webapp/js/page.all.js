@@ -79,6 +79,10 @@ $(document).ready(function() {
                 location.href = '/r/' + selection.link;
             }).bind('typeahead:autocomplete', function(ev, selection) {
                 location.href = '/r/' + selection.link;
+            }).on('keyup', function (e) {
+                if (e.which == 13) {
+                    $(".tt-suggestion:first-child", this).trigger('click');
+                }
             });
 
             element.children('button').click(function() {
