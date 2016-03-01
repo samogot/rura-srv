@@ -641,6 +641,7 @@ footer {
     overflow: hidden;
     white-space: nowrap;
     padding: 10px 3px;
+    text-overflow: ellipsis;
 }
 
 .updPaginator {
