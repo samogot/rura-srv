@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class Diary extends SidebarLayoutPage
 {
@@ -46,20 +45,11 @@ public class Diary extends SidebarLayoutPage
 
             ChaptersMapper chaptersMapper = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
             diaryChapters = chaptersMapper.getChaptersByVolumeId(diaryVolume.getVolumeId());
-            diaryChapters = diaryChapters.stream().filter(
-                    chapter -> chapter.isPublished() && chapter.getText() != null).collect(Collectors.toList());
 
             boolean committingNeeded = false;
             TextsMapper textsMapper = CachingFacade.getCacheableMapper(session, TextsMapper.class);
             for (Chapter diaryChapter : diaryChapters)
             {
-                committingNeeded = ChapterTextParser.getChapterText(diaryChapter, session, textsMapper, false) || committingNeeded;
-                if (diaryChapter.getText().getTextWiki() == null)
-                {
-                    diaryChapter.getText().setTextWiki(textsMapper.getTextById(diaryChapter.getTextId()).getTextWiki());
-                }
-                ContentsHolder holder = new ContentsHolder("#" + diaryChapter.getUrlPart(), diaryChapter.getTitle());
-                contentsHolders.add(holder);
                 if (diaryChapter.isPublished() && diaryChapter.getTextId() != null)
                 {
                     committingNeeded = ChapterTextParser.getChapterText(diaryChapter, session, textsMapper, false) || committingNeeded;
@@ -85,16 +75,16 @@ public class Diary extends SidebarLayoutPage
             {
                 Chapter chapter = item.getModelObject();
                 item.setMarkupId(chapter.getUrlPart());
-                item.add(new Label("htmlText", chapter.getText().getTextHtml()).setEscapeModelStrings(false));
                 item.setVisible(chapter.isPublished());
                 item.add(new Label("htmlText", chapter.getText() == null ? "" : chapter.getText().getTextHtml()).setEscapeModelStrings(false));
                 item.add(new Label("date", chapter.getTitle()).add(new AttributeModifier("href", "#" + chapter.getUrlPart())));
                 WebMarkupContainer avatar = new WebMarkupContainer("avatar");
                 Pattern p = Pattern.compile("^\\s*<!--\\s*img(\\d+)\\s*-->");
-                Matcher matcher = p.matcher(chapter.getText().getTextWiki());
-                if (matcher.find())
-                {
-                    avatar.add(new AttributeModifier("src", "/img/journal/" + matcher.group(1) + ".png"));
+                if (chapter.getText() != null) {
+                    Matcher matcher = p.matcher(chapter.getText().getTextWiki());
+                    if (matcher.find()) {
+                        avatar.add(new AttributeModifier("src", "/img/journal/" + matcher.group(1) + ".png"));
+                    }
                 }
                 item.add(avatar);
             }
