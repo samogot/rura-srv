@@ -37,7 +37,7 @@ public class ModalUserSettings extends Panel
             @Override
             public boolean isVisible()
             {
-                return WicketApplication.get().hasAnyRole(new Roles(new String[]{"ADMIN", "TEAM MEMBER", "INCUBATOR"}));
+                return WicketApplication.get().hasAnyRole(new Roles(new String[]{"ADMIN", "TEAM MEMBER", "WORKS"}));
             }
         });
         userSettings.add(new Button("saveUserSettings")

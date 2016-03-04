@@ -1,12 +1,14 @@
 package ru.ruranobe.wicket.webpages.base;
 
+import org.apache.wicket.authentication.IAuthenticationStrategy;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import ru.ruranobe.misc.RuranobeUtils;
+import ru.ruranobe.wicket.LoginSession;
+import ru.ruranobe.wicket.components.UserActionsPanel;
 import ru.ruranobe.wicket.components.modals.ModalEmailPasswordRecoveryPanel;
 import ru.ruranobe.wicket.components.modals.ModalLoginPanel;
-import ru.ruranobe.wicket.components.UserActionsPanel;
 
 import java.time.Year;
 
@@ -16,6 +18,11 @@ public abstract class BaseLayoutPage extends WebPage
     protected Panel userActionsPanel = null;
     protected Panel loginPanel = null;
     protected Panel resetPasswordPanel = null;
+
+    public BaseLayoutPage()
+    {
+        checkLogin();
+    }
 
     @Override
     protected void onInitialize()
@@ -39,6 +46,33 @@ public abstract class BaseLayoutPage extends WebPage
         add(new Label("pageTitle", getPageTitle()));
         add(new Label("currentYear", Year.now()));
         super.onInitialize();
+    }
+
+    private void checkLogin()
+    {
+        if (!LoginSession.get().isSignedIn())
+        {
+            IAuthenticationStrategy authenticationStrategy = getApplication()
+                    .getSecuritySettings().getAuthenticationStrategy();
+
+            // get username and password from persistence store
+            String[] data = authenticationStrategy.load();
+
+            if ((data != null) && (data.length > 1))
+            {
+                // try to sign in the user
+                if (LoginSession.get().signIn(data[0], data[1]))
+                {
+                    // logon successful. Continue to the original destination
+                    continueToOriginalDestination();
+                }
+                else
+                {
+                    // the loaded credentials are wrong. erase them.
+                    authenticationStrategy.remove();
+                }
+            }
+        }
     }
 
     protected void redirectTo404()

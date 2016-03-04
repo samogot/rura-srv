@@ -49,7 +49,7 @@ public class ProjectBannersList extends Panel
             ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.getCacheableMapper(session, ExternalResourcesMapper.class);
             for (Project project : projects)
             {
-                if (!project.isProjectHidden() && !project.isBannerHidden() && !project.isIncubator())
+                if (!project.isProjectHidden() && !project.isBannerHidden() && !project.isWorks())
                 {
                     ExternalResource image = externalResourcesMapperCacheable.getExternalResourceById(project.getImageId());
                     projectsList.add(new SimpleEntry<>(project, image));

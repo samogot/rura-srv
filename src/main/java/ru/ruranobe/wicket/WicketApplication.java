@@ -80,6 +80,7 @@ public class WicketApplication extends AuthenticatedWebApplication
     {
         mount(new MountedMapper("/diary", Diary.class));
         mount(new MountedMapper("/projects", FullProjects.class));
+        mount(new MountedMapper("/works", WorksProjects.class));
         mount(new MountedMapper("/faq", Faq.class));
         mount(new MountedMapper("/r/${project}", ProjectPage.class));
         mount(new MountedMapper("/r/${project}/${volume}", VolumePage.class));

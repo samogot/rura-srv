@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org" lang="en">
+<body>
+<wicket:extend>
+    <div class="container">
+        <div class="leftColumn">
+            <main class="content" style="padding: 0;">
+                <div class="h3" style="margin-top: 15px !important;">Works</div>
+                <p><span class="color110">Ниже перечислены проекты раздела Works.</span></p>
+
+                <div class="displayNone991">
+                    <div class="view pull-left">Вид:</div>
+                    <button class="view1 active"></button>
+                    <button class="view2"></button>
+                </div>
+                <!-- view type 1 -->
+                <wicket:container wicket:id="viewTypeOne">
+                    <div class="viewType1">
+                        <a wicket:id="linkOneViewTypeOne">
+                            <img wicket:id="imageViewTypeOne" height="73" width="220" src="/img/nobanner.png"/>
+                        </a><br>
+                        <a wicket:id="linkTwoViewTypeOne"><span wicket:id="titleViewTypeOne"></span></a><br>
+                        <span class="bold">Автор:&nbsp;</span><span wicket:id="authorViewTypeOne"></span><br>
+                        <span class="bold">Томов:&nbsp;</span><span wicket:id="volumeCountViewTypeOne"></span><br>
+
+                        <div style="margin-top:15px;">
+                            <div wicket:id="statusViewTypeOne"><span wicket:id="statusViewTypeOneText"></span></div>
+                            <div class="moreAboutProject"><a wicket:id="linkThreeViewTypeOne">Подробнее</a></div>
+                        </div>
+                    </div>
+                </wicket:container>
+                <!-- view type 2 -->
+                <wicket:container wicket:id="viewTypeTwo">
+                    <div class="viewTypeBlock2">
+                        <div class="viewType2">
+                            <a wicket:id="linkOneViewTypeTwo" class="pull-left">
+                                <img wicket:id="imageViewTypeTwo" height="73" width="220" src="/img/nobanner.png"/>
+                            </a>
+                            <div style="padding-bottom: 10px;">
+                                <a wicket:id="linkTwoViewTypeTwo" style="text-decoration: underline;">
+                                    <span wicket:id="titleViewTypeTwo"></span>
+                                </a>
+                            </div>
+                            <div style="line-height: 22px; margin-bottom: 4px;">
+                                <span class="bold">Автор:&nbsp;</span>
+                                <span wicket:id="authorViewTypeTwo"></span><br/>
+                                <span class="bold">Иллюстратор:&nbsp;</span>
+                                <span wicket:id="illustratorViewTypeTwo"></span><br/>
+                            </div>
+                        </div>
+                        <div class="viewType2about pull-right">
+                            <div class="volumes">
+                                <span class="bold">Томов:&nbsp;</span>
+                                <span wicket:id="volumeCountViewTypeTwo"></span>
+                            </div>
+                        </div>
+                        <!--<div class="moreAboutProject pull-right">
+                            <a wicket:id="linkThreeViewTypeTwo">Подробнее</a>
+                        </div>-->
+                    </div>
+                </wicket:container>
+            </main>
+        </div>
+        <aside class="right-sidebar visible-lg-block">
+            <div id="vk_api_transport"></div>
+            <div id="vk_groups"></div>
+            <script type="text/javascript">
+                window.vkAsyncInit = function () {
+                    VK.Widgets.Group("vk_groups", {
+                        mode: 2,
+                        width: "230",
+                        height: "660"
+                    }, 43340456);
+                };
+                setTimeout(function () {
+                    var el = document.createElement("script");
+                    el.type = "text/javascript";
+                    el.src = "//vk.com/js/api/openapi.js?115";
+                    el.async = true;
+                    document.getElementById("vk_api_transport").appendChild(el);
+                }, 0);
+                window.twttr = (function (d, s, id) {
+                    var js, fjs = d.getElementsByTagName(s)[0],
+                            t = window.twttr || {};
+                    if (d.getElementById(id)) return t;
+                    js = d.createElement(s);
+                    js.id = id;
+                    js.src = "https://platform.twitter.com/widgets.js";
+                    fjs.parentNode.insertBefore(js, fjs);
+                    t._e = [];
+                    t.ready = function (f) {
+                        t._e.push(f);
+                    };
+                    return t;
+                }(document, "script", "twitter-wjs"));
+            </script>
+            <hr>
+            <a class="twitter-timeline" data-theme="" href="https://twitter.com/RuRa_team" align="center"
+               data-widget-id="540043044683546624">Твиты от @RuRa_team</a>
+        </aside>
+    </div>
+
+    <script type="text/javascript">
+        $('.view1').click(function () {
+            if ($('.view1').hasClass('active')) {
+            } else {
+                $(".view1").addClass("active");
+                $(".viewType1").show();
+                $(".view2").removeClass("active");
+                $(".viewTypeBlock2").hide();
+            }
+        });
+        $('.view2').click(function () {
+            if ($('.view2').hasClass('active')) {
+            } else {
+                $(".view2").addClass("active");
+                $(".viewTypeBlock2").show();
+                $(".view1").removeClass("active");
+                $(".viewType1").hide();
+            }
+        });
+    </script>
+</wicket:extend>
+
+</body>
+</html>
