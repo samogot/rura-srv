@@ -22,24 +22,24 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class FullProjects extends BaseLayoutPage
+public class WorksProjects extends BaseLayoutPage
 {
     @Override
     protected void onInitialize()
     {
         super.onInitialize();
-        try(SqlSession session = MybatisUtil.getSessionFactory().openSession())
+        try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
         {
             List<ProjectInfo> projectsList = new ArrayList<>();
             Collection<Project> projects = CachingFacade.getCacheableMapper(session, ProjectsMapper.class)
-                    .getAllProjects();
+                                                        .getAllProjects();
             ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.
-                    getCacheableMapper(session, ExternalResourcesMapper.class);
+                                                                                            getCacheableMapper(session, ExternalResourcesMapper.class);
             VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
 
             for (Project project : projects)
             {
-                if (!project.isProjectHidden() && !project.isWorks())
+                if (!project.isProjectHidden() && project.isWorks())
                 {
                     ExternalResource image = (project.getImageId() != null) ? externalResourcesMapperCacheable.getExternalResourceById(project.getImageId())
                                                                             : null;
@@ -127,10 +127,11 @@ public class FullProjects extends BaseLayoutPage
         }
     }
 
-	@Override
-	protected String getPageTitle() {
-		return "Проекты - РуРанобэ";
-	}
+    @Override
+    protected String getPageTitle()
+    {
+        return "Проекты - РуРанобэ Works";
+    }
 
     private class ProjectInfo implements Comparable<ProjectInfo>
     {

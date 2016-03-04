@@ -27,44 +27,6 @@ public class LoginPanel extends Panel
         return (LoginForm) get(LOGIN_FORM);
     }
 
-    @Override
-    protected void onBeforeRender()
-    {
-        if (!isLoggedIn())
-        {
-            IAuthenticationStrategy authenticationStrategy = getApplication()
-                    .getSecuritySettings().getAuthenticationStrategy();
-
-            // get username and password from persistence store
-            String[] data = authenticationStrategy.load();
-
-            if ((data != null) && (data.length > 1))
-            {
-                // try to sign in the user
-                if (login(data[0], data[1]))
-                {
-                    username = data[0];
-                    password = data[1];
-
-                    // logon successful. Continue to the original destination
-                    continueToOriginalDestination();
-
-                    // If we get this far, it means that we should redirect to the home page
-                    throw new RedirectToUrlException(urlFor(getPage().getClass(), getPage().getPageParameters()).toString());
-                    /*throw new RestartResponseException(getSession().getPageFactory().newPage(
-                            getApplication().getHomePage()));*/
-                }
-                else
-                {
-                    // the loaded credentials are wrong. erase them.
-                    authenticationStrategy.remove();
-                }
-            }
-        }
-
-        super.onBeforeRender();
-    }
-
     public String getPassword()
     {
         return password;

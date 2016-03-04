@@ -30,7 +30,7 @@ import ru.ruranobe.wicket.webpages.common.TextPage;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
 
-@AuthorizeInstantiation({"ADMIN", "TEAM MEMBER", "INCUBATOR"})
+@AuthorizeInstantiation({"ADMIN", "TEAM MEMBER", "WORKS"})
 public class Orphus extends BaseLayoutPage
 {
 

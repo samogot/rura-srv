@@ -140,15 +140,15 @@ public class ProjectEdit extends AdminLayoutPage implements InstantiationSecurit
                         add(new TextField<String>("originalDesign"));
                         add(new TextField<String>("originalStory"));
                         add(new CheckBox("onevolume"));
-                        add(new CheckBox("projectHidden"));
-                        add(new CheckBox("bannerHidden"));
-                        add(new CheckBox("incubator"));
+                        add(new CheckBox("projectHidden").setVisible(LoginSession.get().hasRole("ADMIN")));
+                        add(new CheckBox("bannerHidden").setVisible(LoginSession.get().hasRole("ADMIN")));
+                        add(new CheckBox("works").setVisible(LoginSession.get().hasRole("ADMIN")));
                         add(new TextField<String>("issueStatus"));
                         add(new TextField<String>("translationStatus"));
                         add(new DropDownChoice<>("status", RuraConstants.PROJECT_STATUS_LIST));
                         add(new TextArea<String>("franchise"));
                         add(new TextArea<String>("annotation"));
-                        add(new NumberTextField<Integer>("forumId").setMinimum(1));
+                        add(new NumberTextField<Integer>("forumId").setMinimum(1).setVisible(LoginSession.get().hasRole("ADMIN")));
                     }
                 };
             }
@@ -348,7 +348,7 @@ public class ProjectEdit extends AdminLayoutPage implements InstantiationSecurit
                 new_project.setBannerHidden(true);
                 new_project.setProjectHidden(true);
                 new_project.setOnevolume(false);
-                new_project.setIncubator(false);
+                new_project.setWorks(false);
                 new_project.setStatus(RuraConstants.PROJECT_STATUS_LIST.get(0));
                 return new_project;
             }

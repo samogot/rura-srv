@@ -62,14 +62,14 @@ public class Project extends PageRepresentable implements Serializable
         this.translationStatus = translationStatus;
     }
 
-    public Boolean isIncubator()
+    public Boolean isWorks()
     {
-        return incubator;
+        return works;
     }
 
-    public void setIncubator(Boolean incubator)
+    public void setWorks(Boolean works)
     {
-        this.incubator = incubator;
+        this.works = works;
     }
 
     private static final long serialVersionUID = 3L;
@@ -90,7 +90,7 @@ public class Project extends PageRepresentable implements Serializable
     private Boolean bannerHidden;
     private Boolean projectHidden;
     private Boolean onevolume;
-    private Boolean incubator;
+    private Boolean works;
     private String franchise;
     private String annotation;
     private Integer forumId;
@@ -135,7 +135,7 @@ public class Project extends PageRepresentable implements Serializable
         subProject.setNameRomaji("");
         subProject.setNameRu("");
         subProject.setOnevolume(false);
-        subProject.setIncubator(false);
+        subProject.setWorks(false);
         return subProject;
     }
 

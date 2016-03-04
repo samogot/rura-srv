@@ -16,33 +16,35 @@ import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.webpages.common.Updates;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
-public class UpdatesSidebarModule extends SidebarModuleBase
-{
+public class UpdatesSidebarModule extends SidebarModuleBase {
     private static final int UPDATES_BY_PROJECT_ON_PAGE = 5;
 
-    public UpdatesSidebarModule(Integer projectId)
-    {
+    public UpdatesSidebarModule(Integer projectId) {
         super("sidebarModule", "updates", "Обновления серии");
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
-        try (SqlSession session = sessionFactory.openSession())
-        {
+        try (SqlSession session = sessionFactory.openSession()) {
             UpdatesMapper updatesMapperCacheable = CachingFacade.getCacheableMapper(session, UpdatesMapper.class);
             List<Update> updates = updatesMapperCacheable.
-                                                                 getLastUpdatesBy(projectId, null, null, 0, UPDATES_BY_PROJECT_ON_PAGE);
+                    getLastUpdatesBy(projectId, null, null, 0, UPDATES_BY_PROJECT_ON_PAGE);
 
-            ListView<Update> updatesView = new ListView<Update>("updatesList", updates)
-            {
+            ListView<Update> updatesView = new ListView<Update>("updatesList", updates) {
                 @Override
-                protected void populateItem(ListItem<Update> listItem)
-                {
+                protected void populateItem(ListItem<Update> listItem) {
                     Update update = listItem.getModelObject();
                     String iconClass = RuraConstants.UPDATE_TYPE_TO_ICON_CLASS.get(update.getUpdateType());
                     WebMarkupContainer updateContainerWithIcon = new WebMarkupContainer("updateContainerWithIcon");
                     updateContainerWithIcon.add(new AttributeModifier("class", iconClass));
                     BookmarkablePageLink updateLink = update.makeBookmarkablePageLink("updateLink");
                     updateLink.setBody(new Model<>(update.getShortTitle()));
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+                    updateLink.add(new AttributeModifier("title", String.format("%s %s: %s%s",
+                            sdf.format(update.getShowTime()),
+                            update.getUpdateType(),
+                            update.getVolumeTitleShort(),
+                            update.getChapterId() == null ? "" : " - " + update.getChapterTitle())));
                     updateContainerWithIcon.add(updateLink);
                     listItem.add(updateContainerWithIcon);
                 }

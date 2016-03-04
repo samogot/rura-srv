@@ -2,6 +2,7 @@ package ru.ruranobe.wicket.components;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -50,13 +51,15 @@ public class UpdatesWideList extends Panel
 
                     WebMarkupContainer iconDivClass = new WebMarkupContainer("iconDivClass");
                     iconDivClass.add(new AttributeAppender("class", " " + iconDivClassValue));
+                    iconDivClass.add(new AttributeModifier("title", update.getUpdateType()));
                     listItem.add(iconDivClass);
                     SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
                     listItem.add(new Label("updateDate", sdf.format(updateDateValue)));
                     BookmarkablePageLink updateLink = update.makeBookmarkablePageLink("updateLink");
                     updateLink.setBody(new Model<>(update.getVolumeTitle()));
+                    updateLink.add(new AttributeModifier("title", update.getVolumeTitle()));
                     listItem.add(updateLink);
-                    listItem.add(new Label("updateTitle", updateTitleValue));
+                    listItem.add(new Label("updateTitle", updateTitleValue).add(new AttributeModifier("title", updateTitleValue)));
                 }
             };
             add(updatesView);
