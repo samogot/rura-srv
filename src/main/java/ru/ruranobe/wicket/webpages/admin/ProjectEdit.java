@@ -140,7 +140,7 @@ public class ProjectEdit extends AdminLayoutPage implements InstantiationSecurit
                         add(new TextField<String>("originalDesign"));
                         add(new TextField<String>("originalStory"));
                         add(new CheckBox("onevolume"));
-                        add(new CheckBox("projectHidden").setVisible(LoginSession.get().hasRole("ADMIN")));
+                        add(new CheckBox("projectHidden"));
                         add(new CheckBox("bannerHidden").setVisible(LoginSession.get().hasRole("ADMIN")));
                         add(new CheckBox("works").setVisible(LoginSession.get().hasRole("ADMIN")));
                         add(new TextField<String>("issueStatus"));

@@ -1978,3 +1978,9 @@ form.admin-block {
     height: 343px;
     overflow: hidden;
 }
+
+.proj-info-line {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
