@@ -174,8 +174,18 @@ CREATE TABLE volume_statuses
   status_id    INT(11) PRIMARY KEY AUTO_INCREMENT,
   full_text    VARCHAR(32),
   label_text   VARCHAR(32),
-  label_class  ENUM('default', 'primary', 'success', 'info', 'warning', 'danger'),
-  option_group ENUM('basic', 'external', 'not_in_work', 'in_work', 'published', 'licensed')
+  label_class  ENUM('default',
+                    'primary',
+                    'success',
+                    'info',
+                    'warning',
+                    'danger'),
+  option_group ENUM('basic',
+                    'external',
+                    'not_in_work',
+                    'in_work',
+                    'published',
+                    'licensed')
 );
 
 CREATE TABLE chapters
@@ -258,7 +268,10 @@ CREATE TABLE volume_release_activities
   activity_id         INT(11) NOT NULL,
   member_id           INT(11) NOT NULL,
   order_number        INT(11) NOT NULL,
-  team_hidden         BOOLEAN NOT NULL,
+  team_show_label     BOOLEAN NOT NULL    DEFAULT FALSE,
+  team_show_status    ENUM('show_none',
+                           'show_nick',
+                           'show_team'),
   INDEX (volume_id, order_number),
   INDEX (volume_id, activity_id, order_number)
 );

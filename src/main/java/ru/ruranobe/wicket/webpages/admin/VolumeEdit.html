@@ -147,8 +147,12 @@
             <select wicket:id="activity" class="form-control member-input"></select>
         </div>
         <div class="form-group">
+            <label wicket:for="teamShowStatus">Добавлять в поле "Команда"</label>
+            <select wicket:id="teamShowStatus" class="form-control"></select>
+        </div>
+        <div class="form-group">
             <div class="checkbox">
-                <label><input wicket:id="teamHidden" type="checkbox"> Отображать команду</label>
+                <label><input wicket:id="teamShowLabel" type="checkbox"> Подписать команду рядом с ником</label>
             </div>
         </div>
     </wicket:fragment>

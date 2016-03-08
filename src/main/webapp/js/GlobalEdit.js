@@ -48,19 +48,45 @@ $('#teamMembers').on('addnewitem', function (e, d) {
 
 $('.username-input').each(initUserTypeahead);
 
+function initProjectsWorksLabel() {
+    var $projects = $('#projects');
+    var $listGroup = $projects.find('.list-group.select');
+    var $formItems = $projects.find('.form-item');
+    var $worksHeading = $('<a class="list-group-item heading" id="works">Works</a>');
+
+    var $contentsLi = $('<li><a href="#works">Works</a></li>');
+    var $contentsUl = $('#nav').find('a[href="#projects"]+ul');
+
+    var firstId = $formItems.find('.works-checkbox:checked:eq(0)').closest('.form-item').prop('id');
+    if (firstId) {
+        $listGroup.find('a[href="#' + firstId + '"]').before($worksHeading);
+        $contentsUl.addClass('nav').addClass('ContentNav').css('display', '');
+        $contentsUl.append($contentsLi);
+    }
+}
+$(initProjectsWorksLabel);
+
 function initMemberTeamsLabels() {
     var $teamMembers = $('#teamMembers');
     var $listGroup = $teamMembers.find('.list-group.select');
     var $formItems = $teamMembers.find('.form-item');
-    var $noTeamHeading = $('<a class="list-group-item heading">&lt;без команды&gt;</a>');
+    var $noTeamHeading = $('<a class="list-group-item heading" id="no-team">&lt;без команды&gt;</a>');
     $listGroup.prepend($noTeamHeading);
+    var $contentsUl = $('#nav').find('a[href="#teamMembers"]+ul');
+    $contentsUl.addClass('nav').addClass('ContentNav').css('display', '');
+    var $contentsLiTemplate = $('<li><a></a></li>');
     $('#teams').find('.form-item').each(function () {
-        var $teamHeading = $noTeamHeading.clone();
         var teamName = $(this).find('.name-input').val();
-        $teamHeading.text(teamName);
+        var teamAncor = translit(teamName);
+        var $teamHeading = $noTeamHeading.clone();
+        var $contentsLi = $contentsLiTemplate.clone();
+        $teamHeading.text(teamName).attr('id', teamAncor);
+        $contentsLi.find('a').text(teamName).attr('href', '#' + teamAncor);
         var firstId = $formItems.find('option:selected:contains("' + teamName + '"):eq(0)').closest('.form-item').prop('id');
-        if (firstId)
+        if (firstId) {
             $listGroup.find('a[href="#' + firstId + '"]').before($teamHeading);
+            $contentsUl.append($contentsLi);
+        }
     });
 }
 $(initMemberTeamsLabels);

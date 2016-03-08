@@ -1,6 +1,6 @@
 $.getJSON('/f/api/board/forums', function (forums) {
     var forumMap = {'0': {children: []}};
-    var unknown = {children: [], forum_id: 0, forum_name: 'Unknown'};
+    var unknown = {children: [], forum_id: '', forum_name: '<без форума>'};
     var i;
     for (i = 0; i < forums.length; ++i) {
         forumMap[forums[i].forum_id] = forums[i];

@@ -206,6 +206,7 @@ public class ProjectEdit extends AdminLayoutPage implements InstantiationSecurit
                             Volume new_volume = SerializationUtils.clone(selectedItem);
                             new_volume.setProject(selectedItem.getProject());
                             new_volume.setVolumeId(null);
+                            new_volume.setTopicId(null);
                             new_volume.setImageOne(null);
                             new_volume.setImageTwo(null);
                             new_volume.setImageThree(null);
@@ -350,6 +351,7 @@ public class ProjectEdit extends AdminLayoutPage implements InstantiationSecurit
                 new_project.setOnevolume(false);
                 new_project.setWorks(false);
                 new_project.setStatus(RuraConstants.PROJECT_STATUS_LIST.get(0));
+                new_project.setForumId(project.getForumId());
                 return new_project;
             }
 
@@ -369,7 +371,7 @@ public class ProjectEdit extends AdminLayoutPage implements InstantiationSecurit
                     {
                         super.onInitialize();
                         add(new TextField<String>("title").setRequired(true).setLabel(Model.of("Название")));
-                        add(new NumberTextField<Integer>("forumId").setMinimum(1));
+                        add(new NumberTextField<Integer>("forumId").setMinimum(1).setVisible(LoginSession.get().hasRole("ADMIN")));
                     }
                 };
             }

@@ -1,5 +1,6 @@
 package ru.ruranobe.wicket.webpages.common;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.AttributeModifier;
@@ -14,6 +15,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.string.Strings;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.*;
 import ru.ruranobe.mybatis.mappers.*;
@@ -30,6 +32,8 @@ import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 public class VolumePage extends SidebarLayoutPage
@@ -131,16 +135,20 @@ public class VolumePage extends SidebarLayoutPage
 
             VolumeReleaseActivitiesMapper volumeReleaseActivitiesMapperCacheable =
                     CachingFacade.getCacheableMapper(session, VolumeReleaseActivitiesMapper.class);
-            List<VolumeReleaseActivity> groupedVolumeReleaseActivities = new ArrayList<>(
-                    volumeReleaseActivitiesMapperCacheable.getGroupedVolumeReleaseActivitiesByVolumeId(volume.getVolumeId()));
 
-            add(new PropertyListView<VolumeReleaseActivity>("volumeReleaseActivitiesView", groupedVolumeReleaseActivities)
+
+            ArrayList<VolumeReleaseActivity> volumeReleaseActivities =
+                    volumeReleaseActivitiesMapperCacheable.getVolumeReleaseActivitiesByVolumeId(volume.getVolumeId());
+            String teamText = groupUpVolumeReleaseActivitiesAndGetTeamText(volumeReleaseActivities);
+
+            add(new LabelHideableOnNull("team", teamText).setEscapeModelStrings(false));
+            add(new PropertyListView<VolumeReleaseActivity>("volumeReleaseActivitiesView", volumeReleaseActivities)
             {
                 @Override
                 protected void populateItem(ListItem<VolumeReleaseActivity> item)
                 {
                     item.add(new Label("activityName"));
-                    item.add(new Label("memberName"));
+                    item.add(new Label("memberName").setEscapeModelStrings(false));
                 }
 
                 @Override
@@ -216,6 +224,79 @@ public class VolumePage extends SidebarLayoutPage
             sidebarModules.add(new ProjectsSidebarModule());
             sidebarModules.add(new FriendsSidebarModule());
         }
+    }
+
+    private String groupUpVolumeReleaseActivitiesAndGetTeamText(ArrayList<VolumeReleaseActivity> vraList)
+    {
+        ArrayList<String> teamEntities = new ArrayList<>();
+        int i = 0;
+        while (i < vraList.size())
+        {
+            VolumeReleaseActivity vra = vraList.get(i);
+            if (vra.getTeamName() != null && !vra.getTeamShowStatus().equals(VolumeReleaseActivity.TEAM_SHOW_NONE))
+            {
+                String teamEntry;
+                if (vra.getTeamShowStatus().equals(VolumeReleaseActivity.TEAM_SHOW_NICK))
+                {
+                    teamEntry = vra.getMemberName();
+                }
+                else if (!Strings.isEmpty(vra.getTeamLink()))
+                {
+                    teamEntry = String.format("<a href=\"%s\">%s</a>", vra.getTeamLink(), vra.getTeamName());
+                }
+                else
+                {
+                    teamEntry = vra.getTeamName();
+                }
+                if (!teamEntities.contains(teamEntry))
+                {
+                    teamEntities.add(teamEntry);
+                }
+            }
+            StringBuilder vraCurEntry = new StringBuilder(StringEscapeUtils.escapeHtml4(vra.getMemberName()));
+            if (vra.isTeamShowLabel())
+            {
+                vraCurEntry.append(" (");
+                if (!Strings.isEmpty(vra.getTeamLink()) && !vra.getTeamShowStatus().equals(VolumeReleaseActivity.TEAM_SHOW_TEAM))
+                {
+                    vraCurEntry.append(String.format("<a href=\"%s\">%s</a>", vra.getTeamLink(), vra.getTeamName()));
+                }
+                else
+                {
+                    vraCurEntry.append(vra.getTeamName());
+                }
+                vraCurEntry.append(")");
+            }
+
+            List<VolumeReleaseActivity> vraPrevList = vraList.subList(0, i);
+            Optional<VolumeReleaseActivity> vraFirstPrev = vraPrevList.stream().filter(
+                    vraPrev -> vraPrev.getActivityName().equals(vra.getActivityName())).findFirst();
+            if (vraFirstPrev.isPresent())
+            {
+                vraCurEntry.insert(0, ", ");
+                vraCurEntry.insert(0, vraFirstPrev.get().getMemberName());
+                vraFirstPrev.get().setMemberName(vraCurEntry.toString());
+                vraList.remove(i);
+                continue;
+            }
+            else
+            {
+                vra.setMemberName(vraCurEntry.toString());
+            }
+            ++i;
+        }
+        if (teamEntities.isEmpty())
+        {
+            return null;
+        }
+
+        StringBuilder teamText = new StringBuilder(teamEntities.get(0));
+        if (teamEntities.size() > 1)
+        {
+            teamText.append(" совместно с ");
+            teamEntities.stream().skip(1).collect(Collectors.joining(", "));
+        }
+        return teamText.toString();
     }
 
     @Override

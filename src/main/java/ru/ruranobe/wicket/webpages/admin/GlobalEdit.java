@@ -80,7 +80,16 @@ public class GlobalEdit extends AdminLayoutPage
             }
         }
 
-        Collections.sort(projects, (o1, o2) -> o1.getOrderNumber() - o2.getOrderNumber());
+        Collections.sort(projects, (o1, o2) -> {
+            if (o1.isWorks() != o2.isWorks())
+            {
+                return o1.isWorks().compareTo(o2.isWorks());
+            }
+            else
+            {
+                return o1.getOrderNumber().compareTo(o2.getOrderNumber());
+            }
+        });
 
         HashMap<Integer, Team> teamIdToTeamMap = new HashMap<>();
         for (Team team : teams)

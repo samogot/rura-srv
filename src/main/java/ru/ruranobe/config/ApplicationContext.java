@@ -23,6 +23,18 @@ public class ApplicationContext
         loadFileStorageServiceConfig(document);
         loadWebPageConfig(document);
         loadSmtpConfig(document);
+        loadForumApiSecret(document);
+    }
+
+    public static String getForumApiSecret()
+    {
+        return forumApiSecret;
+    }
+
+    private void loadForumApiSecret(Document document)
+    {
+        XPath xpath = new DefaultXPath("/Configuration/ForumApiSecret");
+        forumApiSecret = xpath.selectSingleNode(document).getText();
     }
 
     private void loadWebPageConfig(Document document)
@@ -136,6 +148,7 @@ public class ApplicationContext
     private static final String FILE_STORAGE_ACCESS_TOKEN = "AccessToken";
     private static final String FILE_STORAGE_UPLOAD_DIR = "UploadDir";
     private static final String FILE_STORAGE_PUBLIC_FOLDER = "PublicFolder";
+    private static String forumApiSecret;
     /*private static final String FILE_STORAGE_LOGIN = "Login";
     private static final String FILE_STORAGE_PASSWORD = "Password";
     private static final String FILE_STORAGE_FILE_EXTENSION = "FileExtension";*/

@@ -13,6 +13,11 @@ public class LabelHideableOnNull extends Label
         super(id);
     }
 
+    public LabelHideableOnNull(String id, String label)
+    {
+        super(id, label);
+    }
+
     @Override
     public boolean isVisible()
     {

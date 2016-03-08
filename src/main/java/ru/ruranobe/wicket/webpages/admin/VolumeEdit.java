@@ -69,6 +69,7 @@ import java.util.*;
 
 public class VolumeEdit extends AdminLayoutPage implements InstantiationSecurityCheck
 {
+
     @Override
     public void doInstantiationSecurityCheck()
     {
@@ -289,6 +290,7 @@ public class VolumeEdit extends AdminLayoutPage implements InstantiationSecurity
                 {
                     VolumeReleaseActivitiesMapper volumeReleaseActivitiesMapper = CachingFacade.getCacheableMapper(session, VolumeReleaseActivitiesMapper.class);
                     TeamMembersMapper membersMapper = CachingFacade.getCacheableMapper(session, TeamMembersMapper.class);
+                    TeamsMapper teamsMapper = CachingFacade.getCacheableMapper(session, TeamsMapper.class);
 
                     volumeReleaseActivitiesMapper.deleteVolumeReleaseActivitysByVolumeId(volume.getVolumeId());
 
@@ -300,6 +302,12 @@ public class VolumeEdit extends AdminLayoutPage implements InstantiationSecurity
                             if (!removed.contains(volumeReleaseActivity))
                             {
                                 membersMapper.insertIgnoreTeamMember(volumeReleaseActivity.getMemberName());
+                                Team team = teamsMapper.getTeamByMember(volumeReleaseActivity.getMemberName());
+                                volumeReleaseActivity.setTeamName(team != null ? team.getTeamName() : null);
+                                if (team == null && volumeReleaseActivity.getTeamShowStatus().equals(VolumeReleaseActivity.TEAM_SHOW_TEAM))
+                                {
+                                    volumeReleaseActivity.setTeamShowStatus(VolumeReleaseActivity.TEAM_SHOW_NONE);
+                                }
                                 filteredVolumeReleaseActivities.add(volumeReleaseActivity);
                             }
                         }
@@ -313,7 +321,9 @@ public class VolumeEdit extends AdminLayoutPage implements InstantiationSecurity
             @Override
             protected VolumeReleaseActivity makeItem()
             {
-                return new VolumeReleaseActivity();
+                VolumeReleaseActivity volumeReleaseActivity = new VolumeReleaseActivity();
+                volumeReleaseActivity.setTeamName("");
+                return volumeReleaseActivity;
             }
 
             @Override
@@ -334,7 +344,15 @@ public class VolumeEdit extends AdminLayoutPage implements InstantiationSecurity
                         add(new TextField<String>("memberName").setRequired(true).setLabel(Model.of("Участник")).setOutputMarkupId(true));
                         add(new DropDownChoice<>("activity", activities)
                                 .setChoiceRenderer(new ChoiceRenderer<VolumeActivity>("activityName", "activityId")));
-                        add(new CheckBox("teamHidden"));
+                        add(new CheckBox("teamShowLabel"));
+                        add(new DropDownChoice<String>("teamShowStatus", model.getObject().getTeamShowStatuses())
+                        {
+                            @Override
+                            protected boolean localizeDisplayValues()
+                            {
+                                return true;
+                            }
+                        }.setRequired(true));
                     }
                 };
             }
