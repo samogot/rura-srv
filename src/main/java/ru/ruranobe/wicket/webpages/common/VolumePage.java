@@ -294,7 +294,7 @@ public class VolumePage extends SidebarLayoutPage
         if (teamEntities.size() > 1)
         {
             teamText.append(" совместно с ");
-            teamEntities.stream().skip(1).collect(Collectors.joining(", "));
+            teamText.append(teamEntities.stream().skip(1).collect(Collectors.joining(", ")));
         }
         return teamText.toString();
     }
