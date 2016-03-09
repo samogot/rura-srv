@@ -238,15 +238,15 @@ public class VolumePage extends SidebarLayoutPage
                 String teamEntry;
                 if (vra.getTeamShowStatus().equals(VolumeReleaseActivity.TEAM_SHOW_NICK))
                 {
-                    teamEntry = vra.getMemberName();
+                    teamEntry = StringEscapeUtils.unescapeHtml4(vra.getMemberName());
                 }
                 else if (!Strings.isEmpty(vra.getTeamLink()))
                 {
-                    teamEntry = String.format("<a href=\"%s\">%s</a>", vra.getTeamLink(), vra.getTeamName());
+                    teamEntry = vra.getTeamLinkTag();
                 }
                 else
                 {
-                    teamEntry = vra.getTeamName();
+                    teamEntry = StringEscapeUtils.unescapeHtml4(vra.getTeamName());
                 }
                 if (!teamEntities.contains(teamEntry))
                 {
@@ -259,11 +259,11 @@ public class VolumePage extends SidebarLayoutPage
                 vraCurEntry.append(" (");
                 if (!Strings.isEmpty(vra.getTeamLink()) && !vra.getTeamShowStatus().equals(VolumeReleaseActivity.TEAM_SHOW_TEAM))
                 {
-                    vraCurEntry.append(String.format("<a href=\"%s\">%s</a>", vra.getTeamLink(), vra.getTeamName()));
+                    vraCurEntry.append(vra.getTeamLinkTag());
                 }
                 else
                 {
-                    vraCurEntry.append(vra.getTeamName());
+                    vraCurEntry.append(StringEscapeUtils.unescapeHtml4(vra.getTeamName()));
                 }
                 vraCurEntry.append(")");
             }

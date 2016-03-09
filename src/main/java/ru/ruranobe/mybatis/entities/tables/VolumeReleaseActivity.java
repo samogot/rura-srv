@@ -1,5 +1,8 @@
 package ru.ruranobe.mybatis.entities.tables;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+import ru.ruranobe.engine.wiki.parser.Replacement;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
@@ -131,6 +134,13 @@ public class VolumeReleaseActivity implements Serializable
     public String getTeamLink()
     {
         return teamLink;
+    }
+
+    public String getTeamLinkTag()
+    {
+        return String.format("<a href=\"%s\">%s</a>",
+                Replacement.escapeURLIllegalCharacters(teamLink),
+                StringEscapeUtils.unescapeHtml4(teamName));
     }
 
     public void setTeamLink(String teamLink)
