@@ -39,13 +39,13 @@
     <select id="getOwnProjectsByUser" parameterType="int" resultType="string">
         SELECT DISTINCT coalesce(p.url, pp.url)
         FROM users
-            INNER JOIN team_members USING (user_id)
-            INNER JOIN volume_release_activities USING (member_id)
-            INNER JOIN volumes USING (volume_id)
-            INNER JOIN projects p USING (project_id)
-            LEFT JOIN projects pp ON p.parent_id = pp.project_id
+        INNER JOIN team_members USING (user_id)
+        INNER JOIN volume_release_activities USING (member_id)
+        INNER JOIN volumes USING (volume_id)
+        INNER JOIN projects p USING (project_id)
+        LEFT JOIN projects pp ON p.parent_id = pp.project_id
         WHERE (p.url IS NOT NULL OR pp.url IS NOT NULL)
-              AND user_id = #{userId}
+        AND user_id = #{userId}
     </select>
 
     <select id="getUserByEmailToken" parameterType="String" resultMap="UserResult">
@@ -58,46 +58,47 @@
             useGeneratedKeys="true">
         INSERT INTO users
         SET
-            username = #{username},
-            realname = #{realname},
-            pass = #{pass},
-            pass_recovery_token = #{passRecoveryToken},
-            pass_recovery_token_date = #{passRecoveryTokenDate},
-            pass_version = #{passVersion},
-            email = #{email},
-            email_token = #{emailToken},
-            email_token_date = #{emailTokenDate},
-            email_activated = #{emailActivated},
-            registration_date = #{registrationDate},
-            converter_type = #{converterType},
-            navigation_type = #{navigationType},
-            convert_with_imgs = #{convertWithImgs},
-            adult = #{adult},
-            prefer_colored_imgs = #{preferColoredImgs},
+        username = #{username},
+        realname = #{realname},
+        pass = #{pass},
+        pass_recovery_token = #{passRecoveryToken},
+        pass_recovery_token_date = #{passRecoveryTokenDate},
+        pass_version = #{passVersion},
+        email = #{email},
+        email_token = #{emailToken},
+        email_token_date = #{emailTokenDate},
+        email_activated = #{emailActivated},
+        registration_date = #{registrationDate},
+        converter_type = #{converterType},
+        navigation_type = #{navigationType},
+        convert_with_imgs = #{convertWithImgs},
+        adult = #{adult},
+        prefer_colored_imgs = #{preferColoredImgs},
         show_hidden_content = #{showHiddenContent},
-            convert_imgs_size = #{convertImgsSize}
+        convert_imgs_size = #{convertImgsSize}
     </insert>
 
     <update id="updateUser" parameterType="ru.ruranobe.mybatis.entities.tables.User">
         UPDATE users
         SET
-            username = #{username},
-            realname = #{realname},
-            pass = #{pass},
-            pass_recovery_token = #{passRecoveryToken},
-            pass_recovery_token_date = #{passRecoveryTokenDate},
-            email = #{email},
-            email_token = #{emailToken},
-            email_token_date = #{emailTokenDate},
-            email_activated = #{emailActivated},
-            registration_date = #{registrationDate},
-            converter_type = #{converterType},
-            navigation_type = #{navigationType},
-            convert_with_imgs = #{convertWithImgs},
-            adult = #{adult},
-            prefer_colored_imgs = #{preferColoredImgs},
+        username = #{username},
+        realname = #{realname},
+        pass = #{pass},
+        pass_recovery_token = #{passRecoveryToken},
+        pass_recovery_token_date = #{passRecoveryTokenDate},
+        pass_version = #{passVersion},
+        email = #{email},
+        email_token = #{emailToken},
+        email_token_date = #{emailTokenDate},
+        email_activated = #{emailActivated},
+        registration_date = #{registrationDate},
+        converter_type = #{converterType},
+        navigation_type = #{navigationType},
+        convert_with_imgs = #{convertWithImgs},
+        adult = #{adult},
+        prefer_colored_imgs = #{preferColoredImgs},
         show_hidden_content = #{showHiddenContent},
-            convert_imgs_size = #{convertImgsSize}
+        convert_imgs_size = #{convertImgsSize}
         WHERE user_id = #{userId}
     </update>
 
@@ -122,5 +123,4 @@
         <result property="showHiddenContent" column="show_hidden_content"/>
         <result property="convertImgsSize" column="convert_imgs_size"/>
     </resultMap>
-
 </mapper>

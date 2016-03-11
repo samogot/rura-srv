@@ -116,7 +116,7 @@ public class LoginSession extends AuthenticatedWebSession
     public boolean validatePassword(String password)
     {
         String hash = Authentication.getPassHash(user.getPassVersion(), password, user.getPass());
-        return (areHashesEqual(hash, user.getPass()));
+        return areHashesEqual(hash, user.getPass());
     }
 
     public void updateUser(User user)
@@ -129,16 +129,7 @@ public class LoginSession extends AuthenticatedWebSession
         boolean result = false;
         if (hash2 != null && hash1 != null)
         {
-            int len = Math.min(hash1.length(), hash2.length());
-            int i = 0;
-            for (; i < len; ++i)
-            {
-                if (hash1.codePointAt(i) != hash2.codePointAt(i))
-                {
-                    break;
-                }
-            }
-            result = i == len;
+            result = hash1.equalsIgnoreCase(hash2);
         }
         return result;
     }
