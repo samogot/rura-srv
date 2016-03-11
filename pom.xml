@@ -18,14 +18,14 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
     <modelVersion>4.0.0</modelVersion>
     <groupId>ru.ruranobe</groupId>
     <packaging>war</packaging>
     <version>1.1-SNAPSHOT</version>
-    <!-- TODO project name  -->
-    <name>Ruranobe</name>
-    <description></description>
+    <name>RuRanobe</name>
+    <description>
+
+    </description>
     <!--
         <organization>
             <name>company name</name>
@@ -256,6 +256,11 @@
             <artifactId>rome</artifactId>
             <version>1.5.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.0</version>
+        </dependency>
 
     </dependencies>
     <build>
@@ -385,6 +390,7 @@
     </build>
 
     <repositories>
+
         <repository>
             <id>Apache Nexus</id>
             <url>https://repository.apache.org/content/repositories/snapshots/</url>
@@ -395,6 +401,18 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
+
+        <repository>
+            <id>central-maven-org</id>
+            <url>http://central.maven.org/maven2</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+
     </repositories>
     <artifactId>Ruranobe</artifactId>
 </project>
