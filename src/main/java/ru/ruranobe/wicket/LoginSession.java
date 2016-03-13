@@ -69,8 +69,7 @@ public class LoginSession extends AuthenticatedWebSession
                 {
                     if (signInUser.getPassVersion() < Authentication.ACTUAL_HASH_TYPE)
                     {
-                        signInUser.setPass(Authentication.getPassHash(Authentication.ACTUAL_HASH_TYPE, password, ""));
-                        signInUser.setPassVersion(Authentication.ACTUAL_HASH_TYPE);
+                        signInUser.setPassWithActualVersion(password);
                         usersMapper.updateUser(signInUser);
                     }
                     this.user = signInUser;

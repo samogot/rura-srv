@@ -9,8 +9,6 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.util.string.Strings;
-
-import ru.ruranobe.misc.Authentication;
 import ru.ruranobe.misc.MD5;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.misc.Token;
@@ -130,8 +128,7 @@ public class RegistrationPanel extends Panel {
 					} else {
 						User user = new User();
 						user.setUsername(username);
-						user.setPass(Authentication.getPassHash(Authentication.ACTUAL_HASH_TYPE, MD5.crypt(password), null));
-						user.setPassVersion(Authentication.ACTUAL_HASH_TYPE);
+						user.setPassWithActualVersion(MD5.crypt(password));
 						user.setRealname(realname);
 						user.setEmail(email);
 						user.setRegistrationDate(new Date(System.currentTimeMillis()));
