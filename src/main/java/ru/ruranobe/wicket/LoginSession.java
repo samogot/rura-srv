@@ -83,6 +83,7 @@ public class LoginSession extends AuthenticatedWebSession
                     authenticationCompleted = true;
                 }
             }
+            session.commit();
         }
         return authenticationCompleted;
     }
