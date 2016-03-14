@@ -1,6 +1,8 @@
 package ru.ruranobe.wicket.webpages.base;
 
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.authentication.IAuthenticationStrategy;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -44,6 +46,13 @@ public abstract class BaseLayoutPage extends WebPage
             add(resetPasswordPanel = new ModalEmailPasswordRecoveryPanel("resetPasswordPanelModal"));
         }
         add(new Label("pageTitle", getPageTitle()));
+        WebMarkupContainer ogTitle = new WebMarkupContainer("ogTitle");
+        add(ogTitle);
+        ogTitle.add(new AttributeModifier("content", getPageTitle()));
+        if (get("ogImage") == null) {
+            WebMarkupContainer ogImage = new WebMarkupContainer("ogImage");
+            add(ogImage);
+        }
         add(new Label("currentYear", Year.now()));
         super.onInitialize();
     }

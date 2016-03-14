@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -292,6 +293,12 @@ public class ProjectPage extends SidebarLayoutPage
             }
 
             add(new CoverCarousel("projectCoverCarousel", allCoverIds));
+            if (!allCoverIds.isEmpty()) {
+                WebMarkupContainer ogImage = new WebMarkupContainer("ogImage");
+                add(ogImage);
+                ogImage.add(
+                        new AttributeModifier("content", allCoverIds.iterator().next().getValue().getThumbnail(240)));
+            }
 
             sidebarModules.add(new ActionsSidebarModule(ProjectEdit.class, mainProject.getUrlParameters()));
             sidebarModules.add(new UpdatesSidebarModule(mainProject.getProjectId()));

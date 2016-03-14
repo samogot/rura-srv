@@ -104,6 +104,12 @@ public class VolumePage extends SidebarLayoutPage
                 covers.add(new SimpleEntry<>("", volumeCover));
             }
             add(new CoverCarousel("volumeCoverCarousel", covers));
+            if (!covers.isEmpty()) {
+                WebMarkupContainer ogImage = new WebMarkupContainer("ogImage");
+                add(ogImage);
+                ogImage.add(
+                        new AttributeModifier("content", covers.iterator().next().getValue().getThumbnail(240)));
+            }
 
             BookmarkablePageLink projectUrl =
                     new BookmarkablePageLink("projectUrl", ProjectPage.class, Project.makeUrlParameters(projectUrlValue));
