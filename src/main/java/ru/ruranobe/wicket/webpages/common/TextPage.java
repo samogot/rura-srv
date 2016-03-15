@@ -60,6 +60,11 @@ public class TextPage extends SidebarLayoutPage implements InstantiationSecurity
 
             redirectTo404IfArgumentIsNull(project);
 
+            if (project.isWorks())
+            {
+                addBodyClassAttribute("works");
+            }
+
             ChaptersMapper chaptersMapperCacheable = CachingFacade.getCacheableMapper(session, ChaptersMapper.class);
             VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
             volume = volumesMapperCacheable.getVolumeByUrl(projectUrl + "/" + volumeUrl);

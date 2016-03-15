@@ -160,7 +160,8 @@ CREATE TABLE volumes
     'proofread',
     -- опубликован
     'decor',
-    'done')                              NOT NULL,
+    'done',
+    'license')                           NOT NULL,
   volume_status_hint VARCHAR(255),
   adult              BOOL                NOT NULL,
   annotation         TEXT,

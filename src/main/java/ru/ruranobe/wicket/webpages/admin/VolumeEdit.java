@@ -271,6 +271,7 @@ public class VolumeEdit extends AdminLayoutPage implements InstantiationSecurity
                                 .add(new SelectOptions<>("not_in_work", RuraConstants.VOLUME_STATUS_IN_WORK_LIST, optionRenderer))
                                 .add(new SelectOptions<>("in_work", RuraConstants.VOLUME_STATUS_NOT_IN_WORK_LIST, optionRenderer))
                                 .add(new SelectOptions<>("published", RuraConstants.VOLUME_STATUS_PUBLISHED_LIST, optionRenderer)));
+                        add(new TextField<String>("volumeStatusHint"));
                         add(new TextField<String>("externalUrl"));
                         add(new TextArea<String>("annotation"));
                         add(new CheckBox("adult"));

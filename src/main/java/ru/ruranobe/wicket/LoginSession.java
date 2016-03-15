@@ -39,6 +39,21 @@ public class LoginSession extends AuthenticatedWebSession
         return roles != null && roles.hasRole(role);
     }
 
+    public void setStyleColor(String styleColor)
+    {
+        this.styleColor = styleColor;
+    }
+
+    public void setStyleDayNight(String styleDayNight)
+    {
+        this.styleDayNight = styleDayNight;
+    }
+
+    public String getBodyClassStyle()
+    {
+        return styleColor + " " + styleDayNight;
+    }
+
     private User user;
     private Roles roles = null;
     private Set<String> ownProjects = null;
@@ -133,4 +148,7 @@ public class LoginSession extends AuthenticatedWebSession
         }
         return result;
     }
+
+    private String styleColor = "";
+    private String styleDayNight = "white";
 }

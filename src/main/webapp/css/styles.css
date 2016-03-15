@@ -74,6 +74,10 @@ header {
 
 .navbar-brand {
     height: 100px;
+    display: block;
+    background: url(../img/logo1.png) no-repeat 15px 13px;
+    background-size: 251px;
+    width: 281px;
 }
 
 .regButtons {
@@ -221,6 +225,9 @@ input[type="text"] {
     .navbar-brand {
         height: 75px;
         padding: 8px 15px;
+        background-position: 15px 8px;
+        background-size: 232px;
+        width: 262px;
     }
 
     .navbar-brand > img {
@@ -246,6 +253,9 @@ input[type="text"] {
     .navbar-brand {
         height: 55px;
         padding: 5px 10px;
+        background-position: 10px 5px;
+        background-size: 174px;
+        width: 194px;
     }
 
     .navbar-brand > img {

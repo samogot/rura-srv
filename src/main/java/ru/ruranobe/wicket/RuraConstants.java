@@ -53,6 +53,7 @@ public class RuraConstants
     public static final String VOLUME_STATUS_PROOFREAD = "proofread";
     public static final String VOLUME_STATUS_DECOR = "decor";
     public static final String VOLUME_STATUS_DONE = "done";
+    public static final String VOLUME_STATUS_LICENSE = "license";
     public static final ImmutableBiMap<String, String> VOLUME_STATUS_TO_FULL_TEXT =
             new ImmutableBiMap.Builder<String, String>()
                     .put(RuraConstants.VOLUME_STATUS_HIDDEN, "Скрыт")
@@ -68,6 +69,7 @@ public class RuraConstants
                     .put(RuraConstants.VOLUME_STATUS_PROOFREAD, "Редактура")
                     .put(RuraConstants.VOLUME_STATUS_DECOR, "Не оформлен")
                     .put(RuraConstants.VOLUME_STATUS_DONE, "Завершен")
+                    .put(RuraConstants.VOLUME_STATUS_LICENSE, "Лицензирован")
                     .build();
 
     public static final Map<String, String> VOLUME_STATUS_FULL_TEXT_TO_STATUS =
@@ -87,6 +89,7 @@ public class RuraConstants
                     .put(RuraConstants.VOLUME_STATUS_PROOFREAD, "редакт")
                     .put(RuraConstants.VOLUME_STATUS_DECOR, "не оформлен")
                     .put(RuraConstants.VOLUME_STATUS_DONE, "завершен")
+                    .put(RuraConstants.VOLUME_STATUS_LICENSE, "лицензия")
                     .build();
 
     @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
@@ -99,7 +102,7 @@ public class RuraConstants
     public static final List<String> VOLUME_STATUS_NOT_IN_WORK_LIST = Arrays.asList(RuraConstants.VOLUME_STATUS_ONGOING,
             RuraConstants.VOLUME_STATUS_TRANSLATING, RuraConstants.VOLUME_STATUS_PROOFREAD);
     public static final List<String> VOLUME_STATUS_PUBLISHED_LIST = Arrays.asList(RuraConstants.VOLUME_STATUS_DECOR,
-            RuraConstants.VOLUME_STATUS_DONE);
+            RuraConstants.VOLUME_STATUS_DONE, RuraConstants.VOLUME_STATUS_LICENSE);
 
     public static final ExternalResource NO_COVER_IMAGE = new ExternalResource("http://ruranobe.ru/images/a/ad/nopic.png",
             "http://ruranobe.ru/images/thumb/a/ad/nopic.png/%dpx-nopic.png", 350, 500);

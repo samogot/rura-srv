@@ -2,10 +2,12 @@ package ru.ruranobe.wicket.webpages.base;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.authentication.IAuthenticationStrategy;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.util.cookies.CookieUtils;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.wicket.LoginSession;
 import ru.ruranobe.wicket.components.UserActionsPanel;
@@ -13,9 +15,12 @@ import ru.ruranobe.wicket.components.modals.ModalEmailPasswordRecoveryPanel;
 import ru.ruranobe.wicket.components.modals.ModalLoginPanel;
 
 import java.time.Year;
+import java.util.Arrays;
+import java.util.List;
 
 public abstract class BaseLayoutPage extends WebPage
 {
+    private final TransparentWebMarkupContainer body;
     protected Panel userActionsPanelAndroidView = null;
     protected Panel userActionsPanel = null;
     protected Panel loginPanel = null;
@@ -24,6 +29,36 @@ public abstract class BaseLayoutPage extends WebPage
     public BaseLayoutPage()
     {
         checkLogin();
+        body = new TransparentWebMarkupContainer("body");
+        checkStyleCookies();
+    }
+
+    private void checkStyleCookies()
+    {
+        CookieUtils cookieUtils = new CookieUtils();
+        String color = cookieUtils.load("rura_style_color");
+        cookieUtils.remove("rura_style_color");
+        String dayNight = cookieUtils.load("rura_style_day_night");
+        cookieUtils.remove("rura_style_day_night");
+        LoginSession loginSession = LoginSession.get();
+        if (Arrays.asList("white", "blue", "red", "black").contains(color))
+        {
+            loginSession.setStyleColor(color);
+        }
+        if ("night".equals(dayNight))
+        {
+            loginSession.setStyleDayNight(dayNight);
+        }
+        else if ("day".equals(dayNight))
+        {
+            loginSession.setStyleDayNight("");
+        }
+        addBodyClassAttribute(loginSession.getBodyClassStyle());
+    }
+
+    protected void addBodyClassAttribute(String value)
+    {
+        body.add(AttributeModifier.append("class", " " + value));
     }
 
     @Override
@@ -54,6 +89,7 @@ public abstract class BaseLayoutPage extends WebPage
             add(ogImage);
         }
         add(new Label("currentYear", Year.now()));
+        add(body);
         super.onInitialize();
     }
 
@@ -106,4 +142,5 @@ public abstract class BaseLayoutPage extends WebPage
     {
         return "РуРанобэ";
     }
+
 }

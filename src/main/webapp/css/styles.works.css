@@ -1,0 +1,33 @@
+body.works .btn-primary {
+    background-color: #cd5fd3;
+}
+
+body.works .btn-primary:hover, body.works .btn-primary:focus {
+    background-color: #b935c0;
+}
+
+body.works .btn-primary.disabled, body.works .btn-primary:disabled, body.works .btn-primary[disabled] {
+    background-color: #b935c0;
+}
+
+body.works .secondLogo {
+    background-image: url(../img/logo2works.png);
+    background-color: #f890fe;
+}
+
+body.works .navbar-top {
+    background-color: #cd5fd3;
+}
+
+body.works .miniSearch > button {
+    background-color: #cd5fd3;
+}
+
+body.works .btn-white {
+    color: #cd5fd3;
+    background-color: #FFF;
+}
+
+body.works .navbar-brand {
+    background-image: url(../img/logo1works.png);
+}

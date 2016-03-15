@@ -57,6 +57,11 @@ public class VolumePage extends SidebarLayoutPage
 
             redirectTo404IfArgumentIsNull(project);
 
+            if (project.isWorks())
+            {
+                addBodyClassAttribute("works");
+            }
+
             VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
             String volumeUrl = projectUrlValue + "/" + volumeShortUrl;
             final Volume volume = volumesMapperCacheable.getVolumeNextPrevByUrl(volumeUrl);

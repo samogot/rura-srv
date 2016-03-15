@@ -28,6 +28,7 @@ public class WorksProjects extends BaseLayoutPage
     protected void onInitialize()
     {
         super.onInitialize();
+        addBodyClassAttribute("works");
         try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
         {
             List<ProjectInfo> projectsList = new ArrayList<>();

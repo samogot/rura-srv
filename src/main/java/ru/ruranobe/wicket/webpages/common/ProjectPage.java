@@ -53,6 +53,7 @@ public class ProjectPage extends SidebarLayoutPage
                     .put(RuraConstants.VOLUME_STATUS_PROOFREAD, "warning")
                     .put(RuraConstants.VOLUME_STATUS_DECOR, "success")
                     .put(RuraConstants.VOLUME_STATUS_DONE, "success")
+                    .put(RuraConstants.VOLUME_STATUS_LICENSE, "success")
                     .build();
     private static final VolumesComparator COMPARATOR = new VolumesComparator();
     protected String titleName;
@@ -72,6 +73,11 @@ public class ProjectPage extends SidebarLayoutPage
 
             redirectTo404IfArgumentIsNull(mainProject);
             redirectTo404(mainProject.isProjectHidden() && !LoginSession.get().isProjectEditAllowedByUser(mainProject.getUrl()));
+
+            if (mainProject.isWorks())
+            {
+                addBodyClassAttribute("works");
+            }
 
             titleName = mainProject.getTitle();
             Collection<Project> subProjects =
