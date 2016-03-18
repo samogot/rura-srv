@@ -1,30 +1,30 @@
 body.works .btn-primary {
-    background-color: #cd5fd3;
+    background-color: #01bfaa;
 }
 
 body.works .btn-primary:hover, body.works .btn-primary:focus {
-    background-color: #b935c0;
+    background-color: #2d9085;
 }
 
 body.works .btn-primary.disabled, body.works .btn-primary:disabled, body.works .btn-primary[disabled] {
-    background-color: #b935c0;
+    background-color: #01bfaa;
 }
 
 body.works .secondLogo {
     background-image: url(../img/logo2works.png);
-    background-color: #f890fe;
+    background-color: #7be9dd;
 }
 
 body.works .navbar-top {
-    background-color: #cd5fd3;
+    background-color: #01bfaa;
 }
 
 body.works .miniSearch > button {
-    background-color: #cd5fd3;
+    background-color: #01bfaa;
 }
 
 body.works .btn-white {
-    color: #cd5fd3;
+    color: #01bfaa;
     background-color: #FFF;
 }
 
