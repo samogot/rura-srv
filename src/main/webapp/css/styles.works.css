@@ -23,9 +23,8 @@ body.works .miniSearch > button {
     background-color: #01bfaa;
 }
 
-body.works .btn-white {
+body.works .navbar-form .btn-white {
     color: #01bfaa;
-    background-color: #FFF;
 }
 
 body.works .navbar-brand {
