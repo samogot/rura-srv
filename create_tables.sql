@@ -350,7 +350,8 @@ ALTER TABLE texts_history ADD CONSTRAINT fk_previous_text_id FOREIGN KEY (previo
 
 ALTER TABLE texts_history ADD CONSTRAINT fk_texts_history_user_id FOREIGN KEY (user_id) REFERENCES users (user_id);
 
-ALTER TABLE texts_history ADD CONSTRAINT fk_texts_history_chapter_id FOREIGN KEY (chapter_id) REFERENCES chapters (chapter_id);
+ALTER TABLE texts_history ADD CONSTRAINT fk_texts_history_chapter_id FOREIGN KEY (chapter_id) REFERENCES chapters (chapter_id)
+  ON DELETE SET NULL;
 
 ALTER TABLE chapter_images ADD CONSTRAINT fk_colored_image_id FOREIGN KEY (colored_image_id) REFERENCES external_resources (resource_id);
 
@@ -390,7 +391,8 @@ ALTER TABLE projects ADD CONSTRAINT fk_parent_id FOREIGN KEY (parent_id) REFEREN
 ALTER TABLE projects ADD CONSTRAINT fk_image_id FOREIGN KEY (image_id) REFERENCES external_resources (resource_id);
 
 
-ALTER TABLE orphus_comments ADD CONSTRAINT fk_chapter_id2 FOREIGN KEY (chapter_id) REFERENCES chapters (chapter_id);
+ALTER TABLE orphus_comments ADD CONSTRAINT fk_chapter_id2 FOREIGN KEY (chapter_id) REFERENCES chapters (chapter_id)
+  ON DELETE CASCADE;
 
 ALTER TABLE orphus_comments ADD CONSTRAINT fk_user_id2 FOREIGN KEY (user_id) REFERENCES users (user_id);
 
