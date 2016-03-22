@@ -1,0 +1,15 @@
+{
+  "name": "wicket-nodejs-build",
+  "version": "0.0.1",
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "*",
+    "gulp-load-plugins": "*",
+    "gulp-clean-css": "*",
+    "gulp-sourcemaps": "*",
+    "gulp-uglify": "*"
+  },
+  "engines": {
+    "node": "*"
+  }
+}

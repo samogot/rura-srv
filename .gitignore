@@ -1,3 +1,5 @@
+/node_modules
+/node
 # Created by .ignore support plugin (hsz.mobi)
 ### Maven template
 target/

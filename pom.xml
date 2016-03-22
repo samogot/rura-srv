@@ -314,34 +314,39 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.0.2</version>
+                <configuration>
+                    <webResources>
+                        <resource>
+                            <directory>target/generated-resources/frontend</directory>
+                        </resource>
+                    </webResources>
+                </configuration>
             </plugin>
             <plugin>
-                <groupId>com.samaxes.maven</groupId>
-                <artifactId>minify-maven-plugin</artifactId>
-                <version>1.7.4</version>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>0.0.22</version>
                 <executions>
                     <execution>
-                        <id>default-minify</id>
-                        <configuration>
-                            <skipMerge>true</skipMerge>
-                            <nosuffix>true</nosuffix>
-                            <jsEngine>CLOSURE</jsEngine>
-                            <cssSourceIncludes>
-                                <cssSourceInclude>**</cssSourceInclude>
-                            </cssSourceIncludes>
-                            <cssSourceExcludes>
-                                <cssSourceExclude>**/*.min.css</cssSourceExclude>
-                                <cssSourceExclude>**/*.map</cssSourceExclude>
-                            </cssSourceExcludes>
-                            <jsSourceIncludes>
-                                <jsSourceInclude>**</jsSourceInclude>
-                            </jsSourceIncludes>
-                            <jsSourceExcludes>
-                                <jsSourceExclude>**/*.min.js</jsSourceExclude>
-                            </jsSourceExcludes>
-                        </configuration>
+                        <id>install node and npm</id>
                         <goals>
-                            <goal>minify</goal>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <configuration>
+                            <nodeVersion>v4.4.0</nodeVersion>
+                            <npmVersion>3.8.3</npmVersion>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>gulp build</id>
+                        <goals>
+                            <goal>gulp</goal>
                         </goals>
                     </execution>
                 </executions>
