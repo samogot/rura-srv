@@ -13,22 +13,27 @@ var resourcesPath = 'src/main/frontend/',
 
 gulp.task('styles', function () {
     return gulp.src(resourcesPath + '/**/*.css')
+        .pipe($.changed(generatedPath))
+        .pipe(gulp.dest(generatedPath + 'src/'))
         .pipe($.sourcemaps.init({loadMaps: true}))
         .pipe($.cleanCss())
-        .pipe($.sourcemaps.write('./'))
+        .pipe($.sourcemaps.write('./', {includeContent: false, sourceRoot: '/src'}))
         .pipe(gulp.dest(generatedPath));
 });
 
 gulp.task('images', function () {
     return gulp.src(resourcesPath + '/**/*.png')
+        .pipe($.changed(generatedPath))
         .pipe(gulp.dest(generatedPath));
 });
 
 gulp.task('scripts', function () {
     return gulp.src(resourcesPath + '/**/*.js')
+        .pipe($.changed(generatedPath))
+        .pipe(gulp.dest(generatedPath + 'src/'))
         .pipe($.sourcemaps.init({loadMaps: true}))
         .pipe($.uglify())
-        .pipe($.sourcemaps.write('./'))
+        .pipe($.sourcemaps.write('./', {includeContent: false, sourceRoot: '/src'}))
         .pipe(gulp.dest(generatedPath));
 });
 
@@ -59,6 +64,20 @@ gulp.task('default', ['clean'], function () {
  * Usage: $ gulp watch
  */
 gulp.task('watch', function () {
-    gulp.watch(resourcesPath + '**/*.css', ['styles']);
-    gulp.watch(resourcesPath + '**/*.js', ['scripts']);
+    $.livereload.listen();
+    gulp.watch(resourcesPath + '**/*.css', function (event) {
+        gulp.start('styles').on('task_stop', function () {
+            $.livereload.changed(event.path)
+        })
+    });
+    gulp.watch(resourcesPath + '**/*.js', function (event) {
+        gulp.start('scripts').on('task_stop', function () {
+            $.livereload.changed(event.path)
+        })
+    });
+    gulp.watch(resourcesPath + '**/*.png', function (event) {
+        gulp.start('images').on('task_stop', function () {
+            $.livereload.changed(event.path)
+        })
+    });
 });
