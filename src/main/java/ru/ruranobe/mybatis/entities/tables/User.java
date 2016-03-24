@@ -68,6 +68,7 @@ public class User implements Serializable
         this.convertWithImgs = user.convertWithImgs;
         this.adult = user.adult;
         this.preferColoredImgs = user.preferColoredImgs;
+        this.showHiddenContent = user.showHiddenContent;
         this.convertImgsSize = user.convertImgsSize;
     }
 
