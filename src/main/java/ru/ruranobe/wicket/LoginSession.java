@@ -150,5 +150,5 @@ public class LoginSession extends AuthenticatedWebSession
     }
 
     private String styleColor = "";
-    private String styleDayNight = "white";
+    private String styleDayNight = "";
 }
