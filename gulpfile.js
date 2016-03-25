@@ -1,9 +1,12 @@
 'use strict';
 
-var gulp = require('gulp');
+const gulp = require('gulp');
 
 // load plugins
-var $ = require('gulp-load-plugins')();
+const $ = require('gulp-load-plugins')();
+
+// pngquant is irrelevant and does not contain prefix "gulp-"
+const pngquant = require('imagemin-pngquant');
 
 /**
  * Some constants to save some typing later
@@ -24,6 +27,14 @@ gulp.task('styles', function () {
 gulp.task('images', function () {
     return gulp.src(resourcesPath + '/**/*.png')
         .pipe($.changed(generatedPath))
+        .pipe($.imagemin({
+                    progressive: true,
+                    svgoPlugins: [
+                        {removeViewBox: false},
+                        {cleanupIDs: false}
+                    ],
+                    use: [pngquant()]
+                }))
         .pipe(gulp.dest(generatedPath));
 });
 
