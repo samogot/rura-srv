@@ -27,7 +27,7 @@ public class ContentsModule extends SidebarModuleBase
         super("sidebarModule", "contents", "Содержание");
         module.add(new AttributeAppender("class", " scrollspy"));
         moduleWrapper.add(new AttributeModifier("data-spy", "affix"));
-        moduleBody.add(new ListView<ContentsHolder>("h2Repeater", contents)
+        add(new ListView<ContentsHolder>("h2Repeater", contents)
         {
             @Override
             protected void populateItem(ListItem<ContentsHolder> item)

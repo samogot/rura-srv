@@ -24,6 +24,7 @@ public class UpdatesSidebarModule extends SidebarModuleBase {
 
     public UpdatesSidebarModule(Integer projectId) {
         super("sidebarModule", "updates", "Обновления серии");
+        moduleBody.add(AttributeModifier.replace("class", "actions"));
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
         try (SqlSession session = sessionFactory.openSession()) {
             UpdatesMapper updatesMapperCacheable = CachingFacade.getCacheableMapper(session, UpdatesMapper.class);
@@ -49,11 +50,11 @@ public class UpdatesSidebarModule extends SidebarModuleBase {
                     listItem.add(updateContainerWithIcon);
                 }
             };
-            moduleBody.add(updatesView);
+            add(updatesView);
             PageParameters p = new PageParameters();
             p.add("project", projectId);
             BookmarkablePageLink<Updates> moreLink = new BookmarkablePageLink<>("moreLink", Updates.class, p);
-            moduleBody.add(moreLink);
+            add(moreLink);
         }
     }
 }

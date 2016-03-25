@@ -63,13 +63,6 @@
         </dependency>
         -->
 
-        <!--plugin for direct chrome inspections-->
-        <dependency>
-            <groupId>net.ftlines.wicket-source</groupId>
-            <artifactId>wicket-source</artifactId>
-            <version>6.0.0.8</version>
-        </dependency>
-
         <!-- LOGGING DEPENDENCIES - LOG4J -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -390,7 +383,7 @@
                             <keyPassword>wicket</keyPassword>
                         </connector>
                     </connectors>
-                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <scanIntervalSeconds>1</scanIntervalSeconds>
                     <webApp>
                         <resourceBases>
                             <resourceBase>src/main/webapp</resourceBase>

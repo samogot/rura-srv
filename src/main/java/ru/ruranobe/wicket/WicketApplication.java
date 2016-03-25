@@ -1,6 +1,5 @@
 package ru.ruranobe.wicket;
 
-import net.ftlines.wicketsource.WicketSource;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AnnotationsRoleAuthorizationStrategy;
@@ -46,7 +45,6 @@ public class WicketApplication extends AuthenticatedWebApplication
     {
         super.init();
         getFrameworkSettings().setSerializer(new KryoSerializer());
-        WicketSource.configure(this);
 
         // preload rura configuration
         RuranobeUtils.getApplicationContext();

@@ -5,7 +5,8 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import ru.ruranobe.wicket.components.sidebar.SidebarMiniSearch;
+import ru.ruranobe.wicket.components.sidebar.AdSenseSidebarModule;
+import ru.ruranobe.wicket.components.sidebar.MiniSearchSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.SidebarModuleBase;
 import ru.ruranobe.wicket.webpages.common.TextPage;
 import ru.ruranobe.wicket.webpages.common.VolumePage;
@@ -23,7 +24,7 @@ public class SidebarLayoutPage extends BaseLayoutPage
 
     public SidebarLayoutPage()
     {
-        add(new SidebarMiniSearch("miniSearch"));
+        sidebarModules.add(new MiniSearchSidebarModule());
         add(new ListView<SidebarModuleBase>("sidebarModuleRepeater", sidebarModules)
         {
             @Override
@@ -34,6 +35,13 @@ public class SidebarLayoutPage extends BaseLayoutPage
         });
         add(textPageUtils = new WebMarkupContainer("textPageUtils"));
         textPageUtils.setVisible(false);
+    }
+
+    @Override
+    protected void onBeforeRender()
+    {
+        sidebarModules.add(new AdSenseSidebarModule());
+        super.onBeforeRender();
     }
 
     @Override

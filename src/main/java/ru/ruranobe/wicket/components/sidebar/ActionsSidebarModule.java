@@ -1,5 +1,6 @@
 package ru.ruranobe.wicket.components.sidebar;
 
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import ru.ruranobe.wicket.LoginSession;
@@ -12,9 +13,10 @@ public class ActionsSidebarModule extends SidebarModuleBase
 	public ActionsSidebarModule(Class editClass, PageParameters pageParameters) {
 		super("sidebarModule", "actions", "Действия");
 		project = pageParameters != null ? pageParameters.get("project").toOptionalString() : null;
-		moduleBody.add(new BookmarkablePageLink("edit", editClass, pageParameters));
-		moduleBody.add(new BookmarkablePageLink("orphus", Orphus.class, pageParameters));
-	}
+        add(new BookmarkablePageLink("edit", editClass, pageParameters));
+        add(new BookmarkablePageLink("orphus", Orphus.class, pageParameters));
+        moduleBody.add(AttributeModifier.replace("class", "actions"));
+    }
 
     @Override
     public boolean isVisible()

@@ -2,76 +2,60 @@
 <html xmlns:wicket="http://wicket.apache.org" lang="en">
 <body>
 <wicket:extend>
-    <div class="container">
-        <div class="leftColumn">
-            <main class="content">
-                <div class="h3" style="margin-top:0 !important">Регистрация</div>
-                <div style="color: rgb(77,77,77);margin-bottom:10px;">
-                    Введите данные для регистрации.
-                </div>
-                <form wicket:id="registrationForm" class="form-horizontal">
-                    <div class="form-group">
-                        <label wicket:for="username" class="col-sm-2 control-label">Логин: <span
-                                style="color:red">*</span></label>
-
-                        <div class="col-sm-8">
-                            <input wicket:id="username" type="text" class="form-control" placeholder="Логин">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label wicket:for="password" class="col-sm-2 control-label">Пароль:<span
-                                style="color:red">*</span></label>
-
-                        <div class="col-sm-8">
-                            <input wicket:id="password" type="password" class="form-control" placeholder="Пароль">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label wicket:for="confirmPassword" class="col-sm-2 control-label">Повторите пароль:<span
-                                style="color:red">*</span></label>
-
-                        <div class="col-sm-8">
-                            <input wicket:id="confirmPassword" type="password" class="form-control"
-                                   placeholder="Повторите пароль">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label wicket:for="email" class="col-sm-2 control-label">E-mail:</label>
-
-                        <div class="col-sm-8">
-                            <input wicket:id="email" type="text" class="form-control" placeholder="E-mail">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label wicket:for="realname" class="col-sm-2 control-label">Настоящее имя:</label>
-
-                        <div class="col-sm-8">
-                            <input wicket:id="realname" type="text" class="form-control" placeholder="Настоящее имя">
-                        </div>
-                    </div>
-                    <div style="color:rgb(191,191,191);margin-left:25px;font-size:14px;margin-bottom:10px;"><span
-                            style="color:red">*</span> - помечены поля обязательные для заполнения
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-8">
-                            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
-                        </div>
-                    </div>
-                </form>
-                <div wicket:id="feedback"/>
-            </main>
-        </div>
+    <h1>Регистрация</h1>
+    <div style="color: rgb(77,77,77);margin-bottom:10px;">
+        Введите данные для регистрации.
     </div>
+    <form wicket:id="registrationForm" class="form-horizontal">
+        <div class="form-group">
+            <label wicket:for="username" class="col-sm-2 control-label">Логин: <span
+                    style="color:red">*</span></label>
+
+            <div class="col-sm-8">
+                <input wicket:id="username" type="text" class="form-control" placeholder="Логин">
+            </div>
+        </div>
+        <div class="form-group">
+            <label wicket:for="password" class="col-sm-2 control-label">Пароль:<span
+                    style="color:red">*</span></label>
+
+            <div class="col-sm-8">
+                <input wicket:id="password" type="password" class="form-control" placeholder="Пароль">
+            </div>
+        </div>
+        <div class="form-group">
+            <label wicket:for="confirmPassword" class="col-sm-2 control-label">Повторите пароль:<span
+                    style="color:red">*</span></label>
+
+            <div class="col-sm-8">
+                <input wicket:id="confirmPassword" type="password" class="form-control"
+                       placeholder="Повторите пароль">
+            </div>
+        </div>
+        <div class="form-group">
+            <label wicket:for="email" class="col-sm-2 control-label">E-mail:</label>
+
+            <div class="col-sm-8">
+                <input wicket:id="email" type="text" class="form-control" placeholder="E-mail">
+            </div>
+        </div>
+        <div class="form-group">
+            <label wicket:for="realname" class="col-sm-2 control-label">Настоящее имя:</label>
+
+            <div class="col-sm-8">
+                <input wicket:id="realname" type="text" class="form-control" placeholder="Настоящее имя">
+            </div>
+        </div>
+        <div style="color:rgb(191,191,191);margin-left:25px;font-size:14px;margin-bottom:10px;"><span
+                style="color:red">*</span> - помечены поля обязательные для заполнения
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-8">
+                <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+            </div>
+        </div>
+    </form>
+    <div wicket:id="feedback"/>
 </wicket:extend>
 </body>
-<script type="text/javascript">
-    $('button.login').click(function () {
-        $(".modal-backdrop").show();
-        $(".loginBlock").show();
-    });
-    $('.loginClose').click(function () {
-        $(".modal-backdrop").hide();
-        $(".loginBlock").hide();
-    });
-</script>
 </html>

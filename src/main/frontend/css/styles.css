@@ -1,6 +1,7 @@
 .bold {
     font-weight: bold;
 }
+
 html {
     overflow-x: hidden;
 }
@@ -915,10 +916,6 @@ button.loginClose {
     margin-right: 4px;
 }
 
-.miniSearch {
-    margin-top: 20px;
-}
-
 .miniSearch > input {
     width: 180px;
     height: 40px;
@@ -1055,7 +1052,6 @@ a.list-group-item center {
 #imageselect {
     min-height: 340px;
 }
-
 
 #imageform .progress {
     margin: 5px 0;
@@ -1238,10 +1234,6 @@ a.more {
     color: rgb(133, 133, 133);
     text-decoration: none;
     border-bottom: 1px dashed rgb(133, 133, 133);
-}
-
-.actions {
-    margin-bottom: 20px;
 }
 
 .h4 + div > a {
@@ -1431,6 +1423,7 @@ div > button.view2.active {
     display: block;
     overflow: hidden;
 }
+
 #project-cover-carousel .carousel-inner {
     width: 240px;
     height: 343px;
@@ -1543,6 +1536,7 @@ body.modal-open {
 
 .module {
     width: 100%;
+    margin-top: 20px;
 }
 
 .module_name {
@@ -1894,6 +1888,7 @@ table.rc-table-resizing thead > th > a {
     width: calc(100% - 30px);
     display: inline-block;
 }
+
 /*   table   */
 /*              PROJECT EDIT                 */
 
@@ -1993,4 +1988,13 @@ form.admin-block {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+#vk-widget-module {
+    margin-top: 40px;
+}
+
+#adsense-module, #adsense-module > div, #adsense-module > div > div, #adsense-module .adsbygoogle {
+    height: 220px !important;
+    overflow-y: hidden;
 }

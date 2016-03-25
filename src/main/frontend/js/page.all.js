@@ -1,7 +1,7 @@
 $(document).ready(function() {
     $('.module_name').click(function() {
         $(this).children('.fa').toggleClass("fa-chevron-right fa-chevron-down").end()
-            .toggleClass("opened").next('.actions').slideToggle(reinitAffix);
+            .toggleClass("opened").next().slideToggle(reinitAffix);
     });
 
     //$('.ellipses-left').trimLeft();
