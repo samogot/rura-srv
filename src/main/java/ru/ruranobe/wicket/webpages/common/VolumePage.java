@@ -67,7 +67,8 @@ public class VolumePage extends SidebarLayoutPage
             final Volume volume = volumesMapperCacheable.getVolumeNextPrevByUrl(volumeUrl);
 
             redirectTo404IfArgumentIsNull(volume);
-            redirectTo404((project.isProjectHidden() || volume.getVolumeStatus().equals(RuraConstants.VOLUME_STATUS_HIDDEN))
+            redirectTo404((project.isProjectHidden() && !project.isWorks()
+                           || volume.getVolumeStatus().equals(RuraConstants.VOLUME_STATUS_HIDDEN))
                           && !LoginSession.get().isProjectEditAllowedByUser(projectUrlValue));
 
             setDefaultModel(new CompoundPropertyModel<>(volume));

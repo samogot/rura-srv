@@ -70,7 +70,8 @@ public class TextPage extends SidebarLayoutPage implements InstantiationSecurity
             volume = volumesMapperCacheable.getVolumeByUrl(projectUrl + "/" + volumeUrl);
 
             redirectTo404IfArgumentIsNull(volume);
-            redirectTo404((project.isProjectHidden() || volume.getVolumeStatus().equals(RuraConstants.VOLUME_STATUS_HIDDEN))
+            redirectTo404((project.isProjectHidden() && !project.isWorks()
+                           || volume.getVolumeStatus().equals(RuraConstants.VOLUME_STATUS_HIDDEN))
                           && !LoginSession.get().isProjectEditAllowedByUser(projectUrl));
 
             titleName = volume.getNameTitle();
