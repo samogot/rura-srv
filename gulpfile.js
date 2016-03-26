@@ -33,6 +33,10 @@ gulp.task('styles', function () {
         .pipe($.changed(generatedPath))
         .pipe($.sourcemaps.init({loadMaps: true}))
         .pipe($.revReplace({manifest: gulp.src(generatedPath + "/rev-manifest.json")}))
+        .pipe($.autoprefixer({
+                browsers: ['> 5% in RU'],
+                cascade: false
+            }))
         .pipe($.cleanCss())
         .pipe($.sourcemaps.write('./', {includeContent: false, sourceRoot: '/src'}))
         .pipe(gulp.dest(generatedPath));
@@ -42,13 +46,13 @@ gulp.task('images', function () {
     return gulp.src(generatedPath + 'src/**/*.{png,gif,jpg}')
         .pipe($.changed(generatedPath))
         .pipe($.imagemin({
-                    progressive: true,
-                    svgoPlugins: [
-                        {removeViewBox: false},
-                        {cleanupIDs: false}
-                    ],
-                    use: [pngquant()]
-                }))
+                progressive: true,
+                svgoPlugins: [
+                    {removeViewBox: false},
+                    {cleanupIDs: false}
+                ],
+                use: [pngquant()]
+            }))
         .pipe(gulp.dest(generatedPath));
 });
 
