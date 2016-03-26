@@ -64,7 +64,10 @@ gulp.task('scripts', function () {
 
 gulp.task('html', function () {
     return gulp.src(htmlPath + '/**/*.html')
-        .pipe($.revReplace({manifest: gulp.src(generatedPath + "/rev-manifest.json")}))
+        .pipe($.revReplace({
+                canonicalUris: true,
+                manifest: gulp.src(generatedPath + "/rev-manifest.json")
+            }))
         .pipe($.htmlmin({
                 removeComments: true,
                 collapseWhitespace: true,
