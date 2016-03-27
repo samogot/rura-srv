@@ -47,6 +47,8 @@
         <!-- allowed values: R7, 1.0, 1.5, 2.0 or none -->
         <wtp.version>none</wtp.version>
         <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
+        <wicket.configuration>deployment</wicket.configuration>
+        <!-- use "-Dwicket.configuration=development" command line parameter to run wicket AND gulp build in debug mode-->
     </properties>
     <dependencies>
         <!--  WICKET DEPENDENCIES -->
@@ -315,13 +317,11 @@
                         <resource>
                             <directory>target/generated-resources/frontend</directory>
                             <excludes>
-                                <exclude>**/rev-manifest.json</exclude>
-                                <exclude>**/src/**/*.*</exclude>
+                                <exclude>**/rev-manifest*.json</exclude>
                             </excludes>
                         </resource>
                         <resource>
                             <directory>target/generated-resources/html</directory>
-                            <targetPath>WEB-INF/classes</targetPath>
                         </resource>
                     </webResources>
                 </configuration>
@@ -352,6 +352,9 @@
                         <goals>
                             <goal>gulp</goal>
                         </goals>
+                        <configuration>
+                            <arguments>build-${wicket.configuration}</arguments>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>gulp-watch</id>
@@ -398,6 +401,7 @@
                         <resourceBases>
                             <resourceBase>src/main/webapp</resourceBase>
                             <resourceBase>target/generated-resources/frontend</resourceBase>
+                            <resourceBase>target/generated-resources/html</resourceBase>
                         </resourceBases>
                     </webApp>
                 </configuration>

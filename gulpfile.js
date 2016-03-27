@@ -8,78 +8,133 @@ const $ = require('gulp-load-plugins')();
 // pngquant is irrelevant and does not contain prefix "gulp-"
 const pngquant = require('imagemin-pngquant');
 
-const runSequence = require('run-sequence');
 
 /**
  * Some constants to save some typing later
  */
 var resourcesPath = 'src/main/frontend/',
-    generatedPath = 'target/generated-resources/frontend/';
+    generatedPath = 'target/generated-resources/frontend/',
+    generatedSrcPath = generatedPath + 'src/';
 
 var htmlPath = 'src/main/java',
-    generatedHtmlPath = 'target/generated-resources/html/';
+    generatedHtmlPath = 'target/generated-resources/html/WEB-INF/classes/';
 
-gulp.task('rev-assets', function () {
-    return gulp.src(resourcesPath + '/**/*.{css,js,png,gif,jpg}')
-            .pipe($.changed(generatedPath))
-            .pipe($.rev())
-            .pipe(gulp.dest(generatedPath + 'src/'))
-            .pipe($.rev.manifest({merge: true}))
-            .pipe(gulp.dest(generatedPath));
-});
-
-gulp.task('styles', function () {
-    return gulp.src(generatedPath + 'src/**/*.css')
-        .pipe($.changed(generatedPath))
-        .pipe($.sourcemaps.init({loadMaps: true}))
-        .pipe($.revReplace({manifest: gulp.src(generatedPath + "/rev-manifest.json")}))
-        .pipe($.autoprefixer({
-                browsers: ['> 5% in RU'],
-                cascade: false
-            }))
-        .pipe($.cleanCss())
-        .pipe($.sourcemaps.write('./', {includeContent: false, sourceRoot: '/src'}))
-        .pipe(gulp.dest(generatedPath));
-});
-
-gulp.task('images', function () {
-    return gulp.src(generatedPath + 'src/**/*.{png,gif,jpg}')
-        .pipe($.changed(generatedPath))
+function processImages() {
+    return gulp.src(resourcesPath + '/**/*.{png,gif,jpg}')
+        .pipe($.changed(generatedSrcPath, {hasChanged: $.changed.compareSha1Digest}))
         .pipe($.imagemin({
-                progressive: true,
-                svgoPlugins: [
-                    {removeViewBox: false},
-                    {cleanupIDs: false}
-                ],
-                use: [pngquant()]
-            }))
-        .pipe(gulp.dest(generatedPath));
-});
+            progressive: true,
+            svgoPlugins: [
+                {removeViewBox: false},
+                {cleanupIDs: false}
+            ],
+            use: [pngquant()]
+        }))
+        .pipe(gulp.dest(generatedSrcPath)) //just for changed tracking
+        .pipe(gulp.dest(resourcesPath)); //override original files by lossless compressed
+}
 
-gulp.task('scripts', function () {
-    return gulp.src(generatedPath + 'src/**/*.js')
-        .pipe($.changed(generatedPath))
+function processStyles() {
+
+    return gulp.src(resourcesPath + '/**/*.css')
+        .pipe($.changed(generatedSrcPath))
+        .pipe(gulp.dest(generatedSrcPath))
         .pipe($.sourcemaps.init({loadMaps: true}))
-        .pipe($.revReplace({manifest: gulp.src(generatedPath + "/rev-manifest.json")}))
-        .pipe($.uglify())
-        .pipe($.sourcemaps.write('./', {includeContent: false, sourceRoot: '/src'}))
+        .pipe($.autoprefixer({
+            browsers: ['> 5% in RU'],
+            cascade: false
+        }))
+        .pipe($.cleanCss());
+}
+
+function processScripts() {
+    return gulp.src(resourcesPath + '/**/*.js')
+        .pipe($.changed(generatedSrcPath))
+        .pipe(gulp.dest(generatedSrcPath))
+        .pipe($.sourcemaps.init({loadMaps: true}))
+        .pipe($.uglify());
+}
+
+function writeSourcemaps() {
+    return $.sourcemaps.write('./', {includeContent: false, sourceRoot: '/src'});
+}
+
+gulp.task('images-with-rev', function () {
+    return processImages()
+        .pipe($.rev())
+        .pipe(gulp.dest(generatedPath))
+        .pipe($.rev.manifest('rev-manifest-images.json', {merge: true}))
         .pipe(gulp.dest(generatedPath));
 });
 
-gulp.task('html', function () {
+gulp.task('styles-with-rev', ['images-with-rev'], function () {
+    var manifest = gulp.src(generatedPath + "/rev-manifest-images.json");
+    return processStyles()
+        .pipe($.revReplace({manifest: manifest}))
+        .pipe($.rev())
+        .pipe(writeSourcemaps())
+        .pipe(gulp.dest(generatedPath))
+        .pipe($.rev.manifest('rev-manifest-styles.json', {merge: true}))
+        .pipe(gulp.dest(generatedPath));
+});
+
+gulp.task('scripts-with-rev', ['images-with-rev'], function () {
+    var manifest = gulp.src(generatedPath + "/rev-manifest-images.json");
+    return processScripts()
+        .pipe($.revReplace({manifest: manifest}))
+        .pipe($.rev())
+        .pipe(writeSourcemaps())
+        .pipe(gulp.dest(generatedPath))
+        .pipe($.rev.manifest('rev-manifest-scripts.json', {merge: true}))
+        .pipe(gulp.dest(generatedPath));
+});
+
+gulp.task('html-with-rev', ['scripts-with-rev', 'styles-with-rev'], function () {
+    var manifest = gulp.src(generatedPath + "/rev-manifest-*.json")
+        .pipe($.mergeJson('rev-manifest.json'));
+
     return gulp.src(htmlPath + '/**/*.html')
         .pipe($.revReplace({
-                canonicalUris: true,
-                manifest: gulp.src(generatedPath + "/rev-manifest.json")
-            }))
+            canonicalUris: true,
+            manifest: manifest
+        }))
         .pipe($.htmlmin({
-                removeComments: true,
-                collapseWhitespace: true,
-                minifyJS: true,
-                minifyCSS: true,
-                keepClosingSlash: true
-            }))
+            removeComments: true,
+            collapseWhitespace: true,
+            minifyJS: true,
+            minifyCSS: true,
+            keepClosingSlash: true
+        }))
         .pipe(gulp.dest(generatedHtmlPath));
+});
+
+gulp.task('html-no-rev', function () {
+    return gulp.src(htmlPath + '/**/*.html')
+        .pipe($.changed(generatedHtmlPath))
+        .pipe(gulp.dest(generatedHtmlPath))
+        .pipe($.livereload());
+});
+
+gulp.task('images-no-rev', function () {
+    return processImages()
+        .pipe(gulp.dest(generatedPath))
+        .pipe($.livereload());
+});
+
+gulp.task('styles-no-rev', function () {
+    return processStyles()
+        .pipe(writeSourcemaps())
+        .pipe(gulp.dest(generatedPath))
+        .pipe($.filter(['**/*', '!**/*.map']))
+        .pipe($.livereload());
+});
+
+gulp.task('scripts-no-rev', function () {
+    return processScripts()
+        .pipe(writeSourcemaps())
+        .pipe(gulp.dest(generatedPath))
+        .pipe($.filter(['**/*', '!**/*.map']))
+        .pipe($.livereload());
 });
 
 gulp.task('clean', function () {
@@ -91,12 +146,11 @@ gulp.task('clean', function () {
     //).pipe($.rimraf());
 });
 
-/**
- * The build task just executes 'styles' and 'scripts' tasks
- */
-gulp.task('build', function () {
-    runSequence('rev-assets', ['styles', 'scripts', 'images', 'html']);
-});
+gulp.task('build-development', ['images-no-rev', 'scripts-no-rev', 'styles-no-rev', 'html-no-rev']);
+
+gulp.task('build-deployment', ['html-with-rev']);
+
+gulp.task('build', ['build-development']);
 
 /**
  * Executing just 'gulp' will execute 'clean' and start 'build' tasks
@@ -112,19 +166,11 @@ gulp.task('default', ['clean'], function () {
  */
 gulp.task('watch', function () {
     $.livereload.listen();
-    gulp.watch(resourcesPath + '**/*.css', function (event) {
-        gulp.start('styles').on('task_stop', function () {
-            $.livereload.changed(event.path)
-        })
-    });
-    gulp.watch(resourcesPath + '**/*.js', function (event) {
-        gulp.start('scripts').on('task_stop', function () {
-            $.livereload.changed(event.path)
-        })
-    });
-    gulp.watch(resourcesPath + '**/*.png', function (event) {
-        gulp.start('images').on('task_stop', function () {
-            $.livereload.changed(event.path)
-        })
+    gulp.watch(resourcesPath + '**/*.css', ['styles-no-rev']);
+    gulp.watch(resourcesPath + '**/*.js', ['scripts-no-rev']);
+    gulp.watch(resourcesPath + '**/*.{png,gif,jpg}', ['images-no-rev']);
+    gulp.watch(htmlPath + '/**/*.html', ['html-no-rev']);
+    gulp.watch(htmlPath + '/**/*.java', function () {
+        setTimeout($.livereload.reload, 30000); // reload page after 30sec. do not work. need deploy notification from jetty:run
     });
 });
