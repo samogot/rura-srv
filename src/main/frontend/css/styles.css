@@ -1993,12 +1993,3 @@ form.admin-block {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-
-#vk-widget-module {
-    margin-top: 40px;
-}
-
-#adsense-module, #adsense-module > div, #adsense-module > div > div, #adsense-module .adsbygoogle {
-    height: 220px !important;
-    overflow-y: hidden;
-}

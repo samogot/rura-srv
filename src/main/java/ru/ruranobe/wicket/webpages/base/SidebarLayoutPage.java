@@ -25,6 +25,7 @@ public class SidebarLayoutPage extends BaseLayoutPage
     public SidebarLayoutPage()
     {
         sidebarModules.add(new MiniSearchSidebarModule());
+        sidebarModules.add(new AdSenseSidebarModule());
         add(new ListView<SidebarModuleBase>("sidebarModuleRepeater", sidebarModules)
         {
             @Override
@@ -35,13 +36,6 @@ public class SidebarLayoutPage extends BaseLayoutPage
         });
         add(textPageUtils = new WebMarkupContainer("textPageUtils"));
         textPageUtils.setVisible(false);
-    }
-
-    @Override
-    protected void onBeforeRender()
-    {
-        sidebarModules.add(new AdSenseSidebarModule());
-        super.onBeforeRender();
     }
 
     @Override
