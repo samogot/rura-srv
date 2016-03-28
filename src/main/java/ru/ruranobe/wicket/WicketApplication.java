@@ -1,5 +1,6 @@
 package ru.ruranobe.wicket;
 
+import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AnnotationsRoleAuthorizationStrategy;
@@ -21,6 +22,8 @@ import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.crypt.CachingSunJceCryptFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wicketstuff.pageserializer.kryo.KryoSerializer;
 import org.wicketstuff.rest.utils.mounting.PackageScanner;
 import ru.ruranobe.misc.RuranobeUtils;
@@ -30,6 +33,8 @@ import ru.ruranobe.wicket.webpages.personal.*;
 import ru.ruranobe.wicket.webpages.special.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
 
 public class WicketApplication extends AuthenticatedWebApplication
 {
@@ -72,7 +77,30 @@ public class WicketApplication extends AuthenticatedWebApplication
         getSecuritySettings().setCryptFactory(new CachingSunJceCryptFactory("randomlyGeneratedRuraCryptoKey"));
 
         getSecuritySettings().setAuthorizationStrategy(new AnnotationsRoleAuthorizationStrategy(this));
+
+        if (getConfigurationType() == RuntimeConfigurationType.DEVELOPMENT)
+        {
+            notifyRedeploy();
+        }
     }
+
+    private void notifyRedeploy()
+    {
+        try
+        {
+            File redeployNotifier = new File(getServletContext().getRealPath(File.separator), "redeploy.touch");
+            if (!redeployNotifier.exists())
+            {
+                redeployNotifier.createNewFile();
+            }
+            redeployNotifier.setLastModified(System.currentTimeMillis());
+        }
+        catch (IOException ignored)
+        {
+        }
+    }
+
+    private static final Logger log = LoggerFactory.getLogger(WicketApplication.class);
 
     private void mountPages()
     {

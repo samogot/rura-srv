@@ -7,12 +7,14 @@ const $ = require('gulp-load-plugins')();
 
 // pngquant is irrelevant and does not contain prefix "gulp-"
 const pngquant = require('imagemin-pngquant');
+const del = require('del');
 
 
 /**
  * Some constants to save some typing later
  */
 var resourcesPath = 'src/main/frontend/',
+    webAppRoot = 'src/main/webapp/',
     generatedPath = 'target/generated-resources/frontend/',
     generatedSrcPath = generatedPath + 'src/';
 
@@ -138,12 +140,9 @@ gulp.task('scripts-no-rev', function () {
 });
 
 gulp.task('clean', function () {
-    //return gulp.src(
-    //    [
-    //        webappPath + '**/*.css'
-    //    ],
-    //    { read: false }
-    //).pipe($.rimraf());
+    return del([
+        webAppRoot + 'redeploy.touch'
+    ]);
 });
 
 gulp.task('build-development', ['images-no-rev', 'scripts-no-rev', 'styles-no-rev', 'html-no-rev']);
@@ -170,7 +169,8 @@ gulp.task('watch', function () {
     gulp.watch(resourcesPath + '**/*.js', ['scripts-no-rev']);
     gulp.watch(resourcesPath + '**/*.{png,gif,jpg}', ['images-no-rev']);
     gulp.watch(htmlPath + '/**/*.html', ['html-no-rev']);
-    gulp.watch(htmlPath + '/**/*.java', function () {
-        setTimeout($.livereload.reload, 30000); // reload page after 30sec. do not work. need deploy notification from jetty:run
+    gulp.watch(webAppRoot + 'redeploy.touch', function () {
+        console.log(webAppRoot + 'redeploy.touch');
+        $.livereload.reload();
     });
 });
