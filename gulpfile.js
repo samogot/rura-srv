@@ -80,10 +80,10 @@ gulp.task('styles-with-rev', ['images-with-rev'], function () {
         .pipe(gulp.dest(generatedPath));
 });
 
-gulp.task('scripts-with-rev', ['images-with-rev'], function () {
-    var manifest = gulp.src(generatedPath + "/rev-manifest-images.json");
+gulp.task('scripts-with-rev', /*['images-with-rev'], */function () {
+    //var manifest = gulp.src(generatedPath + "/rev-manifest-images.json");
     return processScripts()
-        .pipe($.revReplace({manifest: manifest}))
+    //.pipe($.revReplace({manifest: manifest}))
         .pipe($.rev())
         .pipe(writeSourcemaps())
         .pipe(gulp.dest(generatedPath))
@@ -91,10 +91,14 @@ gulp.task('scripts-with-rev', ['images-with-rev'], function () {
         .pipe(gulp.dest(generatedPath));
 });
 
-gulp.task('html-with-rev', ['scripts-with-rev', 'styles-with-rev'], function () {
-    var manifest = gulp.src(generatedPath + "/rev-manifest-*.json")
-        .pipe($.mergeJson('rev-manifest.json'));
+gulp.task('marge-rev-manifest', ['scripts-with-rev', 'styles-with-rev'], function () {
+    return gulp.src(generatedPath + "/rev-manifest-*.json")
+        .pipe($.mergeJson('rev-manifest.json'))
+        .pipe(gulp.dest(generatedPath));
+});
 
+gulp.task('html-with-rev', ['marge-rev-manifest'], function () {
+    var manifest = gulp.src(generatedPath + "rev-manifest.json");
     return gulp.src(htmlPath + '/**/*.html')
         .pipe($.revReplace({
             canonicalUris: true,
@@ -149,7 +153,7 @@ gulp.task('build-development', ['images-no-rev', 'scripts-no-rev', 'styles-no-re
 
 gulp.task('build-deployment', ['html-with-rev']);
 
-gulp.task('build', ['build-development']);
+gulp.task('build', ['build-deployment']);
 
 /**
  * Executing just 'gulp' will execute 'clean' and start 'build' tasks
