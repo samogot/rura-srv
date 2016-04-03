@@ -283,6 +283,7 @@ public class WikiParser
             parseWikiTextToHtmlText(entry.getKey(), entry.getValue(), footnote, Collections.<ExternalResource>emptyListIterator(), false);
 
             String quotedFootnoteText = new QuoteParser().applyTo(footnote.toString());
+            quotedFootnoteText = sanitize ? SimpleHtmlSanitizer.apply(quotedFootnoteText) : quotedFootnoteText;
             this.footnotes.add(new FootnoteItem(footnoteParsingBoundariesToFootnoteId.get(entry), quotedFootnoteText));
 
             Replacement footnoteReplacement = footnoteParsingBoundariesToFootnoteReplacement.get(entry);
@@ -460,14 +461,8 @@ public class WikiParser
     {
         this.chapterId = chapterId;
         this.textId = textId;
-        if (sanitize)
-        {
-            this.wikiText = SimpleHtmlSanitizer.apply(wikiText);
-        }
-        else
-        {
-            this.wikiText = wikiText;
-        }
+        this.sanitize = sanitize;
+        this.wikiText = sanitize ? SimpleHtmlSanitizer.apply(wikiText) : wikiText;
     }
 
     //private StringBuilder footnotes = new StringBuilder();
@@ -485,6 +480,7 @@ public class WikiParser
     private final Integer textId;
     private final Integer chapterId;
     private final String wikiText;
+    private final boolean sanitize;
     private int orderNumber = 0;
     int paragraphOrderNumber = 0;
 }
