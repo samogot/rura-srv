@@ -49,7 +49,7 @@ export const setSource = (source) => ({
 });
 
 export const fetchData = () => (dispatch) => (
-    $.when($.get('http://ruranobe.ru/api/radio/nowplaying'))
+    $.when($.get('/api/radio/nowplaying'))
         .then(
             (data) => dispatch(receiveData(data[data.length - 1])),
             () => dispatch(setOfflineStatus())

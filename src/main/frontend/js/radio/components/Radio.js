@@ -7,5 +7,6 @@ export const Radio = ({isPlaying, isExtraVisible}) => (
     <AudioContainer />
     <RadioPlayer isPlaying={isPlaying} />
     <ExtraAreaContainer isExtraVisible={isExtraVisible} />
+    <img src="//radio.ruranobe.ru" className="radio__mpegurl-loader" />
   </div>
 );
