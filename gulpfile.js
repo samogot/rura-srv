@@ -1,6 +1,7 @@
 'use strict';
 
 var gulp = require('gulp');
+var stylus = require('gulp-stylus');
 var merge = require('merge-stream');
 var browserify = require('browserify');
 var babelify = require('babelify');
@@ -67,7 +68,7 @@ function processImages(success, error) {
 }
 
 function processStyles(success, error) {
-    return gulp.src(resourcesPath + '/**/*.css')
+    cssFiles = gulp.src(resourcesPath + '/**/*.css')
         .pipe($.changed(generatedSrcPath))
         .pipe(gulp.dest(generatedSrcPath))
         .pipe($.sourcemaps.init({loadMaps: true}))
@@ -76,6 +77,18 @@ function processStyles(success, error) {
             cascade: false
         }))
         .pipe($.cleanCss().on('error', error));
+    
+    stylusFiles = gulp.src(resourcesPath + '/**/*.styl')
+        .pipe(stylus({compress: true}))
+        .pipe($.changed(generatedSrcPath))
+        .pipe(gulp.dest(generatedSrcPath))
+        .pipe($.autoprefixer({
+            browsers: ['> 5% in RU'],
+            cascade: false
+        }))
+        .pipe($.cleanCss().on('error', error));
+        
+    return merge(cssFiles, stylusFiles);
 }
 
 var browserifyBundle = browserify(resourcesPath + 'js/radio/index.js')
