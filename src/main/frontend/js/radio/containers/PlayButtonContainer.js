@@ -1,20 +1,23 @@
 /* global ReactRedux */
 /* global store */
 
-import {PlayButton} from "../components/PlayButton";
-import {togglePlayingState} from "../actions";
+import {PlayButton} from '../components/PlayButton';
+import {togglePlayingState} from '../actions';
 
 const {connect} = ReactRedux;
 
 export const PlayButtonContainer = connect(
-    ({isPlaying}) => ({
-        isPlaying
-    }),
+  ({isPlaying}) => ({
+    isPlaying
+  }),
 
-    (dispatch, ownProps) => ({
-        onClick() {
-            dispatch(togglePlayingState());
-            window.localStorage.setItem('isPlaying', store.getState().isPlaying);
-        }
-    })
+  (dispatch, {isPlaying}) => ({
+    onClick() {
+      dispatch(togglePlayingState());
+      // console.log("VLUE:", isPlaying);
+      // console.log("PREV:", window.localStorage.getItem('isPlaying'));
+      window.localStorage.setItem('isPlaying', !isPlaying);
+      // console.log("AFTR:", window.localStorage.getItem('isPlaying'));
+    }
+  })
 )(PlayButton);

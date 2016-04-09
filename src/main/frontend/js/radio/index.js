@@ -2,10 +2,11 @@
 /* global ReactRedux */
 /* global ReactDOM */
 /* global ReduxThunk */
+/* global $ */
 
-import {setSource, fetchData} from "./actions";
-import {reducers} from "./reducers";
-import components from "./components";
+import {setSource, fetchData} from './actions';
+import {reducers} from './reducers';
+import {RadioContainer} from './containers/RadioContainer';
 
 const {render} = ReactDOM;
 const {createStore, applyMiddleware} = Redux;
@@ -16,33 +17,36 @@ const el = document.getElementById('radio-component');
 let store;
 
 if (el) {
-    const {localStorage} = window;
-    const localIsPlaying = localStorage.getItem('isPlaying');
-    const localIsExtraVisible = localStorage.getItem('isExtraVisible');
-    const localVolume = parseFloat(localStorage.getItem('volume'));
+  const {localStorage} = window;
+  const localIsPlaying = localStorage.getItem('isPlaying');
+  const localIsExtraVisible = localStorage.getItem('isExtraVisible');
+  const localVolume = parseFloat(localStorage.getItem('volume'));
 
-    const initialState = {
-        isPlaying: (localIsPlaying === null ? false : localIsPlaying !== 'false'),
-        volume: (isNaN(localVolume) ? 1 : localVolume),
-        isExtraVisible: (localIsExtraVisible === null ?
-            false : localIsExtraVisible !== 'false')
-    };
+  // console.log(localIsPlaying)
 
-    store = createStore(reducers, initialState, applyMiddleware(ReduxThunk.default));
+  const initialState = {
+    isPlaying: (localIsPlaying === null ? false : localIsPlaying !== 'false'),
+    volume: (isNaN(localVolume) ? 1 : localVolume),
+    isExtraVisible: (localIsExtraVisible === null ?
+                     false : localIsExtraVisible !== 'false')
+  };
 
-    $.get('//radio.ruranobe.ru', (data) => store.dispatch(setSource(data)));
+  store = createStore(reducers, initialState, applyMiddleware(ReduxThunk.default));
 
-    const updater = () => {
-        if (store.getState().isPlaying) {
-            store.dispatch(fetchData());
-        }
-    };
+  // $.get('//radio.ruranobe.ru',
+  //   (data) => console.log(data.substring(5)));
 
-    setInterval(updater, 1000);
+  const updater = () => {
+    if (store.getState().isPlaying) {
+      store.dispatch(fetchData());
+    }
+  };
 
-    render(
-        <Provider store={store}>
-            <components.Radio />
-        </Provider>, el
-    );
+  setInterval(updater, 1000);
+
+  render(
+    <Provider store={store}>
+      <RadioContainer />
+    </Provider>, el
+  );
 }
