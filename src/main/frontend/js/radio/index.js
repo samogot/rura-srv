@@ -36,6 +36,8 @@ if (el) {
   // $.get('//radio.ruranobe.ru',
   //   (data) => console.log(data.substring(5)));
 
+  store.dispatch(setSource("http://s5.myradiostream.com:7234/"));
+
   const updater = () => {
     if (store.getState().isPlaying) {
       store.dispatch(fetchData());
