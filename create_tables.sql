@@ -48,6 +48,7 @@ CREATE TABLE users
   convert_with_imgs        BOOL               NOT NULL,
   adult                    BOOL               NOT NULL,
   prefer_colored_imgs      BOOL               NOT NULL,
+  show_hidden_content      BOOL               NOT NULL,
   convert_imgs_size        INT(11)            NOT NULL,
   forum_user_id            INT(11) UNSIGNED    DEFAULT NULL,
   INDEX (username),
@@ -99,6 +100,7 @@ CREATE TABLE projects
   banner_hidden      BOOL              NOT NULL,
   project_hidden     BOOL              NOT NULL,
   onevolume          BOOL              NOT NULL,
+  works              BOOL              NOT NULL,
   franchise          TEXT,
   annotation         TEXT,
   forum_id           INT(11) UNSIGNED    DEFAULT NULL,
@@ -158,7 +160,8 @@ CREATE TABLE volumes
     'proofread',
     -- опубликован
     'decor',
-    'done')                              NOT NULL,
+    'done',
+    'license')                           NOT NULL,
   volume_status_hint VARCHAR(255),
   adult              BOOL                NOT NULL,
   annotation         TEXT,
@@ -172,8 +175,18 @@ CREATE TABLE volume_statuses
   status_id    INT(11) PRIMARY KEY AUTO_INCREMENT,
   full_text    VARCHAR(32),
   label_text   VARCHAR(32),
-  label_class  ENUM('default', 'primary', 'success', 'info', 'warning', 'danger'),
-  option_group ENUM('basic', 'external', 'not_in_work', 'in_work', 'published', 'licensed')
+  label_class  ENUM('default',
+                    'primary',
+                    'success',
+                    'info',
+                    'warning',
+                    'danger'),
+  option_group ENUM('basic',
+                    'external',
+                    'not_in_work',
+                    'in_work',
+                    'published',
+                    'licensed')
 );
 
 CREATE TABLE chapters
@@ -256,7 +269,10 @@ CREATE TABLE volume_release_activities
   activity_id         INT(11) NOT NULL,
   member_id           INT(11) NOT NULL,
   order_number        INT(11) NOT NULL,
-  team_hidden         BOOLEAN NOT NULL,
+  team_show_label     BOOLEAN NOT NULL    DEFAULT FALSE,
+  team_show_status    ENUM('show_none',
+                           'show_nick',
+                           'show_team'),
   INDEX (volume_id, order_number),
   INDEX (volume_id, activity_id, order_number)
 );
@@ -283,6 +299,8 @@ CREATE TABLE texts_history
 (
   current_text_id  INT(11) PRIMARY KEY AUTO_INCREMENT,
   previous_text_id INT(11),
+  user_id          INT(11)  NULL,
+  chapter_id       INT(11)  NULL,
   insertion_time   DATETIME NOT NULL
 );
 
@@ -316,6 +334,7 @@ CREATE TABLE user_group_types
 
 INSERT INTO user_group_types VALUES (1, 'ADMIN');
 INSERT INTO user_group_types VALUES (2, 'TEAM MEMBER');
+INSERT INTO user_group_types VALUES (3, 'WORKS');
 
 ALTER TABLE paragraphs ADD CONSTRAINT fk_paragraph_text_id FOREIGN KEY (text_id) REFERENCES texts (text_id);
 
@@ -328,6 +347,11 @@ ALTER TABLE bookmarks ADD CONSTRAINT fk_user_bookmark_id FOREIGN KEY (user_id) R
 ALTER TABLE texts_history ADD CONSTRAINT fk_current_text_id FOREIGN KEY (current_text_id) REFERENCES texts (text_id);
 
 ALTER TABLE texts_history ADD CONSTRAINT fk_previous_text_id FOREIGN KEY (previous_text_id) REFERENCES texts (text_id);
+
+ALTER TABLE texts_history ADD CONSTRAINT fk_texts_history_user_id FOREIGN KEY (user_id) REFERENCES users (user_id);
+
+ALTER TABLE texts_history ADD CONSTRAINT fk_texts_history_chapter_id FOREIGN KEY (chapter_id) REFERENCES chapters (chapter_id)
+  ON DELETE SET NULL;
 
 ALTER TABLE chapter_images ADD CONSTRAINT fk_colored_image_id FOREIGN KEY (colored_image_id) REFERENCES external_resources (resource_id);
 
@@ -367,7 +391,8 @@ ALTER TABLE projects ADD CONSTRAINT fk_parent_id FOREIGN KEY (parent_id) REFEREN
 ALTER TABLE projects ADD CONSTRAINT fk_image_id FOREIGN KEY (image_id) REFERENCES external_resources (resource_id);
 
 
-ALTER TABLE orphus_comments ADD CONSTRAINT fk_chapter_id2 FOREIGN KEY (chapter_id) REFERENCES chapters (chapter_id);
+ALTER TABLE orphus_comments ADD CONSTRAINT fk_chapter_id2 FOREIGN KEY (chapter_id) REFERENCES chapters (chapter_id)
+  ON DELETE CASCADE;
 
 ALTER TABLE orphus_comments ADD CONSTRAINT fk_user_id2 FOREIGN KEY (user_id) REFERENCES users (user_id);
 

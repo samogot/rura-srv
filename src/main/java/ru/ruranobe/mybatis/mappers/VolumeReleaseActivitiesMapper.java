@@ -3,13 +3,12 @@ package ru.ruranobe.mybatis.mappers;
 import org.apache.ibatis.annotations.Param;
 import ru.ruranobe.mybatis.entities.tables.VolumeReleaseActivity;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public interface VolumeReleaseActivitiesMapper
 {
-    Collection<VolumeReleaseActivity> getVolumeReleaseActivitiesByVolumeId(int volumeId);
-
-    Collection<VolumeReleaseActivity> getGroupedVolumeReleaseActivitiesByVolumeId(int volumeId);
+    ArrayList<VolumeReleaseActivity> getVolumeReleaseActivitiesByVolumeId(int volumeId);
 
     void deleteVolumeReleaseActivitysByVolumeId(int volumeId);
 

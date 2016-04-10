@@ -2,6 +2,7 @@ package ru.ruranobe.wicket.webpages.base;
 
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import ru.ruranobe.config.ApplicationContext;
 import ru.ruranobe.wicket.components.ContentsHolder;
 import ru.ruranobe.wicket.components.sidebar.ContentsModule;
 
@@ -19,7 +20,12 @@ public class AdminLayoutPage extends SidebarLayoutPage
     {
         super.renderHead(response);
         response.render(JavaScriptHeaderItem.forScript(
-                String.format("window.serverTimeZone = '%s';", ZoneId.systemDefault()), "timezone"));
+                String.format(
+                        "window.serverTimeZone = '%s';" +
+                        "window.new_topic_secret = '%s'",
+                        ZoneId.systemDefault(),
+                        ApplicationContext.getForumApiSecret()),
+                "set_globals"));
     }
 
     public void addContentsItem(String href, String title)

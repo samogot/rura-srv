@@ -5,7 +5,7 @@ import org.apache.commons.lang3.SerializationUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.authorization.UnauthorizedInstantiationException;
 import org.apache.wicket.extensions.markup.html.form.DateTextField;
 import org.apache.wicket.extensions.markup.html.form.select.IOptionRenderer;
 import org.apache.wicket.extensions.markup.html.form.select.Select;
@@ -29,15 +29,25 @@ import ru.ruranobe.mybatis.mappers.ExternalResourcesMapper;
 import ru.ruranobe.mybatis.mappers.ProjectsMapper;
 import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
+import ru.ruranobe.wicket.InstantiationSecurityCheck;
+import ru.ruranobe.wicket.LoginSession;
 import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.components.admin.*;
 import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
+import ru.ruranobe.wicket.webpages.common.ProjectPage;
 
 import java.util.*;
 
-@AuthorizeInstantiation({"ADMIN", "TEAM MEMBER"})
-public class ProjectEdit extends AdminLayoutPage
+public class ProjectEdit extends AdminLayoutPage implements InstantiationSecurityCheck
 {
+    @Override
+    public void doInstantiationSecurityCheck()
+    {
+        if (!LoginSession.get().isProjectEditAllowedByUser(project.getUrl()))
+        {
+            throw new UnauthorizedInstantiationException(this.getClass());
+        }
+    }
 
     private Project getProject(final PageParameters parameters)
     {
@@ -60,6 +70,10 @@ public class ProjectEdit extends AdminLayoutPage
         project = getProject(parameters);
 
         redirectTo404IfArgumentIsNull(project);
+
+        doInstantiationSecurityCheck();
+
+        addContentsItem(urlFor(ProjectPage.class, parameters).toString(), "Просмотр");
 
         try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
         {
@@ -127,13 +141,14 @@ public class ProjectEdit extends AdminLayoutPage
                         add(new TextField<String>("originalStory"));
                         add(new CheckBox("onevolume"));
                         add(new CheckBox("projectHidden"));
-                        add(new CheckBox("bannerHidden"));
+                        add(new CheckBox("bannerHidden").setVisible(LoginSession.get().hasRole("ADMIN")));
+                        add(new CheckBox("works").setVisible(LoginSession.get().hasRole("ADMIN")));
                         add(new TextField<String>("issueStatus"));
                         add(new TextField<String>("translationStatus"));
                         add(new DropDownChoice<>("status", RuraConstants.PROJECT_STATUS_LIST));
                         add(new TextArea<String>("franchise"));
                         add(new TextArea<String>("annotation"));
-                        add(new NumberTextField<Integer>("forumId").setMinimum(1));
+                        add(new NumberTextField<Integer>("forumId").setMinimum(1).setVisible(LoginSession.get().hasRole("ADMIN")));
                     }
                 };
             }
@@ -191,6 +206,7 @@ public class ProjectEdit extends AdminLayoutPage
                             Volume new_volume = SerializationUtils.clone(selectedItem);
                             new_volume.setProject(selectedItem.getProject());
                             new_volume.setVolumeId(null);
+                            new_volume.setTopicId(null);
                             new_volume.setImageOne(null);
                             new_volume.setImageTwo(null);
                             new_volume.setImageThree(null);
@@ -333,7 +349,9 @@ public class ProjectEdit extends AdminLayoutPage
                 new_project.setBannerHidden(true);
                 new_project.setProjectHidden(true);
                 new_project.setOnevolume(false);
+                new_project.setWorks(false);
                 new_project.setStatus(RuraConstants.PROJECT_STATUS_LIST.get(0));
+                new_project.setForumId(project.getForumId());
                 return new_project;
             }
 
@@ -353,7 +371,7 @@ public class ProjectEdit extends AdminLayoutPage
                     {
                         super.onInitialize();
                         add(new TextField<String>("title").setRequired(true).setLabel(Model.of("Название")));
-                        add(new NumberTextField<Integer>("forumId").setMinimum(1));
+                        add(new NumberTextField<Integer>("forumId").setMinimum(1).setVisible(LoginSession.get().hasRole("ADMIN")));
                     }
                 };
             }

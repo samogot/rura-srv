@@ -62,8 +62,7 @@
 
     <insert id="insertIgnoreTeamMember" parameterType="string" useGeneratedKeys="true">
         INSERT IGNORE INTO team_members
-        SET team_id  = 1,
-            nickname = #{nickname}
+        SET nickname = #{nickname}
     </insert>
 
     <delete id="deleteTeamMember" parameterType="int">

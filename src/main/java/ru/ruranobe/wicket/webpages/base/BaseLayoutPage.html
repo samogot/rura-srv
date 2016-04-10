@@ -3,24 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title wicket:id="pageTitle">РуРанобэ</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/styles.night.css">
+    <link type="image/x-icon" rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/styles.works.css">
+    <link rel="stylesheet" href="/css/styles.night.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    <script src="js/ReinitAffix.js"></script>
-    <script src="js/Login.js"></script>
+    <script src="/js/ReinitAffix.js"></script>
+    <script src="/js/Login.js"></script>
     <wicket:header-items/>
-    <!--script src="js/page.all.js"></script-->
+    <!--script src="/js/page.all.js"></script-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="/manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="application-name" content="RuRanobe">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="#60A9D4">
     <meta name="apple-mobile-web-app-title" content="RuRanobe">
     <link rel=apple-touch-icon href="/img/touch/128.png">
+    <meta wicket:id="ogTitle" name="og:title" content="РуРанобэ">
+    <meta wicket:id="ogImage" name="og:image" content="/img/touch/128.png">
     <meta name="msapplication-TileImage" content="/img/touch/128.png">
     <meta name="msapplication-TileColor" content="#60A9D4">
     <meta name="theme-color" content="#60A9D4">
@@ -39,15 +43,15 @@
             m.parentNode.insertBefore(a, m)
         })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-        ga('create', 'UA-40837511-2', 'auto');
+        ga('create', 'UA-50901432-2', 'auto');
         ga('send', 'pageview');
 
     </script>
 </head>
-<body data-spy="scroll" data-target=".scrollspy" data-color="">
+<body data-spy="scroll" data-target=".scrollspy" data-color="" wicket:id="body">
 
-<div wicket:id="loginPanelModal" class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true"/>
-<div wicket:id="resetPasswordPanelModal"  class="modal fade" id="changePassModal" tabindex="-1" role="dialog" aria-labelledby="changePassLabel"/>
+<div wicket:id="loginPanelModal" class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true"></div>
+<div wicket:id="resetPasswordPanelModal"  class="modal fade" id="changePassModal" tabindex="-1" role="dialog" aria-labelledby="changePassLabel"></div>
 
 <div class="modal-backdrop" style="display:none"></div>
 <nav class="navbar navbar-default navbar-top navbar-static-top" role="navigation">
@@ -60,30 +64,31 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/"><img alt="RuRanobe" src="/img/logo1.png"></a>
+            <a class="navbar-brand" href="/"></a>
         </div>
         <div class="collapse navbar-collapse">
             <div class="secondLogoContainer">
                 <div class="secondLogo"></div>
             </div>
-            <div class="navbar-form navbar-right" wicket:id="userActionsPanel"/>
+            <div class="navbar-form navbar-right" wicket:id="userActionsPanel"></div>
         </div>
     </div>
 </nav>
 <nav class="navbar navbar-default navbar-lower" role="navigation">
     <div class="container">
         <div class="collapse navbar-collapse collapse-buttons" id="bs-example-navbar-collapse-1">
-            <div class="navbar-form navbar-right" wicket:id="userActionsPanelAndroidView"/>
+            <div class="navbar-form visible-xs-block" wicket:id="userActionsPanelAndroidView"></div>
             <ul class="nav navbar-nav">
                 <wicket:link>
                     <li><a href="../common/Updates.html">Обновления</a></li>
                     <li><a href="../common/FullProjects.html">Проекты</a></li>
+                    <li><a href="../common/WorksProjects.html">Works</a></li>
                     <li><a href="../special/Recruit.html">Набор в команду</a></li>
                     <li><a href="../special/Faq.html">FAQ</a></li>
                     <li><a href="../special/AboutUs.html">О нас</a></li>
                     <li><a href="../special/Diary.html">Дневник Руйки</a></li>
-                    <li><a href="/f">Форум</a></li>
                 </wicket:link>
+                <li><a href="/f">Форум</a></li>
             </ul>
             <form class="navbar-form navbar-right">
                 <!--<a href="#" class="btn btn-danger">Трансляции</a>-->
@@ -97,9 +102,7 @@
     </div>
 </nav>
 
-
 <wicket:child/>
-
 
 <div class="container">
     <footer>
@@ -107,22 +110,35 @@
             <wicket:link>
                 <a href="../common/Updates.html">Обновления</a>
                 <a href="../common/FullProjects.html">Проекты</a>
+                <a href="../common/WorksProjects.html">Works</a>
                 <a href="../special/Recruit.html">Набор в команду</a>
                 <a href="../special/Faq.html">FAQ</a>
                 <a href="../special/AboutUs.html">О нас</a>
                 <a href="../special/Diary.html">Дневник Руйки</a>
-                <a href="/f">Форум</a>
             </wicket:link>
+            <a href="/f">Форум</a>
         </div>
         <div class="copyright text-center">&copy; Проект <span class="bold">&laquo;РуРанобэ&raquo; </span>2014-<span
                 wicket:id="currentYear"></span></div>
     </footer>
 </div>
 
-<script src="js/ellipses-left.js"></script>
-<script src="js/page.login.js"></script>
+<script src="/js/ellipses-left.js"></script>
+<script src="/js/page.login.js"></script>
 <script type="text/javascript"
         src="//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
-<script src="js/page.all.js"></script>
+<script src="/js/page.all.js"></script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-dom.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/redux/3.3.1/redux.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/react-redux/4.4.1/react-redux.js"></script>
+
+<script src="//npmcdn.com/react-motion/build/react-motion.js"></script>
+<script src="//npmcdn.com/react-height/build/react-height.js"></script>
+<script src="//npmcdn.com/react-collapse/build/react-collapse.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/redux-thunk/2.0.1/redux-thunk.min.js"></script>
+<link rel="stylesheet" href="/css/radio.css">
+<script src="/js/radio.js"></script>
 </body>
 </html>

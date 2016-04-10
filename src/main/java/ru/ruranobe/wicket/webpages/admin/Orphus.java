@@ -2,6 +2,7 @@ package ru.ruranobe.wicket.webpages.admin;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.SqlSession;
+import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.core.request.mapper.MountedMapper;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -13,7 +14,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.Chapter;
 import ru.ruranobe.mybatis.entities.tables.OrphusComment;
@@ -30,6 +30,7 @@ import ru.ruranobe.wicket.webpages.common.TextPage;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
 
+@AuthorizeInstantiation({"ADMIN", "TEAM MEMBER", "WORKS"})
 public class Orphus extends BaseLayoutPage
 {
 
@@ -133,6 +134,8 @@ public class Orphus extends BaseLayoutPage
                 orphusChapterUrl.add(orphusChapterName);
 
                 item.add(orphusChapterUrl);
+
+                item.add(new BookmarkablePageLink("orphusChapterEditUrl", Editor.class, chapterPageParameters));
             }
         };
 

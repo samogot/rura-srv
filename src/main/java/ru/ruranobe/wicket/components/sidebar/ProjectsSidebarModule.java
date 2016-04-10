@@ -1,6 +1,6 @@
 package ru.ruranobe.wicket.components.sidebar;
 
-import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.AttributeModifier;
 import ru.ruranobe.wicket.components.ProjectBannersList;
 
 /**
@@ -12,8 +12,8 @@ public class ProjectsSidebarModule extends SidebarModuleBase
     public ProjectsSidebarModule()
     {
         super("sidebarModule", "all-projects", "Проекты");
-        moduleBody.add(new ProjectBannersList("bannersList", null));
-        moduleBody.add(new AttributeAppender("class", " banners"));
+        add(new ProjectBannersList("bannersList", null));
+        moduleBody.add(AttributeModifier.replace("class", "actions banners"));
     }
 
 }

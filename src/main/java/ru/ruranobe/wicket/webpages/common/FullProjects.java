@@ -14,7 +14,9 @@ import ru.ruranobe.mybatis.mappers.ExternalResourcesMapper;
 import ru.ruranobe.mybatis.mappers.ProjectsMapper;
 import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
-import ru.ruranobe.wicket.webpages.base.BaseLayoutPage;
+import ru.ruranobe.wicket.components.sidebar.TwitterWidgetSidebarModule;
+import ru.ruranobe.wicket.components.sidebar.VKWidgetSidebarModule;
+import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class FullProjects extends BaseLayoutPage
+public class FullProjects extends SidebarLayoutPage
 {
     @Override
     protected void onInitialize()
@@ -39,7 +41,7 @@ public class FullProjects extends BaseLayoutPage
 
             for (Project project : projects)
             {
-                if (!project.isProjectHidden())
+                if (!project.isProjectHidden() && !project.isWorks())
                 {
                     ExternalResource image = (project.getImageId() != null) ? externalResourcesMapperCacheable.getExternalResourceById(project.getImageId())
                                                                             : null;
@@ -125,6 +127,8 @@ public class FullProjects extends BaseLayoutPage
                 }
             });
         }
+        sidebarModules.add(new VKWidgetSidebarModule());
+        sidebarModules.add(new TwitterWidgetSidebarModule());
     }
 
 	@Override

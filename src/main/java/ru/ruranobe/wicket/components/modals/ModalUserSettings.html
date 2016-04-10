@@ -11,7 +11,7 @@
                 </div>
                 <div class="modal-body">
                     <form id="settingsForm" class="form-inline">
-                        <div class="form-group">
+                        <div class="form-group hidden">
                             <label wicket:for="converterType">Предпочитаемый формат скачивания</label>
                             <select wicket:id="converterType" class="form-control" name="downloadType"/>
                         </div>
@@ -20,12 +20,12 @@
                             <select wicket:id="navigationType" class="form-control" name="downloadType"/>
                         </div>
                         <hr/>
-                        <div class="form-group">
+                        <div class="form-group hidden">
                             <input wicket:id="convertWithImgs" type="checkbox" checked name="downloadImage">
                             <label wicket:for="convertWithImgs">Скачивать с иллюстрациями</label>
                         </div>
                         <br/>
-                        <div class="form-group">
+                        <div class="form-group hidden">
                             <input wicket:id="adult" type="checkbox" name="adult18">
                             <label wicket:for="adult">Отображать материалы для взрослых (18)</label>
                         </div>
@@ -34,10 +34,14 @@
                             <input wicket:id="preferColoredImgs" type="checkbox" checked name="blackImage">
                             <label wicket:for="preferColoredImgs">Отображать цветные иллюстрации вместо черно-белых при наличии</label>
                         </div>
-                        <hr/>
-                        <div class="form-group">
+                        <br/>
+                        <div class="form-group hidden">
                             <label wicket:for="convertImgsSize">Размер иллюстраций в конвертере</label>
                             <input wicket:id="convertImgsSize" type="text" class="form-control" name="irastSize" size="4"> px
+                        </div>
+                        <div class="form-group" wicket:enclosure="">
+                            <input wicket:id="showHiddenContent" type="checkbox" checked>
+                            <label wicket:for="showHiddenContent">Отображать скрытый контент</label>
                         </div>
                     </form>
                     <hr/>

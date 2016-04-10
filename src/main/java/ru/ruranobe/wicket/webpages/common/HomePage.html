@@ -3,71 +3,34 @@
 <body>
 
 <wicket:extend>
-    <div class="container">
-        <div class="leftColumn">
-            <main class="content">
-                <p>
-                    <strong>Добро пожаловать на РуРанобэ</strong> - проект, цель которого - предоставить
-                    возможность ознакомиться с японскими лайт-новел и прочей связанной с ними литературой
-                </p>
 
-                <div id="main-search" class="input-group input-group-lg sharp">
-                    <input type="text" class="form-control" style="height: 38px; vertical-align: bottom;" placeholder="Введите слово для поиска">
-                    <span class="input-group-btn">
-                        <button class="btn btn-primary" type="button"><i class="fa fa-search"></i></button>
-                    </span>
-                </div>
+    <h1>Добро пожаловать</h1>
 
-                <h2>Проекты</h2>
+    <p>
+        <strong>РуРанобэ</strong> - проект, цель которого - предоставить возможность ознакомиться с японскими
+        лайт-новел и прочей связанной с ними литературой
+    </p>
 
-                <div class="project">
-                    <div wicket:id="bannersList"></div>
-                    <a wicket:id="allProjects" class="all">Все проекты</a>
-                </div>
-                <h2>Обновления</h2>
+    <!--<div id="main-search" class="input-group input-group-lg sharp">
+        <input type="text" class="form-control" style="height: 38px; vertical-align: bottom;"
+               placeholder="Введите слово для поиска">
+        <span class="input-group-btn">
+            <button class="btn btn-primary" type="button"><i class="fa fa-search"></i></button>
+        </span>
+    </div>-->
 
-                <div class="updates">
-                    <wicket:fragment wicket:id="updatesList"/>
-                    <a wicket:id="allUpdates" class="all">Больше</a>
-                </div>
-            </main>
-        </div>
-        <aside class="right-sidebar">
-          <div id="vk_api_transport"></div>
-          <div id="vk_groups"></div>
-          <script type="text/javascript">
-            window.vkAsyncInit = function() {
-                VK.Widgets.Group("vk_groups", {
-                    mode: 2,
-                    width: "230",
-                    height: "660"
-                }, 43340456);
-            };
-            setTimeout(function() {
-                var el = document.createElement("script");
-                el.type = "text/javascript";
-                el.src = "//vk.com/js/api/openapi.js?115";
-                el.async = true;
-                document.getElementById("vk_api_transport").appendChild(el);
-            }, 0);
-            window.twttr = (function(d, s, id) {
-              var js, fjs = d.getElementsByTagName(s)[0],
-                t = window.twttr || {};
-              if (d.getElementById(id)) return t;
-              js = d.createElement(s);
-              js.id = id;
-              js.src = "https://platform.twitter.com/widgets.js";
-              fjs.parentNode.insertBefore(js, fjs);
-              t._e = [];
-              t.ready = function(f) {
-                t._e.push(f);
-              };
-              return t;
-            }(document, "script", "twitter-wjs"));
-          </script>
-          <hr>
-          <a class="twitter-timeline" data-theme=""href="https://twitter.com/RuRa_team" align="center" data-widget-id="540043044683546624">Твиты от @RuRa_team</a>
-        </aside>
+    <h2>Проекты</h2>
+
+    <div class="project">
+        <div wicket:id="bannersList"></div>
+        <a wicket:id="allProjects" class="all">Все проекты</a>
+    </div>
+
+    <h2>Обновления</h2>
+
+    <div class="updates">
+        <wicket:fragment wicket:id="updatesList"/>
+        <a wicket:id="allUpdates" class="all">Больше</a>
     </div>
 </wicket:extend>
 

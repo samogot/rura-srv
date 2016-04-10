@@ -1,20 +1,17 @@
 package ru.ruranobe.wicket.components.modals;
 
 import org.apache.ibatis.session.SqlSession;
-import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.markup.html.form.*;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.util.string.Strings;
-import ru.ruranobe.misc.Token;
-import ru.ruranobe.misc.smtp.Email;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.User;
 import ru.ruranobe.mybatis.mappers.UsersMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.LoginSession;
+import ru.ruranobe.wicket.WicketApplication;
 
 import java.util.Arrays;
 
@@ -35,6 +32,14 @@ public class ModalUserSettings extends Panel
         userSettings.add(new CheckBox("adult"));
         userSettings.add(new CheckBox("preferColoredImgs"));
         userSettings.add(new TextField<>("convertImgsSize"));
+        userSettings.add(new CheckBox("showHiddenContent")
+        {
+            @Override
+            public boolean isVisible()
+            {
+                return WicketApplication.get().hasAnyRole(new Roles(new String[]{"ADMIN", "TEAM MEMBER", "WORKS"}));
+            }
+        });
         userSettings.add(new Button("saveUserSettings")
         {
             @Override

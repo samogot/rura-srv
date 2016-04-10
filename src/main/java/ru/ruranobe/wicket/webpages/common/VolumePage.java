@@ -1,5 +1,6 @@
 package ru.ruranobe.wicket.webpages.common;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.AttributeModifier;
@@ -14,10 +15,13 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.string.Strings;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.*;
 import ru.ruranobe.mybatis.mappers.*;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
+import ru.ruranobe.wicket.LoginSession;
+import ru.ruranobe.wicket.RuraConstants;
 import ru.ruranobe.wicket.components.CommentsPanel;
 import ru.ruranobe.wicket.components.CoverCarousel;
 import ru.ruranobe.wicket.components.LabelHideableOnNull;
@@ -28,6 +32,8 @@ import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 public class VolumePage extends SidebarLayoutPage
@@ -49,13 +55,21 @@ public class VolumePage extends SidebarLayoutPage
             ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
             Project project = projectsMapperCacheable.getProjectByUrl(projectUrlValue);
 
-            redirectTo404(project == null || project.isProjectHidden());
+            redirectTo404IfArgumentIsNull(project);
+
+            if (project.isWorks())
+            {
+                addBodyClassAttribute("works");
+            }
 
             VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
             String volumeUrl = projectUrlValue + "/" + volumeShortUrl;
             final Volume volume = volumesMapperCacheable.getVolumeNextPrevByUrl(volumeUrl);
 
             redirectTo404IfArgumentIsNull(volume);
+            redirectTo404((project.isProjectHidden() && !project.isWorks()
+                           || volume.getVolumeStatus().equals(RuraConstants.VOLUME_STATUS_HIDDEN))
+                          && !LoginSession.get().isProjectEditAllowedByUser(projectUrlValue));
 
             setDefaultModel(new CompoundPropertyModel<>(volume));
             titleName = volume.getNameTitle();
@@ -72,7 +86,7 @@ public class VolumePage extends SidebarLayoutPage
             add(nextUrl);
 
             ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.
-                    getCacheableMapper(session, ExternalResourcesMapper.class);
+                                                                                            getCacheableMapper(session, ExternalResourcesMapper.class);
             ExternalResource volumeCover;
             List<SimpleEntry<String, ExternalResource>> covers = new ArrayList<>();
             volumeCover = externalResourcesMapperCacheable.getExternalResourceById(volume.getImageOne());
@@ -96,6 +110,12 @@ public class VolumePage extends SidebarLayoutPage
                 covers.add(new SimpleEntry<>("", volumeCover));
             }
             add(new CoverCarousel("volumeCoverCarousel", covers));
+            if (!covers.isEmpty()) {
+                WebMarkupContainer ogImage = new WebMarkupContainer("ogImage");
+                add(ogImage);
+                ogImage.add(
+                        new AttributeModifier("content", covers.iterator().next().getValue().getThumbnail(240)));
+            }
 
             BookmarkablePageLink projectUrl =
                     new BookmarkablePageLink("projectUrl", ProjectPage.class, Project.makeUrlParameters(projectUrlValue));
@@ -127,16 +147,20 @@ public class VolumePage extends SidebarLayoutPage
 
             VolumeReleaseActivitiesMapper volumeReleaseActivitiesMapperCacheable =
                     CachingFacade.getCacheableMapper(session, VolumeReleaseActivitiesMapper.class);
-            List<VolumeReleaseActivity> groupedVolumeReleaseActivities = new ArrayList<>(
-                    volumeReleaseActivitiesMapperCacheable.getGroupedVolumeReleaseActivitiesByVolumeId(volume.getVolumeId()));
 
-            add(new PropertyListView<VolumeReleaseActivity>("volumeReleaseActivitiesView", groupedVolumeReleaseActivities)
+
+            ArrayList<VolumeReleaseActivity> volumeReleaseActivities =
+                    volumeReleaseActivitiesMapperCacheable.getVolumeReleaseActivitiesByVolumeId(volume.getVolumeId());
+            String teamText = groupUpVolumeReleaseActivitiesAndGetTeamText(volumeReleaseActivities);
+
+            add(new LabelHideableOnNull("team", teamText).setEscapeModelStrings(false));
+            add(new PropertyListView<VolumeReleaseActivity>("volumeReleaseActivitiesView", volumeReleaseActivities)
             {
                 @Override
                 protected void populateItem(ListItem<VolumeReleaseActivity> item)
                 {
                     item.add(new Label("activityName"));
-                    item.add(new Label("memberName"));
+                    item.add(new Label("memberName").setEscapeModelStrings(false));
                 }
 
                 @Override
@@ -155,13 +179,16 @@ public class VolumePage extends SidebarLayoutPage
                 {
                     Chapter chapter = item.getModelObject();
                     WebMarkupContainer chapterLink;
-                    if (chapter.isPublished())
+                    if (chapter.isPublished() || LoginSession.get().isProjectShowHiddenAllowedByUser(projectUrlValue))
                     {
                         chapterLink = chapter.makeBookmarkablePageLink("chapterLink");
                     }
                     else
                     {
                         chapterLink = new WebMarkupContainer("chapterLink");
+                    }
+                    if (!chapter.isPublished())
+                    {
                         chapterLink.add(new AttributeModifier("class", "unpublished"));
                     }
                     if (chapter.isNested())
@@ -209,6 +236,79 @@ public class VolumePage extends SidebarLayoutPage
             sidebarModules.add(new ProjectsSidebarModule());
             sidebarModules.add(new FriendsSidebarModule());
         }
+    }
+
+    private String groupUpVolumeReleaseActivitiesAndGetTeamText(ArrayList<VolumeReleaseActivity> vraList)
+    {
+        ArrayList<String> teamEntities = new ArrayList<>();
+        int i = 0;
+        while (i < vraList.size())
+        {
+            VolumeReleaseActivity vra = vraList.get(i);
+            if (vra.getTeamName() != null && !vra.getTeamShowStatus().equals(VolumeReleaseActivity.TEAM_SHOW_NONE))
+            {
+                String teamEntry;
+                if (vra.getTeamShowStatus().equals(VolumeReleaseActivity.TEAM_SHOW_NICK))
+                {
+                    teamEntry = StringEscapeUtils.unescapeHtml4(vra.getMemberName());
+                }
+                else if (!Strings.isEmpty(vra.getTeamLink()))
+                {
+                    teamEntry = vra.getTeamLinkTag();
+                }
+                else
+                {
+                    teamEntry = StringEscapeUtils.unescapeHtml4(vra.getTeamName());
+                }
+                if (!teamEntities.contains(teamEntry))
+                {
+                    teamEntities.add(teamEntry);
+                }
+            }
+            StringBuilder vraCurEntry = new StringBuilder(StringEscapeUtils.escapeHtml4(vra.getMemberName()));
+            if (vra.isTeamShowLabel())
+            {
+                vraCurEntry.append(" (");
+                if (!Strings.isEmpty(vra.getTeamLink()) && !vra.getTeamShowStatus().equals(VolumeReleaseActivity.TEAM_SHOW_TEAM))
+                {
+                    vraCurEntry.append(vra.getTeamLinkTag());
+                }
+                else
+                {
+                    vraCurEntry.append(StringEscapeUtils.unescapeHtml4(vra.getTeamName()));
+                }
+                vraCurEntry.append(")");
+            }
+
+            List<VolumeReleaseActivity> vraPrevList = vraList.subList(0, i);
+            Optional<VolumeReleaseActivity> vraFirstPrev = vraPrevList.stream().filter(
+                    vraPrev -> vraPrev.getActivityName().equals(vra.getActivityName())).findFirst();
+            if (vraFirstPrev.isPresent())
+            {
+                vraCurEntry.insert(0, ", ");
+                vraCurEntry.insert(0, vraFirstPrev.get().getMemberName());
+                vraFirstPrev.get().setMemberName(vraCurEntry.toString());
+                vraList.remove(i);
+                continue;
+            }
+            else
+            {
+                vra.setMemberName(vraCurEntry.toString());
+            }
+            ++i;
+        }
+        if (teamEntities.isEmpty())
+        {
+            return null;
+        }
+
+        StringBuilder teamText = new StringBuilder(teamEntities.get(0));
+        if (teamEntities.size() > 1)
+        {
+            teamText.append(" совместно с ");
+            teamText.append(teamEntities.stream().skip(1).collect(Collectors.joining(", ")));
+        }
+        return teamText.toString();
     }
 
     @Override

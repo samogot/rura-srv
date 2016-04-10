@@ -1,6 +1,11 @@
 package ru.ruranobe.mybatis.entities.tables;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+import ru.ruranobe.engine.wiki.parser.Replacement;
+
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
 public class VolumeReleaseActivity implements Serializable
 {
@@ -66,14 +71,14 @@ public class VolumeReleaseActivity implements Serializable
         this.memberId = memberId;
     }
 
-    public boolean isTeamHidden()
+    public boolean isTeamShowLabel()
     {
-        return teamHidden;
+        return teamShowLabel;
     }
 
-    public void setTeamHidden(boolean teamHidden)
+    public void setTeamShowLabel(boolean teamShowLabel)
     {
-        this.teamHidden = teamHidden;
+        this.teamShowLabel = teamShowLabel;
     }
 
     public String getActivityName()
@@ -101,6 +106,48 @@ public class VolumeReleaseActivity implements Serializable
         return memberName + " - " + activityName;
     }
 
+    public String getTeamShowStatus()
+    {
+        return teamShowStatus;
+    }
+
+    public void setTeamShowStatus(String teamShowStatus)
+    {
+        this.teamShowStatus = teamShowStatus;
+    }
+
+    public String getTeamName()
+    {
+        return teamName;
+    }
+
+    public void setTeamName(String teamName)
+    {
+        this.teamName = teamName;
+    }
+
+    public List<String> getTeamShowStatuses()
+    {
+        return teamName == null ? SINGLE_SHOW_STATUSES : TEAM_SHOW_STATUSES;
+    }
+
+    public String getTeamLink()
+    {
+        return teamLink;
+    }
+
+    public String getTeamLinkTag()
+    {
+        return String.format("<a href=\"%s\">%s</a>",
+                Replacement.escapeURLIllegalCharacters(teamLink),
+                StringEscapeUtils.unescapeHtml4(teamName));
+    }
+
+    public void setTeamLink(String teamLink)
+    {
+        this.teamLink = teamLink;
+    }
+
     public VolumeReleaseActivity()
     {
     }
@@ -117,9 +164,17 @@ public class VolumeReleaseActivity implements Serializable
     private Integer activityId;
     private Integer memberId;
     private Integer orderNumber;
-    private boolean teamHidden;
+    private boolean teamShowLabel;
+    private String teamShowStatus = TEAM_SHOW_TEAM;
     /* Optional. Doesn't exist in table, used only in mybatis selects and corresponding code. */
     private String activityName;
     private String memberName;
+    private String teamName;
+    private String teamLink;
     private VolumeActivity activity;
+    public static final String TEAM_SHOW_NONE = "show_none";
+    public static final String TEAM_SHOW_NICK = "show_nick";
+    public static final String TEAM_SHOW_TEAM = "show_team";
+    public static final List<String> TEAM_SHOW_STATUSES = Arrays.asList(TEAM_SHOW_NONE, TEAM_SHOW_NICK, TEAM_SHOW_TEAM);
+    public static final List<String> SINGLE_SHOW_STATUSES = Arrays.asList(TEAM_SHOW_NONE, TEAM_SHOW_NICK);
 }

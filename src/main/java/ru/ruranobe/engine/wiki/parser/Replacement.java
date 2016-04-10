@@ -2,15 +2,35 @@ package ru.ruranobe.engine.wiki.parser;
 
 import com.google.common.collect.ImmutableMap;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static ru.ruranobe.engine.wiki.parser.WikiTagType.*;
 
 public class Replacement
 {
+    public static String escapeURLIllegalCharacters(String string)
+    {
+        try
+        {
+            Matcher matcher = Pattern.compile("(?:([^:]+):)?(?://([^/]+))?([^?]+)(?:\\?([^#]+))?(?:#(.*))?").matcher(string);
+            if (matcher.matches())
+            {
+                URI uri = new URI(matcher.group(1), matcher.group(2), matcher.group(3), matcher.group(4), matcher.group(5));
+                return uri.toASCIIString();
+            }
+        }
+        catch (URISyntaxException ignored)
+        {
+        }
+        return string;
+    }
 
     public static List<Replacement> getReplacementsForPair(WikiTag startTag, WikiTag endTag)
     {
@@ -35,7 +55,7 @@ public class Replacement
             }
             else if (startTag.getWikiTagType() == LINK)
             {
-                replacementText = String.format(replacementText, startTag.getAttributeNameToValue().get("href"));
+                replacementText = String.format(replacementText, escapeURLIllegalCharacters(startTag.getAttributeNameToValue().get("href")));
             }
             replacements.add(new Replacement(startTag.getStartPosition(), startTag.getStartPosition() + startTag.getWikiTagLength(), replacementText, startTag));
             replacements.add(new Replacement(endTag.getStartPosition(), endTag.getStartPosition() + endTag.getWikiTagLength(), PAIR_TO_END_REPLACEMENT_TEXT.get(tagPair), startTag));
@@ -139,7 +159,10 @@ public class Replacement
         }
         else if (tag.getWikiTagType() == IMAGE)
         {
-            this.replacementText = String.format(replacementText, tag.getImageUrl(), tag.getImageThumbnail(), tag.getExternalResourceId().toString());
+            this.replacementText = String.format(replacementText,
+                    escapeURLIllegalCharacters(tag.getImageUrl()),
+                    escapeURLIllegalCharacters(tag.getImageThumbnail()),
+                    tag.getExternalResourceId().toString());
         }
         else if (tag.getWikiTagType() == NEW_LINE)
         {
@@ -190,8 +213,6 @@ public class Replacement
             .put(new WikiTagPair(TWO_EQUAL, TWO_EQUAL), "<h2 id=\"h_id-%s\">")
             .put(new WikiTagPair(THREE_EQUAL, THREE_EQUAL), "<h3 id=\"h_id-%s\">")
             .put(new WikiTagPair(FOUR_EQUAL, FOUR_EQUAL), "<h4 id=\"h_id-%s\">")
-            .put(new WikiTagPair(TWO_QUOTES, TWO_QUOTES), "<i>")
-            .put(new WikiTagPair(THREE_QUOTES, THREE_QUOTES), "<b>")
             .put(new WikiTagPair(LINK, END_BRACKET), "<a href=\"%s\">")
             .build();
 
@@ -200,8 +221,6 @@ public class Replacement
             .put(new WikiTagPair(TWO_EQUAL, TWO_EQUAL), "</h2>")
             .put(new WikiTagPair(THREE_EQUAL, THREE_EQUAL), "</h3>")
             .put(new WikiTagPair(FOUR_EQUAL, FOUR_EQUAL), "</h4>")
-            .put(new WikiTagPair(TWO_QUOTES, TWO_QUOTES), "</i>")
-            .put(new WikiTagPair(THREE_QUOTES, THREE_QUOTES), "</b>")
             .put(new WikiTagPair(LINK, END_BRACKET), "</a>")
             .build();
 

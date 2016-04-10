@@ -1,7 +1,6 @@
 package ru.ruranobe.wicket.components;
 
 import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -82,7 +81,7 @@ public class PasswordRecoveryPanel extends Panel
             {
                 try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
-                    user.setPass(MD5.crypt(password));
+                    user.setPassWithActualVersion(MD5.crypt(password));
                     CachingFacade.getCacheableMapper(session, UsersMapper.class).updateUser(user);
                     session.commit();
                     info("Пароль был успешно изменен.");

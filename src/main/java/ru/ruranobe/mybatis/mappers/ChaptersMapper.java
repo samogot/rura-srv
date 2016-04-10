@@ -19,4 +19,8 @@ public interface ChaptersMapper
     void deleteChapter(int activityId);
 
     void updateChapter(Chapter chapter);
+
+    void updateChapterText(Chapter chapter);
+
+    void updateChapterNoText(Chapter chapter);
 }

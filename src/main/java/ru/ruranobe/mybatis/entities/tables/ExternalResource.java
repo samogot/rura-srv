@@ -23,7 +23,7 @@ public class ExternalResource implements Serializable
 
     public String getThumbnail(int width)
     {
-        return width < getWidth() ? String.format(thumbnail, width) : getUrl();
+	    return String.format(thumbnail, Math.min(width, getWidth()));
     }
 
     public void setThumbnail(String thumbnail)

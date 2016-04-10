@@ -18,14 +18,15 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
     <modelVersion>4.0.0</modelVersion>
     <groupId>ru.ruranobe</groupId>
+    <artifactId>Ruranobe</artifactId>
     <packaging>war</packaging>
     <version>1.1-SNAPSHOT</version>
-    <!-- TODO project name  -->
-    <name>Ruranobe</name>
-    <description></description>
+    <name>RuRanobe</name>
+    <description>
+
+    </description>
     <!--
         <organization>
             <name>company name</name>
@@ -46,6 +47,8 @@
         <!-- allowed values: R7, 1.0, 1.5, 2.0 or none -->
         <wtp.version>none</wtp.version>
         <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
+        <wicket.configuration>deployment</wicket.configuration>
+        <!-- use "-Dwicket.configuration=development" command line parameter to run wicket AND gulp build in debug mode-->
     </properties>
     <dependencies>
         <!--  WICKET DEPENDENCIES -->
@@ -61,13 +64,6 @@
             <version>${wicket.version}</version>
         </dependency>
         -->
-
-        <!--plugin for direct chrome inspections-->
-        <dependency>
-            <groupId>net.ftlines.wicket-source</groupId>
-            <artifactId>wicket-source</artifactId>
-            <version>6.0.0.8</version>
-        </dependency>
 
         <!-- LOGGING DEPENDENCIES - LOG4J -->
         <dependency>
@@ -256,6 +252,11 @@
             <artifactId>rome</artifactId>
             <version>1.5.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.0</version>
+        </dependency>
 
     </dependencies>
     <build>
@@ -272,6 +273,7 @@
                 </includes>
                 <excludes>
                     <exclude>**/*.java</exclude>
+                    <exclude>**/*.html</exclude>
                 </excludes>
             </resource>
         </resources>
@@ -288,6 +290,7 @@
                 </includes>
                 <excludes>
                     <exclude>**/*.java</exclude>
+                    <exclude>**/*.html</exclude>
                 </excludes>
             </testResource>
         </testResources>
@@ -309,35 +312,69 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.0.2</version>
+                <configuration>
+                    <webResources>
+                        <resource>
+                            <directory>target/generated-resources/frontend</directory>
+                            <excludes>
+                                <exclude>**/rev-manifest*.json</exclude>
+                            </excludes>
+                        </resource>
+                        <resource>
+                            <directory>target/generated-resources/html</directory>
+                        </resource>
+                    </webResources>
+                </configuration>
             </plugin>
             <plugin>
-                <groupId>com.samaxes.maven</groupId>
-                <artifactId>minify-maven-plugin</artifactId>
-                <version>1.7.4</version>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>0.0.22</version>
                 <executions>
                     <execution>
-                        <id>default-minify</id>
-                        <configuration>
-                            <skipMerge>true</skipMerge>
-                            <nosuffix>true</nosuffix>
-                            <jsEngine>CLOSURE</jsEngine>
-                            <cssSourceIncludes>
-                                <cssSourceInclude>**</cssSourceInclude>
-                            </cssSourceIncludes>
-                            <cssSourceExcludes>
-                                <cssSourceExclude>**/*.min.css</cssSourceExclude>
-                                <cssSourceExclude>**/*.map</cssSourceExclude>
-                            </cssSourceExcludes>
-                            <jsSourceIncludes>
-                                <jsSourceInclude>**</jsSourceInclude>
-                            </jsSourceIncludes>
-                            <jsSourceExcludes>
-                                <jsSourceExclude>**/*.min.js</jsSourceExclude>
-                            </jsSourceExcludes>
-                        </configuration>
+                        <id>install node and npm</id>
                         <goals>
-                            <goal>minify</goal>
+                            <goal>install-node-and-npm</goal>
                         </goals>
+                        <configuration>
+                            <nodeVersion>v4.4.0</nodeVersion>
+                            <npmVersion>3.8.3</npmVersion>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>gulp-build</id>
+                        <goals>
+                            <goal>gulp</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>build-${wicket.configuration}</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>gulp-watch</id>
+                        <goals>
+                            <goal>gulp</goal>
+                        </goals>
+                        <phase>none</phase>
+                        <configuration>
+                            <arguments>watch</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>gulp-clean</id>
+                        <goals>
+                            <goal>gulp</goal>
+                        </goals>
+                        <phase>clean</phase>
+                        <configuration>
+                            <arguments>clean</arguments>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -359,6 +396,14 @@
                             <keyPassword>wicket</keyPassword>
                         </connector>
                     </connectors>
+                    <scanIntervalSeconds>1</scanIntervalSeconds>
+                    <webApp>
+                        <resourceBases>
+                            <resourceBase>src/main/webapp</resourceBase>
+                            <resourceBase>target/generated-resources/frontend</resourceBase>
+                            <resourceBase>target/generated-resources/html</resourceBase>
+                        </resourceBases>
+                    </webApp>
                 </configuration>
             </plugin>
             <plugin>
@@ -385,6 +430,7 @@
     </build>
 
     <repositories>
+
         <repository>
             <id>Apache Nexus</id>
             <url>https://repository.apache.org/content/repositories/snapshots/</url>
@@ -395,6 +441,17 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
+
+        <repository>
+            <id>central-maven-org</id>
+            <url>http://central.maven.org/maven2</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+
     </repositories>
-    <artifactId>Ruranobe</artifactId>
 </project>

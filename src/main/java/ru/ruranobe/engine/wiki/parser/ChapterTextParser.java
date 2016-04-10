@@ -102,5 +102,47 @@ public class ChapterTextParser
         return false;
     }
 
+    public static String getChapterHeading(Chapter chapter)
+    {
+        String headerTag = chapter.isNested() ? "h3" : "h2";
+        return "<" + headerTag + " id=\"" + chapter.getUrlPart() + "\">" + chapter.getTitle() + "</" + headerTag + ">";
+    }
+
+    private static void makeFootnote(StringBuilder builder, String id, String text)
+    {
+        builder.append("<li id=\"cite_note-").append(id).append("\">")
+               .append("<a href=\"#cite_ref-").append(id).append("\">↑</a> <span class=\"reference-text\">")
+               .append(text).append("</span></li>");
+    }
+
+    public static void addFootnotes(StringBuilder builder, List<FootnoteItem> footnotes)
+    {
+        for (FootnoteItem footnoteItem : footnotes)
+        {
+            makeFootnote(builder, footnoteItem.getFootnoteId(), footnoteItem.getFootnoteText());
+        }
+    }
+
+    public static void addFootnotes(StringBuilder builder, String footnotes)
+    {
+        if (!Strings.isEmpty(footnotes))
+        {
+            String[] footnotesSplited = footnotes.split(DELIMITER);
+            for (int i = 0; i < footnotesSplited.length; i += 2)
+            {
+                makeFootnote(builder, footnotesSplited[i], footnotesSplited[i + 1]);
+            }
+        }
+    }
+
+    public static void endFootnotes(StringBuilder builder)
+    {
+        if (!Strings.isEmpty(builder))
+        {
+            builder.insert(0, "<h2 id=\"footnotes\">Примечания</h2><ol class=\"references\">");
+            builder.append("</ol>");
+        }
+    }
+
     public static final String DELIMITER = ",;,";
 }

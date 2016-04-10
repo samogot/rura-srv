@@ -3,6 +3,7 @@ package ru.ruranobe.mybatis.mappers.cacheable;
 import ru.ruranobe.mybatis.entities.tables.VolumeReleaseActivity;
 import ru.ruranobe.mybatis.mappers.VolumeReleaseActivitiesMapper;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class VolumeReleaseActivitiesMapperCacheable implements VolumeReleaseActivitiesMapper
@@ -15,15 +16,9 @@ public class VolumeReleaseActivitiesMapperCacheable implements VolumeReleaseActi
     }
 
     @Override
-    public Collection<VolumeReleaseActivity> getVolumeReleaseActivitiesByVolumeId(int volumeId)
+    public ArrayList<VolumeReleaseActivity> getVolumeReleaseActivitiesByVolumeId(int volumeId)
     {
         return mapper.getVolumeReleaseActivitiesByVolumeId(volumeId);
-    }
-
-    @Override
-    public Collection<VolumeReleaseActivity> getGroupedVolumeReleaseActivitiesByVolumeId(int volumeId)
-    {
-        return mapper.getGroupedVolumeReleaseActivitiesByVolumeId(volumeId);
     }
 
     @Override

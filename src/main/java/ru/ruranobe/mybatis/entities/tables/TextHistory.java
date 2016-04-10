@@ -6,6 +6,26 @@ import java.util.Date;
 public class TextHistory implements Serializable
 {
 
+    public Integer getUserId()
+    {
+        return userId;
+    }
+
+    public void setUserId(Integer userId)
+    {
+        this.userId = userId;
+    }
+
+    public Integer getChapterId()
+    {
+        return chapterId;
+    }
+
+    public void setChapterId(Integer chapterId)
+    {
+        this.chapterId = chapterId;
+    }
+
     public TextHistory()
     {
     }
@@ -43,5 +63,7 @@ public class TextHistory implements Serializable
     private static final long serialVersionUID = 1L;
     private Integer currentTextId;
     private Integer previousTextId;
+    private Integer userId;
+    private Integer chapterId;
     private Date insertionTime;
 }

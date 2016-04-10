@@ -80,7 +80,16 @@ public class GlobalEdit extends AdminLayoutPage
             }
         }
 
-        Collections.sort(projects, (o1, o2) -> o1.getOrderNumber() - o2.getOrderNumber());
+        Collections.sort(projects, (o1, o2) -> {
+            if (o1.isWorks() != o2.isWorks())
+            {
+                return o1.isWorks().compareTo(o2.isWorks());
+            }
+            else
+            {
+                return o1.getOrderNumber().compareTo(o2.getOrderNumber());
+            }
+        });
 
         HashMap<Integer, Team> teamIdToTeamMap = new HashMap<>();
         for (Team team : teams)
@@ -133,6 +142,7 @@ public class GlobalEdit extends AdminLayoutPage
                 project.setBannerHidden(true);
                 project.setProjectHidden(true);
                 project.setOnevolume(false);
+                project.setWorks(false);
                 project.setUrl("");
                 project.setStatus(RuraConstants.PROJECT_STATUS_LIST.get(0));
                 return project;
@@ -157,6 +167,7 @@ public class GlobalEdit extends AdminLayoutPage
                         add(new TextField<String>("title").setRequired(true).setLabel(Model.of("Заголовок")));
                         add(new CheckBox("projectHidden"));
                         add(new CheckBox("bannerHidden"));
+                        add(new CheckBox("works"));
                         add(new BannerUploadComponent("image").setProject(model.getObject()));
                         add(new BookmarkablePageLink("link", ProjectEdit.class)
                         {

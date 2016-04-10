@@ -2,13 +2,13 @@
 <html xmlns:wicket="http://wicket.apache.org" lang="en">
 <head>
     <wicket:head>
-        <link rel="stylesheet" href="css/styles.cabinet.css">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+        <link rel="stylesheet" href="/css/styles.cabinet.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
     </wicket:head>
 </head>
 <body>
 <wicket:extend>
-    <div class="h3" style="margin-top: 15px !important;">Личный кабинет</div>
+    <h1>Личный кабинет</h1>
     <div class="cabinetpanel clearfix">
         <div class="leftcabinet">
             <div class="avatarcabinet">
@@ -16,30 +16,30 @@
                     <p wicket:id="avatarNoImageText">Нет аватара</p>
                     <a href="#">Загрузить</a>
                 </div>
-                <img wicket:id="avatarImage"/>
+                <img wicket:id="avatarImage" src=""/>
             </div>
             <button type="button" class="btn btn-primary">ЛС (0)</button>
         </div>
         <div class="infocabinet">
             <button type="button" class="btn btn-default btn-sm settings" data-toggle="modal" data-target="#settingsModal"><i class="fa fa-cog"></i> Настройки</button>
             <p>
-                <b>Логин:</b> <div wicket:id="username"/>
+                <b>Логин:</b> <div wicket:id="username"></div>
             </p>
             <wicket:enclosure>
                 <p>
-                    <b>Настоящее имя:</b> <div wicket:id="realname"/>
+                    <b>Настоящее имя:</b> <div wicket:id="realname"></div>
                 </p>
             </wicket:enclosure>
             <wicket:enclosure>
                 <p style="margin: 0 0 25px;">
-                    <b>E-mail:</b> <div wicket:id="email"/>
+                    <b>E-mail:</b> <div wicket:id="email"></div>
                 </p>
             </wicket:enclosure>
             <p style="margin: 0 0 25px;">
                 <b>Комментариев:</b> 0 [<a href="">Последние комментарии</a>]
             </p>
             <p>
-                <b>Дата регистрации:</b> <div wicket:id="registrationDate"/>
+                <b>Дата регистрации:</b> <div wicket:id="registrationDate"></div>
             </p>
         </div>
     </div>
@@ -51,7 +51,7 @@
                     <li>
                         <i class="fa fa-lg fa-bookmark"></i>
                         <div class="userbookmark">
-                            <p><a wicket:id="projectUrl"><span wicket:id="projectUrlText"/></a> - <a wicket:id="volumeUrl"><span wicket:id="volumeUrlText"/></a> - <a wicket:id="chapterUrl"><span wicket:id="chapterUrlText"/></a>
+                            <p><a wicket:id="projectUrl"><span wicket:id="projectUrlText"></span></a> - <a wicket:id="volumeUrl"><span wicket:id="volumeUrlText"></span></a> - <a wicket:id="chapterUrl"><span wicket:id="chapterUrlText"/></a>
                             </p>
                             <div wicket:id="bookmarkText" class="bookmarktext">
                                 Диаметр самого нижнего уровня составлял километров десять – там мог бы поместиться весь Сэтагая-ку[1]; группе привередливых ремесленников понадобился месяц, чтобы облазить его весь. А дальше возвышалась еще сотня уровней, один над другим; размер сооружения был просто невероятен...
@@ -68,12 +68,12 @@
     </wicket:enclosure>
 
     <!-- MODALS -->
-    <div wicket:id="settingsPassModal" class="modal fade" id="settingsPassModal" tabindex="-1" role="dialog" aria-labelledby="settingsPassLabel"/>
-    <div wicket:id="settingsEmailModal" class="modal fade" id="settingsEmailModal" tabindex="-1" role="dialog" aria-labelledby="settingsEmailLabel"/>
-    <div wicket:id="settings" class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="settingsLabel"/>
+    <div wicket:id="settingsPassModal" class="modal fade" id="settingsPassModal" tabindex="-1" role="dialog" aria-labelledby="settingsPassLabel"></div>
+    <div wicket:id="settingsEmailModal" class="modal fade" id="settingsEmailModal" tabindex="-1" role="dialog" aria-labelledby="settingsEmailLabel"></div>
+    <div wicket:id="settings" class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="settingsLabel"></div>
 
     <!-- MODALS -->
-    <script src="js/page.cabinet.js"/>
+    <script src="/js/page.cabinet.js"></script>
 </wicket:extend>
 </body>
 </html>

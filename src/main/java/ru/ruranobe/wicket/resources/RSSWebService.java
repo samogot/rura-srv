@@ -69,7 +69,7 @@ public class RSSWebService extends AbstractResource
         feed.setFeedType("rss_2.0");
 
         feed.setTitle("Обновления RuRanobe");
-        feed.setLink("https://ruranobe.ru");
+        feed.setLink("http://ruranobe.ru");
         feed.setDescription("Последние обновления переводов на проекте RuRanobe");
         List<SyndEntry> entries = new ArrayList<>();
         for (Update update : updateList)
@@ -82,7 +82,7 @@ public class RSSWebService extends AbstractResource
                 title += " - " + update.getChapterTitle();
             }
             entry.setTitle(title);
-            entry.setLink("https://ruranobe.ru" + RequestCycle.get().urlFor(update.getLinkClass(),
+            entry.setLink("http://ruranobe.ru" + RequestCycle.get().urlFor(update.getLinkClass(),
                     update.getUrlParameters()).toString().substring(1));
             entry.setPublishedDate(update.getShowTime());
             entries.add(entry);

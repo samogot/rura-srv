@@ -10,8 +10,6 @@ public enum WikiTagType
     TWO_EQUAL("=="),
     THREE_EQUAL("==="),
     FOUR_EQUAL("===="),
-    TWO_QUOTES("\'\'"),
-    THREE_QUOTES("\'\'\'"),
     IMAGE("{{Иллюстрация}}"),
     DOUBLE_END_BRACKET("}}"),
     NEW_LINE("\n"),
@@ -45,8 +43,6 @@ public enum WikiTagType
                     .put("==", TWO_EQUAL)
                     .put("===", THREE_EQUAL)
                     .put("====", FOUR_EQUAL)
-                    .put("\'\'", TWO_QUOTES)
-                    .put("\'\'\'", THREE_QUOTES)
                     .put("{{Иллюстрация}}", IMAGE)
                     .put("}}", DOUBLE_END_BRACKET)
                     .put("\n", NEW_LINE)

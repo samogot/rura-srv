@@ -10,24 +10,34 @@
         WHERE team_id = #{memberId}
     </select>
 
+    <select id="getTeamByMember" parameterType="string" resultMap="TeamResult">
+        SELECT *
+        FROM team_members
+            INNER JOIN teams USING (team_id)
+        WHERE nickname = #{nickname}
+    </select>
+
     <select id="getAllTeams" resultMap="TeamResult">
         SELECT *
         FROM teams
-        order by team_id asc
+        ORDER BY team_id ASC
     </select>
 
-    <insert id="insertTeam" parameterType="ru.ruranobe.mybatis.entities.tables.Team" keyProperty="teamId" useGeneratedKeys="true">
-        insert into teams (team_name, team_website_link)
-        values (#{teamName}, #{teamWebsiteLink})
+    <insert id="insertTeam" parameterType="ru.ruranobe.mybatis.entities.tables.Team" keyProperty="teamId"
+            useGeneratedKeys="true">
+        INSERT INTO teams (team_name, team_website_link)
+        VALUES (#{teamName}, #{teamWebsiteLink})
     </insert>
 
     <delete id="deleteTeam" parameterType="int">
-        delete from teams where team_id=#{teamId}
+        DELETE FROM teams
+        WHERE team_id =#{teamId}
     </delete>
 
     <update id="updateTeam" parameterType="ru.ruranobe.mybatis.entities.tables.Team">
-        update teams set team_name = #{teamName}, team_website_link=#{teamWebsiteLink}
-        where team_id=#{teamId}
+        UPDATE teams
+        SET team_name = #{teamName}, team_website_link=#{teamWebsiteLink}
+        WHERE team_id =#{teamId}
     </update>
 
     <resultMap type="ru.ruranobe.mybatis.entities.tables.Team" id="TeamResult">

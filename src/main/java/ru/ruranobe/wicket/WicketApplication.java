@@ -1,7 +1,7 @@
 package ru.ruranobe.wicket;
 
-import net.ftlines.wicketsource.WicketSource;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AnnotationsRoleAuthorizationStrategy;
@@ -23,6 +23,8 @@ import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.crypt.CachingSunJceCryptFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wicketstuff.pageserializer.kryo.KryoSerializer;
 import org.wicketstuff.rest.utils.mounting.PackageScanner;
 import ru.ruranobe.misc.RuranobeUtils;
@@ -32,6 +34,8 @@ import ru.ruranobe.wicket.webpages.personal.*;
 import ru.ruranobe.wicket.webpages.special.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
 
 public class WicketApplication extends AuthenticatedWebApplication
 {
@@ -47,7 +51,6 @@ public class WicketApplication extends AuthenticatedWebApplication
     {
         super.init();
         getFrameworkSettings().setSerializer(new KryoSerializer());
-        WicketSource.configure(this);
 
         // preload rura configuration
         RuranobeUtils.getApplicationContext();
@@ -75,12 +78,36 @@ public class WicketApplication extends AuthenticatedWebApplication
         getSecuritySettings().setCryptFactory(new CachingSunJceCryptFactory("randomlyGeneratedRuraCryptoKey"));
 
         getSecuritySettings().setAuthorizationStrategy(new AnnotationsRoleAuthorizationStrategy(this));
+
+        if (getConfigurationType() == RuntimeConfigurationType.DEVELOPMENT)
+        {
+            notifyRedeploy();
+        }
     }
+
+    private void notifyRedeploy()
+    {
+        try
+        {
+            File redeployNotifier = new File(getServletContext().getRealPath(File.separator), "redeploy.touch");
+            if (!redeployNotifier.exists())
+            {
+                redeployNotifier.createNewFile();
+            }
+            redeployNotifier.setLastModified(System.currentTimeMillis());
+        }
+        catch (IOException ignored)
+        {
+        }
+    }
+
+    private static final Logger log = LoggerFactory.getLogger(WicketApplication.class);
 
     private void mountPages()
     {
         mount(new MountedMapper("/diary", Diary.class));
         mount(new MountedMapper("/projects", FullProjects.class));
+        mount(new MountedMapper("/works", WorksProjects.class));
         mount(new MountedMapper("/faq", Faq.class));
         mount(new MountedMapper("/r/${project}", ProjectPage.class));
         mount(new MountedMapper("/r/${project}/${volume}", VolumePage.class));
@@ -157,12 +184,8 @@ public class WicketApplication extends AuthenticatedWebApplication
         }
     }
 
-    public static WicketApplication get() {
-        WebApplication application = WebApplication.get();
-        if (!(application instanceof WicketApplication)) {
-            throw new WicketRuntimeException("The web application attached to the current thread is not a " + WicketApplication.class.getSimpleName());
-        } else {
-            return (WicketApplication) application;
-        }
+    public static WicketApplication get()
+    {
+        return (WicketApplication) WebApplication.get();
     }
 }

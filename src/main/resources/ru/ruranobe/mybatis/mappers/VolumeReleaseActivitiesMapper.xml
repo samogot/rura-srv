@@ -8,27 +8,15 @@
         SELECT
             vra.*,
             activity_name,
-            nickname
+        nickname,
+        team_name,
+        team_website_link
         FROM volume_release_activities vra
             INNER JOIN volume_activities USING (activity_id)
             INNER JOIN team_members USING (member_id)
+        LEFT JOIN teams USING (team_id)
         WHERE volume_id = #{volumeId}
         ORDER BY order_number
-    </select>
-
-    <select id="getGroupedVolumeReleaseActivitiesByVolumeId" parameterType="int"
-            resultMap="VolumeReleaseActivityResult">
-        SELECT
-            vra.volume_id,
-            vra.activity_id,
-            activity_name,
-        group_concat(nickname ORDER BY order_number SEPARATOR ', ') AS nickname
-        FROM volume_release_activities vra
-            INNER JOIN volume_activities USING (activity_id)
-            INNER JOIN team_members USING (member_id)
-        WHERE volume_id = #{volumeId}
-        GROUP BY volume_id, activity_id
-        ORDER BY min(order_number)
     </select>
 
     <delete id="deleteVolumeReleaseActivitysByVolumeId" parameterType="int">
@@ -37,11 +25,13 @@
     </delete>
 
     <insert id="insertVolumeReleaseActivitysByVolumeId" parameterType="map">
-        INSERT INTO volume_release_activities(volume_id, activity_id, member_id, order_number, team_hidden) VALUES
+        INSERT INTO volume_release_activities(volume_id, activity_id, member_id, order_number, team_show_label,
+        team_show_status) VALUES
         <foreach collection="releaseActivities" item="activity" separator=",">
             (#{volumeId}, #{activity.activity.activityId}, (SELECT member_id
             FROM team_members
-            WHERE nickname = #{activity.memberName}), #{activity.orderNumber}, #{activity.teamHidden})
+            WHERE nickname = #{activity.memberName}), #{activity.orderNumber}, #{activity.teamShowLabel},
+            #{activity.teamShowStatus})
         </foreach>
     </insert>
 
@@ -53,7 +43,10 @@
         <result property="orderNumber" column="order_number"/>
         <result property="activityName" column="activity_name"/>
         <result property="memberName" column="nickname"/>
-        <result property="teamHidden" column="team_hidden"/>
+        <result property="teamShowLabel" column="team_show_label"/>
+        <result property="teamShowStatus" column="team_show_status"/>
+        <result property="teamName" column="team_name"/>
+        <result property="teamLink" column="team_website_link"/>
     </resultMap>
 
 </mapper>

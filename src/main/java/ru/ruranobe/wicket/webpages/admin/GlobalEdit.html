@@ -31,6 +31,11 @@
                 <label><input wicket:id="bannerHidden" type="checkbox"> Баннер скрыт</label>
             </div>
         </div>
+        <div class="form-group">
+            <div class="checkbox">
+                <label><input wicket:id="works" class="works-checkbox" type="checkbox"> Works</label>
+            </div>
+        </div>
         <wicket:enclosure>
             <div class="form-group banner-upload" style="position: relative;">
                 <label wicket:for="image">Изображение</label>
@@ -89,7 +94,8 @@
         </div>
     </wicket:fragment>
 
-    <script src="js/listgroup.js"></script>
+    <script src="/js/listgroup.js"></script>
+    <script src="/js/translit.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
     <!-- Скрипт загрузки -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/blueimp-load-image/2.1.0/load-image.all.min.js"></script>
@@ -104,16 +110,16 @@
           href="//cdn.rawgit.com/behigh/bootstrap_dropdowns_enhancement/master/dist/css/dropdowns-enhancement.min.css">
     <script src="//cdn.rawgit.com/behigh/bootstrap_dropdowns_enhancement/master/js/dropdowns-enhancement.js"></script>
 
-    <script src="js/ContentsModule.js"></script>
-    <script src="js/AdminListPanel.js"></script>
-    <link rel="stylesheet" href="css/AdminListPanel.css">
-    <script src="js/AdminToolboxAjaxButton.js"></script>
-    <script src="js/AdminFormPanel.js"></script>
-    <link rel="stylesheet" href="css/AdminFormPanel.css">
-    <script src="js/AdminAffixedListPanel.js"></script>
-    <link rel="stylesheet" href="css/AdminAffixedListPanel.css">
-    <script src="js/BannerUploaderComponent.js"></script>
-    <script src="js/GlobalEdit.js"></script>
+    <script src="/js/ContentsModule.js"></script>
+    <script src="/js/AdminListPanel.js"></script>
+    <link rel="stylesheet" href="/css/AdminListPanel.css">
+    <script src="/js/AdminToolboxAjaxButton.js"></script>
+    <script src="/js/AdminFormPanel.js"></script>
+    <link rel="stylesheet" href="/css/AdminFormPanel.css">
+    <script src="/js/AdminAffixedListPanel.js"></script>
+    <link rel="stylesheet" href="/css/AdminAffixedListPanel.css">
+    <script src="/js/BannerUploaderComponent.js"></script>
+    <script src="/js/GlobalEdit.js"></script>
 </wicket:extend>
 </body>
 </html>
