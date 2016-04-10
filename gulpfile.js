@@ -70,24 +70,20 @@ function processStyles(success, error) {
     var cssFiles = gulp.src(resourcesPath + '/**/*.css')
         .pipe($.changed(generatedSrcPath))
         .pipe(gulp.dest(generatedSrcPath))
-        .pipe($.sourcemaps.init({loadMaps: true}))
-        .pipe($.autoprefixer({
-            browsers: ['> 5% in RU'],
-            cascade: false
-        }))
-        .pipe($.cleanCss().on('error', error));
+        .pipe($.sourcemaps.init({loadMaps: true}));
 
     var stylusFiles = gulp.src(resourcesPath + '/**/*.styl')
-        .pipe($.changed(generatedSrcPath))
+        .pipe($.changed(generatedSrcPath, {extension: '.css'}))
         .pipe(gulp.dest(generatedSrcPath))
-        .pipe($.stylus({compress: true}))
+        .pipe($.sourcemaps.init({loadMaps: true}))
+        .pipe($.stylus({compress: true}));
+
+    return merge(cssFiles, stylusFiles)
         .pipe($.autoprefixer({
             browsers: ['> 5% in RU'],
             cascade: false
         }))
         .pipe($.cleanCss().on('error', error));
-        
-    return merge(cssFiles, stylusFiles);
 }
 
 var browserifyBundle = browserify(resourcesPath + 'js/radio/index.js')
