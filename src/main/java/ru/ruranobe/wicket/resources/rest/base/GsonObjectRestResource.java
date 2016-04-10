@@ -39,13 +39,14 @@ public class GsonObjectRestResource extends AbstractRestResource<JsonWebSerialDe
     @Override
     protected void onBeforeMethodInvoked(MethodMappingInfo mappedMethod, Attributes attributes)
     {
+        WebResponse response = (WebResponse) attributes.getResponse();
+        response.addHeader("Access-Control-Allow-Origin", "*");
         AuthorizeInvocation authorizeInvocation = mappedMethod.getMethod().getAnnotation(AuthorizeInvocation.class);
         if (authorizeInvocation != null)
         {
             Roles roles = new Roles(authorizeInvocation.value());
             if (!WicketApplication.get().hasAnyRole(roles))
             {
-                WebResponse response = (WebResponse) attributes.getResponse();
                 if (LoginSession.get().getUser() == null)
                 {
                     objectToResponse(new RestApiHandledErrorException("Unauthorized", "Bad authorization header"), response, mappedMethod.getOutputFormat());
