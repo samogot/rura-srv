@@ -14,7 +14,9 @@ export const ExtraAreaInfo = ({isVisible, showname, playcount, listeners}) => (
         <div className="radio__extra__info__listeners">
           Слушатели: {listeners}
         </div>
-        <a href="#">У меня проблема</a>
+        <a href="vk.com/topic-43340456_33272953" target="_blank">
+          Новости радио
+        </a>
       </div>
     </div>
   </ReactCollapse>
