@@ -9,7 +9,7 @@ export const Radio = ({isPlaying, isExtraVisible}) => (
     <ExtraAreaContainer isExtraVisible={isExtraVisible} />
     <a
       className="radio__trouble"
-      href="vk.com/topic-43340456_33272955"
+      href="//vk.com/topic-43340456_33272955"
       target="_blank"
     >
       У меня проблема
