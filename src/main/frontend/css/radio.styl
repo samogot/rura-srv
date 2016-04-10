@@ -1,10 +1,15 @@
 .radio
   *
     box-sizing border-box
+    
+  a
+    color rgb(59, 148, 217)
+    
+    body.works:not(.night) &
+      color rgb(1, 191, 170)
 
   &__trouble
     font-size 12px
-    color rgb(59, 148, 217)
 
   &__player
     height 40px
@@ -60,6 +65,9 @@
     border none
     background rgb(96, 169, 212)
     position relative
+    
+    body.works &
+     background rgb(1, 191, 170)
     
     body.night &
      background rgb(78, 78, 78)
@@ -130,11 +138,14 @@
       z-index 100
       transition background-color .2s
       
+      body.works &
+       background-color #019e8d
+      
       body.night &
        background-color #5e5e5e
 
       &--disabled
-        background-color #999
+        background-color #999 !important
 
       span
         display block
