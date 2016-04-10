@@ -1,7 +1,6 @@
 'use strict';
 
 var gulp = require('gulp');
-var stylus = require('gulp-stylus');
 var merge = require('merge-stream');
 var browserify = require('browserify');
 var babelify = require('babelify');
@@ -68,7 +67,7 @@ function processImages(success, error) {
 }
 
 function processStyles(success, error) {
-    cssFiles = gulp.src(resourcesPath + '/**/*.css')
+    var cssFiles = gulp.src(resourcesPath + '/**/*.css')
         .pipe($.changed(generatedSrcPath))
         .pipe(gulp.dest(generatedSrcPath))
         .pipe($.sourcemaps.init({loadMaps: true}))
@@ -77,11 +76,11 @@ function processStyles(success, error) {
             cascade: false
         }))
         .pipe($.cleanCss().on('error', error));
-    
-    stylusFiles = gulp.src(resourcesPath + '/**/*.styl')
-        .pipe(stylus({compress: true}))
+
+    var stylusFiles = gulp.src(resourcesPath + '/**/*.styl')
         .pipe($.changed(generatedSrcPath))
         .pipe(gulp.dest(generatedSrcPath))
+        .pipe($.stylus({compress: true}))
         .pipe($.autoprefixer({
             browsers: ['> 5% in RU'],
             cascade: false
