@@ -60,6 +60,9 @@
     border none
     background rgb(96, 169, 212)
     position relative
+    
+    body.night &
+     background rgb(78, 78, 78)
 
     &__icon
       position absolute
@@ -78,6 +81,9 @@
         border-left-width 10px
         border-right-width 0
         transition all .1s
+        
+        body.night &
+         border-left-color #E0E0E0
 
       &:after
         content ""
@@ -123,6 +129,9 @@
       position relative
       z-index 100
       transition background-color .2s
+      
+      body.night &
+       background-color #5e5e5e
 
       &--disabled
         background-color #999
