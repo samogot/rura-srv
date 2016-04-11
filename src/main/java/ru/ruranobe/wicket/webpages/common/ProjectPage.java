@@ -14,6 +14,8 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.ExternalResource;
@@ -303,8 +305,10 @@ public class ProjectPage extends SidebarLayoutPage
             if (!allCoverIds.isEmpty()) {
                 WebMarkupContainer ogImage = new WebMarkupContainer("ogImage");
                 add(ogImage);
+                String absoluteUrl = RequestCycle.get().getUrlRenderer().renderFullUrl(
+                        Url.parse(allCoverIds.iterator().next().getValue().getThumbnail(240)));
                 ogImage.add(
-                        new AttributeModifier("content", allCoverIds.iterator().next().getValue().getThumbnail(240)));
+                        new AttributeModifier("content", absoluteUrl));
             }
 
             sidebarModules.add(new ActionsSidebarModule(ProjectEdit.class, mainProject.getUrlParameters()));

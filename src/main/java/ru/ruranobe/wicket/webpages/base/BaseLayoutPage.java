@@ -16,7 +16,6 @@ import ru.ruranobe.wicket.components.modals.ModalLoginPanel;
 
 import java.time.Year;
 import java.util.Arrays;
-import java.util.List;
 
 public abstract class BaseLayoutPage extends WebPage
 {
@@ -33,7 +32,7 @@ public abstract class BaseLayoutPage extends WebPage
         checkStyleCookies();
     }
 
-    private void checkStyleCookies()
+	private void checkStyleCookies()
     {
         CookieUtils cookieUtils = new CookieUtils();
         String color = cookieUtils.load("rura_style_color");

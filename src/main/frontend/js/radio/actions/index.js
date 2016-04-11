@@ -20,14 +20,12 @@ export const requestData = () => ({
 });
 
 export const RECEIVE_DATA = 'RECEIVE_DATA';
-export const receiveData = ({artist, title, showname, playcount, listeners}) => ({
+export const receiveData = ({artist, title, showname}) => ({
     type: RECEIVE_DATA,
     data: {
         artist,
         title,
-        showname,
-        playcount,
-        listeners
+        showname
     }
 });
 
@@ -49,7 +47,7 @@ export const setSource = (source) => ({
 });
 
 export const fetchData = () => (dispatch) => (
-    $.when($.get('/api/radio/nowplaying'))
+    $.when($.get('//radio.ruranobe.ru/nowplaying'))
         .then(
             (data) => dispatch(receiveData(data[data.length - 1])),
             () => dispatch(setOfflineStatus())

@@ -1,4 +1,4 @@
-export const ExtraAreaInfo = ({isVisible, showname, playcount, listeners}) => (
+export const ExtraAreaInfo = ({isVisible, showname}) => (
   <ReactCollapse isOpened={isVisible}>
     <div className="radio__extra__info">
       <div className="radio__extra__info__inner">
@@ -7,12 +7,6 @@ export const ExtraAreaInfo = ({isVisible, showname, playcount, listeners}) => (
           title={showname}
         >
           {showname}
-        </div>
-        <div className="radio__extra__info__playcount">
-          Проигрываний трека: {playcount}
-        </div>
-        <div className="radio__extra__info__listeners">
-          Слушатели: {listeners}
         </div>
         <a href="//vk.com/topic-43340456_33272953" target="_blank">
           Новости радио

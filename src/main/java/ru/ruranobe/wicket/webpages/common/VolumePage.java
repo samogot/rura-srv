@@ -14,6 +14,8 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
 import ru.ruranobe.mybatis.MybatisUtil;
@@ -113,8 +115,10 @@ public class VolumePage extends SidebarLayoutPage
             if (!covers.isEmpty()) {
                 WebMarkupContainer ogImage = new WebMarkupContainer("ogImage");
                 add(ogImage);
+                String absoluteUrl = RequestCycle.get().getUrlRenderer().renderFullUrl(
+                        Url.parse(covers.iterator().next().getValue().getThumbnail(240)));
                 ogImage.add(
-                        new AttributeModifier("content", covers.iterator().next().getValue().getThumbnail(240)));
+                        new AttributeModifier("content", absoluteUrl));
             }
 
             BookmarkablePageLink projectUrl =
