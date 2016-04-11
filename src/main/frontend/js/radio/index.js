@@ -44,7 +44,7 @@ if (el) {
     }
   };
 
-  setInterval(updater, 1000);
+  setInterval(updater, 3000);
 
   render(
     <Provider store={store}>
