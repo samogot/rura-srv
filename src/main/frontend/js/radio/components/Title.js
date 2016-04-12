@@ -1,4 +1,4 @@
-export const Title = ({isPlaying, isOffline, isFetched, artist, title}) => (
+export const Title = ({isPlaying, isOffline, isFetched, artist, title, showname}) => (
   <div className="radio__title">
     {(() =>
       isPlaying ? (
@@ -6,7 +6,7 @@ export const Title = ({isPlaying, isOffline, isFetched, artist, title}) => (
           isOffline ? (
             <i>Сервер недоступен</i>
           ) : (
-            <span title={`${artist} - ${title}`}>
+            <span title={`${artist} - ${title}&#13;${showname}`}>
               <b>{artist}</b> - {title}
             </span>
           )
