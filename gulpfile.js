@@ -224,7 +224,7 @@ gulp.task('default', ['clean'], function () {
 gulp.task('watch', function () {
     $.livereload.listen();
     browserifyBundle = watchify(browserifyBundle);
-    gulp.watch(resourcesPath + '**/*.css', ['styles-no-rev']);
+    gulp.watch(resourcesPath + '**/*.{css,styl}', ['styles-no-rev']);
     gulp.watch(resourcesPath + '**/*.js', ['scripts-no-rev']);
     gulp.watch(resourcesPath + '**/*.{png,gif,jpg}', ['images-no-rev']);
     gulp.watch(htmlPath + '/**/*.html', ['html-no-rev']);

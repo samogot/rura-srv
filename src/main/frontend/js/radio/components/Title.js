@@ -6,7 +6,7 @@ export const Title = ({isPlaying, isOffline, isFetched, artist, title, showname}
           isOffline ? (
             <i>Сервер недоступен</i>
           ) : (
-            <span title={`${artist} - ${title}&#13;${showname}`}>
+            <span title={`${showname}\n${artist} - ${title}`}>
               <b>{artist}</b> - {title}
             </span>
           )
