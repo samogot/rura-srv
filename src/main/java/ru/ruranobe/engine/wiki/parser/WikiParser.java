@@ -34,8 +34,12 @@ public class WikiParser
         Iterator<ExternalResource> imagesIterator = images.iterator();
         connectWikiTags(imagesIterator);
 
-        parseWikiTextToHtmlText(0, wikiText.length(), htmlText, imagesIterator, appendExtraImagesAtTheEnd);
+        parseWikiTextToHtmlText(0, wikiText.length(), htmlText);
         htmlText.append("</p>");
+        if (appendExtraImagesAtTheEnd)
+        {
+            appendExtraImagesAtTheEnd(htmlText, imagesIterator);
+        }
 
         // parse quotes inside <p> tags
         StringBuilder result = new StringBuilder();
@@ -64,9 +68,10 @@ public class WikiParser
                 }
 
                 String quotedBody = new QuoteParser().applyTo(paragraph.toString());
-                quotedBody = quotedBody.replaceAll("<b>(\\s*)</b>", "\\1")
-                                       .replaceAll("<i>(\\s*)</i>", "\\1")
-                                       .replaceAll("<b>(\\s*)</b>", "\\1");
+                quotedBody = quotedBody.replaceAll("(</div>\\s*)((?:</[bi]>)*)$", "$2$1")
+                                       .replaceAll("<b>(\\s*)</b>", "$1")
+                                       .replaceAll("<i>(\\s*)</i>", "$1")
+                                       .replaceAll("<b>(\\s*)</b>", "$1");
                 // only <a> <b> <i> <span> <sub> <sup> and plain text are allowed in <p>
                 // discard <b> <i> around block tags
                 Matcher matcher = Pattern.compile("^\\s*(?:<[bi]>)*(<[^abis].*[^abinp]>)(?:</[bi]>)*\\s*$").matcher(quotedBody);
@@ -280,7 +285,7 @@ public class WikiParser
         for (HashMap.SimpleEntry<Integer, Integer> entry : preParsingBoundaries)
         {
             StringBuilder footnote = new StringBuilder();
-            parseWikiTextToHtmlText(entry.getKey(), entry.getValue(), footnote, Collections.<ExternalResource>emptyListIterator(), false);
+            parseWikiTextToHtmlText(entry.getKey(), entry.getValue(), footnote);
 
             String quotedFootnoteText = new QuoteParser().applyTo(footnote.toString());
             quotedFootnoteText = sanitize ? SimpleHtmlSanitizer.apply(quotedFootnoteText) : quotedFootnoteText;
@@ -427,7 +432,7 @@ public class WikiParser
     }
 
     // Form output html text
-    private void parseWikiTextToHtmlText(int start, int end, StringBuilder htmlText, Iterator<ExternalResource> imagesIterator, boolean appendExtraImagesAtTheEnd)
+    private void parseWikiTextToHtmlText(int start, int end, StringBuilder htmlText)
     {
         for (int i = start; i < end; )
         {
@@ -443,16 +448,20 @@ public class WikiParser
                 i++;
             }
         }
+    }
 
-        if (appendExtraImagesAtTheEnd)
+    private void appendExtraImagesAtTheEnd(StringBuilder htmlText, Iterator<ExternalResource> imagesIterator)
+    {
+        while (imagesIterator.hasNext())
         {
-            while (imagesIterator.hasNext())
-            {
-                ExternalResource imageEntry = imagesIterator.next();
-                htmlText.append(String.format("<div class=\"center illustration\"><a class=\"fancybox\" rel=\"group\" href=\"%s\">" +
-                                              "<img src=\"%s\" data-resource-id=\"%d\" alt=\"\" class=\"img-responsive img-thumbnail\"/>" +
-                                              "</a></div>", imageEntry.getUrl(), imageEntry.getThumbnail(900), imageEntry.getResourceId()));
-            }
+            ExternalResource imageEntry = imagesIterator.next();
+            htmlText.append(String.format(
+                    "<div class=\"center illustration\"><a class=\"fancybox\" rel=\"group\" href=\"%s\">" +
+                    "<img src=\"%s\" data-resource-id=\"%d\" alt=\"\" class=\"img-responsive img-thumbnail\"/>" +
+                    "</a></div>",
+                    Replacement.escapeURLIllegalCharacters(imageEntry.getUrl()),
+                    Replacement.escapeURLIllegalCharacters(imageEntry.getThumbnail(900)),
+                    imageEntry.getResourceId()));
         }
     }
 
