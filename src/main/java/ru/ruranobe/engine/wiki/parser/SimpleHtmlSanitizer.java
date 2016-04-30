@@ -107,7 +107,7 @@ public class SimpleHtmlSanitizer
 
                 result.append("&amp;");
             }
-            else if (!ignoreInComment)
+            else if (!ignoreInComment && c != '\r')
             {
                 result.append(c);
             }

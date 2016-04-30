@@ -288,7 +288,6 @@ public class WikiParser
             parseWikiTextToHtmlText(entry.getKey(), entry.getValue(), footnote);
 
             String quotedFootnoteText = new QuoteParser().applyTo(footnote.toString());
-            quotedFootnoteText = sanitize ? SimpleHtmlSanitizer.apply(quotedFootnoteText) : quotedFootnoteText;
             this.footnotes.add(new FootnoteItem(footnoteParsingBoundariesToFootnoteId.get(entry), quotedFootnoteText));
 
             Replacement footnoteReplacement = footnoteParsingBoundariesToFootnoteReplacement.get(entry);
