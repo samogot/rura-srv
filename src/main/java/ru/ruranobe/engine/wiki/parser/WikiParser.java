@@ -290,15 +290,29 @@ public class WikiParser
             StringBuilder footnote = new StringBuilder();
             parseWikiTextToHtmlText(entry.getKey(), entry.getValue(), footnote);
 
-            String quotedFootnoteText = new QuoteParser().applyTo(footnote.toString());
-            this.footnotes.add(new FootnoteItem(footnoteParsingBoundariesToFootnoteId.get(entry), quotedFootnoteText));
+            String footnote_temp_str = footnote.toString();
+            StringBuilder quotedFootnoteText = new StringBuilder();
+            while (footnote_temp_str.contains("</p>"))
+            {
+                int endLineIndex = footnote_temp_str.indexOf("</p>");
+                quotedFootnoteText.append(new QuoteParser().applyTo(footnote_temp_str.substring(0, endLineIndex)));
+                int startNextLineIndex = footnote_temp_str.indexOf(">", endLineIndex + 5) + 1;
+                quotedFootnoteText.append(footnote_temp_str.substring(endLineIndex, startNextLineIndex));
+                footnote_temp_str = footnote_temp_str.substring(startNextLineIndex);
+            }
+            quotedFootnoteText.append(new QuoteParser().applyTo(footnote_temp_str));
+            String quotedBody = quotedFootnoteText.toString()
+                                                  .replaceAll("<b>(\\s*)</b>", "$1")
+                                                  .replaceAll("<i>(\\s*)</i>", "$1")
+                                                  .replaceAll("<b>(\\s*)</b>", "$1");
+            this.footnotes.add(new FootnoteItem(footnoteParsingBoundariesToFootnoteId.get(entry), quotedBody));
 
             Replacement footnoteReplacement = footnoteParsingBoundariesToFootnoteReplacement.get(entry);
             //String replacementText = String.format(footnoteReplacement.getReplacementText(), footnote.toString());
 
             // add to data-content content without any tags
-            String dataContent = "&lt;p&gt;" + quotedFootnoteText.replaceAll("<", "&lt;").replaceAll(">", "&gt;")
-                                                                 .replaceAll("\"", "&quot;") + "&lt;/p&gt;";
+            String dataContent = "&lt;p&gt;" + quotedBody.replaceAll("<", "&lt;").replaceAll(">", "&gt;")
+                                                         .replaceAll("\"", "&quot;") + "&lt;/p&gt;";
             footnoteReplacement.setReplacementText(String.format(footnoteReplacement.getReplacementText(), dataContent));
         }
     }
