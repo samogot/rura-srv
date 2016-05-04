@@ -36,10 +36,6 @@ public class WikiParser
 
         parseWikiTextToHtmlText(0, wikiText.length(), htmlText);
         htmlText.append("</p>");
-        if (appendExtraImagesAtTheEnd)
-        {
-            appendExtraImagesAtTheEnd(htmlText, imagesIterator);
-        }
 
         // parse quotes inside <p> tags
         StringBuilder result = new StringBuilder();
@@ -85,6 +81,10 @@ public class WikiParser
                 }
             }
             i++;
+        }
+        if (appendExtraImagesAtTheEnd)
+        {
+            appendExtraImagesAtTheEnd(result, imagesIterator);
         }
         return result.toString();
     }
