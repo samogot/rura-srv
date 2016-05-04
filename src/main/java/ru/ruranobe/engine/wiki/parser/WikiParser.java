@@ -64,8 +64,11 @@ public class WikiParser
                 }
 
                 String quotedBody = new QuoteParser().applyTo(paragraph.toString());
-                quotedBody = quotedBody.replaceAll("(</div>\\s*)((?:</[bi]>)*)$", "$2$1")
-                                       .replaceAll("<b>(\\s*)</b>", "$1")
+                if (quotedBody.contains("<div class=\"center subtitle"))
+                {
+                    quotedBody = quotedBody.replaceAll("(</div>\\s*)((?:</[bi]>)*)$", "$2$1");
+                }
+                quotedBody = quotedBody.replaceAll("<b>(\\s*)</b>", "$1")
                                        .replaceAll("<i>(\\s*)</i>", "$1")
                                        .replaceAll("<b>(\\s*)</b>", "$1");
                 // only <a> <b> <i> <span> <sub> <sup> and plain text are allowed in <p>
