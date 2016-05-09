@@ -1993,3 +1993,22 @@ form.admin-block {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+.css-img .inner {
+    position: relative;
+    width: 100%;
+    padding-top: 31.086956522%; /* 286/920 */
+}
+
+.css-img {
+    max-width: 920px;
+    background-size: contain;
+}
+
+.faq-img {
+    background-image: url('../img/faq.png');
+}
+
+.diary-img {
+    background-image: url('../img/diary.png');
+}

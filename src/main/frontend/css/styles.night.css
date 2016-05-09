@@ -259,4 +259,12 @@ body.night .comment .text, body.night .comment .text:before {
 body.night .post .text {
     background: none;
 }
+
+body.night .faq-img {
+    background-image: url('../img/faq_night.png');
+}
+
+body.night .diary-img {
+    background-image: url('../img/diary_night.png');
+}
 /* body.night END */

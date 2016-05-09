@@ -114,15 +114,9 @@ function loadSettings() {
     }
     if (localStorage.getItem("night") == "true") {
         $('body').addClass("night");
-        $('a.navbar-brand img').attr('src', '/img/logo1_night.png');
-        if ($('.faq-img').length) $('.faq-img').attr('src', '/img/faq_night.png');
-        if ($('.diary-img').length) $('.diary-img').attr('src', '/img/diary_night.png');
         $('.daynight-button .fa').toggleClass('fa-sun-o fa-moon-o');
     } else {
         $('body').removeClass("night");
-        $('a.navbar-brand img').attr('src', '/img/logo1.png');
-        if ($('.faq-img').length) $('.faq-img').attr('src', '/img/faq.png');
-        if ($('.diary-img').length) $('.diary-img').attr('src', '/img/diary.png');
     }
 }
 $(document).ready(function() {
@@ -131,18 +125,12 @@ $(document).ready(function() {
 $('.daynight-button').on('click', function(e) {
     if ($(this).children('.fa').hasClass('fa-sun-o')) {
         $('body').addClass("night");
-        $('a.navbar-brand img').attr('src', '/img/logo1_night.png');
-        if ($('.faq-img').length) $('.faq-img').attr('src', '/img/faq_night.png');
-        if ($('.diary-img').length) $('.diary-img').attr('src', '/img/diary_night.png');
         saveSettings({
             key: 'night',
             item: true
         });
     } else {
         $('body').removeClass("night");
-        $('a.navbar-brand img').attr('src', '/img/logo1.png');
-        if ($('.faq-img').length) $('.faq-img').attr('src', '/img/faq.png');
-        if ($('.diary-img').length) $('.diary-img').attr('src', '/img/diary.png');
         saveSettings({
             key: 'night',
             item: false
