@@ -150,9 +150,21 @@ body.red .leftColumn {
         margin-top: -8px;
     }
 
-    body.white #contents-module.active .module_name,
-    body.white #contents-module.active .ContentNav a {
-        color: #000;
+    body.black #contents-module.active .module_name,
+    body.black #contents-module.active .ContentNav a {
+        color: #E0E0E0;
+    }
+
+    body.blue #contents-module.active .module_name,
+    body.blue #contents-module.active .ContentNav a,
+    body.red #contents-module.active .module_name,
+    body.red #contents-module.active .ContentNav a {
+        color: #FFF;
+    }
+
+    body.blue #contents-module.active .ContentNav a,
+    body.red #contents-module.active .ContentNav a {
+        border-left-color: #FFF;
     }
 
     .controlText div.options-button.active .hint .miniicon {

@@ -2,8 +2,9 @@
     font-weight: bold;
 }
 
-html {
+html, body {
     overflow-x: hidden;
+    position: relative;
 }
 
 body {
@@ -1659,15 +1660,6 @@ ul.ContentNav {
 
     .right-sidebar div {
         display: none;
-    }
-
-    #contents-module.active .module_name {
-        color: #FFF;
-    }
-
-    #contents-module.active .ContentNav a {
-        color: #FFF;
-        border-left-color: #FFF;
     }
 }
 
