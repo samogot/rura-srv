@@ -54,6 +54,16 @@ public class LoginSession extends AuthenticatedWebSession
         return styleColor + " " + styleDayNight;
     }
 
+    public void setForceDesktopVersion(boolean forceDesktopVersion)
+    {
+        this.forceDesktopVersion = forceDesktopVersion;
+    }
+
+    public boolean isForceDesktopVersion()
+    {
+        return forceDesktopVersion;
+    }
+
     private User user;
     private Roles roles = null;
     private Set<String> ownProjects = null;
@@ -151,4 +161,5 @@ public class LoginSession extends AuthenticatedWebSession
 
     private String styleColor = "";
     private String styleDayNight = "";
+    private boolean forceDesktopVersion = false;
 }

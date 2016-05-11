@@ -2,11 +2,18 @@ package ru.ruranobe.wicket.webpages.base;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.authentication.IAuthenticationStrategy;
+import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.cookies.CookieUtils;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.wicket.LoginSession;
@@ -32,7 +39,7 @@ public abstract class BaseLayoutPage extends WebPage
         checkStyleCookies();
     }
 
-	private void checkStyleCookies()
+    private void checkStyleCookies()
     {
         CookieUtils cookieUtils = new CookieUtils();
         String color = cookieUtils.load("rura_style_color");
@@ -83,13 +90,56 @@ public abstract class BaseLayoutPage extends WebPage
         WebMarkupContainer ogTitle = new WebMarkupContainer("ogTitle");
         add(ogTitle);
         ogTitle.add(new AttributeModifier("content", getPageTitle()));
-        if (get("ogImage") == null) {
+        if (get("ogImage") == null)
+        {
             WebMarkupContainer ogImage = new WebMarkupContainer("ogImage");
             add(ogImage);
         }
         add(new Label("currentYear", Year.now()));
         add(body);
         super.onInitialize();
+        handleForceDesktopFlag();
+    }
+
+    private void handleForceDesktopFlag()
+    {
+        if (!getPageParameters().get("forceDesktopVersion").isEmpty())
+        {
+            LoginSession.get().setForceDesktopVersion(getPageParameters().get("forceDesktopVersion").toBoolean());
+            setResponsePage(getPageClass(), new PageParameters(getPageParameters()).remove("forceDesktopVersion"));
+        }
+        PageParameters forceDesktopVersionParameters = new PageParameters(getPageParameters())
+                .add("forceDesktopVersion", !LoginSession.get().isForceDesktopVersion());
+        BookmarkablePageLink forceDesktopVersionLink = new BookmarkablePageLink("forceDesktopVersion", getPageClass(), forceDesktopVersionParameters);
+        if (!LoginSession.get().isForceDesktopVersion())
+        {
+            forceDesktopVersionLink.add(new AttributeAppender("class", " visible-xs-inline"));
+            forceDesktopVersionLink.setBody(Model.of("Полня версия"));
+        }
+        else
+        {
+            forceDesktopVersionLink.setBody(Model.of("Вернутся к мобильной версии"));
+        }
+        add(forceDesktopVersionLink);
+    }
+
+    @Override
+    public void renderHead(IHeaderResponse response)
+    {
+        super.renderHead(response);
+        if (LoginSession.get().isForceDesktopVersion())
+        {
+            response.render(composeMetaItem("viewport", "width=1024"));
+        }
+        else
+        {
+            response.render(composeMetaItem("viewport", "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"));
+        }
+    }
+
+    private static HeaderItem composeMetaItem(String name, String content)
+    {
+        return StringHeaderItem.forString(String.format("<meta name=\"%s\" content=\"%s\" />", name, content));
     }
 
     private void checkLogin()
