@@ -60,6 +60,10 @@ public abstract class BaseLayoutPage extends WebPage
             loginSession.setStyleDayNight("");
         }
         addBodyClassAttribute(loginSession.getBodyClassStyle());
+        if (!loginSession.getStyleColor().isEmpty())
+        {
+            body.add(AttributeModifier.replace("data-color", loginSession.getStyleColor()));
+        }
     }
 
     protected void addBodyClassAttribute(String value)

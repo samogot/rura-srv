@@ -44,6 +44,11 @@ public class LoginSession extends AuthenticatedWebSession
         this.styleColor = styleColor;
     }
 
+    public String getStyleColor()
+    {
+        return styleColor;
+    }
+
     public void setStyleDayNight(String styleDayNight)
     {
         this.styleDayNight = styleDayNight;
