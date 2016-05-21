@@ -25,9 +25,9 @@
             non_colored.user_id       AS userId1,
             non_colored.mime_type     AS mimeType1,
             non_colored.url           AS url1,
-        non_colored.thumbnail AS thumbnail1,
-        non_colored.width AS width1,
-        non_colored.height AS height1,
+            non_colored.thumbnail     AS thumbnail1,
+            non_colored.width         AS width1,
+            non_colored.height        AS height1,
             non_colored.title         AS title1,
             non_colored.uploaded_when AS uploadedWhen1,
 
@@ -35,9 +35,9 @@
             colored.user_id           AS userId2,
             colored.mime_type         AS mimeType2,
             colored.url               AS url2,
-        colored.thumbnail AS thumbnail2,
-        colored.width AS width2,
-        colored.height AS height2,
+            colored.thumbnail         AS thumbnail2,
+            colored.width             AS width2,
+            colored.height            AS height2,
             colored.title             AS title2,
             colored.uploaded_when     AS uploadedWhen2
         FROM chapter_images
@@ -61,9 +61,9 @@
             non_colored.user_id       AS userId1,
             non_colored.mime_type     AS mimeType1,
             non_colored.url           AS url1,
-        non_colored.thumbnail AS thumbnail1,
-        non_colored.width AS width1,
-        non_colored.height AS height1,
+            non_colored.thumbnail     AS thumbnail1,
+            non_colored.width         AS width1,
+            non_colored.height        AS height1,
             non_colored.title         AS title1,
             non_colored.uploaded_when AS uploadedWhen1,
 
@@ -71,9 +71,9 @@
             colored.user_id           AS userId2,
             colored.mime_type         AS mimeType2,
             colored.url               AS url2,
-        colored.thumbnail AS thumbnail2,
-        colored.width AS width2,
-        colored.height AS height2,
+            colored.thumbnail         AS thumbnail2,
+            colored.width             AS width2,
+            colored.height            AS height2,
             colored.title             AS title2,
             colored.uploaded_when     AS uploadedWhen2
         FROM chapter_images
@@ -88,12 +88,12 @@
             keyProperty="chapterImageId"
             useGeneratedKeys="true">
         INSERT INTO chapter_images
-        SET volume_id = #{volumeId},
-        chapter_id = #{chapterId},
-        non_colored_image_id = #{nonColoredImage.resourceId},
-        colored_image_id = #{coloredImage.resourceId},
-        order_number = #{orderNumber},
-        adult = #{adult}
+        SET volume_id            = #{volumeId},
+            chapter_id           = #{chapterId},
+            non_colored_image_id = #{nonColoredImage.resourceId},
+            colored_image_id     = #{coloredImage.resourceId},
+            order_number         = #{orderNumber},
+            adult                = #{adult}
     </insert>
 
     <delete id="deleteChapterImage" parameterType="int">
@@ -103,12 +103,12 @@
 
     <update id="updateChapterImage" parameterType="ru.ruranobe.mybatis.entities.tables.ChapterImage">
         UPDATE chapter_images
-        SET volume_id = #{volumeId},
-        chapter_id = #{chapterId},
-        non_colored_image_id = #{nonColoredImage.resourceId},
-        colored_image_id = #{coloredImage.resourceId},
-        order_number = #{orderNumber},
-        adult = #{adult}
+        SET volume_id            = #{volumeId},
+            chapter_id           = #{chapterId},
+            non_colored_image_id = #{nonColoredImage.resourceId},
+            colored_image_id     = #{coloredImage.resourceId},
+            order_number         = #{orderNumber},
+            adult                = #{adult}
         WHERE chapter_image_id = #{chapterImageId}
     </update>
 

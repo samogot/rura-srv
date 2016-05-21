@@ -7,8 +7,8 @@
     <select id="getUserGroupsByUser" parameterType="int" resultType="java.lang.String">
         SELECT ugt.group_name
         FROM user_groups ug
-        JOIN user_group_types ugt
-        ON ugt.group_id = ug.group_id
+            JOIN user_group_types ugt
+                ON ugt.group_id = ug.group_id
         WHERE ug.user_id = #{userId}
     </select>
 

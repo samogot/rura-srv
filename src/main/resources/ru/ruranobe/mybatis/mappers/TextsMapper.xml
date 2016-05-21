@@ -13,30 +13,40 @@
     </cache-->
 
     <select id="getTextById" resultMap="TextResult">
-        SELECT * FROM texts WHERE text_id = #{textId}
+        SELECT *
+        FROM texts
+        WHERE text_id = #{textId}
     </select>
 
     <select id="getHtmlInfoById" resultMap="TextResult">
-        SELECT text_id, text_html, footnotes, contents FROM texts WHERE text_id = #{textId}
+        SELECT
+            text_id,
+            text_html,
+            footnotes,
+            contents
+        FROM texts
+        WHERE text_id = #{textId}
     </select>
 
     <update id="updateText" parameterType="ru.ruranobe.mybatis.entities.tables.Text">
-        update texts
-        set
-        text_wiki = #{textWiki},
-        text_html = #{textHtml},
-        footnotes = #{footnotes},
-        contents = #{contents}
-        where text_id = #{textId}
+        UPDATE texts
+        SET
+            text_wiki = #{textWiki},
+            text_html = #{textHtml},
+            footnotes = #{footnotes},
+            contents  = #{contents}
+        WHERE text_id = #{textId}
     </update>
 
-    <insert id="insertText" parameterType="ru.ruranobe.mybatis.entities.tables.Text" keyProperty="textId" useGeneratedKeys="true">
+    <insert id="insertText" parameterType="ru.ruranobe.mybatis.entities.tables.Text" keyProperty="textId"
+            useGeneratedKeys="true">
         INSERT INTO texts (text_wiki, text_html, contents, footnotes)
-        values (#{textWiki}, #{textHtml}, #{contents}, #{footnotes})
+        VALUES (#{textWiki}, #{textHtml}, #{contents}, #{footnotes})
     </insert>
 
     <delete id="deleteText" parameterType="int">
-        delete from texts where text_id = #{textId}
+        DELETE FROM texts
+        WHERE text_id = #{textId}
     </delete>
 
     <resultMap id="TextResult" type="ru.ruranobe.mybatis.entities.tables.Text">

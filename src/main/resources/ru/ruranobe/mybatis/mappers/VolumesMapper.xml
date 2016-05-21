@@ -16,7 +16,7 @@
         SELECT count(*) AS volumesCount
         FROM volumes
         WHERE project_id = #{projectId}
-        AND volume_type = 'Ранобэ'
+              AND volume_type = 'Ранобэ'
     </select>
 
     <select id="getVolumeByUrl" parameterType="String" resultMap="VolumeResult">
@@ -48,7 +48,7 @@
               FROM volumes v
                   INNER JOIN projects USING (project_id)
               WHERE v.url = #{url}) v
-        LEFT JOIN volumes prev_vol
+            LEFT JOIN volumes prev_vol
                 ON v.prev_sequence_number = prev_vol.sequence_number AND v.project_id = prev_vol.project_id
             LEFT JOIN volumes next_vol
                 ON v.next_sequence_number = next_vol.sequence_number AND v.project_id = next_vol.project_id
@@ -62,76 +62,76 @@
 
     <update id="updateVolume" parameterType="ru.ruranobe.mybatis.entities.tables.Volume">
         UPDATE volumes
-        SET project_id = #{projectId},
-        image_one = #{imageOne},
-        image_two = #{imageTwo},
-        image_three = #{imageThree},
-        image_four = #{imageFour},
-        url = #{url},
-        name_file = #{nameFile},
-        name_title = #{nameTitle},
-        name_jp = #{nameJp},
-        name_en = #{nameEn},
-        name_ru = #{nameRu},
-        name_romaji = #{nameRomaji},
-        name_short = #{nameShort},
-        sequence_number = #{sequenceNumber},
-        author = #{author},
-        illustrator = #{illustrator},
-        original_design = #{originalDesign},
-        original_story = #{originalStory},
-        release_date = #{releaseDate},
-        isbn = #{isbn},
-        external_url = #{externalUrl},
-        volume_type = #{volumeType},
-        volume_status = #{volumeStatus},
-        volume_status_hint = #{volumeStatusHint},
-        adult = #{adult},
-        annotation = #{annotation},
-        topic_id = #{topicId}
+        SET project_id         = #{projectId},
+            image_one          = #{imageOne},
+            image_two          = #{imageTwo},
+            image_three        = #{imageThree},
+            image_four         = #{imageFour},
+            url                = #{url},
+            name_file          = #{nameFile},
+            name_title         = #{nameTitle},
+            name_jp            = #{nameJp},
+            name_en            = #{nameEn},
+            name_ru            = #{nameRu},
+            name_romaji        = #{nameRomaji},
+            name_short         = #{nameShort},
+            sequence_number    = #{sequenceNumber},
+            author             = #{author},
+            illustrator        = #{illustrator},
+            original_design    = #{originalDesign},
+            original_story     = #{originalStory},
+            release_date       = #{releaseDate},
+            isbn               = #{isbn},
+            external_url       = #{externalUrl},
+            volume_type        = #{volumeType},
+            volume_status      = #{volumeStatus},
+            volume_status_hint = #{volumeStatusHint},
+            adult              = #{adult},
+            annotation         = #{annotation},
+            topic_id           = #{topicId}
         WHERE volume_id = #{volumeId}
     </update>
 
     <update id="updateVolumeCovers" parameterType="ru.ruranobe.mybatis.entities.tables.Volume">
         UPDATE volumes
         SET
-        image_one = #{imageOne},
-        image_two = #{imageTwo},
+            image_one   = #{imageOne},
+            image_two   = #{imageTwo},
             image_three = #{imageThree},
-        image_four = #{imageFour}
+            image_four  = #{imageFour}
         WHERE volume_id = #{volumeId}
     </update>
 
     <insert id="insertVolume" parameterType="ru.ruranobe.mybatis.entities.tables.Volume" keyProperty="volumeId"
             useGeneratedKeys="true">
         INSERT INTO volumes
-        SET project_id = #{projectId},
-        image_one = #{imageOne},
-        image_two = #{imageTwo},
-        image_three = #{imageThree},
-        image_four = #{imageFour},
-        url = #{url},
-        name_file = #{nameFile},
-        name_title = #{nameTitle},
-        name_jp = #{nameJp},
-        name_en = #{nameEn},
-        name_ru = #{nameRu},
-        name_romaji = #{nameRomaji},
-        name_short = #{nameShort},
-        sequence_number = #{sequenceNumber},
-        author = #{author},
-        illustrator = #{illustrator},
-        original_design = #{originalDesign},
-        original_story = #{originalStory},
-        release_date = #{releaseDate},
-        isbn = #{isbn},
-        external_url = #{externalUrl},
-        volume_type = #{volumeType},
-        volume_status = #{volumeStatus},
-        volume_status_hint = #{volumeStatusHint},
-        adult = #{adult},
-        annotation = #{annotation},
-        topic_id = #{topicId}
+        SET project_id         = #{projectId},
+            image_one          = #{imageOne},
+            image_two          = #{imageTwo},
+            image_three        = #{imageThree},
+            image_four         = #{imageFour},
+            url                = #{url},
+            name_file          = #{nameFile},
+            name_title         = #{nameTitle},
+            name_jp            = #{nameJp},
+            name_en            = #{nameEn},
+            name_ru            = #{nameRu},
+            name_romaji        = #{nameRomaji},
+            name_short         = #{nameShort},
+            sequence_number    = #{sequenceNumber},
+            author             = #{author},
+            illustrator        = #{illustrator},
+            original_design    = #{originalDesign},
+            original_story     = #{originalStory},
+            release_date       = #{releaseDate},
+            isbn               = #{isbn},
+            external_url       = #{externalUrl},
+            volume_type        = #{volumeType},
+            volume_status      = #{volumeStatus},
+            volume_status_hint = #{volumeStatusHint},
+            adult              = #{adult},
+            annotation         = #{annotation},
+            topic_id           = #{topicId}
     </insert>
 
     <delete id="deleteVolume" parameterType="int">
