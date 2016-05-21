@@ -14,10 +14,7 @@ export const PlayButtonContainer = connect(
   (dispatch, {isPlaying}) => ({
     onClick() {
       dispatch(togglePlayingState());
-      // console.log("VLUE:", isPlaying);
-      // console.log("PREV:", window.localStorage.getItem('isPlaying'));
       window.localStorage.setItem('isPlaying', !isPlaying);
-      // console.log("AFTR:", window.localStorage.getItem('isPlaying'));
     }
   })
 )(PlayButton);

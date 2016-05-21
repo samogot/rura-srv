@@ -57,6 +57,12 @@ textarea.form-control {
     overflow: auto;
 }
 
+.commentText blockquote {
+    font-size: 0.9em;
+    padding: 5px 10px;
+    margin: 0 0 5px;
+}
+
 .commentText.overflowed {
     overflow: hidden;
     height: 44px;

@@ -6,6 +6,7 @@ import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.encoding.UrlEncoder;
+
 import ru.ruranobe.config.ApplicationContext;
 import ru.ruranobe.config.ConfigurationManager;
 import ru.ruranobe.wicket.RuraConstants;
@@ -16,71 +17,60 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-public class RuranobeUtils
-{
-    private static final String PASSWORD_REGEXP = "^[A-Za-z0-9]+";
-    private static final Pattern PASSWORD_PATTERN = Pattern.compile(PASSWORD_REGEXP);
+public class RuranobeUtils {
 
-    public static boolean isPasswordSyntaxInvalid(String password)
-    {
-        return !PASSWORD_PATTERN.matcher(password).matches();
-    }
+	private static final String PASSWORD_REGEXP = "^[A-Za-z0-9]+";
+	private static final Pattern PASSWORD_PATTERN = Pattern.compile(PASSWORD_REGEXP);
 
-    public static RedirectToUrlException getRedirectTo404Exception(WebPage sourcePage)
-    {
-        return new RedirectToUrlException(sourcePage.urlFor(NotFound.class, null).toString());
-    }
+	public static boolean isPasswordSyntaxInvalid(String password) {
+		return !PASSWORD_PATTERN.matcher(password).matches();
+	}
 
-    public static ApplicationContext getApplicationContext()
-    {
-        return ConfigurationManager.getApplicationContext(RuraConstants.PATH_TO_CONFIGURATION_FILE,
-                RuraConstants.PATH_TO_CONFIGURATION_FILE_SCHEMA);
-    }
+	public static RedirectToUrlException getRedirectTo404Exception(WebPage sourcePage) {
+		return new RedirectToUrlException(sourcePage.urlFor(NotFound.class, null).toString());
+	}
 
-    public static String paragraphIdOf(Integer chapterId, Integer textId, int lineNo)
-    {
-        String r1 = (chapterId == null ? "" : "c" + chapterId.toString() + "-");
-        String r3 = "p" + lineNo;
-        return r1 + r3;
-    }
+	public static ApplicationContext getApplicationContext() {
+		return ConfigurationManager.getApplicationContext(RuraConstants.PATH_TO_CONFIGURATION_FILE,
+		                                                  RuraConstants.PATH_TO_CONFIGURATION_FILE_SCHEMA);
+	}
 
-    public static Url mergeParameters(final Url url, final PageParameters params)
-    {
+	public static String paragraphIdOf(Integer chapterId, Integer textId, int lineNo) {
+		String r1 = (chapterId == null ? "" : "c" + chapterId.toString() + "-");
+		String r3 = "p" + lineNo;
+		return r1 + r3;
+	}
 
-        if (params == null)
-        {
-            return url;
-        }
+	public static Url mergeParameters(final Url url, final PageParameters params) {
 
-        Charset charset = url.getCharset();
+		if (params == null) {
+			return url;
+		}
 
-        Url mergedUrl = Url.parse(url.toString(), charset);
+		Charset charset = url.getCharset();
 
-        UrlEncoder urlEncoder = UrlEncoder.QUERY_INSTANCE;
+		Url mergedUrl = Url.parse(url.toString(), charset);
 
-        Set<String> setParameters = new HashSet<>();
+		UrlEncoder urlEncoder = UrlEncoder.QUERY_INSTANCE;
 
-        for (INamedParameters.NamedPair pair : params.getAllNamed())
-        {
-            String key = urlEncoder.encode(pair.getKey(), charset);
-            String value = urlEncoder.encode(pair.getValue(), charset);
+		Set<String> setParameters = new HashSet<>();
 
-            if (setParameters.contains(key))
-            {
-                mergedUrl.addQueryParameter(key, value);
-            }
-            else
-            {
-                mergedUrl.setQueryParameter(key, value);
-                setParameters.add(key);
-            }
-        }
+		for (INamedParameters.NamedPair pair : params.getAllNamed()) {
+			String key = urlEncoder.encode(pair.getKey(), charset);
+			String value = urlEncoder.encode(pair.getValue(), charset);
 
-        return mergedUrl;
-    }
+			if (setParameters.contains(key)) {
+				mergedUrl.addQueryParameter(key, value);
+			} else {
+				mergedUrl.setQueryParameter(key, value);
+				setParameters.add(key);
+			}
+		}
 
-    private RuranobeUtils()
-    {
+		return mergedUrl;
+	}
 
-    }
+	private RuranobeUtils() {
+
+	}
 }

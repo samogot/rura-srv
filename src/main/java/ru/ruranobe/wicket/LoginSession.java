@@ -45,6 +45,11 @@ public class LoginSession extends AuthenticatedWebSession
         this.styleColor = styleColor;
     }
 
+    public String getStyleColor()
+    {
+        return styleColor;
+    }
+
     public void setStyleDayNight(String styleDayNight)
     {
         this.styleDayNight = styleDayNight;
@@ -53,6 +58,16 @@ public class LoginSession extends AuthenticatedWebSession
     public String getBodyClassStyle()
     {
         return styleColor + " " + styleDayNight;
+    }
+
+    public void setForceDesktopVersion(boolean forceDesktopVersion)
+    {
+        this.forceDesktopVersion = forceDesktopVersion;
+    }
+
+    public boolean isForceDesktopVersion()
+    {
+        return forceDesktopVersion;
     }
 
     private User user;
@@ -153,4 +168,5 @@ public class LoginSession extends AuthenticatedWebSession
 
     private String styleColor = "";
     private String styleDayNight = "";
+    private boolean forceDesktopVersion = false;
 }

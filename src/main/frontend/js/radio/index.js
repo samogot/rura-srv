@@ -19,16 +19,13 @@ let store;
 if (el) {
   const {localStorage} = window;
   const localIsPlaying = localStorage.getItem('isPlaying');
-  const localIsExtraVisible = localStorage.getItem('isExtraVisible');
   const localVolume = parseFloat(localStorage.getItem('volume'));
 
   // console.log(localIsPlaying)
 
   const initialState = {
     isPlaying: (localIsPlaying === null ? false : localIsPlaying !== 'false'),
-    volume: (isNaN(localVolume) ? 1 : localVolume),
-    isExtraVisible: (localIsExtraVisible === null ?
-                     false : localIsExtraVisible !== 'false')
+    volume: (isNaN(localVolume) ? 1 : localVolume)
   };
 
   store = createStore(reducers, initialState, applyMiddleware(ReduxThunk.default));
@@ -44,7 +41,7 @@ if (el) {
     }
   };
 
-  setInterval(updater, 1000);
+  setInterval(updater, 3000);
 
   render(
     <Provider store={store}>

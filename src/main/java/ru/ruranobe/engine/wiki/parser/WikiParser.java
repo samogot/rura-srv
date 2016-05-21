@@ -34,7 +34,7 @@ public class WikiParser
         Iterator<ExternalResource> imagesIterator = images.iterator();
         connectWikiTags(imagesIterator);
 
-        parseWikiTextToHtmlText(0, wikiText.length(), htmlText, imagesIterator, appendExtraImagesAtTheEnd);
+        parseWikiTextToHtmlText(0, wikiText.length(), htmlText);
         htmlText.append("</p>");
 
         // parse quotes inside <p> tags
@@ -64,9 +64,13 @@ public class WikiParser
                 }
 
                 String quotedBody = new QuoteParser().applyTo(paragraph.toString());
-                quotedBody = quotedBody.replaceAll("<b>(\\s*)</b>", "\\1")
-                                       .replaceAll("<i>(\\s*)</i>", "\\1")
-                                       .replaceAll("<b>(\\s*)</b>", "\\1");
+                if (quotedBody.contains("<div class=\"center subtitle"))
+                {
+                    quotedBody = quotedBody.replaceAll("(</div>\\s*)((?:</[bi]>)*)$", "$2$1");
+                }
+                quotedBody = quotedBody.replaceAll("<b>(\\s*)</b>", "$1")
+                                       .replaceAll("<i>(\\s*)</i>", "$1")
+                                       .replaceAll("<b>(\\s*)</b>", "$1");
                 // only <a> <b> <i> <span> <sub> <sup> and plain text are allowed in <p>
                 // discard <b> <i> around block tags
                 Matcher matcher = Pattern.compile("^\\s*(?:<[bi]>)*(<[^abis].*[^abinp]>)(?:</[bi]>)*\\s*$").matcher(quotedBody);
@@ -80,6 +84,10 @@ public class WikiParser
                 }
             }
             i++;
+        }
+        if (appendExtraImagesAtTheEnd)
+        {
+            appendExtraImagesAtTheEnd(result, imagesIterator);
         }
         return result.toString();
     }
@@ -280,18 +288,31 @@ public class WikiParser
         for (HashMap.SimpleEntry<Integer, Integer> entry : preParsingBoundaries)
         {
             StringBuilder footnote = new StringBuilder();
-            parseWikiTextToHtmlText(entry.getKey(), entry.getValue(), footnote, Collections.<ExternalResource>emptyListIterator(), false);
+            parseWikiTextToHtmlText(entry.getKey(), entry.getValue(), footnote);
 
-            String quotedFootnoteText = new QuoteParser().applyTo(footnote.toString());
-            quotedFootnoteText = sanitize ? SimpleHtmlSanitizer.apply(quotedFootnoteText) : quotedFootnoteText;
-            this.footnotes.add(new FootnoteItem(footnoteParsingBoundariesToFootnoteId.get(entry), quotedFootnoteText));
+            String footnote_temp_str = footnote.toString();
+            StringBuilder quotedFootnoteText = new StringBuilder();
+            while (footnote_temp_str.contains("</p>"))
+            {
+                int endLineIndex = footnote_temp_str.indexOf("</p>");
+                quotedFootnoteText.append(new QuoteParser().applyTo(footnote_temp_str.substring(0, endLineIndex)));
+                int startNextLineIndex = footnote_temp_str.indexOf(">", endLineIndex + 5) + 1;
+                quotedFootnoteText.append(footnote_temp_str.substring(endLineIndex, startNextLineIndex));
+                footnote_temp_str = footnote_temp_str.substring(startNextLineIndex);
+            }
+            quotedFootnoteText.append(new QuoteParser().applyTo(footnote_temp_str));
+            String quotedBody = quotedFootnoteText.toString()
+                                                  .replaceAll("<b>(\\s*)</b>", "$1")
+                                                  .replaceAll("<i>(\\s*)</i>", "$1")
+                                                  .replaceAll("<b>(\\s*)</b>", "$1");
+            this.footnotes.add(new FootnoteItem(footnoteParsingBoundariesToFootnoteId.get(entry), quotedBody));
 
             Replacement footnoteReplacement = footnoteParsingBoundariesToFootnoteReplacement.get(entry);
             //String replacementText = String.format(footnoteReplacement.getReplacementText(), footnote.toString());
 
             // add to data-content content without any tags
-            String dataContent = "&lt;p&gt;" + quotedFootnoteText.replaceAll("<", "&lt;").replaceAll(">", "&gt;")
-                                                                 .replaceAll("\"", "&quot;") + "&lt;/p&gt;";
+            String dataContent = "&lt;p&gt;" + quotedBody.replaceAll("<", "&lt;").replaceAll(">", "&gt;")
+                                                         .replaceAll("\"", "&quot;") + "&lt;/p&gt;";
             footnoteReplacement.setReplacementText(String.format(footnoteReplacement.getReplacementText(), dataContent));
         }
     }
@@ -427,7 +448,7 @@ public class WikiParser
     }
 
     // Form output html text
-    private void parseWikiTextToHtmlText(int start, int end, StringBuilder htmlText, Iterator<ExternalResource> imagesIterator, boolean appendExtraImagesAtTheEnd)
+    private void parseWikiTextToHtmlText(int start, int end, StringBuilder htmlText)
     {
         for (int i = start; i < end; )
         {
@@ -443,16 +464,20 @@ public class WikiParser
                 i++;
             }
         }
+    }
 
-        if (appendExtraImagesAtTheEnd)
+    private void appendExtraImagesAtTheEnd(StringBuilder htmlText, Iterator<ExternalResource> imagesIterator)
+    {
+        while (imagesIterator.hasNext())
         {
-            while (imagesIterator.hasNext())
-            {
-                ExternalResource imageEntry = imagesIterator.next();
-                htmlText.append(String.format("<div class=\"center illustration\"><a class=\"fancybox\" rel=\"group\" href=\"%s\">" +
-                                              "<img src=\"%s\" data-resource-id=\"%d\" alt=\"\" class=\"img-responsive img-thumbnail\"/>" +
-                                              "</a></div>", imageEntry.getUrl(), imageEntry.getThumbnail(900), imageEntry.getResourceId()));
-            }
+            ExternalResource imageEntry = imagesIterator.next();
+            htmlText.append(String.format(
+                    "<div class=\"center illustration\"><a class=\"fancybox\" rel=\"group\" href=\"%s\">" +
+                    "<img src=\"%s\" data-resource-id=\"%d\" alt=\"\" class=\"img-responsive img-thumbnail\"/>" +
+                    "</a></div>",
+                    Replacement.escapeURLIllegalCharacters(imageEntry.getUrl()),
+                    Replacement.escapeURLIllegalCharacters(imageEntry.getThumbnail(900)),
+                    imageEntry.getResourceId()));
         }
     }
 
