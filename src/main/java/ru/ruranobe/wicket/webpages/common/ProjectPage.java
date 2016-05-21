@@ -74,10 +74,10 @@ public class ProjectPage extends SidebarLayoutPage
             final Project mainProject = projectsMapperCacheable.getProjectByUrl(projectUrl);
 
             redirectTo404IfArgumentIsNull(mainProject);
-            redirectTo404(mainProject.isProjectHidden() && !mainProject.isWorks()
+            redirectTo404(mainProject.getProjectHidden() && !mainProject.getWorks()
                           && !LoginSession.get().isProjectEditAllowedByUser(mainProject.getUrl()));
 
-            if (mainProject.isWorks())
+            if (mainProject.getWorks())
             {
                 addBodyClassAttribute("works");
             }

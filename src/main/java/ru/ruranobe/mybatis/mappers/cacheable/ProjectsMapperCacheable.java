@@ -3,7 +3,9 @@ package ru.ruranobe.mybatis.mappers.cacheable;
 import ru.ruranobe.mybatis.entities.tables.Project;
 import ru.ruranobe.mybatis.mappers.ProjectsMapper;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -45,6 +47,12 @@ public class ProjectsMapperCacheable implements ProjectsMapper
     }
 
     @Override
+    public Project getProjectById(Integer projectId)
+    {
+        return mapper.getProjectById(projectId);
+    }
+
+    @Override
     public List<Project> getSubProjectsByParentProjectId(Integer parentId)
     {
         return mapper.getSubProjectsByParentProjectId(parentId);
@@ -53,7 +61,7 @@ public class ProjectsMapperCacheable implements ProjectsMapper
     @Override
     public Collection<Project> getAllProjects()
     {
-        return projectIdToProject.values();
+        return new ArrayList<>(projectIdToProject.values());
     }
 
     @Override
@@ -86,6 +94,18 @@ public class ProjectsMapperCacheable implements ProjectsMapper
     public Collection<String> getAllPeople()
     {
         return mapper.getAllPeople();
+    }
+
+    @Override
+    public Date getProjectUpdateDate(Integer projectId)
+    {
+        return mapper.getProjectUpdateDate(projectId);
+    }
+
+    @Override
+    public Date getProjectEditDate(Integer projectId)
+    {
+        return mapper.getProjectEditDate(projectId);
     }
 }
 

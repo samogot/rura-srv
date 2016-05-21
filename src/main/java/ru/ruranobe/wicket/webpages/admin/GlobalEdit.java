@@ -81,9 +81,9 @@ public class GlobalEdit extends AdminLayoutPage
         }
 
         Collections.sort(projects, (o1, o2) -> {
-            if (o1.isWorks() != o2.isWorks())
+            if (o1.getWorks() != o2.getWorks())
             {
-                return o1.isWorks().compareTo(o2.isWorks());
+                return o1.getWorks().compareTo(o2.getWorks());
             }
             else
             {

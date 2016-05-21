@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Param;
 import ru.ruranobe.mybatis.entities.tables.Project;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 public interface ProjectsMapper
@@ -11,6 +12,8 @@ public interface ProjectsMapper
     void insertProject(Project project);
 
     Project getProjectByUrl(String url);
+
+    Project getProjectById(Integer projectId);
 
     List<Project> getSubProjectsByParentProjectId(Integer parentId);
 
@@ -25,4 +28,8 @@ public interface ProjectsMapper
     void deleteProject(Integer projectId);
 
     Collection<String> getAllPeople();
+
+    Date getProjectUpdateDate(Integer projectId);
+
+    Date getProjectEditDate(Integer projectId);
 }

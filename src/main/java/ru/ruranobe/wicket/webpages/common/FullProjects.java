@@ -41,7 +41,7 @@ public class FullProjects extends SidebarLayoutPage
 
             for (Project project : projects)
             {
-                if (!project.isProjectHidden() && !project.isWorks())
+                if (!project.getProjectHidden() && !project.getWorks())
                 {
                     ExternalResource image = (project.getImageId() != null) ? externalResourcesMapperCacheable.getExternalResourceById(project.getImageId())
                                                                             : null;

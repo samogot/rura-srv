@@ -7,6 +7,7 @@ import ru.ruranobe.wicket.webpages.common.VolumePage;
 
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.Date;
 
 public class Project extends PageRepresentable implements Serializable
 {
@@ -62,7 +63,7 @@ public class Project extends PageRepresentable implements Serializable
         this.translationStatus = translationStatus;
     }
 
-    public Boolean isWorks()
+    public Boolean getWorks()
     {
         return works;
     }
@@ -70,6 +71,26 @@ public class Project extends PageRepresentable implements Serializable
     public void setWorks(Boolean works)
     {
         this.works = works;
+    }
+
+    public Date getLastUpdateDate()
+    {
+        return lastUpdateDate;
+    }
+
+    public void setLastUpdateDate(Date lastUpdateDate)
+    {
+        this.lastUpdateDate = lastUpdateDate;
+    }
+
+    public Date getLastEditDate()
+    {
+        return lastEditDate;
+    }
+
+    public void setLastEditDate(Date lastEditDate)
+    {
+        this.lastEditDate = lastEditDate;
     }
 
     private static final long serialVersionUID = 3L;
@@ -99,6 +120,8 @@ public class Project extends PageRepresentable implements Serializable
     private String translationStatus;
     //optional
     private ExternalResource image;
+    private Date lastUpdateDate;
+    private Date lastEditDate;
 
     public Project(Integer parentId, Integer imageId, String url, String title, Integer orderNumber, boolean bannerHidden, boolean projectHidden, String annotation)
     {
@@ -164,12 +187,12 @@ public class Project extends PageRepresentable implements Serializable
         this.annotation = annotation;
     }
 
-    public Boolean isBannerHidden()
+    public Boolean getBannerHidden()
     {
         return bannerHidden;
     }
 
-    public void setBannerHidden(boolean bannerHidden)
+    public void setBannerHidden(Boolean bannerHidden)
     {
         this.bannerHidden = bannerHidden;
     }
@@ -194,12 +217,12 @@ public class Project extends PageRepresentable implements Serializable
         this.parentId = parentId;
     }
 
-    public Boolean isProjectHidden()
+    public Boolean getProjectHidden()
     {
         return projectHidden;
     }
 
-    public void setProjectHidden(boolean projectHidden)
+    public void setProjectHidden(Boolean projectHidden)
     {
         this.projectHidden = projectHidden;
     }
@@ -319,7 +342,7 @@ public class Project extends PageRepresentable implements Serializable
         return onevolume;
     }
 
-    public void setOnevolume(boolean onevolume)
+    public void setOnevolume(Boolean onevolume)
     {
         this.onevolume = onevolume;
     }
