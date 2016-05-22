@@ -3,6 +3,7 @@ package ru.ruranobe.mybatis.mappers.cacheable;
 import ru.ruranobe.mybatis.entities.tables.Volume;
 import ru.ruranobe.mybatis.mappers.VolumesMapper;
 
+import java.util.Date;
 import java.util.List;
 
 public class VolumesMapperCacheable implements VolumesMapper
@@ -66,5 +67,17 @@ public class VolumesMapperCacheable implements VolumesMapper
     public void resetVolumeTextCache(Integer volumeId)
     {
         mapper.resetVolumeTextCache(volumeId);
+    }
+
+    @Override
+    public Date getProjectUpdateDate(Integer volumeId)
+    {
+        return mapper.getProjectUpdateDate(volumeId);
+    }
+
+    @Override
+    public Date getProjectEditDate(Integer volumeId)
+    {
+        return mapper.getProjectEditDate(volumeId);
     }
 }

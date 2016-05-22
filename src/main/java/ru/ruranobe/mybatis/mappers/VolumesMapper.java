@@ -2,6 +2,7 @@ package ru.ruranobe.mybatis.mappers;
 
 import ru.ruranobe.mybatis.entities.tables.Volume;
 
+import java.util.Date;
 import java.util.List;
 
 public interface VolumesMapper
@@ -23,4 +24,8 @@ public interface VolumesMapper
     void deleteVolume(Integer volumeId);
 
     void resetVolumeTextCache(Integer volumeId);
+
+    Date getProjectUpdateDate(Integer volumeId);
+
+    Date getProjectEditDate(Integer volumeId);
 }

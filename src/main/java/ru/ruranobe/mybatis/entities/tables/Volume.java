@@ -9,6 +9,7 @@ import ru.ruranobe.wicket.webpages.common.VolumePage;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 public class Volume extends PageRepresentable implements Serializable, Cloneable
 {
@@ -21,7 +22,10 @@ public class Volume extends PageRepresentable implements Serializable, Cloneable
     public void setProject(Project project)
     {
         this.project = project;
-        projectId = project == null ? null : project.getProjectId();
+        if (project != null)
+        {
+            projectId = project.getProjectId();
+        }
     }
 
     public String getOriginalStory()
@@ -32,6 +36,36 @@ public class Volume extends PageRepresentable implements Serializable, Cloneable
     public void setOriginalStory(String originalStory)
     {
         this.originalStory = originalStory;
+    }
+
+    public Date getLastUpdateDate()
+    {
+        return lastUpdateDate;
+    }
+
+    public void setLastUpdateDate(Date lastUpdateDate)
+    {
+        this.lastUpdateDate = lastUpdateDate;
+    }
+
+    public Date getLastEditDate()
+    {
+        return lastEditDate;
+    }
+
+    public void setLastEditDate(Date lastEditDate)
+    {
+        this.lastEditDate = lastEditDate;
+    }
+
+    public List<ExternalResource> getCovers()
+    {
+        return covers;
+    }
+
+    public void setCovers(List<ExternalResource> covers)
+    {
+        this.covers = covers;
     }
 
     private static final long serialVersionUID = 2L;
@@ -60,7 +94,7 @@ public class Volume extends PageRepresentable implements Serializable, Cloneable
     private String volumeType;
     private String volumeStatus;
     private String volumeStatusHint;
-    private boolean adult;
+    private Boolean adult;
     private String annotation;
     /* Optional */
     private String prevNameShort;
@@ -69,6 +103,9 @@ public class Volume extends PageRepresentable implements Serializable, Cloneable
     private String nextUrl;
     private String subProjectName;
     private transient Project project;
+    private Date lastUpdateDate;
+    private Date lastEditDate;
+    private List<ExternalResource> covers;
 
     private Integer topicId;
 
@@ -309,6 +346,10 @@ public class Volume extends PageRepresentable implements Serializable, Cloneable
 
     public void setUrlPart(String urlPart)
     {
+        if (urlPart == null)
+        {
+            return;
+        }
         String[] parts = this.url.split("/", -1);
         parts[1] = urlPart;
         this.url = Strings.join("/", parts);
@@ -324,12 +365,12 @@ public class Volume extends PageRepresentable implements Serializable, Cloneable
         this.volumeId = volumeId;
     }
 
-    public boolean isAdult()
+    public Boolean getAdult()
     {
         return adult;
     }
 
-    public void setAdult(boolean adult)
+    public void setAdult(Boolean adult)
     {
         this.adult = adult;
     }

@@ -60,6 +60,21 @@
         WHERE project_id = #{projectId}
     </select>
 
+    <select id="getProjectUpdateDate" parameterType="Integer" resultType="java.util.Date">
+        SELECT max(show_time)
+        FROM updates
+        WHERE volume_id = #{volumeId}
+        AND show_time &lt;= now()
+    </select>
+
+    <select id="getProjectEditDate" parameterType="Integer" resultType="java.util.Date">
+        SELECT max(greatest(insertion_time, publish_date))
+        FROM chapters
+        INNER JOIN texts_history USING (chapter_id)
+        WHERE volume_id = #{volumeId}
+        AND publish_date &lt;= now()
+    </select>
+
     <update id="updateVolume" parameterType="ru.ruranobe.mybatis.entities.tables.Volume">
         UPDATE volumes
         SET project_id         = #{projectId},
