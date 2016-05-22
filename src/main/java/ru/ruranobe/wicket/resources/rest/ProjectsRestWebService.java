@@ -29,25 +29,12 @@ import java.util.List;
 @ResourcePath("/api/projects")
 public class ProjectsRestWebService extends GsonObjectRestResource
 {
-    @Override
-    protected void onInitialize(JsonWebSerialDeserial objSerialDeserial)
-    {
-        super.onInitialize(objSerialDeserial);
-        registerValidator("project_fields_validator", ProperifingUtils.ALLOWED_PROJECT_FIELD_VALIDATOR);
-        registerValidator("subproject_fields_validator", ProperifingUtils.ALLOWED_SUBPROJECT_FIELD_VALIDATOR);
-        registerValidator("volume_fields_validator", ProperifingUtils.ALLOWED_VOLUMES_FIELD_VALIDATOR);
-        registerValidator("update_fields_validator", ProperifingUtils.ALLOWED_UPDATES_FIELD_VALIDATOR);
-        registerValidator("limit_validator", ProperifingUtils.RESULT_LIMIT_VALIDATOR);
-        registerValidator("page_validator", ProperifingUtils.RESULT_PAGE_VALIDATOR);
-
-    }
-
     @MethodMapping("")
     public Collection<Project> getProjects(@RequestParam(value = "fields", required = false, defaultValue = DEFAULT_PROJECT_LIST_FIELDS)
-                                           @ValidatorKey("project_fields_validator") String columnsString,
+                                           @ValidatorKey("project_fields_validator") String fieldsString,
                                            @RequestParam(value = "show_hidden", required = false, defaultValue = "false") boolean showHidden)
     {
-        HashSet<String> fields = FieldFilteringUtils.parseFieldsList(columnsString);
+        HashSet<String> fields = FieldFilteringUtils.parseFieldsList(fieldsString);
         HashSet<String> imageFields = FieldFilteringUtils.getImageFields(fields);
         if (!imageFields.isEmpty())
         {
@@ -72,9 +59,9 @@ public class ProjectsRestWebService extends GsonObjectRestResource
     @MethodMapping("/{projectId}")
     public Project getProject(Integer projectId,
                               @RequestParam(value = "fields", required = false, defaultValue = DEFAULT_PROJECT_FIELDS)
-                              @ValidatorKey("project_fields_validator") String columnsString)
+                              @ValidatorKey("project_fields_validator") String fieldsString)
     {
-        HashSet<String> fields = FieldFilteringUtils.parseFieldsList(columnsString);
+        HashSet<String> fields = FieldFilteringUtils.parseFieldsList(fieldsString);
         HashSet<String> imageFields = FieldFilteringUtils.getImageFields(fields);
         if (!imageFields.isEmpty())
         {
@@ -100,9 +87,9 @@ public class ProjectsRestWebService extends GsonObjectRestResource
     @MethodMapping("/{projectId}/subprojects")
     public Collection<Project> getSubProjects(Integer projectId,
                                               @RequestParam(value = "fields", required = false, defaultValue = DEFAULT_SUBPROJECT_FIELDS)
-                                              @ValidatorKey("subproject_fields_validator") String columnsString)
+                                              @ValidatorKey("subproject_fields_validator") String fieldsString)
     {
-        HashSet<String> fields = FieldFilteringUtils.parseFieldsList(columnsString);
+        HashSet<String> fields = FieldFilteringUtils.parseFieldsList(fieldsString);
         HashSet<String> imageFields = FieldFilteringUtils.getImageFields(fields);
         if (!imageFields.isEmpty())
         {
@@ -134,11 +121,11 @@ public class ProjectsRestWebService extends GsonObjectRestResource
     @MethodMapping("/{projectId}/volumes")
     public Collection<Volume> getVolumes(Integer projectId,
                                          @RequestParam(value = "fields", required = false, defaultValue = DEFAULT_VOLUME_LIST_FIELDS)
-                                         @ValidatorKey("volume_fields_validator") String columnsString,
+                                         @ValidatorKey("volume_fields_validator") String fieldsString,
                                          @RequestParam(value = "subprojects", required = false, defaultValue = "true") boolean subprojects,
                                          @RequestParam(value = "show_hidden", required = false, defaultValue = "false") boolean showHidden)
     {
-        HashSet<String> fields = FieldFilteringUtils.parseFieldsList(columnsString);
+        HashSet<String> fields = FieldFilteringUtils.parseFieldsList(fieldsString);
         HashSet<String> imageFields = FieldFilteringUtils.getImageFields(fields);
         if (!imageFields.isEmpty())
         {
@@ -183,13 +170,13 @@ public class ProjectsRestWebService extends GsonObjectRestResource
     @MethodMapping("/{projectId}/updates")
     public Collection<Update> getUpdates(Integer projectId,
                                          @RequestParam(value = "fields", required = false, defaultValue = DEFAULT_UPDATE_FIELDS)
-                                         @ValidatorKey("update_fields_validator") String columnsString,
+                                         @ValidatorKey("update_fields_validator") String fieldsString,
                                          @RequestParam(value = "page", required = false, defaultValue = "1")
                                          @ValidatorKey("page_validator") int page,
                                          @RequestParam(value = "limit", required = false, defaultValue = "20")
                                          @ValidatorKey("limit_validator") int limit)
     {
-        HashSet<String> fields = FieldFilteringUtils.parseFieldsList(columnsString);
+        HashSet<String> fields = FieldFilteringUtils.parseFieldsList(fieldsString);
         try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
         {
             ProjectsMapper projectsMapper = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
@@ -214,6 +201,18 @@ public class ProjectsRestWebService extends GsonObjectRestResource
         }
     }
 
+    @Override
+    protected void onInitialize(JsonWebSerialDeserial objSerialDeserial)
+    {
+        super.onInitialize(objSerialDeserial);
+        registerValidator("project_fields_validator", ProperifingUtils.ALLOWED_PROJECT_FIELD_VALIDATOR);
+        registerValidator("subproject_fields_validator", ProperifingUtils.ALLOWED_SUBPROJECT_FIELD_VALIDATOR);
+        registerValidator("volume_fields_validator", ProperifingUtils.ALLOWED_VOLUMES_FIELD_VALIDATOR);
+        registerValidator("update_fields_validator", ProperifingUtils.ALLOWED_UPDATES_FIELD_VALIDATOR);
+        registerValidator("limit_validator", ProperifingUtils.RESULT_LIMIT_VALIDATOR);
+        registerValidator("page_validator", ProperifingUtils.RESULT_PAGE_VALIDATOR);
+
+    }
     private static final String DEFAULT_PROJECT_LIST_FIELDS = "projectId|imageUrl|title|url|orderNumber";
     private static final String DEFAULT_PROJECT_FIELDS = "title|nameJp|nameEn|nameRu|nameRomaji|author|illustrator|originalDesign|originalStory|onevolume";
     private static final String DEFAULT_SUBPROJECT_FIELDS = "projectId|title";

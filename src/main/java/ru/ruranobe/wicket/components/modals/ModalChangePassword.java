@@ -43,7 +43,7 @@ public class ModalChangePassword extends Panel
                 try (SqlSession session = MybatisUtil.getSessionFactory().openSession()) 
                 {
                     User user = LoginSession.get().getUser();
-                    if (!user.isEmailActivated()) 
+                    if (!user.getEmailActivated())
                     {
                         onFail("Электронный адрес пользователя не был подтвержден.");
                     } 

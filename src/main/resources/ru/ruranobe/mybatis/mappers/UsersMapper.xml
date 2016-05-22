@@ -24,8 +24,14 @@
         WHERE username = #{username}
     </select>
 
-    <select id="searchUsersByUsernameWithCustomColumns" parameterType="map" resultMap="UserResult">
-        SELECT ${columns}
+    <select id="getUserById" parameterType="Integer" resultMap="UserResult">
+        SELECT *
+        FROM users
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="searchUsersByUsername" parameterType="map" resultMap="UserResult">
+        SELECT *
         FROM users
         WHERE username LIKE concat('%', #{query}, '%')
     </select>

@@ -32,7 +32,7 @@ public class LoginSession extends AuthenticatedWebSession
 
     public boolean isProjectShowHiddenAllowedByUser(String project)
     {
-        return isProjectEditAllowedByUser(project) && getUser().isShowHiddenContent();
+        return isProjectEditAllowedByUser(project) && getUser().getShowHiddenContent();
     }
 
     public boolean hasRole(String role)

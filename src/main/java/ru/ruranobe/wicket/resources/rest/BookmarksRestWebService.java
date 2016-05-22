@@ -29,7 +29,8 @@ public class BookmarksRestWebService extends GsonObjectRestResource
 
     @AuthorizeInvocation("ADMIN")
     @MethodMapping(value = "", httpMethod = HttpMethod.PUT)
-    public void updateBookmark(@RequestBody Bookmark bookmark) {
+    public void updateBookmark(@RequestBody Bookmark bookmark)
+    {
 
     }
 

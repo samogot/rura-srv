@@ -20,21 +20,6 @@ import java.lang.reflect.InvocationTargetException;
 
 public class GsonObjectRestResource extends AbstractRestResource<JsonWebSerialDeserial>
 {
-    public GsonObjectRestResource()
-    {
-        this(new GsonObjectSerialDeserial(new GsonBuilder().setDateFormat("dd.MM.yyyy HH:mm:ss Z").create()), WicketApplication.get());
-    }
-
-    public GsonObjectRestResource(GsonObjectSerialDeserial gsonSerialDeserial)
-    {
-        this(gsonSerialDeserial, WicketApplication.get());
-    }
-
-    public GsonObjectRestResource(GsonObjectSerialDeserial gsonSerialDeserial, IRoleCheckingStrategy roleCheckingStrategy)
-    {
-        super(new JsonWebSerialDeserial(gsonSerialDeserial), roleCheckingStrategy);
-    }
-
     @Override
     protected void handleException(WebResponse response, Exception exception)
     {
@@ -42,8 +27,7 @@ public class GsonObjectRestResource extends AbstractRestResource<JsonWebSerialDe
             && ((InvocationTargetException) exception).getTargetException() instanceof RestApiHandledErrorException)
         {
             RestApiHandledErrorException restException = (RestApiHandledErrorException) ((InvocationTargetException) exception).getTargetException();
-            objectToResponse(restException, response, RestMimeTypes.APPLICATION_JSON);
-            response.setStatus(restException.getHttpResponseCode());
+            respondError(response, restException);
         }
         else
         {
@@ -64,7 +48,7 @@ public class GsonObjectRestResource extends AbstractRestResource<JsonWebSerialDe
             Roles roles = new Roles(authorizeInvocation.value());
             if (!WicketApplication.get().hasAnyRole(roles))
             {
-                handleException(response, getUnauthorizedException());
+                respondError(response, getUnauthorizedException());
             }
         }
     }
@@ -86,6 +70,12 @@ public class GsonObjectRestResource extends AbstractRestResource<JsonWebSerialDe
         return new RestApiHandledErrorException(404, "NotFound", "No object is found");
     }
 
+    private void respondError(WebResponse response, RestApiHandledErrorException restException)
+    {
+        objectToResponse(restException, response, RestMimeTypes.APPLICATION_JSON);
+        response.setStatus(restException.getHttpResponseCode());
+    }
+
     private void checkLogin(WebRequest request)
     {
         if (!LoginSession.get().isSignedIn())
@@ -103,5 +93,19 @@ public class GsonObjectRestResource extends AbstractRestResource<JsonWebSerialDe
         }
     }
 
+    public GsonObjectRestResource()
+    {
+        this(new GsonObjectSerialDeserial(new GsonBuilder().setDateFormat("dd.MM.yyyy HH:mm:ss Z").create()), WicketApplication.get());
+    }
+
+    public GsonObjectRestResource(GsonObjectSerialDeserial gsonSerialDeserial)
+    {
+        this(gsonSerialDeserial, WicketApplication.get());
+    }
+
+    public GsonObjectRestResource(GsonObjectSerialDeserial gsonSerialDeserial, IRoleCheckingStrategy roleCheckingStrategy)
+    {
+        super(new JsonWebSerialDeserial(gsonSerialDeserial), roleCheckingStrategy);
+    }
     private static final Logger LOG = LoggerFactory.getLogger(GsonObjectRestResource.class);
 }

@@ -26,7 +26,10 @@ public class TeamMember implements Serializable
     public void setTeam(Team team)
     {
         this.team = team;
-        this.teamId = team == null ? null : team.getTeamId();
+        if (team != null)
+        {
+            this.teamId = team.getTeamId();
+        }
     }
 
     public Integer getMemberId()

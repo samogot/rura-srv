@@ -2,10 +2,6 @@ package ru.ruranobe.wicket.resources.rest.base;
 
 public class RestApiHandledErrorException extends RuntimeException
 {
-    private int httpResponseCode;
-    private String error;
-    private String description;
-
     public int getHttpResponseCode()
     {
         return httpResponseCode;
@@ -31,9 +27,10 @@ public class RestApiHandledErrorException extends RuntimeException
         return description;
     }
 
-    public void setDescription(String description)
+    public RestApiHandledErrorException setDescription(String description)
     {
         this.description = description;
+        return this;
     }
 
     public RestApiHandledErrorException(int httpResponseCode, String error, String message, String description)
@@ -53,4 +50,7 @@ public class RestApiHandledErrorException extends RuntimeException
     {
         this(500, error, message, null);
     }
+    private int httpResponseCode;
+    private String error;
+    private String description;
 }

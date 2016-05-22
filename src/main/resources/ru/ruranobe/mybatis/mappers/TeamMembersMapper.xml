@@ -4,16 +4,10 @@
 
 <mapper namespace="ru.ruranobe.mybatis.mappers.TeamMembersMapper">
 
-    <select id="getTeamMemberByIdWithCustomColumns" parameterType="map" resultMap="TeamMemberResult">
-        SELECT ${columns}
-        FROM team_members
-        WHERE member_id = #{memberId}
-    </select>
-
-    <select id="getAllTeamMembers" resultMap="TeamMemberResult">
+    <select id="getTeamMemberById" parameterType="Integer" resultMap="TeamMemberResult">
         SELECT *
         FROM team_members
-        ORDER BY member_id ASC
+        WHERE member_id = #{memberId}
     </select>
 
     <select id="getAllTeamMembersWithUserName" resultMap="TeamMemberResult">
@@ -23,8 +17,8 @@
         ORDER BY team_id, nickname
     </select>
 
-    <select id="searchTeamMembersByNicknameWithCustomColumns" parameterType="map" resultMap="TeamMemberResult">
-        SELECT ${columns}
+    <select id="searchTeamMembersByNickname" parameterType="map" resultMap="TeamMemberResult">
+        SELECT *
         FROM team_members
         WHERE nickname LIKE concat('%', #{query}, '%')
         <if test="activeOnly">
@@ -33,8 +27,8 @@
         ORDER BY nickname
     </select>
 
-    <select id="getAllTeamMembersWithCustomColumns" parameterType="map" resultMap="TeamMemberResult">
-        SELECT ${columns}
+    <select id="getAllTeamMembers" parameterType="boolean" resultMap="TeamMemberResult">
+        SELECT *
         FROM team_members
         <if test="activeOnly">
             WHERE EXISTS (SELECT * FROM user_groups WHERE user_id = team_members.user_id)
@@ -42,8 +36,8 @@
         ORDER BY nickname
     </select>
 
-    <select id="getTeamMembersByTeamIdWithCustomColumns" parameterType="map" resultMap="TeamMemberResult">
-        SELECT ${columns}
+    <select id="getTeamMembersByTeamId" parameterType="map" resultMap="TeamMemberResult">
+        SELECT *
         FROM team_members
         WHERE team_id &lt;=&gt; #{teamId}
         <if test="activeOnly">

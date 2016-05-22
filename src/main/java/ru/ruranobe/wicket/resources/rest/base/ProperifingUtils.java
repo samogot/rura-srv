@@ -16,33 +16,6 @@ import java.util.List;
 
 public class ProperifingUtils
 {
-    private static final List<String> ALLOWED_PROJECT_FIELD_LIST = Arrays.asList("projectId",
-            "imageWidth", "imageHeight", "imageMimeType", "imageUrl", "imageThumbnail", "imageTitle", "imageUploadedWhen",
-            "url", "title", "nameJp", "nameEn", "nameRu", "nameRomaji", "author", "illustrator", "originalDesign",
-            "originalStory", "orderNumber", "bannerHidden", "projectHidden", "onevolume", "works", "franchise",
-            "annotation", "forumId", "status", "issueStatus", "translationStatus", "lastUpdateDate", "lastEditDate");
-    private static final List<String> ALLOWED_SUBPROJECT_FIELD_LIST = Arrays.asList("projectId", "parentId", "title", "forumId");
-    private static final List<String> ALLOWED_VOLUMES_FIELD_LIST = Arrays.asList("volumeId", "projectId", "imageWidth",
-            "imageHeight", "imageMimeType", "imageUrl", "imageThumbnail", "imageTitle", "imageUploadedWhen", "url",
-            "nameFile", "nameTitle", "nameJp", "nameEn", "nameRu", "nameRomaji", "nameShort", "sequenceNumber", "author",
-            "illustrator", "originalDesign", "originalStory", "releaseDate", "isbn", "externalUrl", "volumeType",
-            "volumeStatus", "volumeStatusHint", "adult", "annotation", "lastUpdateDate", "lastEditDate");
-    private static final List<String> ALLOWED_UPDATES_FIELD_LIST = Arrays.asList("updateId", "projectId", "volumeId",
-            "chapterId", "updateType", "showTime", "description");
-
-
-    public static final AllowedFieldsValidator ALLOWED_PROJECT_FIELD_VALIDATOR =
-            new AllowedFieldsValidator(ALLOWED_PROJECT_FIELD_LIST).setParamName("fields");
-    public static final AllowedFieldsValidator ALLOWED_SUBPROJECT_FIELD_VALIDATOR =
-            new AllowedFieldsValidator(ALLOWED_SUBPROJECT_FIELD_LIST).setParamName("fields");
-    public static final AllowedFieldsValidator ALLOWED_VOLUMES_FIELD_VALIDATOR =
-            new AllowedFieldsValidator(ALLOWED_VOLUMES_FIELD_LIST).setParamName("fields");
-    public static final AllowedFieldsValidator ALLOWED_UPDATES_FIELD_VALIDATOR =
-            new AllowedFieldsValidator(ALLOWED_UPDATES_FIELD_LIST).setParamName("fields");
-    public static final RangeValidator RESULT_LIMIT_VALIDATOR = RangeValidator.range(1, 100);
-    public static final RangeValidator RESULT_PAGE_VALIDATOR = RangeValidator.minimum(1);
-
-
     public static void properifyVolume(Volume volume, HashSet<String> fields, HashSet<String> imageFields, VolumesMapper volumesMapper, ExternalResourcesMapper externalResourcesMapper)
     {
         if (!imageFields.isEmpty())
@@ -104,4 +77,30 @@ public class ProperifingUtils
         }
         FieldFilteringUtils.filterAllowedFields(project, fields);
     }
+    public static final RangeValidator RESULT_LIMIT_VALIDATOR = RangeValidator.range(1, 100);
+    public static final RangeValidator RESULT_PAGE_VALIDATOR = RangeValidator.minimum(1);
+    private static final List<String> ALLOWED_PROJECT_FIELD_LIST = Arrays.asList("projectId",
+            "imageWidth", "imageHeight", "imageMimeType", "imageUrl", "imageThumbnail", "imageTitle", "imageUploadedWhen",
+            "url", "title", "nameJp", "nameEn", "nameRu", "nameRomaji", "author", "illustrator", "originalDesign",
+            "originalStory", "orderNumber", "bannerHidden", "projectHidden", "onevolume", "works", "franchise",
+            "annotation", "forumId", "status", "issueStatus", "translationStatus", "lastUpdateDate", "lastEditDate");
+    public static final AllowedFieldsValidator ALLOWED_PROJECT_FIELD_VALIDATOR =
+            new AllowedFieldsValidator(ALLOWED_PROJECT_FIELD_LIST).setParamName("fields");
+    private static final List<String> ALLOWED_SUBPROJECT_FIELD_LIST = Arrays.asList("projectId", "parentId", "title", "forumId");
+    public static final AllowedFieldsValidator ALLOWED_SUBPROJECT_FIELD_VALIDATOR =
+            new AllowedFieldsValidator(ALLOWED_SUBPROJECT_FIELD_LIST).setParamName("fields");
+    private static final List<String> ALLOWED_VOLUMES_FIELD_LIST = Arrays.asList("volumeId", "projectId", "imageWidth",
+            "imageHeight", "imageMimeType", "imageUrl", "imageThumbnail", "imageTitle", "imageUploadedWhen", "url",
+            "nameFile", "nameTitle", "nameJp", "nameEn", "nameRu", "nameRomaji", "nameShort", "sequenceNumber", "author",
+            "illustrator", "originalDesign", "originalStory", "releaseDate", "isbn", "externalUrl", "volumeType",
+            "volumeStatus", "volumeStatusHint", "adult", "annotation", "lastUpdateDate", "lastEditDate");
+    public static final AllowedFieldsValidator ALLOWED_VOLUMES_FIELD_VALIDATOR =
+            new AllowedFieldsValidator(ALLOWED_VOLUMES_FIELD_LIST).setParamName("fields");
+    private static final List<String> ALLOWED_UPDATES_FIELD_LIST = Arrays.asList("updateId", "projectId", "volumeId",
+            "chapterId", "updateType", "showTime", "description");
+    public static final AllowedFieldsValidator ALLOWED_UPDATES_FIELD_VALIDATOR =
+            new AllowedFieldsValidator(ALLOWED_UPDATES_FIELD_LIST).setParamName("fields");
+    private static final List<String> ALLOWED_MEMBERS_FIELD_LIST = Arrays.asList("memberId", "userId", "teamId", "nickname");
+    public static final AllowedFieldsValidator ALLOWED_MEMBERS_FIELD_VALIDATOR =
+            new AllowedFieldsValidator(ALLOWED_MEMBERS_FIELD_LIST).setParamName("fields");
 }
