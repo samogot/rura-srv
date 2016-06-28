@@ -18,11 +18,9 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
+import ru.ruranobe.engine.ForumApiUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
-import ru.ruranobe.mybatis.entities.tables.Project;
-import ru.ruranobe.mybatis.entities.tables.Team;
-import ru.ruranobe.mybatis.entities.tables.TeamMember;
-import ru.ruranobe.mybatis.entities.tables.VolumeActivity;
+import ru.ruranobe.mybatis.entities.tables.*;
 import ru.ruranobe.mybatis.mappers.*;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.RuraConstants;
@@ -115,10 +113,31 @@ public class GlobalEdit extends AdminLayoutPage
                         {
                             if (item.getProjectId() != null)
                             {
+                                Project prevItem = mapper.getProjectById(item.getProjectId());
+                                if (!prevItem.getUrl().equals(item.getUrl()))
+                                {
+                                    VolumesMapper volumesMapper = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
+                                    List<Volume> volumes = volumesMapper.getVolumesByProjectId(item.getProjectId());
+                                    for (Volume volume : volumes)
+                                    {
+                                        volume.setUrl(item.getUrl() + "/" + volume.getUrlPart());
+                                        ForumApiUtils.updateTopic(volume);
+                                        volumesMapper.updateChaptersUrl(volume);
+                                        volumesMapper.updateVolume(volume);
+                                    }
+                                }
+                                if (!prevItem.getProjectHidden().equals(item.getProjectHidden()) ||
+                                    !prevItem.getWorks().equals(item.getWorks()) ||
+                                    !prevItem.getTitle().equals(item.getTitle()) ||
+                                    prevItem.getOrderNumber() <= 13 != item.getOrderNumber() <= 13)
+                                {
+                                    ForumApiUtils.updateForum(item);
+                                }
                                 mapper.updateProject(item);
                             }
                             else
                             {
+                                ForumApiUtils.createForum(item);
                                 mapper.insertProject(item);
                             }
                         }
@@ -128,6 +147,7 @@ public class GlobalEdit extends AdminLayoutPage
                         if (removedItem.getProjectId() != null)
                         {
                             mapper.deleteProject(removedItem.getProjectId());
+                            ForumApiUtils.deleteForum(removedItem);
                         }
                     }
                     session.commit();

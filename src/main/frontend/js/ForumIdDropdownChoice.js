@@ -2,10 +2,14 @@ $.getJSON('/f/api/board/forums', function (forums) {
     var forumMap = {'0': {children: []}};
     var unknown = {children: [], forum_id: '', forum_name: '<без форума>'};
     var i;
+    var curForum = $(this).val();
+    var curForumExists = false;
     for (i = 0; i < forums.length; ++i) {
         forumMap[forums[i].forum_id] = forums[i];
         forums[i].children = [];
+        if (curForum == forums[i].forum_id) curForumExists = true;
     }
+    if (!curForumExists) return;
     for (i = 0; i < forums.length; ++i)
         (forumMap[forums[i].parent_id] || unknown).children.push(forums[i]);
     for (i = 0; i < forums.length; ++i)
@@ -28,7 +32,7 @@ $.getJSON('/f/api/board/forums', function (forums) {
             'id': $(this).attr('id')
         });
         appendOptions($select, forumMap[0].children, '');
-        $select.val($(this).val());
+        $select.val(curForum);
         $(this).after($select).detach();
     });
 });

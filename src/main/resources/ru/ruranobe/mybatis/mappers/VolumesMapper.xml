@@ -25,6 +25,12 @@
         WHERE url = #{url}
     </select>
 
+    <select id="getVolumeById" parameterType="int" resultMap="VolumeResult">
+        SELECT *
+        FROM volumes
+        WHERE volume_id = #{volumeId}
+    </select>
+
     <select id="getVolumeNextPrevByUrl" parameterType="String" resultMap="VolumeResult">
         SELECT
             v.*,
@@ -114,6 +120,12 @@
             image_two   = #{imageTwo},
             image_three = #{imageThree},
             image_four  = #{imageFour}
+        WHERE volume_id = #{volumeId}
+    </update>
+
+    <update id="updateChaptersUrl" parameterType="ru.ruranobe.mybatis.entities.tables.Volume">
+        UPDATE chapters
+        SET url = concat(#{url},'/' , substring_index(url, '/', -1))
         WHERE volume_id = #{volumeId}
     </update>
 

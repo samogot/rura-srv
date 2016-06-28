@@ -22,6 +22,12 @@ public class VolumesMapperCacheable implements VolumesMapper
     }
 
     @Override
+    public Volume getVolumeById(Integer volumeId)
+    {
+        return mapper.getVolumeById(volumeId);
+    }
+
+    @Override
     public int getVolumesCountByProjectId(int projectId)
     {
         return mapper.getVolumesCountByProjectId(projectId);
@@ -79,5 +85,11 @@ public class VolumesMapperCacheable implements VolumesMapper
     public Date getProjectEditDate(Integer volumeId)
     {
         return mapper.getProjectEditDate(volumeId);
+    }
+
+    @Override
+    public void updateChaptersUrl(Volume volume)
+    {
+        mapper.updateChaptersUrl(volume);
     }
 }

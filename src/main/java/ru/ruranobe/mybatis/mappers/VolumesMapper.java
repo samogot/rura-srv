@@ -9,6 +9,8 @@ public interface VolumesMapper
 {
     Volume getVolumeByUrl(String url);
 
+    Volume getVolumeById(Integer volumeId);
+
     Volume getVolumeNextPrevByUrl(String url);
 
     int getVolumesCountByProjectId(int projectId);
@@ -18,6 +20,8 @@ public interface VolumesMapper
     void updateVolume(Volume volume);
 
     void updateVolumeCovers(Volume volume);
+
+    void updateChaptersUrl(Volume volume);
 
     int insertVolume(Volume volumre);
 

@@ -14,8 +14,10 @@ import ru.ruranobe.mybatis.mappers.ExternalResourcesMapper;
 import ru.ruranobe.mybatis.mappers.ProjectsMapper;
 import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
+import ru.ruranobe.wicket.components.sidebar.ActionsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.TwitterWidgetSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.VKWidgetSidebarModule;
+import ru.ruranobe.wicket.webpages.admin.GlobalEdit;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
 import javax.annotation.Nonnull;
@@ -127,6 +129,7 @@ public class FullProjects extends SidebarLayoutPage
                 }
             });
         }
+        sidebarModules.add(new ActionsSidebarModule(GlobalEdit.class, null));
         sidebarModules.add(new VKWidgetSidebarModule());
         sidebarModules.add(new TwitterWidgetSidebarModule());
     }
