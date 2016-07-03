@@ -1,5 +1,6 @@
 package ru.ruranobe.mybatis.mappers.cacheable;
 
+import ru.ruranobe.mybatis.entities.additional.VolumeDownloadInfo;
 import ru.ruranobe.mybatis.entities.tables.Volume;
 import ru.ruranobe.mybatis.mappers.VolumesMapper;
 
@@ -36,6 +37,12 @@ public class VolumesMapperCacheable implements VolumesMapper
     public Volume getVolumeNextPrevByUrl(String url)
     {
         return mapper.getVolumeNextPrevByUrl(url);
+    }
+
+    @Override
+    public VolumeDownloadInfo getVolumeDownloadInfoByUrl(String url)
+    {
+        return mapper.getVolumeDownloadInfoByUrl(url);
     }
 
     @Override

@@ -54,6 +54,21 @@
                 ON v.next_sequence_number = next_vol.sequence_number AND v.project_id = next_vol.project_id
     </select>
 
+    <select id="getVolumeDownloadInfoByUrl" parameterType="String"
+            resultType="ru.ruranobe.mybatis.entities.additional.VolumeDownloadInfo">
+        SELECT
+            sum(publish_date &lt;= now()) > 0 AS download,
+            count(non_colored_image_id) > 0
+            OR image_two IS NOT NULL
+            OR image_three IS NOT NULL
+            OR image_four IS NOT NULL         AS images,
+            count(colored_image_id) > 0       AS colors
+        FROM volumes v
+            INNER JOIN chapters USING (volume_id)
+            LEFT JOIN chapter_images USING (volume_id)
+        WHERE v.url = #{url}
+    </select>
+
     <select id="getVolumesByProjectId" parameterType="int" resultMap="VolumeResult">
         SELECT *
         FROM volumes

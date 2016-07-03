@@ -227,10 +227,7 @@ public class VolumePage extends SidebarLayoutPage
             }
             add(readAllLink);
 
-            add(new ExternalLink("mobilefb2pic", "/d/fb2/" + volumeUrl));
-            add(new ExternalLink("mobilefb2nopic", "/d/fb2/" + volumeUrl + "?pic=0"));
-            add(new ExternalLink("mobiledocx", "/d/docx/" + volumeUrl));
-            add(new ExternalLink("mobileepub", "/d/epub/" + volumeUrl));
+            add(new DownloadsSidebarModule("mobileDownload", volume.getUrlParameters()));
 
             add(new CommentsPanel("comments", volume.getTopicId()));
             sidebarModules.add(new DownloadsSidebarModule(volume.getUrlParameters()));

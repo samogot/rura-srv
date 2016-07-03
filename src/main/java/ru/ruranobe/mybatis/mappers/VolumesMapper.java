@@ -1,5 +1,6 @@
 package ru.ruranobe.mybatis.mappers;
 
+import ru.ruranobe.mybatis.entities.additional.VolumeDownloadInfo;
 import ru.ruranobe.mybatis.entities.tables.Volume;
 
 import java.util.List;
@@ -9,6 +10,8 @@ public interface VolumesMapper
     Volume getVolumeByUrl(String url);
 
     Volume getVolumeNextPrevByUrl(String url);
+
+    VolumeDownloadInfo getVolumeDownloadInfoByUrl(String url);
 
     int getVolumesCountByProjectId(int projectId);
 
