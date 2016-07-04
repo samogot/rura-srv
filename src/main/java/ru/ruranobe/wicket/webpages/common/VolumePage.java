@@ -59,7 +59,7 @@ public class VolumePage extends SidebarLayoutPage
 
             redirectTo404IfArgumentIsNull(project);
 
-            if (project.isWorks())
+            if (project.getWorks())
             {
                 addBodyClassAttribute("works");
             }
@@ -69,7 +69,7 @@ public class VolumePage extends SidebarLayoutPage
             final Volume volume = volumesMapperCacheable.getVolumeNextPrevByUrl(volumeUrl);
 
             redirectTo404IfArgumentIsNull(volume);
-            redirectTo404((project.isProjectHidden() && !project.isWorks()
+            redirectTo404((project.getProjectHidden() && !project.getWorks()
                            || volume.getVolumeStatus().equals(RuraConstants.VOLUME_STATUS_HIDDEN))
                           && !LoginSession.get().isProjectEditAllowedByUser(projectUrlValue));
 

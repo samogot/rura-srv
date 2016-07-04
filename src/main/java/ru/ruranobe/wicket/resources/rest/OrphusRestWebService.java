@@ -2,14 +2,10 @@ package ru.ruranobe.wicket.resources.rest;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.string.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.wicketstuff.rest.annotations.MethodMapping;
 import org.wicketstuff.rest.annotations.ResourcePath;
 import org.wicketstuff.rest.annotations.parameters.RequestBody;
-import org.wicketstuff.rest.resource.gson.GsonRestResource;
 import org.wicketstuff.rest.utils.http.HttpMethod;
 import ru.ruranobe.misc.ParagraphService;
 import ru.ruranobe.mybatis.MybatisUtil;
@@ -22,11 +18,12 @@ import ru.ruranobe.mybatis.mappers.OrphusCommentsMapper;
 import ru.ruranobe.mybatis.mappers.ParagraphsMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.LoginSession;
+import ru.ruranobe.wicket.resources.rest.base.GsonObjectRestResource;
 
 import java.util.Date;
 
 @ResourcePath("/api/orphus")
-public class OrphusRestWebService extends GsonRestResource
+public class OrphusRestWebService extends GsonObjectRestResource
 {
     @MethodMapping(value = "", httpMethod = HttpMethod.POST)
     public void insertOrphusComment(@RequestBody OrphusComment orphusComment)
@@ -105,13 +102,4 @@ public class OrphusRestWebService extends GsonRestResource
         }
 
     }
-
-    @Override
-    protected void handleException(WebResponse response, Exception exception)
-    {
-        super.handleException(response, exception);
-        LOG.error("Error in REST API call", exception);
-    }
-
-    private static final Logger LOG = LoggerFactory.getLogger(OrphusRestWebService.class);
 }

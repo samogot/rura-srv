@@ -22,19 +22,7 @@ public class TeamMembersMapperCacheable implements TeamMembersMapper
     @Override
     public TeamMember getTeamMemberById(int memberId)
     {
-        return getTeamMemberByIdWithCustomColumns(memberId, "*");
-    }
-
-    @Override
-    public TeamMember getTeamMemberByIdWithCustomColumns(@Param("memberId") int memberId, @Param("columns") String columns)
-    {
-        return mapper.getTeamMemberByIdWithCustomColumns(memberId, columns);
-    }
-
-    @Override
-    public List<TeamMember> getAllTeamMembers()
-    {
-        return mapper.getAllTeamMembers();
+        return mapper.getTeamMemberById(memberId);
     }
 
     @Override
@@ -44,21 +32,21 @@ public class TeamMembersMapperCacheable implements TeamMembersMapper
     }
 
     @Override
-    public Collection<TeamMember> searchTeamMembersByNicknameWithCustomColumns(@Param("query") String query, @Param("columns") String columns, @Param("activeOnly") boolean activeOnly)
+    public Collection<TeamMember> searchTeamMembersByNickname(@Param("query") String query, @Param("activeOnly") boolean activeOnly)
     {
-        return mapper.searchTeamMembersByNicknameWithCustomColumns(query, columns, activeOnly);
+        return mapper.searchTeamMembersByNickname(query, activeOnly);
     }
 
     @Override
-    public Collection<TeamMember> getAllTeamMembersWithCustomColumns(@Param("columns") String columns, @Param("activeOnly") boolean activeOnly)
+    public Collection<TeamMember> getAllTeamMembers(@Param("activeOnly") boolean activeOnly)
     {
-        return mapper.getAllTeamMembersWithCustomColumns(columns, activeOnly);
+        return mapper.getAllTeamMembers(activeOnly);
     }
 
     @Override
-    public Collection<TeamMember> getTeamMembersByTeamIdWithCustomColumns(@Param("teamId") Integer teamId, @Param("columns") String columns, @Param("activeOnly") boolean activeOnly)
+    public Collection<TeamMember> getTeamMembersByTeamId(@Param("teamId") Integer teamId, @Param("activeOnly") boolean activeOnly)
     {
-        return mapper.getTeamMembersByTeamIdWithCustomColumns(teamId, columns, activeOnly);
+        return mapper.getTeamMembersByTeamId(teamId, activeOnly);
     }
 
     @Override

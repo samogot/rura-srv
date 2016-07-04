@@ -19,8 +19,11 @@ public class Update extends PageRepresentable implements Serializable, Comparabl
     public void setChapter(Chapter chapter)
     {
         this.chapter = chapter;
-        this.chapterId = chapter == null ? null : chapter.getChapterId();
-        this.chapterTitle = chapter == null ? null : chapter.getTitle();
+        if (chapter != null)
+        {
+            this.chapterId = chapter.getChapterId();
+            this.chapterTitle = chapter.getTitle();
+        }
     }
 
     public PageParameters getUrlParameters()
@@ -163,6 +166,26 @@ public class Update extends PageRepresentable implements Serializable, Comparabl
         return new SimpleDateFormat("dd.MM.yyyy").format(showTime) + ": " + (chapterId == null ? "Весь том" : chapterTitle);
     }
 
+    public void setVolumeTitle(String volumeTitle)
+    {
+        this.volumeTitle = volumeTitle;
+    }
+
+    public void setVolumeTitleShort(String volumeTitleShort)
+    {
+        this.volumeTitleShort = volumeTitleShort;
+    }
+
+    public void setVolumeUrl(String volumeUrl)
+    {
+        this.volumeUrl = volumeUrl;
+    }
+
+    public void setChapterUrl(String chapterUrl)
+    {
+        this.chapterUrl = chapterUrl;
+    }
+
     public Update()
     {
     }
@@ -191,4 +214,9 @@ public class Update extends PageRepresentable implements Serializable, Comparabl
     private String volumeUrl;
     private String chapterUrl;
     private Chapter chapter;
+
+    public void setChapterTitle(String chapterTitle)
+    {
+        this.chapterTitle = chapterTitle;
+    }
 }

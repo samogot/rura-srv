@@ -4,6 +4,7 @@ import ru.ruranobe.mybatis.entities.additional.VolumeDownloadInfo;
 import ru.ruranobe.mybatis.entities.tables.Volume;
 import ru.ruranobe.mybatis.mappers.VolumesMapper;
 
+import java.util.Date;
 import java.util.List;
 
 public class VolumesMapperCacheable implements VolumesMapper
@@ -19,6 +20,12 @@ public class VolumesMapperCacheable implements VolumesMapper
     public Volume getVolumeByUrl(String url)
     {
         return mapper.getVolumeByUrl(url);
+    }
+
+    @Override
+    public Volume getVolumeById(Integer volumeId)
+    {
+        return mapper.getVolumeById(volumeId);
     }
 
     @Override
@@ -73,5 +80,23 @@ public class VolumesMapperCacheable implements VolumesMapper
     public void resetVolumeTextCache(Integer volumeId)
     {
         mapper.resetVolumeTextCache(volumeId);
+    }
+
+    @Override
+    public Date getProjectUpdateDate(Integer volumeId)
+    {
+        return mapper.getProjectUpdateDate(volumeId);
+    }
+
+    @Override
+    public Date getProjectEditDate(Integer volumeId)
+    {
+        return mapper.getProjectEditDate(volumeId);
+    }
+
+    @Override
+    public void updateChaptersUrl(Volume volume)
+    {
+        mapper.updateChaptersUrl(volume);
     }
 }

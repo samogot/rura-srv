@@ -15,15 +15,15 @@
     <insert id="insertExternalResource" parameterType="ru.ruranobe.mybatis.entities.tables.ExternalResource"
             keyProperty="resourceId" useGeneratedKeys="true">
         INSERT INTO external_resources
-        SET user_id = #{userId},
-        history_id = #{historyId},
-        mime_type = #{mimeType},
-        url = #{url},
-        thumbnail = #{thumbnail},
-        width = #{width},
-        height = #{height},
-        title = #{title},
-        uploaded_when = #{uploadedWhen}
+        SET user_id       = #{userId},
+            history_id    = #{historyId},
+            mime_type     = #{mimeType},
+            url           = #{url},
+            thumbnail     = #{thumbnail},
+            width         = #{width},
+            height        = #{height},
+            title         = #{title},
+            uploaded_when = #{uploadedWhen}
     </insert>
 
     <select id="getExternalResourceById" parameterType="int" resultMap="ExternalResourceResult">

@@ -60,7 +60,7 @@ public class TextPage extends SidebarLayoutPage implements InstantiationSecurity
 
             redirectTo404IfArgumentIsNull(project);
 
-            if (project.isWorks())
+            if (project.getWorks())
             {
                 addBodyClassAttribute("works");
             }
@@ -70,7 +70,7 @@ public class TextPage extends SidebarLayoutPage implements InstantiationSecurity
             volume = volumesMapperCacheable.getVolumeByUrl(projectUrl + "/" + volumeUrl);
 
             redirectTo404IfArgumentIsNull(volume);
-            redirectTo404((project.isProjectHidden() && !project.isWorks()
+            redirectTo404((project.getProjectHidden() && !project.getWorks()
                            || volume.getVolumeStatus().equals(RuraConstants.VOLUME_STATUS_HIDDEN))
                           && !LoginSession.get().isProjectEditAllowedByUser(projectUrl));
 

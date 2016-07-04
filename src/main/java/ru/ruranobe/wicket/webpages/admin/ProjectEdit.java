@@ -22,6 +22,7 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
+import ru.ruranobe.engine.ForumApiUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.Project;
 import ru.ruranobe.mybatis.entities.tables.Volume;
@@ -113,6 +114,28 @@ public class ProjectEdit extends AdminLayoutPage implements InstantiationSecurit
                 try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
                     ProjectsMapper mapper = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
+
+                    Project prevItem = mapper.getProjectById(project.getProjectId());
+                    if (!prevItem.getUrl().equals(project.getUrl()))
+                    {
+                        VolumesMapper volumesMapper = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
+                        List<Volume> volumes = volumesMapper.getVolumesByProjectId(project.getProjectId());
+                        for (Volume volume : volumes)
+                        {
+                            volume.setUrl(project.getUrl() + "/" + volume.getUrlPart());
+                            ForumApiUtils.updateTopic(volume);
+                            volumesMapper.updateChaptersUrl(volume);
+                            volumesMapper.updateVolume(volume);
+                        }
+                        setResponsePage(ProjectEdit.class, project.getUrlParameters());
+                    }
+                    if (!prevItem.getProjectHidden().equals(project.getProjectHidden()) ||
+                        !prevItem.getWorks().equals(project.getWorks()) ||
+                        !prevItem.getTitle().equals(project.getTitle()) ||
+                        prevItem.getOrderNumber() <= 13 != project.getOrderNumber() <= 13)
+                    {
+                        ForumApiUtils.updateForum(project);
+                    }
                     mapper.updateProject(project);
                     session.commit();
                 }
@@ -168,10 +191,30 @@ public class ProjectEdit extends AdminLayoutPage implements InstantiationSecurit
                         {
                             if (item.getVolumeId() != null)
                             {
+                                Volume prevItem = mapper.getVolumeById(item.getVolumeId());
+                                if (RuraConstants.VOLUME_STATUS_HIDDEN.equals(prevItem.getVolumeStatus()) &&
+                                    !RuraConstants.VOLUME_STATUS_HIDDEN.equals(item.getVolumeStatus()) &&
+                                    prevItem.getTopicId() == null)
+                                {
+                                    ForumApiUtils.createTopic(item, project.getForumId());
+                                }
+                                else if (!prevItem.getUrl().equals(item.getUrl()))
+                                {
+                                    ForumApiUtils.updateTopic(item);
+                                    mapper.updateChaptersUrl(item);
+                                }
+                                else if (!prevItem.getNameTitle().equals(item.getNameTitle()))
+                                {
+                                    ForumApiUtils.updateTopic(item);
+                                }
                                 mapper.updateVolume(item);
                             }
                             else
                             {
+                                if (!RuraConstants.VOLUME_STATUS_HIDDEN.equals(item.getVolumeStatus()))
+                                {
+                                    ForumApiUtils.createTopic(item, project.getForumId());
+                                }
                                 mapper.insertVolume(item);
                             }
                         }
@@ -181,6 +224,7 @@ public class ProjectEdit extends AdminLayoutPage implements InstantiationSecurit
                         if (removedItem.getVolumeId() != null)
                         {
                             mapper.deleteVolume(removedItem.getVolumeId());
+                            ForumApiUtils.deleteTopic(removedItem);
                         }
                     }
                     session.commit();

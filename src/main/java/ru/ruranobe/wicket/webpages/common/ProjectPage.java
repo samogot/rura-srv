@@ -74,10 +74,10 @@ public class ProjectPage extends SidebarLayoutPage
             final Project mainProject = projectsMapperCacheable.getProjectByUrl(projectUrl);
 
             redirectTo404IfArgumentIsNull(mainProject);
-            redirectTo404(mainProject.isProjectHidden() && !mainProject.isWorks()
+            redirectTo404(mainProject.getProjectHidden() && !mainProject.getWorks()
                           && !LoginSession.get().isProjectEditAllowedByUser(mainProject.getUrl()));
 
-            if (mainProject.isWorks())
+            if (mainProject.getWorks())
             {
                 addBodyClassAttribute("works");
             }
@@ -173,13 +173,8 @@ public class ProjectPage extends SidebarLayoutPage
                             }
                         }
 
-                        if (volumeTypeToSubProjectToVolumes.get(type) == null)
-                        {
-                            volumeTypeToSubProjectToVolumes.put(type, new ArrayList<SimpleEntry<String, ArrayList<Volume>>>());
-                        }
-                        ArrayList<SimpleEntry<String, ArrayList<Volume>>>
-                                subProjectToVolumes =
-                                volumeTypeToSubProjectToVolumes.get(type);
+                        volumeTypeToSubProjectToVolumes.putIfAbsent(type, new ArrayList<SimpleEntry<String, ArrayList<Volume>>>());
+                        ArrayList<SimpleEntry<String, ArrayList<Volume>>> subProjectToVolumes = volumeTypeToSubProjectToVolumes.get(type);
                         if (subProjectToVolumes.isEmpty() || !subProjectToVolumes.get(subProjectToVolumes.size() - 1).getKey()
                                                                                  .equals(subProjectTitle))
                         {

@@ -1,7 +1,6 @@
 package ru.ruranobe.wicket.components;
 
 import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.markup.html.form.TextField;
@@ -92,7 +91,7 @@ public class EmailPasswordRecoveryPanel extends Panel
                     }
                     else
                     {
-                        if (!user.isEmailActivated())
+                        if (!user.getEmailActivated())
                         {
                             onFail("Электронный адрес пользователя не был подтвержден.");
                         }

@@ -6,13 +6,14 @@ import org.apache.wicket.validation.ValidationError;
 import org.apache.wicket.validation.validator.PatternValidator;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class AllowedFieldsValidator extends PatternValidator
 {
 
     public AllowedFieldsValidator(List<String> allowedFields, String delimiter, String paramName)
     {
-        super(String.format("^(%1$s)(%2$s(%1$s))*$", Strings.join("|", allowedFields), delimiter));
+        super(String.format("^(%1$s)(%2$s(%1$s))*$", Strings.join("|", allowedFields), Pattern.quote(delimiter)));
         this.allowedFields = allowedFields;
         this.delimiter = delimiter;
         this.paramName = paramName;
@@ -25,7 +26,7 @@ public class AllowedFieldsValidator extends PatternValidator
 
     public AllowedFieldsValidator(List<String> allowedFields)
     {
-        this(allowedFields, ",", null);
+        this(allowedFields, "|", null);
     }
 
     @Override

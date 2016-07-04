@@ -12,9 +12,10 @@
         <property name="memoryStoreEvictionPolicy" value="LRU"/>
     </cache-->
 
-    <insert id="insertBookmark" parameterType="ru.ruranobe.mybatis.entities.tables.Bookmark" keyProperty="bookmarkId" useGeneratedKeys="true">
-        insert into bookmarks (chapter_id, user_id, paragraph_id, created_when)
-        values (#{chapterId}, #{userId}, #{paragraphId}, #{createdWhen})
+    <insert id="insertBookmark" parameterType="ru.ruranobe.mybatis.entities.tables.Bookmark" keyProperty="bookmarkId"
+            useGeneratedKeys="true">
+        INSERT INTO bookmarks (chapter_id, user_id, paragraph_id, created_when)
+        VALUES (#{chapterId}, #{userId}, #{paragraphId}, #{createdWhen})
     </insert>
 
     <select id="getBookmarksByUser" parameterType="int" resultMap="BookmarkResult">
@@ -24,18 +25,19 @@
     </select>
 
     <select id="getBookmarksExtendedByUser" parameterType="int" resultMap="BookmarkResult">
-        SELECT b.*,
-               p.paragraph_id as paragraph_id2,
-               p.paragraph_text,
-               p.text_id
+        SELECT
+            b.*,
+            p.paragraph_id AS paragraph_id2,
+            p.paragraph_text,
+            p.text_id
         FROM bookmarks b
-        join paragraphs p
-          on p.paragraph_id = b.paragraph_id
+            JOIN paragraphs p ON p.paragraph_id = b.paragraph_id
         WHERE b.user_id = #{userId}
     </select>
 
     <delete id="deleteBookmark" parameterType="int">
-        delete from bookmarks where bookmark_id=#{bookmarkId}
+        DELETE FROM bookmarks
+        WHERE bookmark_id = #{bookmarkId}
     </delete>
 
     <resultMap id="BookmarkResult" type="ru.ruranobe.mybatis.entities.tables.Bookmark">

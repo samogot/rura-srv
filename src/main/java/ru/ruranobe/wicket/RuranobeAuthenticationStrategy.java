@@ -2,6 +2,7 @@ package ru.ruranobe.wicket;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.authentication.IAuthenticationStrategy;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.util.cookies.CookieUtils;
 import org.apache.wicket.util.crypt.ICrypt;
 import org.apache.wicket.util.lang.Args;
@@ -42,6 +43,25 @@ public class RuranobeAuthenticationStrategy implements IAuthenticationStrategy
             crypt = Application.get().getSecuritySettings().getCryptFactory().newCrypt();
         }
         return crypt;
+    }
+
+
+    public String[] loadFromHeader(WebRequest request)
+    {
+        String value = request.getHeader("Authorization");
+        if (!Strings.isEmpty(value))
+        {
+            try
+            {
+                value = getCrypt().decryptUrlSafe(value);
+            }
+            catch (RuntimeException e)
+            {
+                value = null;
+            }
+            return decode(value);
+        }
+        return null;
     }
 
     @Override

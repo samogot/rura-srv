@@ -12,6 +12,7 @@ import ru.ruranobe.mybatis.mappers.RolesMapper;
 import ru.ruranobe.mybatis.mappers.UsersMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -31,7 +32,7 @@ public class LoginSession extends AuthenticatedWebSession
 
     public boolean isProjectShowHiddenAllowedByUser(String project)
     {
-        return isProjectEditAllowedByUser(project) && getUser().isShowHiddenContent();
+        return isProjectEditAllowedByUser(project) && getUser().getShowHiddenContent();
     }
 
     public boolean hasRole(String role)
@@ -106,10 +107,11 @@ public class LoginSession extends AuthenticatedWebSession
                     ownProjects = usersMapper.getOwnProjectsByUser(user.getUserId());
                     RolesMapper rolesMapperCacheable = CachingFacade.getCacheableMapper(session, RolesMapper.class);
                     List<String> roles = rolesMapperCacheable.getUserGroupsByUser(user.getUserId());
-                    if (roles != null)
-                    {
-                        this.roles = new Roles(roles.toArray(new String[roles.size()]));
+                    if (roles == null) {
+                        roles = new ArrayList<>();
                     }
+                    roles.add("USER");
+                    this.roles = new Roles(roles.toArray(new String[roles.size()]));
                     authenticationCompleted = true;
                 }
             }

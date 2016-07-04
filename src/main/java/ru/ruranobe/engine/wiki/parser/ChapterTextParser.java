@@ -27,7 +27,7 @@ public class ChapterTextParser
         {
             ExternalResource image;
             boolean preferColoredImgs = LoginSession.get().getUser() == null
-                                        || LoginSession.get().getUser().isPreferColoredImgs() != Boolean.FALSE;
+                                        || LoginSession.get().getUser().getPreferColoredImgs() != Boolean.FALSE;
             if (chapterImage.getColoredImage() != null
                 && !Strings.isEmpty(chapterImage.getColoredImage().getUrl()) && preferColoredImgs)
             {

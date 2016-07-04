@@ -10,22 +10,14 @@ public interface TeamMembersMapper
 {
     TeamMember getTeamMemberById(int memberId);
 
-    TeamMember getTeamMemberByIdWithCustomColumns(@Param("memberId") int memberId,
-                                                  @Param("columns") String columns);
-
-    List<TeamMember> getAllTeamMembers();
-
     List<TeamMember> getAllTeamMembersWithUserName();
 
-    Collection<TeamMember> searchTeamMembersByNicknameWithCustomColumns(@Param("query") String query,
-                                                                        @Param("columns") String columns,
+    Collection<TeamMember> searchTeamMembersByNickname(@Param("query") String query,
                                                                         @Param("activeOnly") boolean activeOnly);
 
-    Collection<TeamMember> getAllTeamMembersWithCustomColumns(@Param("columns") String columns,
-                                                              @Param("activeOnly") boolean activeOnly);
+    Collection<TeamMember> getAllTeamMembers(@Param("activeOnly") boolean activeOnly);
 
-    Collection<TeamMember> getTeamMembersByTeamIdWithCustomColumns(@Param("teamId") Integer teamId,
-                                                                   @Param("columns") String columns,
+    Collection<TeamMember> getTeamMembersByTeamId(@Param("teamId") Integer teamId,
                                                                    @Param("activeOnly") boolean activeOnly);
 
     void insertTeamMember(TeamMember teamMember);
