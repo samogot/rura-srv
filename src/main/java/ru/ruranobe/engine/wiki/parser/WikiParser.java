@@ -234,11 +234,8 @@ public class WikiParser
             for (WikiTag image : images)
             {
                 ExternalResource imageEntry = imagesIterator.hasNext() ? imagesIterator.next() : RuraConstants.UNKNOWN_IMAGE;
-                image.setExternalResourceId(imageEntry.getResourceId());
-                image.setImageUrl(imageEntry.getUrl());
-                image.setImageThumbnail(imageEntry.getThumbnail(900));
-                startPositionToReplacement.put(image.getStartPosition(),
-                        new Replacement(image));
+                image.setExternalResource(imageEntry);
+                startPositionToReplacement.put(image.getStartPosition(), new Replacement(image));
             }
         }
 
@@ -471,13 +468,7 @@ public class WikiParser
         while (imagesIterator.hasNext())
         {
             ExternalResource imageEntry = imagesIterator.next();
-            htmlText.append(String.format(
-                    "<div class=\"center illustration\"><a class=\"fancybox\" rel=\"group\" href=\"%s\">" +
-                    "<img src=\"%s\" data-resource-id=\"%d\" alt=\"\" class=\"img-responsive img-thumbnail\"/>" +
-                    "</a></div>",
-                    Replacement.escapeURLIllegalCharacters(imageEntry.getUrl()),
-                    Replacement.escapeURLIllegalCharacters(imageEntry.getThumbnail(900)),
-                    imageEntry.getResourceId()));
+            htmlText.append(Replacement.getImageReplacementText(imageEntry));
         }
     }
 

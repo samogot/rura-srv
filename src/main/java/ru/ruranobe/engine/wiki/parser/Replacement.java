@@ -1,6 +1,7 @@
 package ru.ruranobe.engine.wiki.parser;
 
 import com.google.common.collect.ImmutableMap;
+import ru.ruranobe.mybatis.entities.tables.ExternalResource;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -159,10 +160,7 @@ public class Replacement
         }
         else if (tag.getWikiTagType() == IMAGE)
         {
-            this.replacementText = String.format(replacementText,
-                    escapeURLIllegalCharacters(tag.getImageUrl()),
-                    escapeURLIllegalCharacters(tag.getImageThumbnail()),
-                    tag.getExternalResourceId().toString());
+            this.replacementText = getImageReplacementText(tag.getExternalResource());
         }
         else if (tag.getWikiTagType() == NEW_LINE)
         {
@@ -185,6 +183,33 @@ public class Replacement
         else
         {
             this.replacementText = replacementText;
+        }
+    }
+
+    public static String getImageReplacementText(ExternalResource imageEntry)
+    {
+        if (imageEntry.getNonColored() == null)
+        {
+            return String.format(
+                    "<div class=\"center illustration\"><a class=\"fancybox\" rel=\"group\" href=\"%s\">" +
+                    "<img src=\"%s\" data-resource-id=\"%d\" alt=\"\" class=\"img-responsive img-thumbnail\"/>" +
+                    "</a></div>",
+                    escapeURLIllegalCharacters(imageEntry.getUrl()),
+                    escapeURLIllegalCharacters(imageEntry.getThumbnail(900)),
+                    imageEntry.getResourceId());
+        }
+        else
+        {
+            return String.format(
+                    "<div class=\"center illustration\"><a class=\"fancybox\" rel=\"group\" href=\"%s\" data-non-colored-href=\"%s\">" +
+                    "<img src=\"%s\" data-non-colored-src=\"%s\" data-resource-id=\"%d\" data-non-colored-resource-id=\"%d\" alt=\"\" class=\"img-responsive img-thumbnail\"/>" +
+                    "</a></div>",
+                    escapeURLIllegalCharacters(imageEntry.getUrl()),
+                    escapeURLIllegalCharacters(imageEntry.getNonColored().getUrl()),
+                    escapeURLIllegalCharacters(imageEntry.getThumbnail(900)),
+                    escapeURLIllegalCharacters(imageEntry.getNonColored().getThumbnail(900)),
+                    imageEntry.getResourceId(),
+                    imageEntry.getNonColored().getResourceId());
         }
     }
 

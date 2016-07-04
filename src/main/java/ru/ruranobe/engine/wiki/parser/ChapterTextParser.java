@@ -26,12 +26,15 @@ public class ChapterTextParser
         for (ChapterImage chapterImage : chapterImages)
         {
             ExternalResource image;
-            boolean preferColoredImgs = LoginSession.get().getUser() == null
-                                        || LoginSession.get().getUser().getPreferColoredImgs() != Boolean.FALSE;
             if (chapterImage.getColoredImage() != null
-                && !Strings.isEmpty(chapterImage.getColoredImage().getUrl()) && preferColoredImgs)
+                && !Strings.isEmpty(chapterImage.getColoredImage().getUrl()))
             {
                 image = chapterImage.getColoredImage();
+                if (chapterImage.getNonColoredImage() != null
+                    && !Strings.isEmpty(chapterImage.getNonColoredImage().getUrl()))
+                {
+                    image.setNonColored(chapterImage.getNonColoredImage());
+                }
             }
             else if (chapterImage.getNonColoredImage() != null
                      && !Strings.isEmpty(chapterImage.getNonColoredImage().getUrl()))
@@ -89,6 +92,7 @@ public class ChapterTextParser
 
     public static boolean getChapterText(Chapter chapter, SqlSession session, TextsMapper textsMapper, boolean sanitize)
     {
+        boolean result = false;
         if (chapter.getTextId() != null)
         {
             chapter.setText(textsMapper.getHtmlInfoById(chapter.getTextId()));
@@ -97,9 +101,26 @@ public class ChapterTextParser
         {
             chapter.setText(textsMapper.getTextById(chapter.getTextId()));
             ChapterTextParser.parseChapterText(chapter, session, textsMapper, sanitize);
-            return true;
+            result = true;
         }
-        return false;
+        if (chapter.getTextId() != null)
+        {
+            chapter.getText().setTextHtml(replaceNonColoredImages(chapter.getText().getTextHtml()));
+        }
+        return result;
+    }
+
+    public static String replaceNonColoredImages(String textHtml)
+    {
+        boolean preferColoredImgs = LoginSession.get().getUser() == null
+                                    || LoginSession.get().getUser().getPreferColoredImgs() != Boolean.FALSE;
+        if (!preferColoredImgs)
+        {
+            textHtml = textHtml.replaceAll("\"[^\"]+\" data-non-colored-href=", "");
+            textHtml = textHtml.replaceAll("\"[^\"]+\" data-non-colored-src=", "");
+            textHtml = textHtml.replaceAll("\"[^\"]+\" data-non-colored-resource-id=", "");
+        }
+        return textHtml;
     }
 
     public static String getChapterHeading(Chapter chapter)

@@ -51,6 +51,16 @@ public class ExternalResource implements Serializable
         this.height = height;
     }
 
+    public ExternalResource getNonColored()
+    {
+        return nonColored;
+    }
+
+    public void setNonColored(ExternalResource nonColored)
+    {
+        this.nonColored = nonColored;
+    }
+
     private static final long serialVersionUID = 1L;
     private Integer resourceId;
     private Integer userId;
@@ -62,6 +72,8 @@ public class ExternalResource implements Serializable
     private String thumbnail;
     private String title;
     private Date uploadedWhen;
+    private ExternalResource nonColored;
+
 
     public ExternalResource()
     {

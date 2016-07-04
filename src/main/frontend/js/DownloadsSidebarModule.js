@@ -13,12 +13,12 @@ $('.module .download-images, .module .download-bw').change(function (e) {
             $italic.text('Без иллюстраций');
         }
         else if (bw === true) {
-            $link.attr('href', baseUrl);
+            $link.attr('href', baseUrl + '?color=0');
             $link.attr('title', body + ' c оригинальными черно-белыми иллюстрациями');
             $italic.text('С ч/б иллюстрациями');
         }
         else if (bw === false) {
-            $link.attr('href', baseUrl + '?color=1');
+            $link.attr('href', baseUrl);
             $link.attr('title', body + ' c цветными иллюстрациями вместо черно-белых');
             $italic.text('С цвет. иллюстрациями');
         }
