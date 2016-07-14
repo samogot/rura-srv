@@ -28,12 +28,33 @@ DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS teams;
 DROP TABLE IF EXISTS volume_activities;
 
+CREATE TABLE sections (
+  section_id    INT(11) PRIMARY KEY AUTO_INCREMENT,
+  url           VARCHAR(32) UNIQUE NOT NULL,
+  url_hist      VARCHAR(32)        NOT NULL,
+  deleted       BOOL               NOT NULL,
+  title         VARCHAR(255)       NOT NULL,
+  primary_color VARCHAR(16),
+  logo_color    VARCHAR(16),
+  main_logo     INT(11),
+  circle_logo   INT(11),
+  lang_id       VARCHAR(5)         NOT NULL
+                                    DEFAULT ('ru'),
+  forum_id      INT(11) UNSIGNED   NOT NULL
+);
+
+CREATE TABLE section_domains (
+  domain     VARCHAR(256) PRIMARY KEY,
+  section_id INT(11) NOT NULL
+);
+
 CREATE TABLE projects
 (
   project_id         INT(11) PRIMARY KEY AUTO_INCREMENT,
   parent_id          INT(11),
   image_id           INT(11),
-  url                VARCHAR(32) UNIQUE,
+  section_id         INT(11),
+  url                VARCHAR(32),
   title              VARCHAR(1023)      NOT NULL,
   name_jp            VARCHAR(255),
   name_en            VARCHAR(255),
@@ -56,21 +77,22 @@ CREATE TABLE projects
   status             ENUM ('Выпускается',
                            'Окончен',
                            'Переведен') NOT NULL,
-  INDEX (url),
+  UNIQUE (section_id, url),
   INDEX (order_number)
 );
 
 CREATE TABLE volumes
 (
   volume_id          INT(11) PRIMARY KEY AUTO_INCREMENT,
-  project_id         INT(11)             NOT NULL,
+  project_id         INT(11)         NOT NULL,
   image_one          INT(11),
   image_two          INT(11),
   image_three        INT(11),
   image_four         INT(11),
-  url                VARCHAR(32) UNIQUE  NOT NULL,
-  name_file          VARCHAR(255)        NOT NULL,
-  name_title         VARCHAR(255)        NOT NULL,
+  section_id         INT(11),
+  url                VARCHAR(32)     NOT NULL,
+  name_file          VARCHAR(255)    NOT NULL,
+  name_title         VARCHAR(255)    NOT NULL,
   name_jp            VARCHAR(255),
   name_en            VARCHAR(255),
   name_ru            VARCHAR(255),
@@ -87,7 +109,7 @@ CREATE TABLE volumes
   volume_type        ENUM ('Ранобэ',
                            'Побочные истории',
                            'Авторские додзинси',
-                           'Другое')     NOT NULL,
+                           'Другое') NOT NULL,
   volume_status      ENUM (
     -- не в работе
     'on_hold',
@@ -108,12 +130,12 @@ CREATE TABLE volumes
     -- опубликован
     'decor',
     'done',
-    'license')                           NOT NULL,
+    'license')                       NOT NULL,
   volume_status_hint VARCHAR(255),
-  adult              BOOL                NOT NULL,
+  adult              BOOL            NOT NULL,
   annotation         TEXT,
   topic_id           INT(11) UNSIGNED    DEFAULT NULL,
-  INDEX (url),
+  UNIQUE (section_id, url),
   UNIQUE (project_id, sequence_number)
 );
 
@@ -141,12 +163,13 @@ CREATE TABLE chapters
   chapter_id   INT(11) PRIMARY KEY AUTO_INCREMENT,
   volume_id    INT(11)       NOT NULL,
   text_id      INT(11),
-  url          VARCHAR(32) UNIQUE,
+  section_id   INT(11),
+  url          VARCHAR(32)   NOT NULL,
   title        VARCHAR(1023) NOT NULL,
   order_number INT(11)       NOT NULL,
   publish_date DATETIME,
   nested       BOOL          NOT NULL,
-  INDEX (url),
+  UNIQUE (section_id, url),
   INDEX (volume_id, order_number)
 );
 
@@ -308,17 +331,18 @@ CREATE TABLE users
   email_activated          BOOL               NOT NULL,
   registration_date        DATETIME           NOT NULL,
   # user_settings
-  converter_type           ENUM ('fb2',
+  converter_type      ENUM ('fb2',
                                  'docx',
                                  'epub')      NOT NULL,
-  navigation_type          ENUM ('Главам',
+  navigation_type     ENUM ('Главам',
                                  'Подглавам') NOT NULL,
-  convert_with_imgs        BOOL               NOT NULL,
-  adult                    BOOL               NOT NULL,
-  prefer_colored_imgs      BOOL               NOT NULL,
-  show_hidden_content      BOOL               NOT NULL,
-  convert_imgs_size        INT(11)            NOT NULL,
-  forum_user_id            INT(11) UNSIGNED    DEFAULT NULL,
+  convert_with_imgs   BOOL               NOT NULL,
+  adult               BOOL               NOT NULL,
+  prefer_colored_imgs BOOL               NOT NULL,
+  show_hidden_content BOOL               NOT NULL,
+  convert_imgs_size   INT(11)            NOT NULL,
+  forum_user_id       INT(11) UNSIGNED DEFAULT NULL,
+  lang_id             VARCHAR(5)       DEFAULT ('ru'),
   INDEX (username),
   INDEX (email),
   INDEX (pass_recovery_token),
@@ -341,11 +365,16 @@ INSERT INTO user_group_types VALUES (1, 'ADMIN');
 INSERT INTO user_group_types VALUES (2, 'TEAM MEMBER');
 INSERT INTO user_group_types VALUES (3, 'WORKS');
 
+ALTER TABLE section_domains
+  ADD CONSTRAINT fk_section_domains_section_id FOREIGN KEY (section_id) REFERENCES sections (section_id);
+
 ALTER TABLE projects
+  ADD CONSTRAINT fk_projects_section_id FOREIGN KEY (section_id) REFERENCES sections (section_id),
   ADD CONSTRAINT fk_projects_parent_id FOREIGN KEY (parent_id) REFERENCES projects (project_id),
   ADD CONSTRAINT fk_projects_image_id FOREIGN KEY (image_id) REFERENCES external_resources (resource_id);
 
 ALTER TABLE volumes
+  ADD CONSTRAINT fk_volumes_section_id FOREIGN KEY (section_id) REFERENCES sections (section_id),
   ADD CONSTRAINT fk_volumes_project_id FOREIGN KEY (project_id) REFERENCES projects (project_id),
   ADD CONSTRAINT fk_volumes_image_one FOREIGN KEY (image_one) REFERENCES external_resources (resource_id),
   ADD CONSTRAINT fk_volumes_image_two FOREIGN KEY (image_two) REFERENCES external_resources (resource_id),
@@ -353,6 +382,7 @@ ALTER TABLE volumes
   ADD CONSTRAINT fk_volumes_image_four FOREIGN KEY (image_four) REFERENCES external_resources (resource_id);
 
 ALTER TABLE chapters
+  ADD CONSTRAINT fk_chapters_section_id FOREIGN KEY (section_id) REFERENCES sections (section_id),
   ADD CONSTRAINT fk_chapters_volume_id FOREIGN KEY (volume_id) REFERENCES volumes (volume_id)
   ON DELETE CASCADE,
   ADD CONSTRAINT fk_chapters_text_id FOREIGN KEY (text_id) REFERENCES texts (text_id);
@@ -381,7 +411,11 @@ ALTER TABLE external_resources_history
   ADD CONSTRAINT fk_external_resources_history_chapter_image_id FOREIGN KEY (chapter_image_id) REFERENCES chapter_images (chapter_image_id)
   ON DELETE SET NULL;
 
+ALTER TABLE teams
+  ADD CONSTRAINT fk_teams_section_id FOREIGN KEY (section_id) REFERENCES sections (section_id);
+
 ALTER TABLE team_members
+  ADD CONSTRAINT fk_team_members_section_id FOREIGN KEY (section_id) REFERENCES sections (section_id),
   ADD CONSTRAINT fk_team_members_team_id FOREIGN KEY (team_id) REFERENCES teams (team_id),
   ADD CONSTRAINT fk_team_members_user_id FOREIGN KEY (user_id) REFERENCES users (user_id);
 
