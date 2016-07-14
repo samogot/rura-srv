@@ -2,11 +2,11 @@
 
 SET NAMES UTF8;
 ALTER TABLE external_resources_history
-  DROP FOREIGN KEY fk_history_project_id;
+  DROP FOREIGN KEY fk_external_resources_history_project_id;
 ALTER TABLE external_resources_history
-  DROP FOREIGN KEY fk_history_volume_id;
+  DROP FOREIGN KEY fk_external_resources_history_volume_id;
 ALTER TABLE external_resources_history
-  DROP FOREIGN KEY fk_history_chapter_image_id;
+  DROP FOREIGN KEY fk_external_resources_history_chapter_image_id;
 DROP TABLE IF EXISTS user_groups;
 DROP TABLE IF EXISTS user_group_types;
 DROP TABLE IF EXISTS orphus_comments;
@@ -62,8 +62,8 @@ CREATE TABLE projects
 
 CREATE TABLE volumes
 (
-  volume_id          INT(11) PRIMARY KEY          AUTO_INCREMENT,
-  project_id         INT(11)         NOT NULL,
+  volume_id          INT(11) PRIMARY KEY AUTO_INCREMENT,
+  project_id         INT(11)             NOT NULL,
   image_one          INT(11),
   image_two          INT(11),
   image_three        INT(11),
@@ -87,7 +87,7 @@ CREATE TABLE volumes
   volume_type        ENUM ('Ранобэ',
                            'Побочные истории',
                            'Авторские додзинси',
-                           'Другое') NOT NULL,
+                           'Другое')     NOT NULL,
   volume_status      ENUM (
     -- не в работе
     'on_hold',
@@ -108,11 +108,11 @@ CREATE TABLE volumes
     -- опубликован
     'decor',
     'done',
-    'license')                       NOT NULL,
+    'license')                           NOT NULL,
   volume_status_hint VARCHAR(255),
-  adult              BOOL            NOT NULL,
+  adult              BOOL                NOT NULL,
   annotation         TEXT,
-  topic_id           INT(11) UNSIGNED             DEFAULT NULL,
+  topic_id           INT(11) UNSIGNED    DEFAULT NULL,
   INDEX (url),
   UNIQUE (project_id, sequence_number)
 );
@@ -213,16 +213,18 @@ CREATE TABLE volume_activities
 CREATE TABLE teams
 (
   team_id           INT(11) PRIMARY KEY AUTO_INCREMENT,
+  section_id        INT(11),
   team_name         VARCHAR(255) UNIQUE NOT NULL,
   team_website_link VARCHAR(255)
 );
 
 CREATE TABLE team_members
 (
-  member_id INT(11) PRIMARY KEY AUTO_INCREMENT,
-  user_id   INT(11),
-  team_id   INT(11),
-  nickname  VARCHAR(64) UNIQUE NOT NULL,
+  member_id  INT(11) PRIMARY KEY AUTO_INCREMENT,
+  section_id INT(11),
+  user_id    INT(11),
+  team_id    INT(11),
+  nickname   VARCHAR(64) UNIQUE NOT NULL,
   INDEX (team_id, nickname)
 );
 
@@ -340,78 +342,76 @@ INSERT INTO user_group_types VALUES (2, 'TEAM MEMBER');
 INSERT INTO user_group_types VALUES (3, 'WORKS');
 
 ALTER TABLE projects
-  ADD CONSTRAINT fk_parent_id FOREIGN KEY (parent_id) REFERENCES projects (project_id),
-  ADD CONSTRAINT fk_image_id FOREIGN KEY (image_id) REFERENCES external_resources (resource_id);
+  ADD CONSTRAINT fk_projects_parent_id FOREIGN KEY (parent_id) REFERENCES projects (project_id),
+  ADD CONSTRAINT fk_projects_image_id FOREIGN KEY (image_id) REFERENCES external_resources (resource_id);
 
 ALTER TABLE volumes
-  ADD CONSTRAINT fk_project_id FOREIGN KEY (project_id) REFERENCES projects (project_id),
-  ADD CONSTRAINT fk_image_one FOREIGN KEY (image_one) REFERENCES external_resources (resource_id),
-  ADD CONSTRAINT fk_image_two FOREIGN KEY (image_two) REFERENCES external_resources (resource_id),
-  ADD CONSTRAINT fk_image_three FOREIGN KEY (image_three) REFERENCES external_resources (resource_id),
-  ADD CONSTRAINT fk_image_four FOREIGN KEY (image_four) REFERENCES external_resources (resource_id);
+  ADD CONSTRAINT fk_volumes_project_id FOREIGN KEY (project_id) REFERENCES projects (project_id),
+  ADD CONSTRAINT fk_volumes_image_one FOREIGN KEY (image_one) REFERENCES external_resources (resource_id),
+  ADD CONSTRAINT fk_volumes_image_two FOREIGN KEY (image_two) REFERENCES external_resources (resource_id),
+  ADD CONSTRAINT fk_volumes_image_three FOREIGN KEY (image_three) REFERENCES external_resources (resource_id),
+  ADD CONSTRAINT fk_volumes_image_four FOREIGN KEY (image_four) REFERENCES external_resources (resource_id);
 
 ALTER TABLE chapters
-  ADD CONSTRAINT fk_volume_id2 FOREIGN KEY (volume_id) REFERENCES volumes (volume_id)
+  ADD CONSTRAINT fk_chapters_volume_id FOREIGN KEY (volume_id) REFERENCES volumes (volume_id)
   ON DELETE CASCADE,
-  ADD CONSTRAINT fk_text_id FOREIGN KEY (text_id) REFERENCES texts (text_id);
+  ADD CONSTRAINT fk_chapters_text_id FOREIGN KEY (text_id) REFERENCES texts (text_id);
 
 ALTER TABLE texts_history
-  ADD CONSTRAINT fk_current_text_id FOREIGN KEY (current_text_id) REFERENCES texts (text_id),
-  ADD CONSTRAINT fk_previous_text_id FOREIGN KEY (previous_text_id) REFERENCES texts (text_id),
+  ADD CONSTRAINT fk_texts_history_current_text_id FOREIGN KEY (current_text_id) REFERENCES texts (text_id),
+  ADD CONSTRAINT fk_texts_history_previous_text_id FOREIGN KEY (previous_text_id) REFERENCES texts (text_id),
   ADD CONSTRAINT fk_texts_history_user_id FOREIGN KEY (user_id) REFERENCES users (user_id),
   ADD CONSTRAINT fk_texts_history_chapter_id FOREIGN KEY (chapter_id) REFERENCES chapters (chapter_id)
   ON DELETE SET NULL;
 
 ALTER TABLE chapter_images
-  ADD CONSTRAINT fk_colored_image_id FOREIGN KEY (colored_image_id) REFERENCES external_resources (resource_id),
-  ADD CONSTRAINT fk_non_colored_image_id FOREIGN KEY (non_colored_image_id) REFERENCES external_resources (resource_id),
-  ADD CONSTRAINT fk_volume_id FOREIGN KEY (volume_id) REFERENCES volumes (volume_id)
+  ADD CONSTRAINT fk_chapter_images_colored_image_id FOREIGN KEY (colored_image_id) REFERENCES external_resources (resource_id),
+  ADD CONSTRAINT fk_chapter_images_non_colored_image_id FOREIGN KEY (non_colored_image_id) REFERENCES external_resources (resource_id),
+  ADD CONSTRAINT fk_chapter_images_volume_id FOREIGN KEY (volume_id) REFERENCES volumes (volume_id)
   ON DELETE CASCADE,
-  ADD CONSTRAINT fk_chapter_id FOREIGN KEY (chapter_id) REFERENCES chapters (chapter_id);
-
+  ADD CONSTRAINT fk_chapter_images_chapter_id FOREIGN KEY (chapter_id) REFERENCES chapters (chapter_id);
 
 ALTER TABLE external_resources
-  ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (user_id),
-  ADD CONSTRAINT fk_history_id FOREIGN KEY (history_id) REFERENCES external_resources_history (history_id);
+  ADD CONSTRAINT fk_external_resources_user_id FOREIGN KEY (user_id) REFERENCES users (user_id),
+  ADD CONSTRAINT fk_external_resources_history_id FOREIGN KEY (history_id) REFERENCES external_resources_history (history_id);
 
 ALTER TABLE external_resources_history
-  ADD CONSTRAINT fk_history_project_id FOREIGN KEY (project_id) REFERENCES projects (project_id),
-  ADD CONSTRAINT fk_history_volume_id FOREIGN KEY (volume_id) REFERENCES volumes (volume_id),
-  ADD CONSTRAINT fk_history_chapter_image_id FOREIGN KEY (chapter_image_id) REFERENCES chapter_images (chapter_image_id)
+  ADD CONSTRAINT fk_external_resources_history_project_id FOREIGN KEY (project_id) REFERENCES projects (project_id),
+  ADD CONSTRAINT fk_external_resources_history_volume_id FOREIGN KEY (volume_id) REFERENCES volumes (volume_id),
+  ADD CONSTRAINT fk_external_resources_history_chapter_image_id FOREIGN KEY (chapter_image_id) REFERENCES chapter_images (chapter_image_id)
   ON DELETE SET NULL;
 
 ALTER TABLE team_members
-  ADD CONSTRAINT fk_team_id FOREIGN KEY (team_id) REFERENCES teams (team_id),
-  ADD CONSTRAINT fk_user_id3 FOREIGN KEY (user_id) REFERENCES users (user_id);
-
+  ADD CONSTRAINT fk_team_members_team_id FOREIGN KEY (team_id) REFERENCES teams (team_id),
+  ADD CONSTRAINT fk_team_members_user_id FOREIGN KEY (user_id) REFERENCES users (user_id);
 
 ALTER TABLE volume_release_activities
-  ADD CONSTRAINT fk_ra_volume_id FOREIGN KEY (volume_id) REFERENCES volumes (volume_id)
+  ADD CONSTRAINT fk_volume_release_activities_volume_id FOREIGN KEY (volume_id) REFERENCES volumes (volume_id)
   ON DELETE CASCADE,
-  ADD CONSTRAINT fk_member_id FOREIGN KEY (member_id) REFERENCES team_members (member_id),
-  ADD CONSTRAINT fk_activity_id FOREIGN KEY (activity_id) REFERENCES volume_activities (activity_id);
+  ADD CONSTRAINT fk_volume_release_activities_member_id FOREIGN KEY (member_id) REFERENCES team_members (member_id),
+  ADD CONSTRAINT fk_volume_release_activities_activity_id FOREIGN KEY (activity_id) REFERENCES volume_activities (activity_id);
 
 ALTER TABLE updates
-  ADD CONSTRAINT fk_u_project_id FOREIGN KEY (project_id) REFERENCES projects (project_id),
-  ADD CONSTRAINT fk_u_volume_id FOREIGN KEY (volume_id) REFERENCES volumes (volume_id),
-  ADD CONSTRAINT fk_u_chapter_id FOREIGN KEY (chapter_id) REFERENCES chapters (chapter_id);
+  ADD CONSTRAINT fk_updates_project_id FOREIGN KEY (project_id) REFERENCES projects (project_id),
+  ADD CONSTRAINT fk_updates_volume_id FOREIGN KEY (volume_id) REFERENCES volumes (volume_id),
+  ADD CONSTRAINT fk_updates_chapter_id FOREIGN KEY (chapter_id) REFERENCES chapters (chapter_id);
 
 ALTER TABLE bookmarks
-  ADD CONSTRAINT fk_bookmark_paragraph_id FOREIGN KEY (paragraph_id) REFERENCES paragraphs (paragraph_id),
-  ADD CONSTRAINT fk_user_bookmark_id FOREIGN KEY (user_id) REFERENCES users (user_id);
+  ADD CONSTRAINT fk_bookmarks_paragraph_id FOREIGN KEY (paragraph_id) REFERENCES paragraphs (paragraph_id),
+  ADD CONSTRAINT fk_bookmarks_user_id FOREIGN KEY (user_id) REFERENCES users (user_id);
 
 ALTER TABLE paragraphs
-  ADD CONSTRAINT fk_paragraph_text_id FOREIGN KEY (text_id) REFERENCES texts (text_id);
+  ADD CONSTRAINT fk_paragraphs_text_id FOREIGN KEY (text_id) REFERENCES texts (text_id);
 
 ALTER TABLE orphus_comments
-  ADD CONSTRAINT fk_orphus_paragraph_id FOREIGN KEY (paragraph) REFERENCES paragraphs (paragraph_id),
-  ADD CONSTRAINT fk_chapter_id2 FOREIGN KEY (chapter_id) REFERENCES chapters (chapter_id)
+  ADD CONSTRAINT fk_orphus_comments_paragraph_id FOREIGN KEY (paragraph) REFERENCES paragraphs (paragraph_id),
+  ADD CONSTRAINT fk_orphus_comments_chapter_id FOREIGN KEY (chapter_id) REFERENCES chapters (chapter_id)
   ON DELETE CASCADE,
-  ADD CONSTRAINT fk_user_id2 FOREIGN KEY (user_id) REFERENCES users (user_id);
+  ADD CONSTRAINT fk_orphus_comments_user_id FOREIGN KEY (user_id) REFERENCES users (user_id);
 
 ALTER TABLE user_groups
-  ADD CONSTRAINT fk_ug_user_id FOREIGN KEY (user_id) REFERENCES users (user_id),
-  ADD CONSTRAINT fk_ug_group_id FOREIGN KEY (group_id) REFERENCES user_group_types (group_id);
+  ADD CONSTRAINT fk_user_groups_user_id FOREIGN KEY (user_id) REFERENCES users (user_id),
+  ADD CONSTRAINT fk_user_groups_group_id FOREIGN KEY (group_id) REFERENCES user_group_types (group_id);
 
 /*
  * Do MySQL and MariaDB index foreign key columns automatically?
