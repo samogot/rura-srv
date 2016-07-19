@@ -51,10 +51,9 @@ CREATE TABLE section_domains (
 CREATE TABLE projects
 (
   project_id         INT(11) PRIMARY KEY AUTO_INCREMENT,
-  parent_id          INT(11),
   image_id           INT(11),
   section_id         INT(11),
-  url                VARCHAR(32),
+  url                VARCHAR(32)        NOT NULL,
   url_hist           VARCHAR(32)        NOT NULL,
   deleted            BOOL               NOT NULL,
   title              VARCHAR(1023)      NOT NULL,
@@ -83,10 +82,18 @@ CREATE TABLE projects
   INDEX (order_number)
 );
 
+CREATE TABLE sub_projects (
+  sub_project_id INT(11) PRIMARY KEY AUTO_INCREMENT,
+  project_id     INT(11)       NOT NULL,
+  title          VARCHAR(1023) NOT NULL,
+  forum_id       INT(11) UNSIGNED
+);
+
 CREATE TABLE volumes
 (
   volume_id          INT(11) PRIMARY KEY AUTO_INCREMENT,
   project_id         INT(11)         NOT NULL,
+  sub_project_id     INT(11),
   image_one          INT(11),
   image_two          INT(11),
   image_three        INT(11),
@@ -376,12 +383,15 @@ ALTER TABLE section_domains
 
 ALTER TABLE projects
   ADD CONSTRAINT fk_projects_section_id FOREIGN KEY (section_id) REFERENCES sections (section_id),
-  ADD CONSTRAINT fk_projects_parent_id FOREIGN KEY (parent_id) REFERENCES projects (project_id),
   ADD CONSTRAINT fk_projects_image_id FOREIGN KEY (image_id) REFERENCES external_resources (resource_id);
+
+ALTER TABLE sub_projects
+  ADD CONSTRAINT fk_sub_projects_project_id FOREIGN KEY (project_id) REFERENCES projects (project_id);
 
 ALTER TABLE volumes
   ADD CONSTRAINT fk_volumes_section_id FOREIGN KEY (section_id) REFERENCES sections (section_id),
   ADD CONSTRAINT fk_volumes_project_id FOREIGN KEY (project_id) REFERENCES projects (project_id),
+  ADD CONSTRAINT fk_volumes_sub_project_id FOREIGN KEY (sub_project_id) REFERENCES sub_projects (sub_project_id),
   ADD CONSTRAINT fk_volumes_image_one FOREIGN KEY (image_one) REFERENCES external_resources (resource_id),
   ADD CONSTRAINT fk_volumes_image_two FOREIGN KEY (image_two) REFERENCES external_resources (resource_id),
   ADD CONSTRAINT fk_volumes_image_three FOREIGN KEY (image_three) REFERENCES external_resources (resource_id),
