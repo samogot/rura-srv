@@ -1,20 +1,17 @@
 package ru.ruranobe.wicket.resources.rest;
 
 import org.apache.ibatis.session.SqlSession;
-import org.apache.wicket.request.http.WebResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.wicketstuff.rest.annotations.MethodMapping;
 import org.wicketstuff.rest.annotations.ResourcePath;
-import org.wicketstuff.rest.resource.gson.GsonRestResource;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.mappers.ProjectsMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
+import ru.ruranobe.wicket.resources.rest.base.GsonObjectRestResource;
 
 import java.util.Collection;
 
 @ResourcePath("/api/people")
-public class PeopleRestWebService extends GsonRestResource
+public class PeopleRestWebService extends GsonObjectRestResource
 {
     @MethodMapping("")
     public Collection<String> getPeople()
@@ -25,13 +22,4 @@ public class PeopleRestWebService extends GsonRestResource
             return projectsMapper.getAllPeople();
         }
     }
-
-    @Override
-    protected void handleException(WebResponse response, Exception exception)
-    {
-        super.handleException(response, exception);
-        LOG.error("Error in REST API call", exception);
-    }
-
-    private static final Logger LOG = LoggerFactory.getLogger(PeopleRestWebService.class);
 }

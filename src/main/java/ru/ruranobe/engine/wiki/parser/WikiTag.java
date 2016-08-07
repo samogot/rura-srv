@@ -1,17 +1,20 @@
 package ru.ruranobe.engine.wiki.parser;
 
+import ru.ruranobe.mybatis.entities.tables.ExternalResource;
+
 import java.util.Map;
 
 public class WikiTag
 {
-    public String getImageThumbnail()
+
+    public ExternalResource getExternalResource()
     {
-        return imageThumbnail;
+        return externalResource;
     }
 
-    public void setImageThumbnail(String imageThumbnail)
+    public void setExternalResource(ExternalResource externalResource)
     {
-        this.imageThumbnail = imageThumbnail;
+        this.externalResource = externalResource;
     }
 
     public WikiTag(WikiTagType wikiTagType, int startPosition, String uniqueId, Map<String, String> attributeNameToValue)
@@ -53,14 +56,6 @@ public class WikiTag
         return listOrderNumber;
     }
 
-    public Integer getExternalResourceId() {
-        return externalResourceId;
-    }
-
-    public void setExternalResourceId(Integer externalResourceId) {
-        this.externalResourceId = externalResourceId;
-    }
-
     public Map<String, String> getAttributeNameToValue()
     {
         return attributeNameToValue;
@@ -69,16 +64,6 @@ public class WikiTag
     public void setListOrderNumber(int listOrderNumber)
     {
         this.listOrderNumber = listOrderNumber;
-    }
-
-    public void setImageUrl(String imageUrl)
-    {
-        this.imageUrl = imageUrl;
-    }
-
-    public String getImageUrl()
-    {
-        return imageUrl;
     }
 
     @Override
@@ -112,9 +97,7 @@ public class WikiTag
     private final String uniqueId;
     private final Map<String, String> attributeNameToValue;
     private int listOrderNumber;
-    private String imageUrl;
-    private String imageThumbnail;
     private int wikiTagLength;
-    private Integer externalResourceId;
+    private ExternalResource externalResource;
 
 }

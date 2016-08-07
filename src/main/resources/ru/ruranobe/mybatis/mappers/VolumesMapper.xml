@@ -16,13 +16,19 @@
         SELECT count(*) AS volumesCount
         FROM volumes
         WHERE project_id = #{projectId}
-        AND volume_type = 'Ранобэ'
+              AND volume_type = 'Ранобэ'
     </select>
 
     <select id="getVolumeByUrl" parameterType="String" resultMap="VolumeResult">
         SELECT *
         FROM volumes
         WHERE url = #{url}
+    </select>
+
+    <select id="getVolumeById" parameterType="int" resultMap="VolumeResult">
+        SELECT *
+        FROM volumes
+        WHERE volume_id = #{volumeId}
     </select>
 
     <select id="getVolumeNextPrevByUrl" parameterType="String" resultMap="VolumeResult">
@@ -48,10 +54,25 @@
               FROM volumes v
                   INNER JOIN projects USING (project_id)
               WHERE v.url = #{url}) v
-        LEFT JOIN volumes prev_vol
+            LEFT JOIN volumes prev_vol
                 ON v.prev_sequence_number = prev_vol.sequence_number AND v.project_id = prev_vol.project_id
             LEFT JOIN volumes next_vol
                 ON v.next_sequence_number = next_vol.sequence_number AND v.project_id = next_vol.project_id
+    </select>
+
+    <select id="getVolumeDownloadInfoByUrl" parameterType="String"
+            resultType="ru.ruranobe.mybatis.entities.additional.VolumeDownloadInfo">
+        SELECT
+            sum(publish_date &lt;= now()) > 0 AS download,
+            count(non_colored_image_id) > 0
+            OR image_two IS NOT NULL
+            OR image_three IS NOT NULL
+            OR image_four IS NOT NULL         AS images,
+            count(colored_image_id) > 0       AS colors
+        FROM volumes v
+            INNER JOIN chapters USING (volume_id)
+            LEFT JOIN chapter_images USING (volume_id)
+        WHERE v.url = #{url}
     </select>
 
     <select id="getVolumesByProjectId" parameterType="int" resultMap="VolumeResult">
@@ -60,78 +81,99 @@
         WHERE project_id = #{projectId}
     </select>
 
+    <select id="getProjectUpdateDate" parameterType="Integer" resultType="java.util.Date">
+        SELECT max(show_time)
+        FROM updates
+        WHERE volume_id = #{volumeId}
+        AND show_time &lt;= now()
+    </select>
+
+    <select id="getProjectEditDate" parameterType="Integer" resultType="java.util.Date">
+        SELECT max(greatest(insertion_time, publish_date))
+        FROM chapters
+        INNER JOIN texts_history USING (chapter_id)
+        WHERE volume_id = #{volumeId}
+        AND publish_date &lt;= now()
+    </select>
+
     <update id="updateVolume" parameterType="ru.ruranobe.mybatis.entities.tables.Volume">
         UPDATE volumes
-        SET project_id = #{projectId},
-        image_one = #{imageOne},
-        image_two = #{imageTwo},
-        image_three = #{imageThree},
-        image_four = #{imageFour},
-        url = #{url},
-        name_file = #{nameFile},
-        name_title = #{nameTitle},
-        name_jp = #{nameJp},
-        name_en = #{nameEn},
-        name_ru = #{nameRu},
-        name_romaji = #{nameRomaji},
-        name_short = #{nameShort},
-        sequence_number = #{sequenceNumber},
-        author = #{author},
-        illustrator = #{illustrator},
-        original_design = #{originalDesign},
-        original_story = #{originalStory},
-        release_date = #{releaseDate},
-        isbn = #{isbn},
-        external_url = #{externalUrl},
-        volume_type = #{volumeType},
-        volume_status = #{volumeStatus},
-        volume_status_hint = #{volumeStatusHint},
-        adult = #{adult},
-        annotation = #{annotation},
-        topic_id = #{topicId}
+        SET project_id         = #{projectId},
+            image_one          = #{imageOne},
+            image_two          = #{imageTwo},
+            image_three        = #{imageThree},
+            image_four         = #{imageFour},
+            url                = #{url},
+            name_file          = #{nameFile},
+            name_title         = #{nameTitle},
+            name_jp            = #{nameJp},
+            name_en            = #{nameEn},
+            name_ru            = #{nameRu},
+            name_romaji        = #{nameRomaji},
+            name_short         = #{nameShort},
+            sequence_number    = #{sequenceNumber},
+            author             = #{author},
+            illustrator        = #{illustrator},
+            original_design    = #{originalDesign},
+            original_story     = #{originalStory},
+            release_date       = #{releaseDate},
+            isbn               = #{isbn},
+            external_url       = #{externalUrl},
+            volume_type        = #{volumeType},
+            volume_status      = #{volumeStatus},
+            volume_status_hint = #{volumeStatusHint},
+            adult              = #{adult},
+            annotation         = #{annotation},
+            topic_id           = #{topicId}
         WHERE volume_id = #{volumeId}
     </update>
 
     <update id="updateVolumeCovers" parameterType="ru.ruranobe.mybatis.entities.tables.Volume">
         UPDATE volumes
         SET
-        image_one = #{imageOne},
-        image_two = #{imageTwo},
+            image_one   = #{imageOne},
+            image_two   = #{imageTwo},
             image_three = #{imageThree},
-        image_four = #{imageFour}
+            image_four  = #{imageFour}
+        WHERE volume_id = #{volumeId}
+    </update>
+
+    <update id="updateChaptersUrl" parameterType="ru.ruranobe.mybatis.entities.tables.Volume">
+        UPDATE chapters
+        SET url = concat(#{url},'/' , substring_index(url, '/', -1))
         WHERE volume_id = #{volumeId}
     </update>
 
     <insert id="insertVolume" parameterType="ru.ruranobe.mybatis.entities.tables.Volume" keyProperty="volumeId"
             useGeneratedKeys="true">
         INSERT INTO volumes
-        SET project_id = #{projectId},
-        image_one = #{imageOne},
-        image_two = #{imageTwo},
-        image_three = #{imageThree},
-        image_four = #{imageFour},
-        url = #{url},
-        name_file = #{nameFile},
-        name_title = #{nameTitle},
-        name_jp = #{nameJp},
-        name_en = #{nameEn},
-        name_ru = #{nameRu},
-        name_romaji = #{nameRomaji},
-        name_short = #{nameShort},
-        sequence_number = #{sequenceNumber},
-        author = #{author},
-        illustrator = #{illustrator},
-        original_design = #{originalDesign},
-        original_story = #{originalStory},
-        release_date = #{releaseDate},
-        isbn = #{isbn},
-        external_url = #{externalUrl},
-        volume_type = #{volumeType},
-        volume_status = #{volumeStatus},
-        volume_status_hint = #{volumeStatusHint},
-        adult = #{adult},
-        annotation = #{annotation},
-        topic_id = #{topicId}
+        SET project_id         = #{projectId},
+            image_one          = #{imageOne},
+            image_two          = #{imageTwo},
+            image_three        = #{imageThree},
+            image_four         = #{imageFour},
+            url                = #{url},
+            name_file          = #{nameFile},
+            name_title         = #{nameTitle},
+            name_jp            = #{nameJp},
+            name_en            = #{nameEn},
+            name_ru            = #{nameRu},
+            name_romaji        = #{nameRomaji},
+            name_short         = #{nameShort},
+            sequence_number    = #{sequenceNumber},
+            author             = #{author},
+            illustrator        = #{illustrator},
+            original_design    = #{originalDesign},
+            original_story     = #{originalStory},
+            release_date       = #{releaseDate},
+            isbn               = #{isbn},
+            external_url       = #{externalUrl},
+            volume_type        = #{volumeType},
+            volume_status      = #{volumeStatus},
+            volume_status_hint = #{volumeStatusHint},
+            adult              = #{adult},
+            annotation         = #{annotation},
+            topic_id           = #{topicId}
     </insert>
 
     <delete id="deleteVolume" parameterType="int">

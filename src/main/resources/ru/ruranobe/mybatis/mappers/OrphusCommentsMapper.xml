@@ -14,29 +14,29 @@
 
     <insert id="insertOrphusComment" parameterType="ru.ruranobe.mybatis.entities.tables.OrphusComment">
         INSERT INTO orphus_comments (chapter_id, paragraph, start_offset, original_text, replacement_text,
-        optional_comment, created_when, user_id, user_ip)
+                                     optional_comment, created_when, user_id, user_ip)
         VALUES (#{chapterId}, #{paragraph}, #{startOffset}, #{originalText}, #{replacementText}, #{optionalComment},
-        #{createdWhen}, #{userId}, #{userIP})
+                #{createdWhen}, #{userId}, #{userIP})
     </insert>
 
     <select id="getLastOrphusCommentsBy" parameterType="map" resultMap="OrphusCommentResult">
         select c.*,
-               p.*,
-               u.username,
-               ch.url,
-               ch.title,
-               projects.title as projectTitle
+        p.*,
+        u.username,
+        ch.url,
+        ch.title,
+        projects.title as projectTitle
         from orphus_comments c
         join paragraphs p
-          on p.paragraph_id = c.paragraph
+        on p.paragraph_id = c.paragraph
         left join users u
-          on u.user_id = c.user_id
+        on u.user_id = c.user_id
         join chapters ch
-          on ch.chapter_id = c.chapter_id
+        on ch.chapter_id = c.chapter_id
         join volumes v
-          on v.volume_id = ch.volume_id
+        on v.volume_id = ch.volume_id
         join projects
-          on projects.project_id = v.project_id
+        on projects.project_id = v.project_id
         where 1=1
         <if test="volumeId != null">
             AND v.volume_id = #{volumeId}
@@ -58,12 +58,12 @@
     </select>
 
     <select id="getOrphusCommentsSize" resultType="int">
-        select count(1)
-        from orphus_comments c
-        join paragraphs p
-          on p.paragraph_id = c.paragraph
-        join chapters ch
-          on ch.chapter_id = c.chapter_id
+        SELECT count(1)
+        FROM orphus_comments c
+            JOIN paragraphs p
+                ON p.paragraph_id = c.paragraph
+            JOIN chapters ch
+                ON ch.chapter_id = c.chapter_id
     </select>
 
     <resultMap type="ru.ruranobe.mybatis.entities.tables.OrphusComment" id="OrphusCommentResult">

@@ -40,62 +40,64 @@
             next_c.chapter_id next_chapter_id,
             prev_c.nested     prev_chapter_nested
         FROM
-        (
-            SELECT
-                c.*,
-                (
-                    SELECT max(order_number)
-                    FROM chapters
-                    WHERE chapters.order_number &lt; c.order_number
-                      AND chapters.volume_id = c.volume_id
-                    ORDER BY order_number DESC
-                    LIMIT 1
-                ) AS prev_order_number,
-                (
-                    SELECT min(order_number)
-                    FROM chapters
-                    WHERE chapters.order_number &gt; c.order_number
-                      AND chapters.volume_id = c.volume_id
-                    ORDER BY order_number ASC
-                    LIMIT 1
-                ) AS next_order_number
-            FROM chapters c
-            INNER JOIN volumes USING (volume_id)
-            WHERE c.url = #{url}
-        ) c
-        LEFT JOIN chapters prev_c
-          ON c.prev_order_number = prev_c.order_number
-         AND c.volume_id = prev_c.volume_id
-        LEFT JOIN chapters next_c
-          ON c.next_order_number = next_c.order_number
-         AND c.volume_id = next_c.volume_id
+            (
+                SELECT
+                    c.*,
+                    (
+                        SELECT max(order_number)
+                        FROM chapters
+                        WHERE chapters.order_number &lt; c.order_number
+                              AND chapters.volume_id = c.volume_id
+                        ORDER BY order_number DESC
+                        LIMIT 1
+                    ) AS prev_order_number,
+                    (
+                        SELECT min(order_number)
+                        FROM chapters
+                        WHERE chapters.order_number &gt; c.order_number
+                              AND chapters.volume_id = c.volume_id
+                        ORDER BY order_number ASC
+                        LIMIT 1
+                    ) AS next_order_number
+                FROM chapters c
+                    INNER JOIN volumes USING (volume_id)
+                WHERE c.url = #{url}
+            ) c
+            LEFT JOIN chapters prev_c
+                ON c.prev_order_number = prev_c.order_number
+                   AND c.volume_id = prev_c.volume_id
+            LEFT JOIN chapters next_c
+                ON c.next_order_number = next_c.order_number
+                   AND c.volume_id = next_c.volume_id
     </select>
 
-    <insert id="insertChapter" parameterType="ru.ruranobe.mybatis.entities.tables.Chapter" keyProperty="chapterId" useGeneratedKeys="true">
-        insert into chapters
-        set volume_id = #{volumeId},
-        text_id = #{textId},
-        url = #{url},
-        title = #{title},
-        order_number = #{orderNumber},
-        publish_date = #{publishDate},
-        nested = #{nested}
+    <insert id="insertChapter" parameterType="ru.ruranobe.mybatis.entities.tables.Chapter" keyProperty="chapterId"
+            useGeneratedKeys="true">
+        INSERT INTO chapters
+        SET volume_id    = #{volumeId},
+            text_id      = #{textId},
+            url          = #{url},
+            title        = #{title},
+            order_number = #{orderNumber},
+            publish_date = #{publishDate},
+            nested       = #{nested}
     </insert>
 
     <delete id="deleteChapter" parameterType="int">
-        delete from chapters where chapter_id=#{chapterId}
+        DELETE FROM chapters
+        WHERE chapter_id = #{chapterId}
     </delete>
 
     <update id="updateChapter" parameterType="ru.ruranobe.mybatis.entities.tables.Chapter">
-        update chapters
-        set volume_id = #{volumeId},
-        text_id = #{textId},
-        url = #{url},
-        title = #{title},
-        order_number = #{orderNumber},
-        publish_date = #{publishDate},
-        nested = #{nested}
-        where chapter_id = #{chapterId}
+        UPDATE chapters
+        SET volume_id    = #{volumeId},
+            text_id      = #{textId},
+            url          = #{url},
+            title        = #{title},
+            order_number = #{orderNumber},
+            publish_date = #{publishDate},
+            nested       = #{nested}
+        WHERE chapter_id = #{chapterId}
     </update>
 
     <update id="updateChapterText" parameterType="ru.ruranobe.mybatis.entities.tables.Chapter">
@@ -106,12 +108,12 @@
 
     <update id="updateChapterNoText" parameterType="ru.ruranobe.mybatis.entities.tables.Chapter">
         UPDATE chapters
-        SET volume_id = #{volumeId},
-        url = #{url},
-        title = #{title},
-        order_number = #{orderNumber},
-        publish_date = #{publishDate},
-        nested = #{nested}
+        SET volume_id    = #{volumeId},
+            url          = #{url},
+            title        = #{title},
+            order_number = #{orderNumber},
+            publish_date = #{publishDate},
+            nested       = #{nested}
         WHERE chapter_id = #{chapterId}
     </update>
 

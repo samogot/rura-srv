@@ -31,13 +31,13 @@
 
     <delete id="deleteTeam" parameterType="int">
         DELETE FROM teams
-        WHERE team_id =#{teamId}
+        WHERE team_id = #{teamId}
     </delete>
 
     <update id="updateTeam" parameterType="ru.ruranobe.mybatis.entities.tables.Team">
         UPDATE teams
-        SET team_name = #{teamName}, team_website_link=#{teamWebsiteLink}
-        WHERE team_id =#{teamId}
+        SET team_name = #{teamName}, team_website_link = #{teamWebsiteLink}
+        WHERE team_id = #{teamId}
     </update>
 
     <resultMap type="ru.ruranobe.mybatis.entities.tables.Team" id="TeamResult">

@@ -54,6 +54,10 @@ body.night .read > a {
     color: #E0E0E0;
 }
 
+body.night .read a.unpublished {
+    color: #b52a3d
+}
+
 body.night .ranobeList > div > .pull-left {
     color: #282828;
 }

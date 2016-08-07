@@ -13,21 +13,24 @@
     <select id="getAllVolumeActivities" resultMap="VolumeActivityResult">
         SELECT *
         FROM volume_activities
-        order by activity_id asc
+        ORDER BY activity_id ASC
     </select>
 
-    <insert id="insertVolumeActivity" parameterType="ru.ruranobe.mybatis.entities.tables.VolumeActivity" keyProperty="activityId" useGeneratedKeys="true">
-        insert into volume_activities (activity_name, activity_type)
-        values (#{activityName}, #{activityType})
+    <insert id="insertVolumeActivity" parameterType="ru.ruranobe.mybatis.entities.tables.VolumeActivity"
+            keyProperty="activityId" useGeneratedKeys="true">
+        INSERT INTO volume_activities (activity_name, activity_type)
+        VALUES (#{activityName}, #{activityType})
     </insert>
 
     <delete id="deleteVolumeActivity" parameterType="int">
-        delete from volume_activities where activity_id=#{activityId}
+        DELETE FROM volume_activities
+        WHERE activity_id = #{activityId}
     </delete>
 
     <update id="updateVolumeActivity" parameterType="ru.ruranobe.mybatis.entities.tables.VolumeActivity">
-        update volume_activities set activity_name = #{activityName}, activity_type=#{activityType}
-        where activity_id=#{activityId}
+        UPDATE volume_activities
+        SET activity_name = #{activityName}, activity_type = #{activityType}
+        WHERE activity_id = #{activityId}
     </update>
 
     <resultMap type="ru.ruranobe.mybatis.entities.tables.VolumeActivity" id="VolumeActivityResult">

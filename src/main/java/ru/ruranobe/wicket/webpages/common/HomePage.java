@@ -3,8 +3,10 @@ package ru.ruranobe.wicket.webpages.common;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import ru.ruranobe.wicket.components.ProjectBannersList;
 import ru.ruranobe.wicket.components.UpdatesWideList;
+import ru.ruranobe.wicket.components.sidebar.ActionsSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.TwitterWidgetSidebarModule;
 import ru.ruranobe.wicket.components.sidebar.VKWidgetSidebarModule;
+import ru.ruranobe.wicket.webpages.admin.GlobalEdit;
 import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
 public class HomePage extends SidebarLayoutPage
@@ -21,6 +23,7 @@ public class HomePage extends SidebarLayoutPage
         add(new BookmarkablePageLink("allProjects", FullProjects.class));
         add(new UpdatesWideList("updatesList", null, null, null, 0, COUNT_OF_UPDATES_ON_PAGE));
         add(new BookmarkablePageLink("allUpdates", Updates.class));
+        sidebarModules.add(new ActionsSidebarModule(GlobalEdit.class, null));
         sidebarModules.add(new VKWidgetSidebarModule());
         sidebarModules.add(new TwitterWidgetSidebarModule());
     }

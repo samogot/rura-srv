@@ -1,5 +1,6 @@
 package ru.ruranobe.wicket;
 
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;

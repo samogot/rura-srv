@@ -13,20 +13,18 @@
     </cache-->
 
     <select id="getChapterUrlDetailsByChapter" parameterType="int" resultMap="chapterUrlDetailsMap">
-        select c.url as chapter_url
-             , v.url as volume_url
-             , if (p.url is null, p2.url, p.url) as project_url
-             , c.title as chapter_title
-             , v.name_ru as volume_title
-             , p.title as project_title
-        from chapters c
-        join volumes v
-          on v.volume_id = c.volume_id
-        join projects p
-          on p.project_id = v.project_id
-		left join projects p2
-          on p2.project_id = p.parent_id
-        where c.chapter_id = #{chapterId}
+        SELECT
+            c.url                            AS chapter_url,
+            v.url                            AS volume_url,
+            if(p.url IS NULL, p2.url, p.url) AS project_url,
+            c.title                          AS chapter_title,
+            v.name_ru                        AS volume_title,
+            p.title                          AS project_title
+        FROM chapters c
+            JOIN volumes v ON v.volume_id = c.volume_id
+            JOIN projects p ON p.project_id = v.project_id
+            LEFT JOIN projects p2 ON p2.project_id = p.parent_id
+        WHERE c.chapter_id = #{chapterId}
     </select>
 
     <resultMap id="chapterUrlDetailsMap" type="ru.ruranobe.mybatis.entities.additional.ChapterUrlDetails">

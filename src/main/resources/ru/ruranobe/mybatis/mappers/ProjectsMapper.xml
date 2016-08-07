@@ -30,6 +30,30 @@
         WHERE url = #{url}
     </select>
 
+    <select id="getProjectById" parameterType="Integer" resultMap="ProjectResult">
+        SELECT *
+        FROM projects
+        WHERE project_id = #{projectId}
+    </select>
+
+    <select id="getProjectUpdateDate" parameterType="Integer" resultType="java.util.Date">
+        SELECT max(show_time)
+        FROM projects
+        INNER JOIN updates USING (project_id)
+        WHERE (project_id = #{projectId} OR parent_id = #{projectId})
+        AND show_time &lt;= now()
+    </select>
+
+    <select id="getProjectEditDate" parameterType="Integer" resultType="java.util.Date">
+        SELECT max(greatest(insertion_time, publish_date))
+        FROM projects
+            INNER JOIN volumes USING (project_id)
+            INNER JOIN chapters USING (volume_id)
+            INNER JOIN texts_history USING (chapter_id)
+        WHERE (project_id = #{projectId} OR parent_id = #{projectId})
+              AND publish_date &lt;= now()
+    </select>
+
     <select id="getSubProjectsByParentProjectId" parameterType="Integer" resultMap="ProjectResult">
         SELECT *
         FROM projects
@@ -40,56 +64,56 @@
     <insert id="insertProject" parameterType="ru.ruranobe.mybatis.entities.tables.Project" keyProperty="projectId"
             useGeneratedKeys="true">
         INSERT INTO projects
-        SET parent_id       = #{parentId},
-            image_id        = #{imageId},
-            url             = #{url},
-            title           = #{title},
-            name_jp         = #{nameJp},
-            name_en         = #{nameEn},
-            name_ru         = #{nameRu},
-            name_romaji     = #{nameRomaji},
-            author          = #{author},
-            illustrator     = #{illustrator},
-            original_design = #{originalDesign},
-            original_story  = #{originalStory},
-            order_number    = #{orderNumber},
-            banner_hidden   = #{bannerHidden},
-            project_hidden  = #{projectHidden},
-            onevolume       = #{onevolume},
-        works = #{works},
-            franchise       = #{franchise},
-            annotation      = #{annotation},
-        forum_id = #{forumId},
-        status = #{status},
-        issue_status = #{issueStatus},
-        translation_status = #{translationStatus}
+        SET parent_id          = #{parentId},
+            image_id           = #{imageId},
+            url                = #{url},
+            title              = #{title},
+            name_jp            = #{nameJp},
+            name_en            = #{nameEn},
+            name_ru            = #{nameRu},
+            name_romaji        = #{nameRomaji},
+            author             = #{author},
+            illustrator        = #{illustrator},
+            original_design    = #{originalDesign},
+            original_story     = #{originalStory},
+            order_number       = #{orderNumber},
+            banner_hidden      = #{bannerHidden},
+            project_hidden     = #{projectHidden},
+            onevolume          = #{onevolume},
+            works              = #{works},
+            franchise          = #{franchise},
+            annotation         = #{annotation},
+            forum_id           = #{forumId},
+            status             = #{status},
+            issue_status       = #{issueStatus},
+            translation_status = #{translationStatus}
     </insert>
 
     <update id="updateProject" parameterType="ru.ruranobe.mybatis.entities.tables.Project">
         UPDATE projects
-        SET parent_id       = #{parentId},
-            image_id        = #{imageId},
-            url             = #{url},
-            title           = #{title},
-            name_jp         = #{nameJp},
-            name_en         = #{nameEn},
-            name_ru         = #{nameRu},
-            name_romaji     = #{nameRomaji},
-            author          = #{author},
-            illustrator     = #{illustrator},
-            original_design = #{originalDesign},
-            original_story  = #{originalStory},
-            order_number    = #{orderNumber},
-            banner_hidden   = #{bannerHidden},
-            project_hidden  = #{projectHidden},
-            onevolume       = #{onevolume},
-        works = #{works},
-            franchise       = #{franchise},
-            annotation      = #{annotation},
-        forum_id = #{forumId},
-        status = #{status},
-        issue_status = #{issueStatus},
-        translation_status = #{translationStatus}
+        SET parent_id          = #{parentId},
+            image_id           = #{imageId},
+            url                = #{url},
+            title              = #{title},
+            name_jp            = #{nameJp},
+            name_en            = #{nameEn},
+            name_ru            = #{nameRu},
+            name_romaji        = #{nameRomaji},
+            author             = #{author},
+            illustrator        = #{illustrator},
+            original_design    = #{originalDesign},
+            original_story     = #{originalStory},
+            order_number       = #{orderNumber},
+            banner_hidden      = #{bannerHidden},
+            project_hidden     = #{projectHidden},
+            onevolume          = #{onevolume},
+            works              = #{works},
+            franchise          = #{franchise},
+            annotation         = #{annotation},
+            forum_id           = #{forumId},
+            status             = #{status},
+            issue_status       = #{issueStatus},
+            translation_status = #{translationStatus}
         WHERE project_id = #{projectId}
     </update>
 

@@ -127,6 +127,7 @@ public class Editor extends AdminLayoutPage implements InstantiationSecurityChec
 
                         String heading = ChapterTextParser.getChapterHeading(chapter);
                         String body = parser.parseWikiText(ChapterTextParser.getChapterExternalResources(chapter, session), true);
+                        body = ChapterTextParser.replaceNonColoredImages(body);
                         StringBuilder footnotes = new StringBuilder();
                         ChapterTextParser.addFootnotes(footnotes, parser.getFootnotes());
                         ChapterTextParser.endFootnotes(footnotes);

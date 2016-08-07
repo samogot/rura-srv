@@ -1,56 +1,106 @@
 package ru.ruranobe.wicket.resources.rest;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.ibatis.session.SqlSession;
-import org.apache.wicket.request.http.WebResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.wicketstuff.rest.annotations.MethodMapping;
 import org.wicketstuff.rest.annotations.ResourcePath;
 import org.wicketstuff.rest.annotations.parameters.RequestParam;
 import org.wicketstuff.rest.annotations.parameters.ValidatorKey;
-import org.wicketstuff.rest.resource.gson.GsonRestResource;
+import org.wicketstuff.rest.contenthandling.json.webserialdeserial.JsonWebSerialDeserial;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.User;
 import ru.ruranobe.mybatis.mappers.UsersMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
+import ru.ruranobe.wicket.LoginSession;
+import ru.ruranobe.wicket.resources.rest.base.AuthorizeInvocation;
+import ru.ruranobe.wicket.resources.rest.base.FieldFilteringUtils;
+import ru.ruranobe.wicket.resources.rest.base.GsonObjectRestResource;
 import ru.ruranobe.wicket.validators.AllowedFieldsValidator;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 @ResourcePath("/api/users")
-public class UsersRestWebService extends GsonRestResource
+public class UsersRestWebService extends GsonObjectRestResource
 {
 
     @MethodMapping("/search")
     public Collection<User> searchUsers(@RequestParam("q") String query,
-                                        @RequestParam(value = "fields", required = false, defaultValue = "user_id,username")
-                                        @ValidatorKey("fields_validator") String columns)
+                                        @RequestParam(value = "fields", required = false, defaultValue = "userId|username")
+                                        @ValidatorKey("user_fields_validator") String fieldsString)
     {
+        HashSet<String> fields = FieldFilteringUtils.parseFieldsList(fieldsString);
+        if (!LoginSession.get().hasRole("ADMIN"))
+        {
+            for (String field : ALLOWED_ADMIN_USER_FIELD_LIST)
+            {
+                if (fields.contains(field))
+                {
+                    throw getUnauthorizedException().setDescription("Field \"" + field + "\" allowed only for admins");
+                }
+            }
+        }
         try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
         {
             UsersMapper usersMapper = CachingFacade.getCacheableMapper(session, UsersMapper.class);
-            return usersMapper.searchUsersByUsernameWithCustomColumns(query, columns);
+            Collection<User> users = usersMapper.searchUsersByUsername(query);
+            for (User user : users)
+            {
+                FieldFilteringUtils.filterAllowedFields(user, fields);
+            }
+            return users;
         }
     }
 
-    @Override
-    @SuppressWarnings("deprecation")
-    protected void onInitialize(org.wicketstuff.rest.resource.gson.GsonSerialDeserial objSerialDeserial)
+    @AuthorizeInvocation("USER")
+    @MethodMapping("/{userId}")
+    public User getUser(Integer userId,
+                        @RequestParam(value = "fields", required = false, defaultValue = "userId|username|realname|registrationDate")
+                        @ValidatorKey("user_fields_validator") String fieldsString)
     {
-        registerValidator("fields_validator", new AllowedFieldsValidator(ALLOWED_FIELD_LIST).setParamName("fields"));
+        HashSet<String> fields = FieldFilteringUtils.parseFieldsList(fieldsString);
+        if (!LoginSession.get().hasRole("ADMIN"))
+        {
+            for (String field : ALLOWED_ADMIN_USER_FIELD_LIST)
+            {
+                if (fields.contains(field))
+                {
+                    throw getUnauthorizedException().setDescription("Field \"" + field + "\" allowed only for admins");
+                }
+            }
+        }
+        try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
+        {
+            UsersMapper usersMapper = CachingFacade.getCacheableMapper(session, UsersMapper.class);
+            User user = usersMapper.getUserById(userId);
+            FieldFilteringUtils.filterAllowedFields(user, fields);
+            return user;
+        }
+    }
+
+    @AuthorizeInvocation("USER")
+    @MethodMapping("/me")
+    public User getSelf(@RequestParam(value = "fields", required = false, defaultValue = "userId|username|realname|email|registrationDate")
+                        @ValidatorKey("user_fields_validator") String fieldsString)
+    {
+        HashSet<String> fields = FieldFilteringUtils.parseFieldsList(fieldsString);
+        User user = SerializationUtils.clone(LoginSession.get().getUser());
+        FieldFilteringUtils.filterAllowedFields(user, fields);
+        return user;
     }
 
     @Override
-    protected void handleException(WebResponse response, Exception exception)
+    protected void onInitialize(JsonWebSerialDeserial objSerialDeserial)
     {
-        super.handleException(response, exception);
-        LOG.error("Error in REST API call", exception);
+        super.onInitialize(objSerialDeserial);
+        registerValidator("user_fields_validator", new AllowedFieldsValidator(ALLOWED_FIELD_LIST).setParamName("fields"));
     }
-
-    private static final Logger LOG = LoggerFactory.getLogger(UsersRestWebService.class);
-    private static final List<String> ALLOWED_FIELD_LIST = Arrays.asList("user_id", "username", "realname", "email",
-            "registration_date", "converter_type", "navigation_type", "convert_with_imgs",
-            "adult", "prefer_colored_imgs", "convert_imgs_size");
+    private static final List<String> ALLOWED_FIELD_LIST = Arrays.asList("userId", "username", "realname", "email",
+            "registrationDate", "converterType", "navigationType", "convertWithImgs", "adult", "preferColoredImgs",
+            "showHiddenContent", "convertImgsSize");
+    private static final List<String> ALLOWED_ADMIN_USER_FIELD_LIST = Arrays.asList("email",
+            "converterType", "navigationType", "convertWithImgs", "adult", "preferColoredImgs",
+            "showHiddenContent", "convertImgsSize");
 }

@@ -42,49 +42,49 @@
         SELECT count(*)
         FROM updates
         WHERE (volume_id = #{volumeId} OR #{volumeId} IS NULL)
-        AND (project_id = #{projectId} OR #{projectId} IS NULL)
-        AND (update_type = #{updateType} OR #{updateType} IS NULL)
+              AND (project_id = #{projectId} OR #{projectId} IS NULL)
+              AND (update_type = #{updateType} OR #{updateType} IS NULL)
     </select>
 
     <select id="getUpdatesByVolumeId" resultType="ru.ruranobe.mybatis.entities.tables.Update">
         SELECT
-        updates.update_id AS updateId,
+            updates.update_id   AS updateId,
             updates.update_type AS updateType,
             updates.update_type AS updateType,
-        updates.project_id AS projectId,
-        updates.volume_id AS volumeId,
-        updates.chapter_id AS chapterId,
-        updates.show_time AS showTime,
+            updates.project_id  AS projectId,
+            updates.volume_id   AS volumeId,
+            updates.chapter_id  AS chapterId,
+            updates.show_time   AS showTime,
             updates.description AS description
         FROM updates
-        WHERE volume_id =#{volumeId}
+        WHERE volume_id = #{volumeId}
     </select>
 
     <insert id="insertUpdate" parameterType="ru.ruranobe.mybatis.entities.tables.Update" keyProperty="updateId"
             useGeneratedKeys="true">
         INSERT INTO updates
-        SET project_id = #{projectId},
-        volume_id = #{volumeId},
-        chapter_id = #{chapterId},
-        update_type = #{updateType},
-        show_time = #{showTime},
-        description = #{description}
+        SET project_id  = #{projectId},
+            volume_id   = #{volumeId},
+            chapter_id  = #{chapterId},
+            update_type = #{updateType},
+            show_time   = #{showTime},
+            description = #{description}
     </insert>
 
     <delete id="deleteUpdate" parameterType="int">
         DELETE FROM updates
-        WHERE update_id =#{updateId}
+        WHERE update_id = #{updateId}
     </delete>
 
     <update id="updateUpdate" parameterType="ru.ruranobe.mybatis.entities.tables.Update">
         UPDATE updates
-        SET project_id = #{projectId},
-        volume_id = #{volumeId},
-        chapter_id = #{chapterId},
-        update_type = #{updateType},
-        show_time = #{showTime},
-        description = #{description}
-        WHERE update_id =#{updateId}
+        SET project_id  = #{projectId},
+            volume_id   = #{volumeId},
+            chapter_id  = #{chapterId},
+            update_type = #{updateType},
+            show_time   = #{showTime},
+            description = #{description}
+        WHERE update_id = #{updateId}
     </update>
 
     <!--TODO: add resultMap-->

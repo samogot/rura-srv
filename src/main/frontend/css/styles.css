@@ -1162,6 +1162,7 @@ center.project {
     min-height: 40px;
     float: left;
     padding-top: 11px;
+    margin-bottom: 1px;
 }
 
 .nextVolume > div > a {
@@ -1187,13 +1188,13 @@ center.project {
 }
 
 aside > .actions > div:hover {
-    background: rgb(231, 231, 231) no-repeat 5% 50%;
+    background: rgb(231, 231, 231) no-repeat 10px 50%;
 }
 
 .actions > div {
     padding: 5px 5px 5px 35px;
     width: 100%;
-    background: no-repeat scroll 5% 50% #F2F2F2;
+    background: no-repeat scroll 10px 50% #F2F2F2;
     margin-bottom: 1px;
     white-space: nowrap;
     overflow: hidden;

@@ -118,7 +118,7 @@ public abstract class BaseLayoutPage extends WebPage
         if (!LoginSession.get().isForceDesktopVersion())
         {
             forceDesktopVersionLink.add(new AttributeAppender("class", " visible-xs-inline"));
-            forceDesktopVersionLink.setBody(Model.of("Полня версия"));
+            forceDesktopVersionLink.setBody(Model.of("Полная версия"));
         }
         else
         {

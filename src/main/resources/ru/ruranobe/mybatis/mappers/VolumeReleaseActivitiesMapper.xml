@@ -8,13 +8,13 @@
         SELECT
             vra.*,
             activity_name,
-        nickname,
-        team_name,
-        team_website_link
+            nickname,
+            team_name,
+            team_website_link
         FROM volume_release_activities vra
             INNER JOIN volume_activities USING (activity_id)
             INNER JOIN team_members USING (member_id)
-        LEFT JOIN teams USING (team_id)
+            LEFT JOIN teams USING (team_id)
         WHERE volume_id = #{volumeId}
         ORDER BY order_number
     </select>

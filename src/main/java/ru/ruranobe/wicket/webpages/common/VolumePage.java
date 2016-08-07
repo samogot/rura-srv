@@ -59,7 +59,7 @@ public class VolumePage extends SidebarLayoutPage
 
             redirectTo404IfArgumentIsNull(project);
 
-            if (project.isWorks())
+            if (project.getWorks())
             {
                 addBodyClassAttribute("works");
             }
@@ -69,7 +69,7 @@ public class VolumePage extends SidebarLayoutPage
             final Volume volume = volumesMapperCacheable.getVolumeNextPrevByUrl(volumeUrl);
 
             redirectTo404IfArgumentIsNull(volume);
-            redirectTo404((project.isProjectHidden() && !project.isWorks()
+            redirectTo404((project.getProjectHidden() && !project.getWorks()
                            || volume.getVolumeStatus().equals(RuraConstants.VOLUME_STATUS_HIDDEN))
                           && !LoginSession.get().isProjectEditAllowedByUser(projectUrlValue));
 
@@ -227,10 +227,7 @@ public class VolumePage extends SidebarLayoutPage
             }
             add(readAllLink);
 
-            add(new ExternalLink("mobilefb2pic", "/d/fb2/" + volumeUrl));
-            add(new ExternalLink("mobilefb2nopic", "/d/fb2/" + volumeUrl + "?pic=0"));
-            add(new ExternalLink("mobiledocx", "/d/docx/" + volumeUrl));
-            add(new ExternalLink("mobileepub", "/d/epub/" + volumeUrl));
+            add(new DownloadsSidebarModule("mobileDownload", volume.getUrlParameters()));
 
             add(new CommentsPanel("comments", volume.getTopicId()));
             sidebarModules.add(new DownloadsSidebarModule(volume.getUrlParameters()));

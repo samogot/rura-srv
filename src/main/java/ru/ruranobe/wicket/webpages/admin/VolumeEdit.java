@@ -45,6 +45,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.ruranobe.config.ApplicationContext;
+import ru.ruranobe.engine.ForumApiUtils;
 import ru.ruranobe.engine.Webpage;
 import ru.ruranobe.engine.image.ImageServices;
 import ru.ruranobe.engine.image.RuraImage;
@@ -231,6 +232,23 @@ public class VolumeEdit extends AdminLayoutPage implements InstantiationSecurity
                 try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
                 {
                     VolumesMapper mapper = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
+                    Volume prevItem = mapper.getVolumeById(volume.getVolumeId());
+                    if (RuraConstants.VOLUME_STATUS_HIDDEN.equals(prevItem.getVolumeStatus()) &&
+                        !RuraConstants.VOLUME_STATUS_HIDDEN.equals(volume.getVolumeStatus()) &&
+                        prevItem.getTopicId() == null)
+                    {
+                        ForumApiUtils.createTopic(volume, volume.getProject().getForumId());
+                    }
+                    else if (!prevItem.getUrl().equals(volume.getUrl()))
+                    {
+                        ForumApiUtils.updateTopic(volume);
+                        mapper.updateChaptersUrl(volume);
+                        setResponsePage(VolumeEdit.class, volume.getUrlParameters());
+                    }
+                    else if (!prevItem.getNameTitle().equals(volume.getNameTitle()))
+                    {
+                        ForumApiUtils.updateTopic(volume);
+                    }
                     mapper.updateVolume(volume);
                     session.commit();
                 }
@@ -276,7 +294,7 @@ public class VolumeEdit extends AdminLayoutPage implements InstantiationSecurity
                         add(new TextArea<String>("annotation"));
                         add(new CheckBox("adult"));
                         add(new NumberTextField<Integer>("topicId").setMinimum(1).add(new AttributeModifier(
-                                "data-forum-id", volume.getProject().getForumId())));
+                                "data-forum-id", volume.getProject().getForumId())).setVisible(LoginSession.get().hasRole("ADMIN")));
                     }
                 };
             }
@@ -773,8 +791,8 @@ public class VolumeEdit extends AdminLayoutPage implements InstantiationSecurity
                             target.add(selectorBlockItem);
                             target.appendJavaScript(String.format(
                                     "$('#%s .list-group.select.sortable').trigger('sortupdate');" +
-                                    "$('#%s').click();"                                           +
-                                    "initFormItemFileUpload('#%s .image-data-main');"             +
+                                    "$('#%s').click();" +
+                                    "initFormItemFileUpload('#%s .image-data-main');" +
                                     "initFormItemFileUpload('#%s .image-data-color');",
                                     form.getMarkupId(), selectorBlockItem.getMarkupId(),
                                     formBlockItem.getMarkupId(), formBlockItem.getMarkupId()));

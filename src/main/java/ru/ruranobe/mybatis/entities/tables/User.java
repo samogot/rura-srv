@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class User implements Serializable
 {
-    public Boolean isShowHiddenContent()
+    public Boolean getShowHiddenContent()
     {
         return showHiddenContent;
     }
@@ -34,14 +34,14 @@ public class User implements Serializable
     private String email;
     private String emailToken;
     private Date emailTokenDate;
-    private Boolean emailActivated;
+    private Boolean emailActivated = false;
     private Date registrationDate;
     private String converterType;
     private String navigationType;
-    private Boolean convertWithImgs;
-    private Boolean adult;
-    private Boolean preferColoredImgs;
-    private Boolean showHiddenContent;
+    private Boolean convertWithImgs = true;
+    private Boolean adult = false;
+    private Boolean preferColoredImgs = true;
+    private Boolean showHiddenContent = false;
     private Integer convertImgsSize;
 
     public User()
@@ -158,12 +158,12 @@ public class User implements Serializable
         this.emailTokenDate = emailTokenDate;
     }
 
-    public Boolean isEmailActivated()
+    public Boolean getEmailActivated()
     {
         return emailActivated;
     }
 
-    public void setEmailActivated(boolean emailActivated)
+    public void setEmailActivated(Boolean emailActivated)
     {
         this.emailActivated = emailActivated;
     }
@@ -198,12 +198,12 @@ public class User implements Serializable
         this.passRecoveryTokenDate = passRecoveryTokenDate;
     }
 
-    public Boolean isAdult()
+    public Boolean getAdult()
     {
         return adult;
     }
 
-    public void setAdult(boolean adult)
+    public void setAdult(Boolean adult)
     {
         this.adult = adult;
     }
@@ -238,22 +238,22 @@ public class User implements Serializable
         this.navigationType = navigationType;
     }
 
-    public Boolean isConvertWithImgs()
+    public Boolean getConvertWithImgs()
     {
         return convertWithImgs;
     }
 
-    public void setConvertWithImgs(boolean convertWithImgs)
+    public void setConvertWithImgs(Boolean convertWithImgs)
     {
         this.convertWithImgs = convertWithImgs;
     }
 
-    public Boolean isPreferColoredImgs()
+    public Boolean getPreferColoredImgs()
     {
         return preferColoredImgs;
     }
 
-    public void setPreferColoredImgs(boolean preferColoredImgs)
+    public void setPreferColoredImgs(Boolean preferColoredImgs)
     {
         this.preferColoredImgs = preferColoredImgs;
     }
