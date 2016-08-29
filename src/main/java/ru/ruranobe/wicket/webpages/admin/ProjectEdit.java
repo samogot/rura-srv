@@ -22,9 +22,13 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
+
+import ru.ruranobe.cache.Cache;
+import ru.ruranobe.cache.keys.SectionProjectUrl;
 import ru.ruranobe.engine.ForumApiUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.Project;
+import ru.ruranobe.mybatis.entities.tables.SectionProject;
 import ru.ruranobe.mybatis.entities.tables.Volume;
 import ru.ruranobe.mybatis.mappers.ExternalResourcesMapper;
 import ru.ruranobe.mybatis.mappers.ProjectsMapper;
@@ -53,9 +57,12 @@ public class ProjectEdit extends AdminLayoutPage implements InstantiationSecurit
     private Project getProject(final PageParameters parameters)
     {
         String projectUrl = parameters.get("project").toOptionalString();
+        SectionProject sectionProject = Cache.SECTION_PROJECTS_BY_URL.get(new SectionProjectUrl(sectionId, projectUrl));
+
+        redirectTo404IfArgumentIsNull(sectionProject);
         try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
         {
-            return CachingFacade.getCacheableMapper(session, ProjectsMapper.class).getProjectByUrl(projectUrl);
+            return CachingFacade.getCacheableMapper(session, ProjectsMapper.class).getProjectById(sectionProject.getProjectId());
         }
     }
 
@@ -129,13 +136,14 @@ public class ProjectEdit extends AdminLayoutPage implements InstantiationSecurit
                         }
                         setResponsePage(ProjectEdit.class, project.getUrlParameters());
                     }
-                    if (!prevItem.getProjectHidden().equals(project.getProjectHidden()) ||
+                    // TODO: исправить, как станет понятен механизм работы тут
+/*                    if (!prevItem.getProjectHidden().equals(project.getProjectHidden()) ||
                         !prevItem.getWorks().equals(project.getWorks()) ||
                         !prevItem.getTitle().equals(project.getTitle()) ||
                         prevItem.getOrderNumber() <= 13 != project.getOrderNumber() <= 13)
                     {
                         ForumApiUtils.updateForum(project);
-                    }
+                    }*/
                     mapper.updateProject(project);
                     session.commit();
                 }
@@ -390,10 +398,11 @@ public class ProjectEdit extends AdminLayoutPage implements InstantiationSecurit
             {
                 Project new_project = new Project();
                 new_project.setParentId(project.getProjectId());
-                new_project.setBannerHidden(true);
-                new_project.setProjectHidden(true);
+                // TODO: исправить, как станет понятен механизм работы тут
+//                new_project.setBannerHidden(true);
+//                new_project.setProjectHidden(true);
                 new_project.setOnevolume(false);
-                new_project.setWorks(false);
+//                new_project.setWorks(false);
                 new_project.setStatus(RuraConstants.PROJECT_STATUS_LIST.get(0));
                 new_project.setForumId(project.getForumId());
                 return new_project;

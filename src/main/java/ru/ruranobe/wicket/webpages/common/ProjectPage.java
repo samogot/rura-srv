@@ -17,9 +17,13 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+
+import ru.ruranobe.cache.Cache;
+import ru.ruranobe.cache.keys.SectionProjectUrl;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.ExternalResource;
 import ru.ruranobe.mybatis.entities.tables.Project;
+import ru.ruranobe.mybatis.entities.tables.SectionProject;
 import ru.ruranobe.mybatis.entities.tables.Volume;
 import ru.ruranobe.mybatis.mappers.ExternalResourcesMapper;
 import ru.ruranobe.mybatis.mappers.ProjectsMapper;
@@ -63,7 +67,16 @@ public class ProjectPage extends SidebarLayoutPage
     public ProjectPage(PageParameters parameters)
     {
         String projectUrl = parameters.get("project").toString();
+
         redirectTo404IfArgumentIsNull(projectUrl);
+
+        SectionProject sectionProject = Cache.SECTION_PROJECTS_BY_URL.get(new SectionProjectUrl(sectionId, projectUrl));
+
+        redirectTo404IfArgumentIsNull(sectionProject);
+
+        Project mainProject = Cache.PROJECTS.get(sectionProject.getProjectId());
+
+	      redirectTo404IfArgumentIsNull(mainProject);
 
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
 
@@ -71,13 +84,10 @@ public class ProjectPage extends SidebarLayoutPage
         {
             ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
 
-            final Project mainProject = projectsMapperCacheable.getProjectByUrl(projectUrl);
-
-            redirectTo404IfArgumentIsNull(mainProject);
-            redirectTo404(mainProject.getProjectHidden() && !mainProject.getWorks()
+            redirectTo404(sectionProject.getProjectHidden() && sectionProject.getMain()
                           && !LoginSession.get().isProjectEditAllowedByUser(mainProject.getUrl()));
 
-            if (mainProject.getWorks())
+            if (!sectionProject.getMain())
             {
                 addBodyClassAttribute("works");
             }

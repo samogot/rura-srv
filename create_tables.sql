@@ -83,6 +83,32 @@ CREATE TABLE projects
   INDEX (order_number)
 );
 
+CREATE TABLE section_projects (
+  `section_id` INT(11) NOT NULL,
+  `project_id` INT(11) NOT NULL,
+  `mode` ENUM('full', 'teaser') NOT NULL,
+  `url` VARCHAR(32) NOT NULL,
+  `alias` VARCHAR(32) NOT NULL,
+  `project_hidden` TINYINT(1) NOT NULL DEFAULT 0,
+  `banner_hidden` TINYINT(1) NOT NULL DEFAULT 0,
+  `main` TINYINT(1) NOT NULL DEFAULT 0,
+  `order` INT(11) NOT NULL,
+  PRIMARY KEY (`section_id`, `project_id`),
+  UNIQUE INDEX `UQ_SECTION_URL` (`section_id` ASC, `url` ASC),
+  INDEX `fk_section_projects_project_idx` (`project_id` ASC),
+  INDEX `order_idx` (`order` ASC),
+  CONSTRAINT `fk_section_projects_section`
+    FOREIGN KEY (`section_id`)
+    REFERENCES `ruranobe_test`.`sections` (`section_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_section_projects_project`
+    FOREIGN KEY (`project_id`)
+    REFERENCES `ruranobe_test`.`projects` (`project_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
+
+
 CREATE TABLE volumes
 (
   volume_id          INT(11) PRIMARY KEY AUTO_INCREMENT,

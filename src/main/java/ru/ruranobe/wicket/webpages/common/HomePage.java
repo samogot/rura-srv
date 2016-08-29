@@ -17,8 +17,8 @@ public class HomePage extends SidebarLayoutPage
     @Override
     protected void onInitialize()
     {
-        setStatelessHint(true);
         super.onInitialize();
+
         add(new ProjectBannersList("bannersList", COUNT_OF_PROJECTS_ON_PAGE));
         add(new BookmarkablePageLink("allProjects", FullProjects.class));
         add(new UpdatesWideList("updatesList", null, null, null, 0, COUNT_OF_UPDATES_ON_PAGE));

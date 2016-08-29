@@ -46,6 +46,7 @@ public class GlobalEdit extends AdminLayoutPage
         try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
         {
             ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
+	          // TODO: исправить, как станет понятен механизм работы тут
             Collection<Project> projectsCollection = projectsMapperCacheable.getRootProjects();
             projects = Lists.newArrayList(projectsCollection);
 
@@ -77,17 +78,17 @@ public class GlobalEdit extends AdminLayoutPage
                 }
             }
         }
-
-        Collections.sort(projects, (o1, o2) -> {
-            if (o1.getWorks() != o2.getWorks())
-            {
-                return o1.getWorks().compareTo(o2.getWorks());
-            }
-            else
-            {
-                return o1.getOrderNumber().compareTo(o2.getOrderNumber());
-            }
-        });
+// TODO: исправить, как станет понятен механизм работы тут
+//        Collections.sort(projects, (o1, o2) -> {
+//            if (o1.getWorks() != o2.getWorks())
+//            {
+//                return o1.getWorks().compareTo(o2.getWorks());
+//            }
+//            else
+//            {
+//                return o1.getOrderNumber().compareTo(o2.getOrderNumber());
+//            }
+//        });
 
         HashMap<Integer, Team> teamIdToTeamMap = new HashMap<>();
         for (Team team : teams)
@@ -126,13 +127,14 @@ public class GlobalEdit extends AdminLayoutPage
                                         volumesMapper.updateVolume(volume);
                                     }
                                 }
-                                if (!prevItem.getProjectHidden().equals(item.getProjectHidden()) ||
-                                    !prevItem.getWorks().equals(item.getWorks()) ||
-                                    !prevItem.getTitle().equals(item.getTitle()) ||
-                                    prevItem.getOrderNumber() <= 13 != item.getOrderNumber() <= 13)
-                                {
-                                    ForumApiUtils.updateForum(item);
-                                }
+	                            // TODO: исправить, как станет понятен механизм работы тут
+//                                if (!prevItem.getProjectHidden().equals(item.getProjectHidden()) ||
+//                                    !prevItem.getWorks().equals(item.getWorks()) ||
+//                                    !prevItem.getTitle().equals(item.getTitle()) ||
+//                                    prevItem.getOrderNumber() <= 13 != item.getOrderNumber() <= 13)
+//                                {
+//                                    ForumApiUtils.updateForum(item);
+//                                }
                                 mapper.updateProject(item);
                             }
                             else
@@ -159,10 +161,11 @@ public class GlobalEdit extends AdminLayoutPage
             protected Project makeItem()
             {
                 Project project = new Project();
-                project.setBannerHidden(true);
-                project.setProjectHidden(true);
+	            // TODO: исправить, как станет понятен механизм работы тут
+//                project.setBannerHidden(true);
+//                project.setProjectHidden(true);
                 project.setOnevolume(false);
-                project.setWorks(false);
+//                project.setWorks(false);
                 project.setUrl("");
                 project.setStatus(RuraConstants.PROJECT_STATUS_LIST.get(0));
                 return project;

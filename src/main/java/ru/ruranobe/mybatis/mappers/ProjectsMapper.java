@@ -1,7 +1,10 @@
 package ru.ruranobe.mybatis.mappers;
 
 import org.apache.ibatis.annotations.Param;
+
+import ru.ruranobe.mybatis.entities.base.SimpleEntry;
 import ru.ruranobe.mybatis.entities.tables.Project;
+import ru.ruranobe.mybatis.entities.tables.SectionProject;
 
 import java.util.Collection;
 import java.util.Date;
@@ -9,9 +12,15 @@ import java.util.List;
 
 public interface ProjectsMapper
 {
-    void insertProject(Project project);
+    Collection<SimpleEntry<String, Integer>> getAllDomains();
 
-    Project getProjectByUrl(String url);
+    SimpleEntry<String, Integer> getDomain(@Param("domain") String domain);
+
+    List<SectionProject> getAllSectionProjects(@Param("sectionId") Integer sectionId);
+
+    SectionProject getSectionProjectByUrl(@Param("sectionId") Integer sectionId, @Param("url") String url);
+
+    void insertProject(Project project);
 
     Project getProjectById(Integer projectId);
 

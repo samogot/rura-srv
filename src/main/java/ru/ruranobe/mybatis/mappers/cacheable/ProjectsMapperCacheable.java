@@ -1,6 +1,10 @@
 package ru.ruranobe.mybatis.mappers.cacheable;
 
+import org.apache.ibatis.annotations.Param;
+
+import ru.ruranobe.mybatis.entities.base.SimpleEntry;
 import ru.ruranobe.mybatis.entities.tables.Project;
+import ru.ruranobe.mybatis.entities.tables.SectionProject;
 import ru.ruranobe.mybatis.mappers.ProjectsMapper;
 
 import java.util.ArrayList;
@@ -32,18 +36,31 @@ public class ProjectsMapperCacheable implements ProjectsMapper
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public Collection<SimpleEntry<String, Integer>> getAllDomains() {
+	    return mapper.getAllDomains();
+    }
+
+    @Override
+    public SimpleEntry<String, Integer> getDomain(@Param("domain") String domain) {
+        return mapper.getDomain(domain);
+    }
+
+    @Override
+    public List<SectionProject> getAllSectionProjects(@Param("sectionId") Integer sectionId) {
+        return mapper.getAllSectionProjects(sectionId);
+    }
+
+    @Override
+    public SectionProject getSectionProjectByUrl(@Param("sectionId") Integer sectionId, @Param("url") String url) {
+        return mapper.getSectionProjectByUrl(sectionId, url);
+    }
+
+    @Override
     public void insertProject(Project project)
     {
         mapper.insertProject(project);
         projectIdToProject.put(project.getProjectId(), project);
-    }
-
-    /* Uncacheable operation. For this operation DB level cache is used.
-     * See ProjectsMapper cache tag */
-    @Override
-    public Project getProjectByUrl(String url)
-    {
-        return mapper.getProjectByUrl(url);
     }
 
     @Override
@@ -59,8 +76,7 @@ public class ProjectsMapperCacheable implements ProjectsMapper
     }
 
     @Override
-    public Collection<Project> getAllProjects()
-    {
+    public Collection<Project> getAllProjects() {
         return new ArrayList<>(projectIdToProject.values());
     }
 

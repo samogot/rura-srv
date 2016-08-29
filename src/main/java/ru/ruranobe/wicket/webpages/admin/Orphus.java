@@ -14,14 +14,16 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+
+import ru.ruranobe.cache.Cache;
+import ru.ruranobe.cache.keys.SectionProjectUrl;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.Chapter;
 import ru.ruranobe.mybatis.entities.tables.OrphusComment;
-import ru.ruranobe.mybatis.entities.tables.Project;
+import ru.ruranobe.mybatis.entities.tables.SectionProject;
 import ru.ruranobe.mybatis.entities.tables.Volume;
 import ru.ruranobe.mybatis.mappers.ChaptersMapper;
 import ru.ruranobe.mybatis.mappers.OrphusCommentsMapper;
-import ru.ruranobe.mybatis.mappers.ProjectsMapper;
 import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.webpages.base.BaseLayoutPage;
@@ -234,13 +236,9 @@ public class Orphus extends BaseLayoutPage
             }
             else
             {
-                try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
-                {
-                    ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
-                    Project project = projectsMapperCacheable.getProjectByUrl(fullUrl.toString());
-                    redirectTo404IfArgumentIsNull(project);
-                    projectId = project.getProjectId();
-                }
+                SectionProject sectionProject = Cache.SECTION_PROJECTS_BY_URL.get(new SectionProjectUrl(sectionId, fullUrl.toString()));
+                redirectTo404IfArgumentIsNull(sectionProject);
+                projectId = sectionProject.getProjectId();
             }
         }
     }

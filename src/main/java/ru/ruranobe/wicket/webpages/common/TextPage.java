@@ -5,14 +5,17 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
+
+import ru.ruranobe.cache.Cache;
+import ru.ruranobe.cache.keys.SectionProjectUrl;
 import ru.ruranobe.engine.wiki.parser.ChapterTextParser;
 import ru.ruranobe.engine.wiki.parser.ContentItem;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.Chapter;
 import ru.ruranobe.mybatis.entities.tables.Project;
+import ru.ruranobe.mybatis.entities.tables.SectionProject;
 import ru.ruranobe.mybatis.entities.tables.Volume;
 import ru.ruranobe.mybatis.mappers.ChaptersMapper;
-import ru.ruranobe.mybatis.mappers.ProjectsMapper;
 import ru.ruranobe.mybatis.mappers.TextsMapper;
 import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
@@ -40,6 +43,20 @@ public class TextPage extends SidebarLayoutPage implements InstantiationSecurity
     {
         setStatelessHint(true);
 
+        String projectUrl = parameters.get("project").toString();
+        redirectTo404(Strings.isEmpty(projectUrl));
+
+        String volumeUrl = parameters.get("volume").toString();
+        redirectTo404(Strings.isEmpty(volumeUrl));
+
+        SectionProject sectionProject = Cache.SECTION_PROJECTS_BY_URL.get(new SectionProjectUrl(sectionId, projectUrl));
+
+        redirectTo404IfArgumentIsNull(sectionProject);
+
+        Project project = Cache.PROJECTS.get(sectionProject.getProjectId());
+
+        redirectTo404IfArgumentIsNull(project);
+
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
         StringBuilder volumeText = new StringBuilder();
         StringBuilder volumeFootnotes = new StringBuilder();
@@ -49,18 +66,7 @@ public class TextPage extends SidebarLayoutPage implements InstantiationSecurity
 
         try (SqlSession session = sessionFactory.openSession())
         {
-            String projectUrl = parameters.get("project").toString();
-            redirectTo404(Strings.isEmpty(projectUrl));
-
-            String volumeUrl = parameters.get("volume").toString();
-            redirectTo404(Strings.isEmpty(volumeUrl));
-
-            ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
-            Project project = projectsMapperCacheable.getProjectByUrl(projectUrl);
-
-            redirectTo404IfArgumentIsNull(project);
-
-            if (project.getWorks())
+            if (!sectionProject.getMain())
             {
                 addBodyClassAttribute("works");
             }
@@ -70,7 +76,7 @@ public class TextPage extends SidebarLayoutPage implements InstantiationSecurity
             volume = volumesMapperCacheable.getVolumeByUrl(projectUrl + "/" + volumeUrl);
 
             redirectTo404IfArgumentIsNull(volume);
-            redirectTo404((project.getProjectHidden() && !project.getWorks()
+            redirectTo404((sectionProject.getProjectHidden() && sectionProject.getMain()
                            || volume.getVolumeStatus().equals(RuraConstants.VOLUME_STATUS_HIDDEN))
                           && !LoginSession.get().isProjectEditAllowedByUser(projectUrl));
 

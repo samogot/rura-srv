@@ -17,6 +17,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.cookies.CookieUtils;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.wicket.LoginSession;
+import ru.ruranobe.wicket.MetaDataKeys;
 import ru.ruranobe.wicket.components.UserActionsPanel;
 import ru.ruranobe.wicket.components.modals.ModalEmailPasswordRecoveryPanel;
 import ru.ruranobe.wicket.components.modals.ModalLoginPanel;
@@ -31,12 +32,14 @@ public abstract class BaseLayoutPage extends WebPage
     protected Panel userActionsPanel = null;
     protected Panel loginPanel = null;
     protected Panel resetPasswordPanel = null;
+    protected Integer sectionId = null;
 
     public BaseLayoutPage()
     {
         checkLogin();
         body = new TransparentWebMarkupContainer("body");
         checkStyleCookies();
+        sectionId = Integer.valueOf(getRequestCycle().getMetaData(MetaDataKeys.DOMAIN));
     }
 
     private void checkStyleCookies()

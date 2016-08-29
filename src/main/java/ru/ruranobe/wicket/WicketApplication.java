@@ -1,6 +1,5 @@
 package ru.ruranobe.wicket;
 
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
@@ -16,6 +15,8 @@ import org.apache.wicket.protocol.http.servlet.ServletWebResponse;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.info.PageComponentInfo;
@@ -27,12 +28,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wicketstuff.pageserializer.kryo.KryoSerializer;
 import org.wicketstuff.rest.utils.mounting.PackageScanner;
+
+import ru.ruranobe.cache.Cache;
 import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.wicket.webpages.admin.*;
 import ru.ruranobe.wicket.webpages.common.*;
 import ru.ruranobe.wicket.webpages.personal.*;
 import ru.ruranobe.wicket.webpages.special.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
@@ -70,6 +74,18 @@ public class WicketApplication extends AuthenticatedWebApplication
         });
 
         getApplicationSettings().setAccessDeniedPage(NotFound.class);
+
+        getRequestCycleListeners().add(new AbstractRequestCycleListener() {
+            @Override
+            public void onBeginRequest(RequestCycle cycle) {
+                HttpServletRequest containerRequest = (HttpServletRequest)cycle.getRequest().getContainerRequest();
+                String host = containerRequest.getServerName();
+
+                Integer sectionId = Cache.DOMAINS.get(host);
+
+                cycle.setMetaData(MetaDataKeys.DOMAIN, sectionId.toString());
+            }
+        });
 
         getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
         getMarkupSettings().setDefaultMarkupEncoding("UTF-8");

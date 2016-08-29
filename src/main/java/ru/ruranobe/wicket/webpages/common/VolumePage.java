@@ -18,6 +18,9 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
+
+import ru.ruranobe.cache.Cache;
+import ru.ruranobe.cache.keys.SectionProjectUrl;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.*;
 import ru.ruranobe.mybatis.mappers.*;
@@ -46,20 +49,25 @@ public class VolumePage extends SidebarLayoutPage
     public VolumePage(PageParameters parameters)
     {
         setStatelessHint(true);
-        final String projectUrlValue = parameters.get("project").toString();
+
+        String projectUrlValue = parameters.get("project").toString();
         String volumeShortUrl = parameters.get("volume").toString();
+
         redirectTo404(volumeShortUrl == null || projectUrlValue == null);
+
+        SectionProject sectionProject = Cache.SECTION_PROJECTS_BY_URL.get(new SectionProjectUrl(sectionId, projectUrlValue));
+
+        redirectTo404IfArgumentIsNull(sectionProject);
+
+        Project project = Cache.PROJECTS.get(sectionProject.getProjectId());
+
+        redirectTo404IfArgumentIsNull(project);
 
         SqlSessionFactory sessionFactory = MybatisUtil.getSessionFactory();
 
         try (SqlSession session = sessionFactory.openSession())
         {
-            ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
-            Project project = projectsMapperCacheable.getProjectByUrl(projectUrlValue);
-
-            redirectTo404IfArgumentIsNull(project);
-
-            if (project.getWorks())
+            if (!sectionProject.getMain())
             {
                 addBodyClassAttribute("works");
             }
@@ -69,7 +77,7 @@ public class VolumePage extends SidebarLayoutPage
             final Volume volume = volumesMapperCacheable.getVolumeNextPrevByUrl(volumeUrl);
 
             redirectTo404IfArgumentIsNull(volume);
-            redirectTo404((project.getProjectHidden() && !project.getWorks()
+            redirectTo404((sectionProject.getProjectHidden() && sectionProject.getMain()
                            || volume.getVolumeStatus().equals(RuraConstants.VOLUME_STATUS_HIDDEN))
                           && !LoginSession.get().isProjectEditAllowedByUser(projectUrlValue));
 

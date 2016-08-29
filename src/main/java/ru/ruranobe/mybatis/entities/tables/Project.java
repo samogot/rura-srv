@@ -63,16 +63,6 @@ public class Project extends PageRepresentable implements Serializable
         this.translationStatus = translationStatus;
     }
 
-    public Boolean getWorks()
-    {
-        return works;
-    }
-
-    public void setWorks(Boolean works)
-    {
-        this.works = works;
-    }
-
     public Date getLastUpdateDate()
     {
         return lastUpdateDate;
@@ -108,10 +98,7 @@ public class Project extends PageRepresentable implements Serializable
     private String originalDesign;
     private String originalStory;
     private Integer orderNumber;
-    private Boolean bannerHidden;
-    private Boolean projectHidden;
     private Boolean onevolume;
-    private Boolean works;
     private String franchise;
     private String annotation;
     private Integer forumId;
@@ -130,8 +117,6 @@ public class Project extends PageRepresentable implements Serializable
         this.url = url;
         this.title = title;
         this.orderNumber = orderNumber;
-        this.bannerHidden = bannerHidden;
-        this.projectHidden = projectHidden;
         this.annotation = annotation;
     }
 
@@ -146,8 +131,6 @@ public class Project extends PageRepresentable implements Serializable
         subProject.setUrl(null);
         subProject.setOrderNumber(orderNumber);
         subProject.setTitle(projectTitle);
-        subProject.setBannerHidden(true);
-        subProject.setProjectHidden(false);
         subProject.setAuthor(project.getAuthor());
         subProject.setIllustrator(project.getIllustrator());
         subProject.setAnnotation("");
@@ -158,7 +141,6 @@ public class Project extends PageRepresentable implements Serializable
         subProject.setNameRomaji("");
         subProject.setNameRu("");
         subProject.setOnevolume(false);
-        subProject.setWorks(false);
         return subProject;
     }
 
@@ -187,16 +169,6 @@ public class Project extends PageRepresentable implements Serializable
         this.annotation = annotation;
     }
 
-    public Boolean getBannerHidden()
-    {
-        return bannerHidden;
-    }
-
-    public void setBannerHidden(Boolean bannerHidden)
-    {
-        this.bannerHidden = bannerHidden;
-    }
-
     public Integer getOrderNumber()
     {
         return orderNumber;
@@ -215,16 +187,6 @@ public class Project extends PageRepresentable implements Serializable
     public void setParentId(Integer parentId)
     {
         this.parentId = parentId;
-    }
-
-    public Boolean getProjectHidden()
-    {
-        return projectHidden;
-    }
-
-    public void setProjectHidden(Boolean projectHidden)
-    {
-        this.projectHidden = projectHidden;
     }
 
     public Integer getProjectId()
@@ -370,7 +332,7 @@ public class Project extends PageRepresentable implements Serializable
     @Override
     public String toString()
     {
-        return "Project{" + "projectId=" + projectId + ", parentId=" + parentId + ", imageId=" + imageId + ", url=" + url + ", title=" + title + ", orderNumber=" + orderNumber + ", bannerHidden=" + bannerHidden + ", projectHidden=" + projectHidden + ", annotation=" + annotation + '}';
+        return "Project{" + "projectId=" + projectId + ", parentId=" + parentId + ", imageId=" + imageId + ", url=" + url + ", title=" + title + ", orderNumber=" + orderNumber + ", annotation=" + annotation + '}';
     }
 
     public String getAnnotationParsed()

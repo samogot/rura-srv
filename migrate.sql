@@ -1603,3 +1603,43 @@ SET
 INSERT INTO chapters
 SET volume_id = @faq_volume_id, url = 'system/faq/50', order_number = 50, text_id = last_insert_id(),
   title       = 'Если вы не нашли ответ на свой вопрос';
+
+
+INSERT INTO section_projects (section_id, project_id, url, alias, project_hidden, banner_hidden, main, `order`)
+  SELECT
+    1,
+    project_id,
+    url,
+    url,
+    project_hidden,
+    banner_hidden,
+    1,
+    order_number
+  FROM projects p
+  WHERE works = 0 and parent_id is null;
+
+INSERT INTO section_projects (section_id, project_id, url, alias, project_hidden, banner_hidden, main, `order`)
+  SELECT
+    2,
+    project_id,
+    url,
+    url,
+    project_hidden,
+    banner_hidden,
+    1,
+    order_number
+  FROM projects p
+  WHERE works = 1 and parent_id is null;
+
+INSERT INTO section_projects (section_id, project_id, url, alias, project_hidden, banner_hidden, main, `order`)
+  SELECT
+    1,
+    project_id,
+    url,
+    url,
+    project_hidden,
+    banner_hidden,
+    0,
+    order_number
+  FROM projects p
+  WHERE works = 1 and parent_id is null;

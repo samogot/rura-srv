@@ -3,6 +3,47 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ru.ruranobe.mybatis.mappers.ProjectsMapper">
+    <resultMap id="sectionDomain" type="SimpleEntry">
+        <result property="key" column="domain" javaType="String"/>
+        <result property="value" column="section_id" javaType="Integer"/>
+    </resultMap>
+
+    <select id="getAllDomains" resultMap="sectionDomain">
+        SELECT *
+        FROM section_domains;
+    </select>
+
+    <select id="getDomain" resultMap="sectionDomain">
+        SELECT *
+        FROM section_domains
+        WHERE domain = #{domain};
+    </select>
+
+    <resultMap id="sectionProject" type="SectionProject">
+        <result property="sectionId" column="sectionId"/>
+        <result property="projectId" column="project_id"/>
+        <result property="mode" column="mode"
+                typeHandler="ru.ruranobe.mybatis.handlers.UpperToLowerCaseEnumTypeHandler"/>
+        <result property="url" column="url"/>
+        <result property="alias" column="alias"/>
+        <result property="projectHidden" column="project_hidden"/>
+        <result property="bannerHidden" column="banner_hidden"/>
+        <result property="main" column="main"/>
+        <result property="order" column="order"/>
+    </resultMap>
+
+    <select id="getAllSectionProjects" resultMap="sectionProject">
+        SELECT *
+        FROM section_projects
+        WHERE section_id = #{sectionId}
+        ORDER BY `order`;
+    </select>
+
+    <select id="getSectionProjectByUrl" resultMap="sectionProject">
+        SELECT *
+        FROM section_projects
+        WHERE section_id = #{sectionId} AND url = #{url};
+    </select>
 
     <select id="getRootProjects" resultMap="ProjectResult">
         SELECT *
@@ -24,12 +65,6 @@
         ORDER BY order_number;
     </select>
 
-    <select id="getProjectByUrl" parameterType="String" resultMap="ProjectResult">
-        SELECT *
-        FROM projects
-        WHERE url = #{url}
-    </select>
-
     <select id="getProjectById" parameterType="Integer" resultMap="ProjectResult">
         SELECT *
         FROM projects
@@ -47,11 +82,11 @@
     <select id="getProjectEditDate" parameterType="Integer" resultType="java.util.Date">
         SELECT max(greatest(insertion_time, publish_date))
         FROM projects
-            INNER JOIN volumes USING (project_id)
-            INNER JOIN chapters USING (volume_id)
-            INNER JOIN texts_history USING (chapter_id)
+        INNER JOIN volumes USING (project_id)
+        INNER JOIN chapters USING (volume_id)
+        INNER JOIN texts_history USING (chapter_id)
         WHERE (project_id = #{projectId} OR parent_id = #{projectId})
-              AND publish_date &lt;= now()
+        AND publish_date &lt;= now()
     </select>
 
     <select id="getSubProjectsByParentProjectId" parameterType="Integer" resultMap="ProjectResult">
@@ -64,56 +99,50 @@
     <insert id="insertProject" parameterType="ru.ruranobe.mybatis.entities.tables.Project" keyProperty="projectId"
             useGeneratedKeys="true">
         INSERT INTO projects
-        SET parent_id          = #{parentId},
-            image_id           = #{imageId},
-            url                = #{url},
-            title              = #{title},
-            name_jp            = #{nameJp},
-            name_en            = #{nameEn},
-            name_ru            = #{nameRu},
-            name_romaji        = #{nameRomaji},
-            author             = #{author},
-            illustrator        = #{illustrator},
-            original_design    = #{originalDesign},
-            original_story     = #{originalStory},
-            order_number       = #{orderNumber},
-            banner_hidden      = #{bannerHidden},
-            project_hidden     = #{projectHidden},
-            onevolume          = #{onevolume},
-            works              = #{works},
-            franchise          = #{franchise},
-            annotation         = #{annotation},
-            forum_id           = #{forumId},
-            status             = #{status},
-            issue_status       = #{issueStatus},
-            translation_status = #{translationStatus}
+        SET parent_id = #{parentId},
+        image_id = #{imageId},
+        url = #{url},
+        title = #{title},
+        name_jp = #{nameJp},
+        name_en = #{nameEn},
+        name_ru = #{nameRu},
+        name_romaji = #{nameRomaji},
+        author = #{author},
+        illustrator = #{illustrator},
+        original_design = #{originalDesign},
+        original_story = #{originalStory},
+        order_number = #{orderNumber},
+        onevolume = #{onevolume},
+        franchise = #{franchise},
+        annotation = #{annotation},
+        forum_id = #{forumId},
+        status = #{status},
+        issue_status = #{issueStatus},
+        translation_status = #{translationStatus}
     </insert>
 
     <update id="updateProject" parameterType="ru.ruranobe.mybatis.entities.tables.Project">
         UPDATE projects
-        SET parent_id          = #{parentId},
-            image_id           = #{imageId},
-            url                = #{url},
-            title              = #{title},
-            name_jp            = #{nameJp},
-            name_en            = #{nameEn},
-            name_ru            = #{nameRu},
-            name_romaji        = #{nameRomaji},
-            author             = #{author},
-            illustrator        = #{illustrator},
-            original_design    = #{originalDesign},
-            original_story     = #{originalStory},
-            order_number       = #{orderNumber},
-            banner_hidden      = #{bannerHidden},
-            project_hidden     = #{projectHidden},
-            onevolume          = #{onevolume},
-            works              = #{works},
-            franchise          = #{franchise},
-            annotation         = #{annotation},
-            forum_id           = #{forumId},
-            status             = #{status},
-            issue_status       = #{issueStatus},
-            translation_status = #{translationStatus}
+        SET parent_id = #{parentId},
+        image_id = #{imageId},
+        url = #{url},
+        title = #{title},
+        name_jp = #{nameJp},
+        name_en = #{nameEn},
+        name_ru = #{nameRu},
+        name_romaji = #{nameRomaji},
+        author = #{author},
+        illustrator = #{illustrator},
+        original_design = #{originalDesign},
+        original_story = #{originalStory},
+        order_number = #{orderNumber},
+        onevolume = #{onevolume},
+        franchise = #{franchise},
+        annotation = #{annotation},
+        forum_id = #{forumId},
+        status = #{status},
+        issue_status = #{issueStatus},
+        translation_status = #{translationStatus}
         WHERE project_id = #{projectId}
     </update>
 
@@ -162,10 +191,7 @@
         <result property="originalDesign" column="original_design"/>
         <result property="originalStory" column="original_story"/>
         <result property="orderNumber" column="order_number"/>
-        <result property="bannerHidden" column="banner_hidden" javaType="java.lang.Boolean"/>
-        <result property="projectHidden" column="project_hidden" javaType="java.lang.Boolean"/>
         <result property="onevolume" column="onevolume" javaType="java.lang.Boolean"/>
-        <result property="works" column="works" javaType="java.lang.Boolean"/>
         <result property="franchise" column="franchise"/>
         <result property="annotation" column="annotation"/>
         <result property="forumId" column="forum_id"/>

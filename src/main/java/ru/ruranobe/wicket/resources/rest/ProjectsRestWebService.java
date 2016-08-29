@@ -29,7 +29,8 @@ import java.util.List;
 @ResourcePath("/api/projects")
 public class ProjectsRestWebService extends GsonObjectRestResource
 {
-    @MethodMapping("")
+	// TODO: исправить, как станет понятен механизм работы тут
+/*    @MethodMapping("")
     public Collection<Project> getProjects(@RequestParam(value = "fields", required = false, defaultValue = DEFAULT_PROJECT_LIST_FIELDS)
                                            @ValidatorKey("project_fields_validator") String fieldsString,
                                            @RequestParam(value = "show_hidden", required = false, defaultValue = "false") boolean showHidden)
@@ -45,7 +46,7 @@ public class ProjectsRestWebService extends GsonObjectRestResource
             ProjectsMapper projectsMapper = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
             ExternalResourcesMapper externalResourcesMapper = CachingFacade.getCacheableMapper(session, ExternalResourcesMapper.class);
 
-            Collection<Project> projects = projectsMapper.getRootProjects();
+            Collection<Project> projects = projectsMapper.getRootProjects(1);
             projects.removeIf(project -> (!LoginSession.get().isProjectEditAllowedByUser(project.getUrl()) || !showHidden)
                                          && project.getProjectHidden());
             for (Project project : projects)
@@ -70,7 +71,7 @@ public class ProjectsRestWebService extends GsonObjectRestResource
         try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
         {
             ProjectsMapper projectsMapper = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
-            Project project = projectsMapper.getProjectById(projectId);
+            Project project = projectsMapper.getProjectById(1, projectId);
             if (project == null)
             {
                 throw getNotFoundException();
@@ -100,7 +101,7 @@ public class ProjectsRestWebService extends GsonObjectRestResource
             ProjectsMapper projectsMapper = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
             ExternalResourcesMapper externalResourcesMapper = CachingFacade.getCacheableMapper(session, ExternalResourcesMapper.class);
 
-            Project parentProject = projectsMapper.getProjectById(projectId);
+            Project parentProject = projectsMapper.getProjectById(1, projectId);
             if (parentProject == null)
             {
                 throw getNotFoundException();
@@ -137,7 +138,7 @@ public class ProjectsRestWebService extends GsonObjectRestResource
             ExternalResourcesMapper externalResourcesMapper = CachingFacade.getCacheableMapper(session, ExternalResourcesMapper.class);
             VolumesMapper volumesMapper = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
 
-            Project parentProject = projectsMapper.getProjectById(projectId);
+            Project parentProject = projectsMapper.getProjectById(1, projectId);
             if (parentProject == null)
             {
                 throw getNotFoundException();
@@ -183,7 +184,7 @@ public class ProjectsRestWebService extends GsonObjectRestResource
             UpdatesMapper updatesMapper = CachingFacade.getCacheableMapper(session, UpdatesMapper.class);
 
 
-            Project parentProject = projectsMapper.getProjectById(projectId);
+            Project parentProject = projectsMapper.getProjectById(1, projectId);
             if (parentProject == null)
             {
                 throw getNotFoundException();
@@ -217,5 +218,5 @@ public class ProjectsRestWebService extends GsonObjectRestResource
     private static final String DEFAULT_PROJECT_FIELDS = "title|nameJp|nameEn|nameRu|nameRomaji|author|illustrator|originalDesign|originalStory|onevolume";
     private static final String DEFAULT_SUBPROJECT_FIELDS = "projectId|title";
     private static final String DEFAULT_VOLUME_LIST_FIELDS = "volumeId|url|projectId|nameTitle|nameShort|volumeStatus";
-    private static final String DEFAULT_UPDATE_FIELDS = "volumeId|chapterId|updateType|showTime";
+    private static final String DEFAULT_UPDATE_FIELDS = "volumeId|chapterId|updateType|showTime";*/
 }

@@ -224,7 +224,8 @@ public class ForumApiUtils
 
     private static void writeForumJson(Project project, OutputStream outputStream) throws IOException
     {
-        int parentForumId, accessCopyForumId;
+// TODO: исправить, как станет понятен механизм работы тут
+/*        int parentForumId, accessCopyForumId;
         if (project.getWorks())
         {
             parentForumId = WORKS_LIST_FORUM_ID;
@@ -267,7 +268,7 @@ public class ForumApiUtils
         writer.name("enable_quick_reply").value(64);
         writer.name("forum_perm_from").value(accessCopyForumId);
         writer.endObject();
-        writer.close();
+        writer.close();*/
     }
 
     private static Integer readTopicIdFromJson(InputStream inputStream) throws IOException

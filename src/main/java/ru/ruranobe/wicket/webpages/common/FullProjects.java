@@ -7,11 +7,13 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+
+import ru.ruranobe.cache.Cache;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.ExternalResource;
 import ru.ruranobe.mybatis.entities.tables.Project;
+import ru.ruranobe.mybatis.entities.tables.SectionProject;
 import ru.ruranobe.mybatis.mappers.ExternalResourcesMapper;
-import ru.ruranobe.mybatis.mappers.ProjectsMapper;
 import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.components.sidebar.ActionsSidebarModule;
@@ -22,9 +24,9 @@ import ru.ruranobe.wicket.webpages.base.SidebarLayoutPage;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FullProjects extends SidebarLayoutPage
 {
@@ -32,25 +34,26 @@ public class FullProjects extends SidebarLayoutPage
     protected void onInitialize()
     {
         super.onInitialize();
+
+        List<SectionProject> sectionProjects = Cache.SECTION_PROJECTS.get(sectionId);
+	    List<Project> projects = sectionProjects.stream().filter(
+			    sectionProject -> !sectionProject.getProjectHidden() && sectionProject.getMain()
+	    ).map(sectionProject -> Cache.PROJECTS.get(sectionProject.getProjectId())).collect(Collectors.toList());
+
         try(SqlSession session = MybatisUtil.getSessionFactory().openSession())
         {
             List<ProjectInfo> projectsList = new ArrayList<>();
-            Collection<Project> projects = CachingFacade.getCacheableMapper(session, ProjectsMapper.class)
-                    .getAllProjects();
             ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.
                     getCacheableMapper(session, ExternalResourcesMapper.class);
             VolumesMapper volumesMapperCacheable = CachingFacade.getCacheableMapper(session, VolumesMapper.class);
 
-            for (Project project : projects)
-            {
-                if (!project.getProjectHidden() && !project.getWorks())
-                {
-                    ExternalResource image = (project.getImageId() != null) ? externalResourcesMapperCacheable.getExternalResourceById(project.getImageId())
-                                                                            : null;
-                    int volumesCount = volumesMapperCacheable.getVolumesCountByProjectId(project.getProjectId());
-                    projectsList.add(new ProjectInfo(project, image, volumesCount));
-                }
-            }
+	        for (Project project : projects) {
+		        ExternalResource image =
+				        (project.getImageId() != null) ? externalResourcesMapperCacheable.getExternalResourceById(project.getImageId())
+				                                       : null;
+		        int volumesCount = volumesMapperCacheable.getVolumesCountByProjectId(project.getProjectId());
+		        projectsList.add(new ProjectInfo(project, image, volumesCount));
+	        }
 
             Collections.sort(projectsList);
 

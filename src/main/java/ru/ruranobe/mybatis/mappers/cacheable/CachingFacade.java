@@ -34,6 +34,7 @@ public class CachingFacade
 
     public static <T> T getCacheableMapper(SqlSession session, Class<T> mapperClass)
     {
+        @SuppressWarnings("unchecked")
         Class<T> mapperCacheableClass = (Class<T>) mapperToMapperCacheable.get(mapperClass);
         if (mapperCacheableClass == null)
         {
