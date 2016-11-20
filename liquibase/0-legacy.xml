@@ -1,0 +1,811 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="PaveLiArcH (generated)" id="0-1">
+        <createTable tableName="bookmarks">
+            <column autoIncrement="true" name="bookmark_id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="chapter_id" type="INT"/>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="paragraph_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_when" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-2">
+        <createTable tableName="chapter_images">
+            <column autoIncrement="true" name="chapter_image_id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="chapter_id" type="INT"/>
+            <column name="volume_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="non_colored_image_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="colored_image_id" type="INT"/>
+            <column name="order_number" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="adult" type="BIT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-3">
+        <createTable tableName="chapters">
+            <column autoIncrement="true" name="chapter_id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="volume_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="text_id" type="INT"/>
+            <column name="url" type="VARCHAR(32)"/>
+            <column name="title" type="VARCHAR(1023)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_number" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="publish_date" type="datetime"/>
+            <column name="nested" type="BIT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-4">
+        <createTable tableName="external_resources">
+            <column autoIncrement="true" name="resource_id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="mime_type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="url" type="VARCHAR(511)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="thumbnail" type="VARCHAR(511)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="uploaded_when" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="width" type="INT"/>
+            <column name="height" type="INT"/>
+            <column name="history_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-5">
+        <createTable tableName="external_resources_history">
+            <column autoIncrement="true" name="history_id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="uploaded_when" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="colored_type" type="ENUM('main', 'color')">
+                <constraints nullable="false"/>
+            </column>
+            <column name="project_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="volume_id" type="INT"/>
+            <column name="chapter_image_id" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-6">
+        <createTable tableName="orphus_comments">
+            <column name="chapter_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="paragraph" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="start_offset" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="original_text" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="replacement_text" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="optional_comment" type="VARCHAR(255)"/>
+            <column name="user_id" type="INT"/>
+            <column name="user_ip" type="VARCHAR(15)"/>
+            <column name="created_when" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-7">
+        <createTable tableName="paragraphs">
+            <column name="paragraph_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="paragraph_text" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="text_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-8">
+        <createTable tableName="projects">
+            <column autoIncrement="true" name="project_id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="parent_id" type="INT"/>
+            <column name="image_id" type="INT"/>
+            <column name="url" type="VARCHAR(32)"/>
+            <column name="title" type="VARCHAR(1023)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name_jp" type="VARCHAR(255)"/>
+            <column name="name_en" type="VARCHAR(255)"/>
+            <column name="name_ru" type="VARCHAR(255)"/>
+            <column name="name_romaji" type="VARCHAR(255)"/>
+            <column name="author" type="VARCHAR(255)"/>
+            <column name="illustrator" type="VARCHAR(255)"/>
+            <column name="original_design" type="VARCHAR(255)"/>
+            <column name="original_story" type="VARCHAR(255)"/>
+            <column name="order_number" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="banner_hidden" type="BIT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="project_hidden" type="BIT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="onevolume" type="BIT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="franchise" type="TEXT"/>
+            <column name="annotation" type="TEXT"/>
+            <column name="forum_id" type="INT UNSIGNED"/>
+            <column name="issue_status" type="VARCHAR(255)"/>
+            <column name="translation_status" type="VARCHAR(255)"/>
+            <column name="status" type="ENUM('Выпускается', 'Окончен', 'Переведен')">
+                <constraints nullable="false"/>
+            </column>
+            <column name="works" type="BIT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-9">
+        <createTable tableName="team_members">
+            <column autoIncrement="true" name="member_id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="user_id" type="INT"/>
+            <column name="team_id" type="INT"/>
+            <column name="nickname" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-10">
+        <createTable tableName="teams">
+            <column autoIncrement="true" name="team_id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="team_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="team_website_link" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-11">
+        <createTable tableName="texts">
+            <column autoIncrement="true" name="text_id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="text_wiki" type="MEDIUMTEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="text_html" type="MEDIUMTEXT"/>
+            <column name="footnotes" type="MEDIUMTEXT"/>
+            <column name="contents" type="MEDIUMTEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-12">
+        <createTable tableName="texts_history">
+            <column autoIncrement="true" name="current_text_id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="previous_text_id" type="INT"/>
+            <column name="insertion_time" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="INT"/>
+            <column name="chapter_id" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-13">
+        <createTable tableName="updates">
+            <column autoIncrement="true" name="update_id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="project_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="volume_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="chapter_id" type="INT"/>
+            <column name="update_type" type="ENUM('Опубликован', 'Обновлен перевод', 'Глобальная редактура', 'Обновление иллюстраций')">
+                <constraints nullable="false"/>
+            </column>
+            <column name="show_time" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-14">
+        <createTable tableName="user_group_types">
+            <column autoIncrement="true" name="group_id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="group_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-15">
+        <createTable tableName="user_groups">
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="group_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-16">
+        <createTable tableName="users">
+            <column autoIncrement="true" name="user_id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="username" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="realname" type="VARCHAR(255)"/>
+            <column name="pass" type="TINYBLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pass_version" type="INT UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pass_recovery_token" type="VARCHAR(255)"/>
+            <column name="pass_recovery_token_date" type="datetime"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="email_token" type="VARCHAR(255)"/>
+            <column name="email_token_date" type="datetime"/>
+            <column defaultValueBoolean="false" name="email_activated" type="BIT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="registration_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="converter_type" type="ENUM('fb2', 'docx', 'epub')">
+                <constraints nullable="false"/>
+            </column>
+            <column name="navigation_type" type="ENUM('Главам', 'Подглавам')">
+                <constraints nullable="false"/>
+            </column>
+            <column name="convert_with_imgs" type="BIT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="adult" type="BIT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="prefer_colored_imgs" type="BIT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="false" name="show_hidden_content" type="BIT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="convert_imgs_size" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="forum_user_id" type="INT UNSIGNED"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-17">
+        <createTable tableName="volume_activities">
+            <column autoIncrement="true" name="activity_id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="activity_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="activity_type" type="ENUM('text', 'image')">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-18">
+        <createTable tableName="volume_release_activities">
+            <column autoIncrement="true" name="release_activity_id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="volume_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="activity_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="member_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_number" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="false" name="team_hidden" type="BIT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="false" name="team_show_label" type="BIT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="team_show_status" type="ENUM('show_none', 'show_nick', 'show_team')">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-19">
+        <createTable tableName="volume_statuses">
+            <column autoIncrement="true" name="status_id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="full_text" type="VARCHAR(32)"/>
+            <column name="label_text" type="VARCHAR(32)"/>
+            <column name="label_class" type="ENUM('default', 'primary', 'success', 'info', 'warning', 'danger')"/>
+            <column name="option_group" type="ENUM('basic', 'external', 'not_in_work', 'in_work', 'published', 'licensed')"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-20">
+        <createTable tableName="volumes">
+            <column autoIncrement="true" name="volume_id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="project_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image_one" type="INT"/>
+            <column name="image_two" type="INT"/>
+            <column name="image_three" type="INT"/>
+            <column name="image_four" type="INT"/>
+            <column name="url" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name_file" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name_title" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name_jp" type="VARCHAR(255)"/>
+            <column name="name_en" type="VARCHAR(255)"/>
+            <column name="name_ru" type="VARCHAR(255)"/>
+            <column name="name_romaji" type="VARCHAR(255)"/>
+            <column name="name_short" type="VARCHAR(64)"/>
+            <column name="sequence_number" type="FLOAT(12)"/>
+            <column name="author" type="VARCHAR(255)"/>
+            <column name="illustrator" type="VARCHAR(255)"/>
+            <column name="original_design" type="VARCHAR(255)"/>
+            <column name="original_story" type="VARCHAR(255)"/>
+            <column name="release_date" type="date"/>
+            <column name="ISBN" type="VARCHAR(16)"/>
+            <column name="external_url" type="VARCHAR(255)"/>
+            <column name="volume_type" type="ENUM('Ранобэ', 'Побочные истории', 'Авторские додзинси', 'Другое')">
+                <constraints nullable="false"/>
+            </column>
+            <column name="volume_status" type="ENUM('on_hold', 'no_eng', 'freeze', 'queue', 'hidden', 'auto', 'external_dropped', 'external_active', 'external_done', 'ongoing', 'translating', 'proofread', 'decor', 'done', 'license')">
+                <constraints nullable="false"/>
+            </column>
+            <column name="volume_status_hint" type="VARCHAR(255)"/>
+            <column name="adult" type="BIT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="annotation" type="TEXT"/>
+            <column name="topic_id" type="INT UNSIGNED"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-21">
+        <addPrimaryKey columnNames="chapter_id, paragraph, start_offset, original_text, replacement_text" constraintName="PRIMARY" tableName="orphus_comments"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-22">
+        <addPrimaryKey columnNames="paragraph_id" constraintName="PRIMARY" tableName="paragraphs"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-23">
+        <addUniqueConstraint columnNames="activity_name" constraintName="activity_name" tableName="volume_activities"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-24">
+        <addUniqueConstraint columnNames="group_name" constraintName="group_name" tableName="user_group_types"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-25">
+        <addUniqueConstraint columnNames="nickname" constraintName="nickname" tableName="team_members"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-26">
+        <addUniqueConstraint columnNames="project_id, sequence_number" constraintName="project_id" tableName="volumes"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-27">
+        <addUniqueConstraint columnNames="team_name" constraintName="team_name" tableName="teams"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-28">
+        <addUniqueConstraint columnNames="url" constraintName="url" tableName="chapters"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-29">
+        <addUniqueConstraint columnNames="url" constraintName="url" tableName="projects"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-30">
+        <addUniqueConstraint columnNames="url" constraintName="url" tableName="volumes"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-31">
+        <addUniqueConstraint columnNames="username" constraintName="username" tableName="users"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-32">
+        <createIndex indexName="chapter_id" tableName="orphus_comments">
+            <column name="chapter_id"/>
+            <column name="created_when"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-33">
+        <createIndex indexName="created_when" tableName="orphus_comments">
+            <column name="created_when"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-34">
+        <createIndex indexName="email" tableName="users">
+            <column name="email"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-35">
+        <createIndex indexName="email_token" tableName="users">
+            <column name="email_token"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-36">
+        <createIndex indexName="fk_activity_id" tableName="volume_release_activities">
+            <column name="activity_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-37">
+        <createIndex indexName="fk_bookmark_paragraph_id" tableName="bookmarks">
+            <column name="paragraph_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-38">
+        <createIndex indexName="fk_chapter_id" tableName="chapter_images">
+            <column name="chapter_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-39">
+        <createIndex indexName="fk_colored_image_id" tableName="chapter_images">
+            <column name="colored_image_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-40">
+        <createIndex indexName="fk_history_chapter_image_id" tableName="external_resources_history">
+            <column name="chapter_image_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-41">
+        <createIndex indexName="fk_history_id" tableName="external_resources">
+            <column name="history_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-42">
+        <createIndex indexName="fk_history_project_id" tableName="external_resources_history">
+            <column name="project_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-43">
+        <createIndex indexName="fk_history_volume_id" tableName="external_resources_history">
+            <column name="volume_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-44">
+        <createIndex indexName="fk_image_four" tableName="volumes">
+            <column name="image_four"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-45">
+        <createIndex indexName="fk_image_id" tableName="projects">
+            <column name="image_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-46">
+        <createIndex indexName="fk_image_one" tableName="volumes">
+            <column name="image_one"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-47">
+        <createIndex indexName="fk_image_three" tableName="volumes">
+            <column name="image_three"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-48">
+        <createIndex indexName="fk_image_two" tableName="volumes">
+            <column name="image_two"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-49">
+        <createIndex indexName="fk_member_id" tableName="volume_release_activities">
+            <column name="member_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-50">
+        <createIndex indexName="fk_non_colored_image_id" tableName="chapter_images">
+            <column name="non_colored_image_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-51">
+        <createIndex indexName="fk_orphus_paragraph_id" tableName="orphus_comments">
+            <column name="paragraph"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-52">
+        <createIndex indexName="fk_paragraph_text_id" tableName="paragraphs">
+            <column name="text_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-53">
+        <createIndex indexName="fk_parent_id" tableName="projects">
+            <column name="parent_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-54">
+        <createIndex indexName="fk_previous_text_id" tableName="texts_history">
+            <column name="previous_text_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-55">
+        <createIndex indexName="fk_text_id" tableName="chapters">
+            <column name="text_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-56">
+        <createIndex indexName="fk_texts_history_chapter_id" tableName="texts_history">
+            <column name="chapter_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-57">
+        <createIndex indexName="fk_texts_history_user_id" tableName="texts_history">
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-58">
+        <createIndex indexName="fk_u_chapter_id" tableName="updates">
+            <column name="chapter_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-59">
+        <createIndex indexName="fk_u_volume_id" tableName="updates">
+            <column name="volume_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-60">
+        <createIndex indexName="fk_ug_group_id" tableName="user_groups">
+            <column name="group_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-61">
+        <createIndex indexName="fk_ug_user_id" tableName="user_groups">
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-62">
+        <createIndex indexName="fk_user_bookmark_id" tableName="bookmarks">
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-63">
+        <createIndex indexName="fk_user_id" tableName="external_resources">
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-64">
+        <createIndex indexName="fk_user_id2" tableName="orphus_comments">
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-65">
+        <createIndex indexName="fk_user_id3" tableName="team_members">
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-66">
+        <createIndex indexName="fk_volume_id" tableName="chapter_images">
+            <column name="volume_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-67">
+        <createIndex indexName="order_number" tableName="projects">
+            <column name="order_number"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-68">
+        <createIndex indexName="pass_recovery_token" tableName="users">
+            <column name="pass_recovery_token"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-69">
+        <createIndex indexName="project_id" tableName="updates">
+            <column name="project_id"/>
+            <column name="show_time"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-70">
+        <createIndex indexName="show_time" tableName="updates">
+            <column name="show_time"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-71">
+        <createIndex indexName="team_id" tableName="team_members">
+            <column name="team_id"/>
+            <column name="nickname"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-72">
+        <createIndex indexName="update_type" tableName="updates">
+            <column name="update_type"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-73">
+        <createIndex indexName="update_type_2" tableName="updates">
+            <column name="update_type"/>
+            <column name="show_time"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-74">
+        <createIndex indexName="volume_id" tableName="chapters">
+            <column name="volume_id"/>
+            <column name="order_number"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-75">
+        <createIndex indexName="volume_id" tableName="volume_release_activities">
+            <column name="volume_id"/>
+            <column name="order_number"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-76">
+        <createIndex indexName="volume_id_2" tableName="volume_release_activities">
+            <column name="volume_id"/>
+            <column name="activity_id"/>
+            <column name="order_number"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-77">
+        <addForeignKeyConstraint baseColumnNames="activity_id" baseTableName="volume_release_activities" constraintName="fk_activity_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="activity_id" referencedTableName="volume_activities"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-78">
+        <addForeignKeyConstraint baseColumnNames="paragraph_id" baseTableName="bookmarks" constraintName="fk_bookmark_paragraph_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="paragraph_id" referencedTableName="paragraphs"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-79">
+        <addForeignKeyConstraint baseColumnNames="chapter_id" baseTableName="chapter_images" constraintName="fk_chapter_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="chapter_id" referencedTableName="chapters"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-80">
+        <addForeignKeyConstraint baseColumnNames="chapter_id" baseTableName="orphus_comments" constraintName="fk_chapter_id2" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="chapter_id" referencedTableName="chapters"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-81">
+        <addForeignKeyConstraint baseColumnNames="colored_image_id" baseTableName="chapter_images" constraintName="fk_colored_image_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="resource_id" referencedTableName="external_resources"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-82">
+        <addForeignKeyConstraint baseColumnNames="current_text_id" baseTableName="texts_history" constraintName="fk_current_text_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="text_id" referencedTableName="texts"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-83">
+        <addForeignKeyConstraint baseColumnNames="chapter_image_id" baseTableName="external_resources_history" constraintName="fk_history_chapter_image_id" deferrable="false" initiallyDeferred="false" onDelete="SET NULL" onUpdate="NO ACTION" referencedColumnNames="chapter_image_id" referencedTableName="chapter_images"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-84">
+        <addForeignKeyConstraint baseColumnNames="history_id" baseTableName="external_resources" constraintName="fk_history_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="history_id" referencedTableName="external_resources_history"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-85">
+        <addForeignKeyConstraint baseColumnNames="project_id" baseTableName="external_resources_history" constraintName="fk_history_project_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="project_id" referencedTableName="projects"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-86">
+        <addForeignKeyConstraint baseColumnNames="volume_id" baseTableName="external_resources_history" constraintName="fk_history_volume_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="volume_id" referencedTableName="volumes"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-87">
+        <addForeignKeyConstraint baseColumnNames="image_four" baseTableName="volumes" constraintName="fk_image_four" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="resource_id" referencedTableName="external_resources"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-88">
+        <addForeignKeyConstraint baseColumnNames="image_id" baseTableName="projects" constraintName="fk_image_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="resource_id" referencedTableName="external_resources"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-89">
+        <addForeignKeyConstraint baseColumnNames="image_one" baseTableName="volumes" constraintName="fk_image_one" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="resource_id" referencedTableName="external_resources"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-90">
+        <addForeignKeyConstraint baseColumnNames="image_three" baseTableName="volumes" constraintName="fk_image_three" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="resource_id" referencedTableName="external_resources"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-91">
+        <addForeignKeyConstraint baseColumnNames="image_two" baseTableName="volumes" constraintName="fk_image_two" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="resource_id" referencedTableName="external_resources"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-92">
+        <addForeignKeyConstraint baseColumnNames="member_id" baseTableName="volume_release_activities" constraintName="fk_member_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="member_id" referencedTableName="team_members"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-93">
+        <addForeignKeyConstraint baseColumnNames="non_colored_image_id" baseTableName="chapter_images" constraintName="fk_non_colored_image_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="resource_id" referencedTableName="external_resources"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-94">
+        <addForeignKeyConstraint baseColumnNames="paragraph" baseTableName="orphus_comments" constraintName="fk_orphus_paragraph_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="paragraph_id" referencedTableName="paragraphs"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-95">
+        <addForeignKeyConstraint baseColumnNames="text_id" baseTableName="paragraphs" constraintName="fk_paragraph_text_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="text_id" referencedTableName="texts"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-96">
+        <addForeignKeyConstraint baseColumnNames="parent_id" baseTableName="projects" constraintName="fk_parent_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="project_id" referencedTableName="projects"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-97">
+        <addForeignKeyConstraint baseColumnNames="previous_text_id" baseTableName="texts_history" constraintName="fk_previous_text_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="text_id" referencedTableName="texts"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-98">
+        <addForeignKeyConstraint baseColumnNames="project_id" baseTableName="volumes" constraintName="fk_project_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="project_id" referencedTableName="projects"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-99">
+        <addForeignKeyConstraint baseColumnNames="volume_id" baseTableName="volume_release_activities" constraintName="fk_ra_volume_id" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="volume_id" referencedTableName="volumes"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-100">
+        <addForeignKeyConstraint baseColumnNames="team_id" baseTableName="team_members" constraintName="fk_team_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="team_id" referencedTableName="teams"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-101">
+        <addForeignKeyConstraint baseColumnNames="text_id" baseTableName="chapters" constraintName="fk_text_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="text_id" referencedTableName="texts"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-102">
+        <addForeignKeyConstraint baseColumnNames="chapter_id" baseTableName="texts_history" constraintName="fk_texts_history_chapter_id" deferrable="false" initiallyDeferred="false" onDelete="SET NULL" onUpdate="NO ACTION" referencedColumnNames="chapter_id" referencedTableName="chapters"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-103">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="texts_history" constraintName="fk_texts_history_user_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="user_id" referencedTableName="users"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-104">
+        <addForeignKeyConstraint baseColumnNames="chapter_id" baseTableName="updates" constraintName="fk_u_chapter_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="chapter_id" referencedTableName="chapters"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-105">
+        <addForeignKeyConstraint baseColumnNames="project_id" baseTableName="updates" constraintName="fk_u_project_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="project_id" referencedTableName="projects"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-106">
+        <addForeignKeyConstraint baseColumnNames="volume_id" baseTableName="updates" constraintName="fk_u_volume_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="volume_id" referencedTableName="volumes"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-107">
+        <addForeignKeyConstraint baseColumnNames="group_id" baseTableName="user_groups" constraintName="fk_ug_group_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="group_id" referencedTableName="user_group_types"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-108">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_groups" constraintName="fk_ug_user_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="user_id" referencedTableName="users"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-109">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="bookmarks" constraintName="fk_user_bookmark_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="user_id" referencedTableName="users"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-110">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="external_resources" constraintName="fk_user_id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="user_id" referencedTableName="users"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-111">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="orphus_comments" constraintName="fk_user_id2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="user_id" referencedTableName="users"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-112">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="team_members" constraintName="fk_user_id3" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="user_id" referencedTableName="users"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-113">
+        <addForeignKeyConstraint baseColumnNames="volume_id" baseTableName="chapter_images" constraintName="fk_volume_id" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="volume_id" referencedTableName="volumes"/>
+    </changeSet>
+    <changeSet author="PaveLiArcH (generated)" id="0-114">
+        <addForeignKeyConstraint baseColumnNames="volume_id" baseTableName="chapters" constraintName="fk_volume_id2" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="volume_id" referencedTableName="volumes"/>
+    </changeSet>
+</databaseChangeLog>
