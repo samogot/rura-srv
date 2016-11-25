@@ -45,6 +45,7 @@ public class TextPage extends SidebarLayoutPage implements InstantiationSecurity
         StringBuilder volumeFootnotes = new StringBuilder();
         Chapter currentChapter = null;
         Volume volume;
+        Project project;
         List<Chapter> allChapterList;
 
         try (SqlSession session = sessionFactory.openSession())
@@ -56,7 +57,7 @@ public class TextPage extends SidebarLayoutPage implements InstantiationSecurity
             redirectTo404(Strings.isEmpty(volumeUrl));
 
             ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
-            Project project = projectsMapperCacheable.getProjectByUrl(projectUrl);
+            project = projectsMapperCacheable.getProjectByUrl(projectUrl);
 
             redirectTo404IfArgumentIsNull(project);
 
@@ -251,7 +252,7 @@ public class TextPage extends SidebarLayoutPage implements InstantiationSecurity
             sidebarModules.add(new ActionsSidebarModule(VolumeEdit.class, volume.getUrlParameters()));
         }
         sidebarModules.add(new UpdatesSidebarModule(volume.getProjectId()));
-        sidebarModules.add(new RequisitesSidebarModule());
+        sidebarModules.add(RequisitesSidebarModule.makeVolumeOrProjectOrDefault(volume, project));
         sidebarModules.add(new ProjectsSidebarModule());
         sidebarModules.add(new FriendsSidebarModule());
         sidebarModules.add(new ContentsModule(contentsHolders));

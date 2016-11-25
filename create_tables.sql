@@ -109,6 +109,7 @@ CREATE TABLE projects
   status             ENUM('Выпускается',
                           'Окончен',
                           'Переведен') NOT NULL,
+  requisite_id       INT(11),
   INDEX (url),
   INDEX (order_number)
 );
@@ -166,6 +167,7 @@ CREATE TABLE volumes
   adult              BOOL                NOT NULL,
   annotation         TEXT,
   topic_id           INT(11) UNSIGNED             DEFAULT NULL,
+  requisite_id       INT(11),
   INDEX (url),
   UNIQUE (project_id, sequence_number)
 );
@@ -336,6 +338,25 @@ INSERT INTO user_group_types VALUES (1, 'ADMIN');
 INSERT INTO user_group_types VALUES (2, 'TEAM MEMBER');
 INSERT INTO user_group_types VALUES (3, 'WORKS');
 
+CREATE TABLE requisites (
+  requisite_id INT AUTO_INCREMENT NOT NULL,
+  title        VARCHAR(255)       NOT NULL,
+  qiwi         VARCHAR(20)        NULL,
+  wmr          VARCHAR(13)        NULL,
+  wmu          VARCHAR(13)        NULL,
+  wmz          VARCHAR(13)        NULL,
+  wme          VARCHAR(13)        NULL,
+  wmb          VARCHAR(13)        NULL,
+  wmg          VARCHAR(13)        NULL,
+  wmk          VARCHAR(13)        NULL,
+  wmx          VARCHAR(13)        NULL,
+  yandex       VARCHAR(20)        NULL,
+  paypal       VARCHAR(254)       NULL,
+  card         VARCHAR(16)        NULL,
+  bitcoin      VARCHAR(34)        NULL,
+  CONSTRAINT PK_REQUISITES PRIMARY KEY (requisite_id)
+);
+
 ALTER TABLE paragraphs ADD CONSTRAINT fk_paragraph_text_id FOREIGN KEY (text_id) REFERENCES texts (text_id);
 
 ALTER TABLE bookmarks ADD CONSTRAINT fk_bookmark_paragraph_id FOREIGN KEY (paragraph_id) REFERENCES paragraphs (paragraph_id);
@@ -385,10 +406,16 @@ ALTER TABLE volumes ADD CONSTRAINT fk_image_two FOREIGN KEY (image_two) REFERENC
 ALTER TABLE volumes ADD CONSTRAINT fk_image_three FOREIGN KEY (image_three) REFERENCES external_resources (resource_id);
 ALTER TABLE volumes ADD CONSTRAINT fk_image_four FOREIGN KEY (image_four) REFERENCES external_resources (resource_id);
 
+ALTER TABLE volumes
+  ADD CONSTRAINT fk_volumes_requisite_id FOREIGN KEY (requisite_id) REFERENCES requisites (requisite_id);
+
 
 ALTER TABLE projects ADD CONSTRAINT fk_parent_id FOREIGN KEY (parent_id) REFERENCES projects (project_id);
 
 ALTER TABLE projects ADD CONSTRAINT fk_image_id FOREIGN KEY (image_id) REFERENCES external_resources (resource_id);
+
+ALTER TABLE projects
+  ADD CONSTRAINT fk_projects_requisite_id FOREIGN KEY (requisite_id) REFERENCES requisites (requisite_id);
 
 
 ALTER TABLE orphus_comments ADD CONSTRAINT fk_chapter_id2 FOREIGN KEY (chapter_id) REFERENCES chapters (chapter_id)

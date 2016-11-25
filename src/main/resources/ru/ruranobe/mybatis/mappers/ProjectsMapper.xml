@@ -86,7 +86,8 @@
             forum_id           = #{forumId},
             status             = #{status},
             issue_status       = #{issueStatus},
-            translation_status = #{translationStatus}
+        translation_status = #{translationStatus},
+        requisite_id = #{requisiteId}
     </insert>
 
     <update id="updateProject" parameterType="ru.ruranobe.mybatis.entities.tables.Project">
@@ -113,7 +114,8 @@
             forum_id           = #{forumId},
             status             = #{status},
             issue_status       = #{issueStatus},
-            translation_status = #{translationStatus}
+        translation_status = #{translationStatus},
+        requisite_id = #{requisiteId}
         WHERE project_id = #{projectId}
     </update>
 
@@ -172,6 +174,7 @@
         <result property="status" column="status"/>
         <result property="issueStatus" column="issue_status"/>
         <result property="translationStatus" column="translation_status"/>
+        <result property="requisiteId" column="requisite_id"/>
     </resultMap>
 
 </mapper>

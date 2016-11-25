@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ru.ruranobe.mybatis.mappers.RequisitesMapper">
+
+    <select id="getRequisiteById" parameterType="int" resultMap="RequisiteResult">
+        SELECT *
+        FROM requisites
+        WHERE requisite_id = #{requisiteId}
+    </select>
+
+    <select id="getAllRequisites" resultMap="RequisiteResult">
+        SELECT *
+        FROM requisites
+    </select>
+
+    <insert id="insertRequisite" parameterType="ru.ruranobe.mybatis.entities.tables.Requisite" keyProperty="requisiteId"
+            useGeneratedKeys="true">
+        INSERT INTO requisites
+        SET
+            title   = #{title},
+            qiwi    = #{qiwi},
+            wmr     = #{wmr},
+            wmu     = #{wmu},
+            wmz     = #{wmz},
+            wme     = #{wme},
+            wmb     = #{wmb},
+            wmg     = #{wmg},
+            wmk     = #{wmk},
+            wmx     = #{wmx},
+            yandex  = #{yandex},
+            paypal  = #{paypal},
+            card    = #{card},
+            bitcoin = #{bitcoin}
+    </insert>
+
+    <delete id="deleteRequisite" parameterType="int">
+        DELETE FROM requisites
+        WHERE requisite_id = #{requisiteId}
+    </delete>
+
+    <update id="updateRequisite" parameterType="ru.ruranobe.mybatis.entities.tables.Requisite">
+        UPDATE requisites
+        SET
+            title   = #{title},
+            qiwi    = #{qiwi},
+            wmr     = #{wmr},
+            wmu     = #{wmu},
+            wmz     = #{wmz},
+            wme     = #{wme},
+            wmb     = #{wmb},
+            wmg     = #{wmg},
+            wmk     = #{wmk},
+            wmx     = #{wmx},
+            yandex  = #{yandex},
+            paypal  = #{paypal},
+            card    = #{card},
+            bitcoin = #{bitcoin}
+        WHERE requisite_id = #{requisiteId}
+    </update>
+
+    <resultMap type="ru.ruranobe.mybatis.entities.tables.Requisite" id="RequisiteResult">
+        <id property="requisiteId" column="requisite_id"/>
+        <result property="qiwi" column="qiwi"/>
+        <result property="wmr" column="wmr"/>
+        <result property="wmu" column="wmu"/>
+        <result property="wmz" column="wmz"/>
+        <result property="wme" column="wme"/>
+        <result property="wmb" column="wmb"/>
+        <result property="wmg" column="wmg"/>
+        <result property="wmk" column="wmk"/>
+        <result property="wmx" column="wmx"/>
+        <result property="yandex" column="yandex"/>
+        <result property="paypal" column="paypal"/>
+        <result property="card" column="card"/>
+        <result property="bitcoin" column="bitcoin"/>
+    </resultMap>
+
+</mapper>

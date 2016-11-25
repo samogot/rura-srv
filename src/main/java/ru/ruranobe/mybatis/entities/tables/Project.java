@@ -12,6 +12,16 @@ import java.util.Date;
 public class Project extends PageRepresentable implements Serializable
 {
 
+    public Integer getRequisiteId()
+    {
+        return requisiteId;
+    }
+
+    public void setRequisiteId(Integer requisiteId)
+    {
+        this.requisiteId = requisiteId;
+    }
+
     public ExternalResource getImage()
     {
         return image;
@@ -93,6 +103,20 @@ public class Project extends PageRepresentable implements Serializable
         this.lastEditDate = lastEditDate;
     }
 
+    public Requisite getRequisite()
+    {
+        return requisite;
+    }
+
+    public void setRequisite(Requisite requisite)
+    {
+        this.requisite = requisite;
+        if (requisite != null)
+        {
+            requisiteId = requisite.getRequisiteId();
+        }
+    }
+
     private static final long serialVersionUID = 3L;
     private Integer projectId;
     private Integer parentId;
@@ -118,10 +142,12 @@ public class Project extends PageRepresentable implements Serializable
     private String status;
     private String issueStatus;
     private String translationStatus;
+    private Integer requisiteId;
     //optional
     private ExternalResource image;
     private Date lastUpdateDate;
     private Date lastEditDate;
+    private Requisite requisite;
 
     public Project(Integer parentId, Integer imageId, String url, String title, Integer orderNumber, boolean bannerHidden, boolean projectHidden, String annotation)
     {

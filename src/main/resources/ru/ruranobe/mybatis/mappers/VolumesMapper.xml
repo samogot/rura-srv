@@ -124,7 +124,8 @@
             volume_status_hint = #{volumeStatusHint},
             adult              = #{adult},
             annotation         = #{annotation},
-            topic_id           = #{topicId}
+        topic_id = #{topicId},
+        requisite_id = #{requisiteId}
         WHERE volume_id = #{volumeId}
     </update>
 
@@ -140,7 +141,7 @@
 
     <update id="updateChaptersUrl" parameterType="ru.ruranobe.mybatis.entities.tables.Volume">
         UPDATE chapters
-        SET url = concat(#{url},'/' , substring_index(url, '/', -1))
+        SET url = concat(#{url}, '/', substring_index(url, '/', -1))
         WHERE volume_id = #{volumeId}
     </update>
 
@@ -173,7 +174,8 @@
             volume_status_hint = #{volumeStatusHint},
             adult              = #{adult},
             annotation         = #{annotation},
-            topic_id           = #{topicId}
+        topic_id = #{topicId},
+        requisite_id = #{requisiteId}
     </insert>
 
     <delete id="deleteVolume" parameterType="int">
@@ -226,6 +228,7 @@
         <result property="nextUrl" column="next_url"/>
         <result property="nextNameShort" column="next_name_short"/>
         <result property="topicId" column="topic_id"/>
+        <result property="requisiteId" column="requisite_id"/>
     </resultMap>
 
 </mapper>

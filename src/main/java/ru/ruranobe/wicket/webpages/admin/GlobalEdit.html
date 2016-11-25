@@ -10,6 +10,7 @@
     <div wicket:id="activities"></div>
     <div wicket:id="teams"></div>
     <div wicket:id="teamMembers"></div>
+    <div wicket:id="requisites"></div>
 
     <wicket:fragment wicket:id="projectsFormItemFragment">
         <h3>Настройка серии</h3>
@@ -91,6 +92,66 @@
         <div class="form-group">
             <label wicket:for="userRoles">Роли</label>
             <select wicket:id="userRoles" class="form-control role-select" multiple></select>
+        </div>
+    </wicket:fragment>
+
+    <wicket:fragment wicket:id="requisitesFormItemFragment">
+        <h3>Настройка реквизитов</h3>
+        <div class="form-group">
+            <label wicket:for="title">Заголовок</label>
+            <input wicket:id="title" class="form-control name-input" type="text">
+        </div>
+        <div class="form-group">
+            <label wicket:for="qiwi">QIWI-кошелек</label>
+            <input wicket:id="qiwi" class="form-control" type="text">
+        </div>
+        <div class="form-group">
+            <label wicket:for="wmr">Webmoney WMR-кошелек (российский рубль)</label>
+            <input wicket:id="wmr" class="form-control" type="text">
+        </div>
+        <div class="form-group">
+            <label wicket:for="wmu">Webmoney WMU-кошелек (гривна)</label>
+            <input wicket:id="wmu" class="form-control" type="text">
+        </div>
+        <div class="form-group">
+            <label wicket:for="wmz">Webmoney WMZ-кошелек (доллар США)</label>
+            <input wicket:id="wmz" class="form-control" type="text">
+        </div>
+        <div class="form-group">
+            <label wicket:for="wme">Webmoney WME-кошелек (евро)</label>
+            <input wicket:id="wme" class="form-control" type="text">
+        </div>
+        <div class="form-group">
+            <label wicket:for="wmb">Webmoney WMB-кошелек (белорусский рубль)</label>
+            <input wicket:id="wmb" class="form-control" type="text">
+        </div>
+        <div class="form-group">
+            <label wicket:for="wmg">Webmoney WMG-кошелек (золото)</label>
+            <input wicket:id="wmg" class="form-control" type="text">
+        </div>
+        <div class="form-group">
+            <label wicket:for="wmk">Webmoney WMК-кошелек (казахский тенге)</label>
+            <input wicket:id="wmk" class="form-control" type="text">
+        </div>
+        <div class="form-group">
+            <label wicket:for="wmx">Webmoney WMX-кошелек (Bitcoin)</label>
+            <input wicket:id="wmx" class="form-control" type="text">
+        </div>
+        <div class="form-group">
+            <label wicket:for="yandex">Яндекс-деньги</label>
+            <input wicket:id="yandex" class="form-control" type="text">
+        </div>
+        <div class="form-group">
+            <label wicket:for="paypal">PayPal-кошелек</label>
+            <input wicket:id="paypal" class="form-control" type="text">
+        </div>
+        <div class="form-group">
+            <label wicket:for="card">Счет для перевода с кредиток</label>
+            <input wicket:id="card" class="form-control" type="text">
+        </div>
+        <div class="form-group">
+            <label wicket:for="bitcoin">Bitcoin адресс</label>
+            <input wicket:id="bitcoin" class="form-control" type="text">
         </div>
     </wicket:fragment>
 

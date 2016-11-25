@@ -95,7 +95,7 @@ public class Updates extends SidebarLayoutPage
         addPaginator("paginator2", searchType, page, volumeId, projectId, numberOfPages);
 
         sidebarModules.add(new ActionsSidebarModule(GlobalEdit.class, null));
-        sidebarModules.add(new RequisitesSidebarModule());
+        sidebarModules.add(RequisitesSidebarModule.makeDefault());
         sidebarModules.add(new ProjectsSidebarModule());
         sidebarModules.add(new FriendsSidebarModule());
     }

@@ -43,6 +43,7 @@ public class GlobalEdit extends AdminLayoutPage
         List<Project> projects;
         List<VolumeActivity> activities;
         List<TeamMember> teamMembers;
+        List<Requisite> requisites;
         try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
         {
             ProjectsMapper projectsMapperCacheable = CachingFacade.getCacheableMapper(session, ProjectsMapper.class);
@@ -57,6 +58,9 @@ public class GlobalEdit extends AdminLayoutPage
 
             TeamMembersMapper teamMembersMapperCacheable = CachingFacade.getCacheableMapper(session, TeamMembersMapper.class);
             teamMembers = teamMembersMapperCacheable.getAllTeamMembersWithUserName();
+
+            RequisitesMapper requisitesMapper = CachingFacade.getCacheableMapper(session, RequisitesMapper.class);
+            requisites = requisitesMapper.getAllRequisites();
 
             RolesMapper rolesMapperCacheable = CachingFacade.getCacheableMapper(session, RolesMapper.class);
             allRoles = rolesMapperCacheable.getAllUserGroups();
@@ -441,6 +445,80 @@ public class GlobalEdit extends AdminLayoutPage
                                 }
                             }
                         });
+                    }
+                };
+            }
+        });
+
+        add(new AdminAffixedListPanel<Requisite>("requisites", "Реквизиты", new ListModel<>(requisites))
+        {
+            @Override
+            public boolean onSubmit()
+            {
+                try (SqlSession session = MybatisUtil.getSessionFactory().openSession())
+                {
+                    RequisitesMapper mapper = CachingFacade.getCacheableMapper(session, RequisitesMapper.class);
+                    for (Requisite item : model.getObject())
+                    {
+                        if (!removed.contains(item))
+                        {
+                            if (item.getRequisiteId() != null)
+                            {
+                                mapper.updateRequisite(item);
+                            }
+                            else
+                            {
+                                mapper.insertRequisite(item);
+                            }
+                        }
+                    }
+                    for (Requisite removedItem : removed)
+                    {
+                        if (removedItem.getRequisiteId() != null)
+                        {
+                            mapper.deleteRequisite(removedItem.getRequisiteId());
+                        }
+                    }
+                    session.commit();
+                }
+                return true;
+            }
+
+            @Override
+            protected Requisite makeItem()
+            {
+                return new Requisite();
+            }
+
+            @Override
+            protected Component getSelectorItemLabelComponent(String id, IModel<Requisite> model)
+            {
+                return new Label(id, new PropertyModel<Team>(model, "title"));
+            }
+
+            @Override
+            protected Component getFormItemLabelComponent(String id, IModel<Requisite> model)
+            {
+                return new Fragment(id, "requisitesFormItemFragment", GlobalEdit.this, model)
+                {
+                    @Override
+                    protected void onInitialize()
+                    {
+                        super.onInitialize();
+                        add(new TextField<String>("title").setRequired(true).setLabel(Model.of("Заголовок")));
+                        add(new TextField<String>("qiwi"));
+                        add(new TextField<String>("wmr"));
+                        add(new TextField<String>("wmu"));
+                        add(new TextField<String>("wmz"));
+                        add(new TextField<String>("wme"));
+                        add(new TextField<String>("wmb"));
+                        add(new TextField<String>("wmg"));
+                        add(new TextField<String>("wmk"));
+                        add(new TextField<String>("wmx"));
+                        add(new TextField<String>("yandex"));
+                        add(new TextField<String>("paypal"));
+                        add(new TextField<String>("card"));
+                        add(new TextField<String>("bitcoin"));
                     }
                 };
             }

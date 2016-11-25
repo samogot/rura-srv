@@ -4,7 +4,6 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.wicket.markup.html.basic.Label;
 import ru.ruranobe.engine.wiki.parser.ChapterTextParser;
-import ru.ruranobe.misc.RuranobeUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.Chapter;
 import ru.ruranobe.mybatis.mappers.ChaptersMapper;
@@ -45,7 +44,7 @@ public class AboutUs extends SidebarLayoutPage
         add(new Label("htmlText", textHtml).setEscapeModelStrings(false));
 
         sidebarModules.add(new ActionsSidebarModule(Editor.class, chapter.getUrlParameters()));
-        sidebarModules.add(new RequisitesSidebarModule());
+        sidebarModules.add(RequisitesSidebarModule.makeDefault());
         sidebarModules.add(new ProjectsSidebarModule());
         sidebarModules.add(new FriendsSidebarModule());
     }

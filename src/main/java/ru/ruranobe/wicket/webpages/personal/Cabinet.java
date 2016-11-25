@@ -3,7 +3,8 @@ package ru.ruranobe.wicket.webpages.personal;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -132,7 +133,7 @@ public class Cabinet extends SidebarLayoutPage
         add(new ModalChangeEmail("settingsEmailModal"));
         add(new ModalChangePassword("settingsPassModal"));
 
-        sidebarModules.add(new RequisitesSidebarModule());
+        sidebarModules.add(RequisitesSidebarModule.makeDefault());
         sidebarModules.add(new ProjectsSidebarModule());
         sidebarModules.add(new FriendsSidebarModule());
     }

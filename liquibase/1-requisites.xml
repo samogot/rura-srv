@@ -1,0 +1,67 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="samogot" id="1-1">
+        <createTable tableName="requisites">
+            <column autoIncrement="true" name="requisite_id" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="title" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="qiwi" type="VARCHAR(20)"/>
+            <column name="wmr" type="VARCHAR(13)"/>
+            <column name="wmu" type="VARCHAR(13)"/>
+            <column name="wmz" type="VARCHAR(13)"/>
+            <column name="wme" type="VARCHAR(13)"/>
+            <column name="wmb" type="VARCHAR(13)"/>
+            <column name="wmg" type="VARCHAR(13)"/>
+            <column name="wmk" type="VARCHAR(13)"/>
+            <column name="wmx" type="VARCHAR(13)"/>
+            <column name="yandex" type="VARCHAR(20)"/>
+            <column name="paypal" type="VARCHAR(254)"/>
+            <column name="card" type="VARCHAR(16)"/>
+            <column name="bitcoin" type="VARCHAR(34)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="samogot" id="1-2">
+        <insert tableName="requisites">
+            <column name="title" value="Реквизиты проекта RuRanobe"/>
+            <column name="qiwi" value="+79116857099"/>
+            <column name="wmr" value="R125820793397"/>
+            <column name="wmu" value="U911921912420"/>
+            <column name="wmz" value="Z608138208963"/>
+            <column name="wme" value="E656434626499"/>
+            <column name="yandex" value="410012692832515"/>
+            <column name="paypal" value="paypal@ruranobe.ru"/>
+            <column name="card" value="4890494300657970"/>
+        </insert>
+    </changeSet>
+    <changeSet author="samogot" id="1-3">
+        <addColumn tableName="volumes">
+            <column name="requisite_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="samogot" id="1-4">
+        <addForeignKeyConstraint
+                constraintName="fk_volumes_requisite_id"
+                baseTableName="volumes" baseColumnNames="requisite_id"
+                referencedTableName="requisites" referencedColumnNames="requisite_id"
+                onDelete="NO ACTION" onUpdate="NO ACTION"
+        />
+    </changeSet>
+    <changeSet author="samogot" id="1-5">
+        <addColumn tableName="projects">
+            <column name="requisite_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="samogot" id="1-6">
+        <addForeignKeyConstraint
+                constraintName="fk_projects_requisite_id"
+                baseTableName="projects" baseColumnNames="requisite_id"
+                referencedTableName="requisites" referencedColumnNames="requisite_id"
+                onDelete="NO ACTION" onUpdate="NO ACTION"
+        />
+    </changeSet>
+</databaseChangeLog>

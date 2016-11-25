@@ -308,7 +308,7 @@ public class ProjectPage extends SidebarLayoutPage
 
             sidebarModules.add(new ActionsSidebarModule(ProjectEdit.class, mainProject.getUrlParameters()));
             sidebarModules.add(new UpdatesSidebarModule(mainProject.getProjectId()));
-            sidebarModules.add(new RequisitesSidebarModule());
+            sidebarModules.add(RequisitesSidebarModule.makeProjectOrDefault(mainProject));
             sidebarModules.add(new ProjectsSidebarModule());
             sidebarModules.add(new FriendsSidebarModule());
         }

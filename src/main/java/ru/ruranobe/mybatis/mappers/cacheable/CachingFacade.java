@@ -30,6 +30,7 @@ public class CachingFacade
                     .put(OrphusCommentsMapper.class, OrphusCommentsMapperCacheable.class)
                     .put(ParagraphsMapper.class, ParagraphsMapperCacheable.class)
                     .put(RolesMapper.class, RolesMapperCacheable.class)
+                    .put(RequisitesMapper.class, RequisitesMapperCacheable.class)
                     .build();
 
     public static <T> T getCacheableMapper(SqlSession session, Class<T> mapperClass)

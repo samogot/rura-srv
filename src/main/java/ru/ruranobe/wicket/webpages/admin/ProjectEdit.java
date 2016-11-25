@@ -1,5 +1,6 @@
 package ru.ruranobe.wicket.webpages.admin;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.ibatis.session.SqlSession;
@@ -25,9 +26,11 @@ import org.apache.wicket.util.string.Strings;
 import ru.ruranobe.engine.ForumApiUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
 import ru.ruranobe.mybatis.entities.tables.Project;
+import ru.ruranobe.mybatis.entities.tables.Requisite;
 import ru.ruranobe.mybatis.entities.tables.Volume;
 import ru.ruranobe.mybatis.mappers.ExternalResourcesMapper;
 import ru.ruranobe.mybatis.mappers.ProjectsMapper;
+import ru.ruranobe.mybatis.mappers.RequisitesMapper;
 import ru.ruranobe.mybatis.mappers.VolumesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.InstantiationSecurityCheck;
@@ -85,6 +88,9 @@ public class ProjectEdit extends AdminLayoutPage implements InstantiationSecurit
                 project.setImage(externalResourcesMapperCacheable.getExternalResourceById(project.getImageId()));
             }
 
+            RequisitesMapper requisitesMapper = CachingFacade.getCacheableMapper(session, RequisitesMapper.class);
+            requisites = Lists.newArrayList(requisitesMapper.getAllRequisites());
+
             subProjects = CachingFacade.getCacheableMapper(session, ProjectsMapper.class).getSubProjectsByParentProjectId(project.getProjectId());
             allProjects = new ArrayList<>();
             volumes = new ArrayList<>();
@@ -100,6 +106,12 @@ public class ProjectEdit extends AdminLayoutPage implements InstantiationSecurit
             }
         }
 
+        if (project.getRequisiteId() != null)
+        {
+            project.setRequisite(requisites.stream()
+                                           .filter(requisite -> requisite.getRequisiteId().equals(project.getRequisiteId()))
+                                           .findFirst().orElse(null));
+        }
 
         Collections.sort(subProjects, PROJECT_COMPARATOR);
         Collections.sort(allProjects, PROJECT_COMPARATOR);
@@ -172,6 +184,7 @@ public class ProjectEdit extends AdminLayoutPage implements InstantiationSecurit
                         add(new TextArea<String>("franchise"));
                         add(new TextArea<String>("annotation"));
                         add(new NumberTextField<Integer>("forumId").setMinimum(1).setVisible(LoginSession.get().hasRole("ADMIN")));
+                        add(new DropDownChoice<>("requisite", requisites).setNullValid(true).setChoiceRenderer(new ChoiceRenderer<Requisite>("title", "requisiteId")));
                     }
                 };
             }
@@ -456,5 +469,6 @@ public class ProjectEdit extends AdminLayoutPage implements InstantiationSecurit
     private final List<Project> subProjects;
     private final List<Project> allProjects;
     private final List<Volume> volumes;
+    private List<Requisite> requisites;
     private final Project project;
 }

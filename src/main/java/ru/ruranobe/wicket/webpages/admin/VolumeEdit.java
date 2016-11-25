@@ -103,6 +103,7 @@ public class VolumeEdit extends AdminLayoutPage implements InstantiationSecurity
     private List<Chapter> allChapters = new ArrayList<>();
     private List<Update> updates;
     private List<ChapterImage> volumeImages;
+    private List<Requisite> requisites;
 
     public VolumeEdit(final PageParameters parameters)
     {
@@ -141,6 +142,9 @@ public class VolumeEdit extends AdminLayoutPage implements InstantiationSecurity
             ChapterImagesMapper chapterImagesMapperCacheable = CachingFacade.getCacheableMapper(session, ChapterImagesMapper.class);
             volumeImages = chapterImagesMapperCacheable.getChapterImagesByVolumeId(volume.getVolumeId());
 
+            RequisitesMapper requisitesMapper = CachingFacade.getCacheableMapper(session, RequisitesMapper.class);
+            requisites = Lists.newArrayList(requisitesMapper.getAllRequisites());
+
             ExternalResourcesMapper externalResourcesMapperCacheable = CachingFacade.getCacheableMapper(session, ExternalResourcesMapper.class);
             if (volume.getImageOne() != null)
             {
@@ -163,6 +167,13 @@ public class VolumeEdit extends AdminLayoutPage implements InstantiationSecurity
                 volumeImages.add(Math.min(3, volumeImages.size()), new ChapterImage(null, -1, volume.getVolumeId(), null, resource, 4));
             }
 
+        }
+
+        if (volume.getRequisiteId() != null)
+        {
+            volume.setRequisite(requisites.stream()
+                                          .filter(requisite -> requisite.getRequisiteId().equals(volume.getRequisiteId()))
+                                          .findFirst().orElse(null));
         }
 
         final Map<Integer, Chapter> chaptertIdToChapter = new HashMap<>();
@@ -295,6 +306,7 @@ public class VolumeEdit extends AdminLayoutPage implements InstantiationSecurity
                         add(new CheckBox("adult"));
                         add(new NumberTextField<Integer>("topicId").setMinimum(1).add(new AttributeModifier(
                                 "data-forum-id", volume.getProject().getForumId())).setVisible(LoginSession.get().hasRole("ADMIN")));
+                        add(new DropDownChoice<>("requisite", requisites).setNullValid(true).setChoiceRenderer(new ChoiceRenderer<Requisite>("title", "requisiteId")));
                     }
                 };
             }

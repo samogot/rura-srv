@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class RuraConstants
 {
+    public static final int DEFAULT_REQUISITE_ID = 1;
     public static final String PATH_TO_P12_API_KEY = "C:/Users/Viktor/test/API Project-4143964bc63e.p12";
     public static final String GOOGLE_APPLICATION_NAME = "ruranobe";
     public static final String GOOGLE_TOKEN_SERVER_URL = "https://accounts.google.com/o/oauth2/token";

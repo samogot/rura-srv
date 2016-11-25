@@ -430,9 +430,9 @@
                 <configuration>
                     <changeLogFile>liquibase/master.xml</changeLogFile>
                     <driver>com.mysql.jdbc.Driver</driver>
-                    <url>jdbc:mysql://localhost/ruranobe_test</url>
-                    <username>root</username>
-                    <password/>
+                    <url>jdbc:mysql://localhost/ruranobe_beta</url>
+                    <username>ruranobe_beta</username>
+                    <password>123</password>
                 </configuration>
             </plugin>
             <!--This stupid idiot decided it is a good idea to include servlet-api-2.5-20081211 in the war file.

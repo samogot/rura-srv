@@ -112,7 +112,8 @@ public class VolumePage extends SidebarLayoutPage
                 covers.add(new SimpleEntry<>("", volumeCover));
             }
             add(new CoverCarousel("volumeCoverCarousel", covers));
-            if (!covers.isEmpty()) {
+            if (!covers.isEmpty())
+            {
                 WebMarkupContainer ogImage = new WebMarkupContainer("ogImage");
                 add(ogImage);
                 String absoluteUrl = RequestCycle.get().getUrlRenderer().renderFullUrl(
@@ -233,7 +234,7 @@ public class VolumePage extends SidebarLayoutPage
             sidebarModules.add(new DownloadsSidebarModule(volume.getUrlParameters()));
             sidebarModules.add(new ActionsSidebarModule(VolumeEdit.class, volume.getUrlParameters()));
             sidebarModules.add(new UpdatesSidebarModule(volume.getProjectId()));
-            sidebarModules.add(new RequisitesSidebarModule());
+            sidebarModules.add(RequisitesSidebarModule.makeVolumeOrProjectOrDefault(volume, project));
             sidebarModules.add(new ProjectsSidebarModule());
             sidebarModules.add(new FriendsSidebarModule());
         }

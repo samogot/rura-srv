@@ -68,6 +68,20 @@ public class Volume extends PageRepresentable implements Serializable, Cloneable
         this.covers = covers;
     }
 
+    public Requisite getRequisite()
+    {
+        return requisite;
+    }
+
+    public void setRequisite(Requisite requisite)
+    {
+        this.requisite = requisite;
+        if (requisite != null)
+        {
+            requisiteId = requisite.getRequisiteId();
+        }
+    }
+
     private static final long serialVersionUID = 2L;
     private Integer volumeId;
     private Integer projectId;
@@ -96,6 +110,7 @@ public class Volume extends PageRepresentable implements Serializable, Cloneable
     private String volumeStatusHint;
     private Boolean adult;
     private String annotation;
+    private Integer requisiteId;
     /* Optional */
     private String prevNameShort;
     private String prevUrl;
@@ -103,6 +118,7 @@ public class Volume extends PageRepresentable implements Serializable, Cloneable
     private String nextUrl;
     private String subProjectName;
     private transient Project project;
+    private Requisite requisite;
     private Date lastUpdateDate;
     private Date lastEditDate;
     private List<ExternalResource> covers;
@@ -493,6 +509,16 @@ public class Volume extends PageRepresentable implements Serializable, Cloneable
     public void setTopicId(Integer topicId)
     {
         this.topicId = topicId;
+    }
+
+    public Integer getRequisiteId()
+    {
+        return requisiteId;
+    }
+
+    public void setRequisiteId(Integer requisiteId)
+    {
+        this.requisiteId = requisiteId;
     }
 
     @Override

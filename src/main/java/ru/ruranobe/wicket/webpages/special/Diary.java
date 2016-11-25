@@ -101,7 +101,7 @@ public class Diary extends SidebarLayoutPage
         }
 
         sidebarModules.add(new ActionsSidebarModule(VolumeEdit.class, diaryVolume.getUrlParameters()));
-        sidebarModules.add(new RequisitesSidebarModule());
+        sidebarModules.add(RequisitesSidebarModule.makeDefault());
         sidebarModules.add(new ProjectsSidebarModule());
         sidebarModules.add(new FriendsSidebarModule());
         sidebarModules.add(new ContentsModule(contentsHolders));

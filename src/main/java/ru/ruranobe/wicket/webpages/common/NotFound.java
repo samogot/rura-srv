@@ -13,7 +13,7 @@ public class NotFound extends SidebarLayoutPage
     protected void onInitialize()
     {
         add(new BookmarkablePageLink("mainPage", WicketApplication.get().getHomePage(), null));
-        sidebarModules.add(new RequisitesSidebarModule());
+        sidebarModules.add(RequisitesSidebarModule.makeDefault());
         sidebarModules.add(new ProjectsSidebarModule());
         sidebarModules.add(new FriendsSidebarModule());
         super.onInitialize();
