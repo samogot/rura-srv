@@ -66,9 +66,12 @@ function setNameLabelText($formItem, text) {
     findNameLabel($formItem).text(text);
 }
 
+var lastScrollTop;
 $(document).on('keyup', '.name-input', function () {
     var $input = $(this);  // засовываем этот объект в переменную (на всякий случай)
     setNameLabelText($input.closest('.form-item'), $input.val());
+}).on('show.bs.collapse.rura', '.panel', function () {
+    lastScrollTop = $(window).scrollTop();
 }).on('click', 'a.list-group-item', function (event) {
     var adminBlock = $(this).closest('.admin-block');
     adminBlock.find('.form-item.in').collapse('hide');
@@ -77,11 +80,14 @@ $(document).on('keyup', '.name-input', function () {
     formItem.find('.name-input').focus();
     event.preventDefault();
     $.event.trigger('selectionChange', [$(this).index()], adminBlock.get(0), false);
+    var listGroup = $(this).closest('.list-group');
+    $(window).scrollTop(lastScrollTop);
     formItem.one('hidden.bs.collapse.rura', function () {
         formItem.collapse('show');
         formItem.off('shown.bs.collapse.rura');
     }).one('shown.bs.collapse.rura', function () {
         formItem.off('hidden.bs.collapse.rura');
+        listGroup.css('min-height', formItem.height());
     });
 });
 
