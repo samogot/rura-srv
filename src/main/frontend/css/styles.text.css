@@ -431,6 +431,7 @@ div.mistake .sendText {
     text-indent: 1em;
     text-align: justify;
     overflow-x: auto;
+    min-height: 20px;
 }
 
 /* text END */
