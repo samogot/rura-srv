@@ -35,6 +35,7 @@ public class TextPage extends SidebarLayoutPage implements InstantiationSecurity
 {
     protected String titleName;
     private Chapter chapter;
+    private Project project;
 
     public TextPage(PageParameters parameters)
     {
@@ -45,7 +46,6 @@ public class TextPage extends SidebarLayoutPage implements InstantiationSecurity
         StringBuilder volumeFootnotes = new StringBuilder();
         Chapter currentChapter = null;
         Volume volume;
-        Project project;
         List<Chapter> allChapterList;
 
         try (SqlSession session = sessionFactory.openSession())
@@ -232,11 +232,13 @@ public class TextPage extends SidebarLayoutPage implements InstantiationSecurity
 
         textPageUtils.setVisible(true);
         textPageUtils.add(homeTextLink = volume.makeBookmarkablePageLink("homeTextLink"));
-        if (currentChapter != null && currentChapter.getNextChapter() != null)
+        if (currentChapter != null && currentChapter.getNextChapter() != null
+            && (currentChapter.getNextChapter().isPublished() || LoginSession.get().isProjectShowHiddenAllowedByUser(project.getUrl())))
         {
             textPageUtils.add(nextTextLink = currentChapter.getNextChapter().makeBookmarkablePageLink("nextTextLink"));
         }
-        if (currentChapter != null && currentChapter.getPrevChapter() != null)
+        if (currentChapter != null && currentChapter.getPrevChapter() != null
+            && (currentChapter.getPrevChapter().isPublished() || LoginSession.get().isProjectShowHiddenAllowedByUser(project.getUrl())))
         {
             textPageUtils.add(prevTextLink = currentChapter.getPrevChapter().makeBookmarkablePageLink("prevTextLink"));
         }
@@ -260,7 +262,9 @@ public class TextPage extends SidebarLayoutPage implements InstantiationSecurity
 
     private void processChapterContents(Chapter chapter, List<ContentsHolder> contentsHolders, int level)
     {
-        String chapterLink = chapter.isVisibleOnPage() ? "#" + chapter.getUrlPart() : chapter.getBookmarkablePageUrlString(this);
+        String chapterLink = chapter.isVisibleOnPage() ? "#" + chapter.getUrlPart() :
+                             chapter.isPublished() || LoginSession.get().isProjectShowHiddenAllowedByUser(project.getUrl()) ?
+                             chapter.getBookmarkablePageUrlString(this) : null;
         ContentsHolder holder = new ContentsHolder(chapterLink, chapter.getTitle());
         contentsHolders.add(holder);
         if (chapter.getText() != null && !Strings.isEmpty(chapter.getText().getContents()))

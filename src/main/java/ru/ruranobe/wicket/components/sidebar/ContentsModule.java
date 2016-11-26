@@ -33,21 +33,39 @@ public class ContentsModule extends SidebarModuleBase
             protected void populateItem(ListItem<ContentsHolder> item)
             {
                 ContentsHolder ch = item.getModelObject();
-                item.add(new ExternalLink("h2Link", ch.getUrl(), ch.getTitle()));
+                String url = ch.getUrl();
+                ExternalLink link = new ExternalLink("h2Link", url, ch.getTitle());
+                if (url == null)
+                {
+                    link.add(new AttributeModifier("class", "unpublished"));
+                }
+                item.add(link);
                 item.add(new ListView<ContentsHolder>("h3Repeater", ch.getChildren())
                 {
                     @Override
                     protected void populateItem(ListItem<ContentsHolder> item)
                     {
                         ContentsHolder ch = item.getModelObject();
-                        item.add(new ExternalLink("h3Link", ch.getUrl(), ch.getTitle()));
+                        String url = ch.getUrl();
+                        ExternalLink link = new ExternalLink("h3Link", url, ch.getTitle());
+                        if (url == null)
+                        {
+                            link.add(new AttributeModifier("class", "unpublished"));
+                        }
+                        item.add(link);
                         item.add(new ListView<ContentsHolder>("h4Repeater", ch.getChildren())
                         {
                             @Override
                             protected void populateItem(ListItem<ContentsHolder> item)
                             {
                                 ContentsHolder ch = item.getModelObject();
-                                item.add(new ExternalLink("h4Link", ch.getUrl(), ch.getTitle()));
+                                String url = ch.getUrl();
+                                ExternalLink link = new ExternalLink("h4Link", url, ch.getTitle());
+                                if (url == null)
+                                {
+                                    link.add(new AttributeModifier("class", "unpublished"));
+                                }
+                                item.add(link);
                             }
 
                             @Override
