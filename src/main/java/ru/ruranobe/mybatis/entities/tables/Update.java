@@ -186,6 +186,16 @@ public class Update extends PageRepresentable implements Serializable, Comparabl
         this.chapterUrl = chapterUrl;
     }
 
+    public Boolean getWorks()
+    {
+        return works;
+    }
+
+    public void setWorks(Boolean works)
+    {
+        this.works = works;
+    }
+
     public Update()
     {
     }
@@ -214,6 +224,7 @@ public class Update extends PageRepresentable implements Serializable, Comparabl
     private String volumeUrl;
     private String chapterUrl;
     private Chapter chapter;
+    private Boolean works;
 
     public void setChapterTitle(String chapterTitle)
     {

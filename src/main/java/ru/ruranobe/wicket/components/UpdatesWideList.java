@@ -41,6 +41,11 @@ public class UpdatesWideList extends Panel
                 {
                     Update update = listItem.getModelObject();
 
+                    if (update.getWorks())
+                    {
+                        listItem.add(new AttributeAppender("class", " works"));
+                    }
+
                     String iconDivClassValue = RuraConstants.UPDATE_TYPE_TO_ICON_CLASS.get(update.getUpdateType());
                     Date updateDateValue = update.getShowTime();
                     String updateTitleValue = update.getChapterShortTitle();
