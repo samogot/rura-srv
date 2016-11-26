@@ -60,5 +60,12 @@ $(document).ready(function () {
         e.preventDefault();
         $(this).parent().children('.commentText').removeClass('overflowed');
         $(this).remove();
-    })
+    }).on('click', '.spoilbtn', function (event) {
+        event.preventDefault();
+        var trigger = $(this),
+            spoiler = trigger.closest('div').next('.spoilcontent');
+        spoiler.slideToggle('fast', function () {
+            trigger.text(spoiler.is(':visible') ? trigger.data('hide') : trigger.data('show'));
+        });
+    });
 });
