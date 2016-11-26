@@ -1686,6 +1686,11 @@ ul.ContentNav {
     position: absolute;
 }
 
+#contents-module div.affix ul#nav {
+    overflow-y: auto;
+    max-height: calc(100vh - 60px);
+}
+
 .moduleIcon.list {
     background: url("../img/list.png") no-repeat scroll 10px 20px;
     padding: 10px 0 10px 35px;
