@@ -32,7 +32,11 @@
             yandex  = #{yandex},
             paypal  = #{paypal},
             card    = #{card},
-            bitcoin = #{bitcoin}
+        bitcoin = #{bitcoin},
+        show_yandex_money_button = #{showYandexMoneyButton},
+        show_yandex_card_button = #{showYandexCardButton},
+        show_yandex_mobile_button = #{showYandexMobileButton},
+        paypal_button_id = #{paypalButtonId}
     </insert>
 
     <delete id="deleteRequisite" parameterType="int">
@@ -56,7 +60,11 @@
             yandex  = #{yandex},
             paypal  = #{paypal},
             card    = #{card},
-            bitcoin = #{bitcoin}
+        bitcoin = #{bitcoin},
+        show_yandex_money_button = #{showYandexMoneyButton},
+        show_yandex_card_button = #{showYandexCardButton},
+        show_yandex_mobile_button = #{showYandexMobileButton},
+        paypal_button_id = #{paypalButtonId}
         WHERE requisite_id = #{requisiteId}
     </update>
 
@@ -75,6 +83,10 @@
         <result property="paypal" column="paypal"/>
         <result property="card" column="card"/>
         <result property="bitcoin" column="bitcoin"/>
+        <result property="showYandexMoneyButton" column="show_yandex_money_button"/>
+        <result property="showYandexCardButton" column="show_yandex_card_button"/>
+        <result property="showYandexMobileButton" column="show_yandex_mobile_button"/>
+        <result property="paypalButtonId" column="paypal_button_id"/>
     </resultMap>
 
 </mapper>

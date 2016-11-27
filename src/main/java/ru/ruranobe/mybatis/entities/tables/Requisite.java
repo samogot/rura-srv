@@ -24,6 +24,10 @@ public class Requisite implements Serializable
     private String paypal;
     private String card;
     private String bitcoin;
+    private boolean showYandexMoneyButton = false;
+    private boolean showYandexCardButton = false;
+    private boolean showYandexMobileButton = false;
+    private String paypalButtonId;
 
     public Integer getRequisiteId()
     {
@@ -173,5 +177,45 @@ public class Requisite implements Serializable
     public void setBitcoin(String bitcoin)
     {
         this.bitcoin = bitcoin;
+    }
+
+    public boolean isShowYandexMoneyButton()
+    {
+        return showYandexMoneyButton;
+    }
+
+    public void setShowYandexMoneyButton(boolean showYandexMoneyButton)
+    {
+        this.showYandexMoneyButton = showYandexMoneyButton;
+    }
+
+    public boolean isShowYandexCardButton()
+    {
+        return showYandexCardButton;
+    }
+
+    public void setShowYandexCardButton(boolean showYandexCardButton)
+    {
+        this.showYandexCardButton = showYandexCardButton;
+    }
+
+    public boolean isShowYandexMobileButton()
+    {
+        return showYandexMobileButton;
+    }
+
+    public void setShowYandexMobileButton(boolean showYandexMobileButton)
+    {
+        this.showYandexMobileButton = showYandexMobileButton;
+    }
+
+    public String getPaypalButtonId()
+    {
+        return paypalButtonId;
+    }
+
+    public void setPaypalButtonId(String paypalButtonId)
+    {
+        this.paypalButtonId = paypalButtonId;
     }
 }

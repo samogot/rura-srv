@@ -519,6 +519,10 @@ public class GlobalEdit extends AdminLayoutPage
                         add(new TextField<String>("paypal"));
                         add(new TextField<String>("card"));
                         add(new TextField<String>("bitcoin"));
+                        add(new CheckBox("showYandexMoneyButton"));
+                        add(new CheckBox("showYandexCardButton"));
+                        add(new CheckBox("showYandexMobileButton"));
+                        add(new TextField<String>("paypalButtonId"));
                     }
                 };
             }

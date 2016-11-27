@@ -142,8 +142,33 @@
             <input wicket:id="yandex" class="form-control" type="text">
         </div>
         <div class="form-group">
+            <div class="checkbox">
+                <label><input wicket:id="showYandexMoneyButton" type="checkbox"> Показать кнопку пожертвований с
+                    кошелька Яндекс-деньги</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="checkbox">
+                <label><input wicket:id="showYandexCardButton" type="checkbox"> Показать кнопку пожертвований с
+                    карты</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="checkbox">
+                <label><input wicket:id="showYandexMobileButton" type="checkbox"> Показать кнопку пожертвований с
+                    мобильного счета</label>
+            </div>
+        </div>
+        <div class="form-group">
             <label wicket:for="paypal">PayPal-кошелек</label>
             <input wicket:id="paypal" class="form-control" type="text">
+        </div>
+        <div class="form-group">
+            <label wicket:for="paypalButtonId">
+                Идентификационный номер
+                <a href="https://www.paypal.com/buttons/paymentbuttons/donate/create">кнопки пожертвований PayPal</a>
+            </label>
+            <input wicket:id="paypalButtonId" class="form-control" type="text">
         </div>
         <div class="form-group">
             <label wicket:for="card">Счет для перевода с кредиток</label>

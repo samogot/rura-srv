@@ -64,4 +64,25 @@
                 onDelete="NO ACTION" onUpdate="NO ACTION"
         />
     </changeSet>
+    <changeSet author="samogot" id="1-7">
+        <addColumn tableName="requisites">
+            <column name="show_yandex_money_button" type="BOOLEAN" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="show_yandex_card_button" type="BOOLEAN" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="show_yandex_mobile_button" type="BOOLEAN" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="paypal_button_id" type="VARCHAR(13)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="samogot" id="1-8">
+        <update tableName="requisites">
+            <column name="title" value="На развитие RuRanobe"/>
+            <column name="paypal_button_id" value="LMLKD2SR2FLMA"/>
+            <where>requisite_id=1</where>
+        </update>
+    </changeSet>
 </databaseChangeLog>
