@@ -2016,3 +2016,55 @@ form.admin-block {
 .diary-img {
     background-image: url('../img/diary.png');
 }
+
+.actions .edit-icon {
+    background-image: url(/img/actions/edit.png);
+}
+
+.actions .edit_base-icon {
+    background-image: url(/img/actions/edit_base.png);
+}
+
+.actions .history-icon {
+    background-image: url(/img/actions/history.png);
+}
+
+.actions .protect-icon {
+    background-image: url(/img/actions/protect.png);
+}
+
+.actions .remove-icon {
+    background-image: url(/img/actions/remove.png);
+}
+
+.actions .rename-icon {
+    background-image: url(/img/actions/rename.png);
+}
+
+.actions .track-icon {
+    background-image: url(/img/actions/track.png);
+}
+
+.actions .qiwi-icon {
+    background-image: url(/img/requisites/qiwi.png);
+}
+
+.actions .webmoney-icon {
+    background-image: url(/img/requisites/webmoney.png);
+}
+
+.actions .yandex-icon {
+    background-image: url(/img/requisites/yandex.png);
+}
+
+.actions .paypal-icon {
+    background-image: url(/img/requisites/paypal.png);
+}
+
+.actions .card-icon {
+    background-image: url(/img/requisites/card.png);
+}
+
+.actions .bitcoin-icon {
+    background-image: url(/img/requisites/bitcoin.png);
+}

@@ -49,3 +49,17 @@ body.works .navbar-brand {
 .works .updTitle {
     background-color: #dbfaf7;
 }
+
+.night .works.updBlock,
+.night .works .updTitle {
+    background-color: #424242;
+}
+
+.night .works .updDate,
+.night .works .updType {
+    background-color: #222222;
+}
+
+.night .works .updIcon {
+    background-color: #b8cad5;
+}

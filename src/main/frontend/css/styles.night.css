@@ -3,6 +3,7 @@
 body.night .panel .row {
     color: #282828;
 }
+
 body.night input,
 body.night textarea,
 body.night select,
@@ -10,7 +11,7 @@ body.night .list-group-item {
     opacity: 0.95;
 }
 
-body.night .orphusTable thead tr, 
+body.night .orphusTable thead tr,
 body.night .miniSearch button {
     background-color: #4E4E4E;
     color: #E0E0E0;
@@ -24,13 +25,16 @@ body.night .admin-header {
 body.night table .header-copy {
     background: #4E4E4E;
 }
+
 body.night .panel-heading {
     background: #4E4E4E;
     border: 1px solid #6e6e6e !important;
 }
-body.night .panel-heading>h4>a>div {
-    color: #E0E0E0;    
+
+body.night .panel-heading > h4 > a > div {
+    color: #E0E0E0;
 }
+
 body.night .list-group.select .form-control,
 body.night .admin-table .form-control {
     color: #DFDFDF;
@@ -65,6 +69,7 @@ body.night .ranobeList > div > .pull-left {
 body.night .ranobeList > div:hover {
     background: #4E4E4E;
 }
+
 body.night .ranobeList > div:hover > a {
     color: #E0E0E0;
 }
@@ -119,10 +124,10 @@ body.night .popover-title {
     background-color: #282828;
 }
 
-body.night .popover.right>.arrow:after,
-body.night .popover.bottom>.arrow:after,
-body.night .popover.top>.arrow:after,
-body.night .popover.left>.arrow:after {
+body.night .popover.right > .arrow:after,
+body.night .popover.bottom > .arrow:after,
+body.night .popover.top > .arrow:after,
+body.night .popover.left > .arrow:after {
     border-right-color: #282828;
 }
 
@@ -271,4 +276,57 @@ body.night .faq-img {
 body.night .diary-img {
     background-image: url('../img/diary_night.png');
 }
+
+body.night .actions .edit-icon {
+    background-image: url(/img/actions/edit-night.png);
+}
+
+body.night .actions .edit_base-icon {
+    background-image: url(/img/actions/edit_base-night.png);
+}
+
+body.night .actions .history-icon {
+    background-image: url(/img/actions/history-night.png);
+}
+
+body.night .actions .protect-icon {
+    background-image: url(/img/actions/protect-night.png);
+}
+
+body.night .actions .remove-icon {
+    background-image: url(/img/actions/remove-night.png);
+}
+
+body.night .actions .rename-icon {
+    background-image: url(/img/actions/rename-night.png);
+}
+
+body.night .actions .track-icon {
+    background-image: url(/img/actions/track-night.png);
+}
+
+body.night .actions .qiwi-icon {
+    background-image: url(/img/requisites/qiwi-night.png);
+}
+
+body.night .actions .webmoney-icon {
+    background-image: url(/img/requisites/webmoney-night.png);
+}
+
+body.night .actions .yandex-icon {
+    background-image: url(/img/requisites/yandex-night.png);
+}
+
+body.night .actions .paypal-icon {
+    background-image: url(/img/requisites/paypal-night.png);
+}
+
+body.night .actions .card-icon {
+    background-image: url(/img/requisites/card-night.png);
+}
+
+body.night .actions .bitcoin-icon {
+    background-image: url(/img/requisites/bitcoin-night.png);
+}
+
 /* body.night END */
