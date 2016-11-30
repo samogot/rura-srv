@@ -18,7 +18,7 @@
         v.name_short AS volumeTitleShort,
         c.url AS chapterUrl,
         v.url AS volumeUrl,
-        p.works AS works
+        coalesce(pp.works, p.works) AS works
         FROM (SELECT *
         FROM updates
         WHERE show_time &lt; (now())
@@ -38,6 +38,9 @@
         LEFT JOIN chapters c ON last_updates.chapter_id = c.chapter_id
         LEFT JOIN volumes v ON last_updates.volume_id = v.volume_id
         LEFT JOIN projects p ON last_updates.project_id = p.project_id
+        LEFT JOIN projects pp ON pp.project_id = p.parent_id
+        ORDER BY show_time DESC, coalesce(pp.order_number, p.order_number), p.order_number DESC, v.sequence_number DESC,
+        c.order_number DESC
     </select>
 
     <select id="getUpdatesCountBy" resultType="int">
