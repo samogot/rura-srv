@@ -85,4 +85,7 @@
             <where>requisite_id=1</where>
         </update>
     </changeSet>
+    <changeSet author="samogot" id="1-9">
+        <modifyDataType tableName="requisites" columnName="card" newDataType="VARCHAR(19)"/>
+    </changeSet>
 </databaseChangeLog>

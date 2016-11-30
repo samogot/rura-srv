@@ -1212,6 +1212,9 @@ aside > .actions > div:hover {
 
 .actions > div > a:hover {
     text-decoration: none;
+}
+
+.actions > div > a[href]:hover {
     border-bottom: 1px dashed rgb(77, 77, 77);
 }
 

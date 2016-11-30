@@ -6,10 +6,12 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.util.convert.ConversionException;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.IConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,11 +22,11 @@ import ru.ruranobe.mybatis.entities.tables.Volume;
 import ru.ruranobe.mybatis.mappers.RequisitesMapper;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.RuraConstants;
+import ru.ruranobe.wicket.components.CreditCardConverter;
 import ru.ruranobe.wicket.components.LabelHideableOnNull;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class RequisitesSidebarModule extends SidebarModuleBase
 {
@@ -70,13 +72,54 @@ public class RequisitesSidebarModule extends SidebarModuleBase
         add(new LabelHideableOnNull("wmk"));
         add(new LabelHideableOnNull("wmx"));
         add(new LabelHideableOnNull("yandex"));
-        add(new LabelHideableOnNull("paypal"));
+        add(new AbstractLink("paypal")
+        {
+            @Override
+            public boolean isVisible()
+            {
+                return !org.apache.wicket.util.string.Strings.isEmpty(getDefaultModelObjectAsString());
+            }
+
+            @Override
+            protected void onComponentTag(ComponentTag tag)
+            {
+                super.onComponentTag(tag);
+                Object hrefValue = this.getDefaultModelObject();
+                if (hrefValue != null)
+                {
+                    String url = hrefValue.toString();
+                    if (!url.contains(":"))
+                    {
+                        if (url.contains("@"))
+                        {
+                            return;
+                        }
+                        else if (url.contains("/"))
+                        {
+                            url = "https://" + url;
+                        }
+                        else
+                        {
+                            url = "https://paypal.me/" + url;
+                        }
+                    }
+                    tag.put("href", url);
+                }
+            }
+
+            @Override
+            public IModel<?> getBody()
+            {
+                return this.getDefaultModel();
+            }
+        });
         add(new LabelHideableOnNull("card")
         {
+            @SuppressWarnings("unchecked")
             @Override
             public <C> IConverter<C> getConverter(Class<C> type)
             {
-                return new CreditCardConverter<C>();
+                return type.equals(String.class) ? (IConverter<C>) new CreditCardConverter() : super.getConverter(type);
             }
         });
         add(new LabelHideableOnNull("bitcoin"));
@@ -124,20 +167,4 @@ public class RequisitesSidebarModule extends SidebarModuleBase
     }
 
     private static final Logger LOG = LoggerFactory.getLogger(RequisitesSidebarModule.class);
-}
-
-class CreditCardConverter<C> implements IConverter<C>
-{
-    @Override
-    public C convertToObject(String s, Locale locale) throws ConversionException
-    {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public String convertToString(C c, Locale locale)
-    {
-        return c.toString().replaceAll("(\\d{4})\\s*(\\d{4})\\s*(\\d{4})\\s*(\\d{4})", "$1 $2 $3 $4");
-    }
-
 }

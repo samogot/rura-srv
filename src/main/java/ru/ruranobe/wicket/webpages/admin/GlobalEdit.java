@@ -17,6 +17,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.Strings;
 import ru.ruranobe.engine.ForumApiUtils;
 import ru.ruranobe.mybatis.MybatisUtil;
@@ -24,6 +25,7 @@ import ru.ruranobe.mybatis.entities.tables.*;
 import ru.ruranobe.mybatis.mappers.*;
 import ru.ruranobe.mybatis.mappers.cacheable.CachingFacade;
 import ru.ruranobe.wicket.RuraConstants;
+import ru.ruranobe.wicket.components.CreditCardConverter;
 import ru.ruranobe.wicket.components.admin.AdminAffixedListPanel;
 import ru.ruranobe.wicket.components.admin.BannerUploadComponent;
 import ru.ruranobe.wicket.webpages.base.AdminLayoutPage;
@@ -501,6 +503,7 @@ public class GlobalEdit extends AdminLayoutPage
             {
                 return new Fragment(id, "requisitesFormItemFragment", GlobalEdit.this, model)
                 {
+                    @SuppressWarnings("WicketForgeJavaIdInspection")
                     @Override
                     protected void onInitialize()
                     {
@@ -517,7 +520,15 @@ public class GlobalEdit extends AdminLayoutPage
                         add(new TextField<String>("wmx"));
                         add(new TextField<String>("yandex"));
                         add(new TextField<String>("paypal"));
-                        add(new TextField<String>("card"));
+                        add(new TextField<String>("card")
+                        {
+                            @SuppressWarnings("unchecked")
+                            @Override
+                            public <C> IConverter<C> getConverter(Class<C> type)
+                            {
+                                return type.equals(String.class) ? (IConverter<C>) new CreditCardConverter() : super.getConverter(type);
+                            }
+                        });
                         add(new TextField<String>("bitcoin"));
                         add(new CheckBox("showYandexMoneyButton"));
                         add(new CheckBox("showYandexCardButton"));
