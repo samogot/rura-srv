@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\Users\Viktor\test\RuraConfig.xsd">
+	<ForumApiSecret>342950507aede02cf327383dc6652cd99f40cf0f9b2649da</ForumApiSecret>
+	<RadioApiToken>c6cfb5c03efbd212b191f56216b46206</RadioApiToken>
+	<FileStoragePolicy>
+		<FileStorageService>
+			<ServiceName>Picassa</ServiceName>
+			<RefreshToken>1/xbteaEmLD5wBEQiAMvaZW9_FHrTVXyPuDhjj1TUTnq8</RefreshToken>
+			<ClientId>759419720878-4143dd5aqcpu01qhu1jgra7h7r9afcqu.apps.googleusercontent.com</ClientId>
+			<ClientSecret>wJCA82sp8X_e-Y6IhU3eW5KU</ClientSecret>
+		</FileStorageService>
+		<FileStorageService>
+			<ServiceName>YandexDisk</ServiceName>
+			<AccessToken>OAuth fa51560833df48bf93e0121cef79547d</AccessToken>
+			<UploadDir>ImagesBackup</UploadDir>
+			<PublicFolder>https://yadi.sk/d/IHaGEV-SexEBi</PublicFolder>
+		</FileStorageService>
+		<FileStorageService>
+			<ServiceName>LocalStorage</ServiceName>
+			<!-- <UploadDir>/home/samogot/IDEAProjects/rura-srv/target/Ruranobe-1.1-SNAPSHOT/images</UploadDir> -->
+			<UploadDir>/srv/http/ruranobe.ru/images</UploadDir>
+			<PublicFolder>//ruranobe.ru/images</PublicFolder>
+		</FileStorageService>
+	</FileStoragePolicy>
+	<Webpages>
+		<Webpage>
+			<PageClass>ru.ruranobe.wicket.webpages.admin.GlobalEdit</PageClass>
+			<ImageStorage>
+				<ServiceName>LocalStorage</ServiceName>
+				<StoragePath>/${md5_1}/${md5_2}</StoragePath>
+				<StorageFileName>${project}-banner.${ext}</StorageFileName>
+			</ImageStorage>
+<!-- 			<ImageStorage>
+				<ServiceName>Picassa</ServiceName>
+				<StoragePath>banners</StoragePath>
+				<StorageFileName>${project}-banner.${ext}</StorageFileName>
+			</ImageStorage>
+			<ImageStorage>
+				<ServiceName>YandexDisk</ServiceName>
+				<StoragePath>/${project}</StoragePath>
+				<StorageFileName>${project}-banner.${ext}</StorageFileName>
+			</ImageStorage> -->
+		</Webpage>
+		<Webpage>
+			<PageClass>ru.ruranobe.wicket.webpages.admin.ProjectEdit</PageClass>
+			<ImageStorage>
+				<ServiceName>LocalStorage</ServiceName>
+				<StoragePath>/${md5_1}/${md5_2}</StoragePath>
+				<StorageFileName>${project}-banner.${ext}</StorageFileName>
+			</ImageStorage>
+<!-- 			<ImageStorage>
+				<ServiceName>Picassa</ServiceName>
+				<StoragePath>banners</StoragePath>
+				<StorageFileName>${project}-banner.${ext}</StorageFileName>
+			</ImageStorage>
+			<ImageStorage>
+				<ServiceName>YandexDisk</ServiceName>
+				<StoragePath>/${project}</StoragePath>
+				<StorageFileName>${project}-banner.${ext}</StorageFileName>
+			</ImageStorage> -->
+		</Webpage>
+		<Webpage>
+			<PageClass>ru.ruranobe.wicket.webpages.admin.VolumeEdit</PageClass>
+			<!-- <ImageStorage>
+				<ServiceName>Picassa</ServiceName>
+				<StoragePath>${project}_${volume}</StoragePath>
+				<StorageFileName>${project}_${volume}_${uuid}_${name}.${ext}</StorageFileName>
+			</ImageStorage>
+			<ImageStorage>
+				<ServiceName>YandexDisk</ServiceName>
+				<StoragePath>/${project}/${volume}</StoragePath>
+				<StorageFileName>${uuid}_${name}.${ext}</StorageFileName>
+			</ImageStorage> -->
+			<ImageStorage>
+				<ServiceName>LocalStorage</ServiceName>
+				<StoragePath>/${md5_1}/${md5_2}</StoragePath>
+				<StorageFileName>${project}_${volume}_${uuid}_${name}.${ext}</StorageFileName>
+			</ImageStorage>
+		</Webpage>
+	</Webpages>
+	<Smtp>
+		<!--Please install SMTP server if it is not present-->
+		<Host>localhost</Host>
+		<Port>25</Port>
+		<Address>noreply@ruranobe.ru</Address>
+		<Message>
+			<Id>EmailActivation</Id>
+			<Subject>Активация электронного адреса</Subject>
+			<Text>Для активации электронного адреса в системе проследуйте по ссылке http://ruranobe.ru/user/email/activate?token=%s</Text>
+		</Message>
+		<Message>
+			<Id>ChangePassword</Id>
+			<Subject>Восстановление пароля</Subject>
+			<Text>Для восстановления пароля проследуйте по ссылке http://ruranobe.ru/user/recover/pass?token=%s</Text>
+		</Message>
+	</Smtp>
+</Configuration>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="Webpages">
+		<xs:complexType>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:element ref="Webpage"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Webpage">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="PageClass" type="xs:string"/>
+				<xs:element ref="ImageStorage" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ServiceName">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="LocalStorage"/>
+				<xs:enumeration value="Picassa"/>
+				<xs:enumeration value="YandexDisk"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="ImageStorage">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ServiceName"/>
+				<xs:element name="StoragePath" type="xs:string"/>
+				<xs:element name="StorageFileName" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="FileStorageService">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ServiceName"/>
+				<xs:element name="RefreshToken" type="xs:string" minOccurs="0"/>
+				<xs:element name="ClientId" type="xs:string" minOccurs="0"/>
+				<xs:element name="ClientSecret" type="xs:string" minOccurs="0"/>
+				<xs:element name="AccessToken" type="xs:string" minOccurs="0"/>
+				<xs:element name="UploadDir" type="xs:string" minOccurs="0"/>
+				<xs:element name="PublicFolder" type="xs:string" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="FileStoragePolicy">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="FileStorageService" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Configuration">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="ForumApiSecret" type="xs:string"/>
+				<xs:element name="RadioApiToken" type="xs:string"/>
+				<xs:element ref="FileStoragePolicy" minOccurs="0"/>
+				<xs:element ref="Webpages"/>
+				<xs:element ref="Smtp"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Smtp">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Host" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="Port" type="xs:string" minOccurs="1" maxOccurs="1"/> 
+				<xs:element name="Address" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="Message" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Message">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Id" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="Subject" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="Text"  type="xs:string" minOccurs="1" maxOccurs="1"/> 
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

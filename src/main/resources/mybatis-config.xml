@@ -8,9 +8,9 @@
             <transactionManager type="JDBC"/>
             <dataSource type="POOLED">
                 <property name="driver" value="com.mysql.jdbc.Driver"/>
-                <property name="url" value="jdbc:mysql://localhost:3306/ruranobe_beta?characterEncoding=utf8"/>
-                <property name="username" value="ruranobe_beta"/>
-                <property name="password" value="123"/>
+                <property name="url" value="jdbc:mysql://ruranobe.ru:3306/ruranobe_dev?characterEncoding=utf8"/>
+                <property name="username" value="devel"/>
+                <property name="password" value="645Ft85V9JBH27g"/>
             </dataSource>
         </environment>
     </environments>
