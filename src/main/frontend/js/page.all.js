@@ -32,7 +32,7 @@ $(document).ready(function () {
             name: 'projects',
             display: 'title',
             source: function (query, syncResults, asyncResults) {
-                $.get('/api/projects?fields=name_ru,url,name_jp,name_romaji,title', function (data) {
+              $.get('/api/projects?fields=nameRu|url|nameJp|nameRomaji|title', function (data) {
                     var matches, substringRegex;
                     matches = [];
                     substrRegex = new RegExp(query, 'i');
